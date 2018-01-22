@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.mgrid.main"
+  android:installLocation="preferExternal"
+  android:versionCode="12"
+  android:versionName="4.2"
+  
+ >
+  
+   
+  <uses-sdk android:minSdkVersion="17" android:targetSdkVersion="19" />
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.MOUNT_FORMAT_FILESYSTEMS"/>
+    
+ 
+  
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+ <uses-permission android:name="android.permission.WAKE_LOCK"/>
+ <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+
+ 
+ 
+
+  <uses-permission android:name="android.permission.FLASHLIGHT" />
+  <uses-permission android:name="android.permission.CAMERA"/>
+  <uses-feature android:name="android.hardware.camera" /> 
+  <uses-feature android:name="android.hardware.camera.autofocus" />
+  <uses-feature           
+        android:name="android.hardware.usb.host"/>
+  
+  
+      <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="com.example.test" >
+    </instrumentation>
+
+    <!-- Tell the system this app requires OpenGL ES 2.0. -->
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+    <!-- 设置支持的纹理压缩 -->
+    <supports-gl-texture android:name="GL_OES_compressed_ETC1_RGB8_texture" />
+    <supports-gl-texture android:name="GL_OES_compressed_paletted_texture" />
+  
+  
+  
+  <application 
+      android:label="@string/app_name" 
+      android:icon="@drawable/ic_jiqiren" 
+      android:largeHeap="true"
+      android:name="com.mgrid.uncaughtexceptionhandler.MyApplication"
+      android:allowBackup="true">
+      <!-- android:hardwareAccelerated="true" -->     
+      <service android:name="SoundService"></service>  
+      <activity
+      android:name="com.mgrid.main.MGridActivity"
+      android:label="@string/app_name">
+      <!-- android:screenOrientation="portrait">-->
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />     
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+    <activity
+      android:name="com.mgrid.main.CameraActivity"
+      android:label="@string/app_name">
+    </activity>
+    <activity
+      android:name="com.mgrid.main.GridviewActivity"
+      android:label="@string/app_name">
+    </activity>    
+    <activity
+      android:name="com.mgrid.main.ImageviewActivity"
+      android:label="@string/app_name">
+    </activity>     
+    
+    <receiver android:name=".BootBroadcastReceiver">  
+       <!-- android:enabled="true"   
+        android:exported="false"   
+        android:label="SystemStartReceiver">-->
+        <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+        </intent-filter>
+    </receiver>
+    <service android:name="com.lsy.Service.TilmePlush.TimePlushService"></service>
+    </application>
+</manifest>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFFFF"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" >
+    
+       <com.lsy.ViewStyle.FancyButton
+                android:id="@+id/FB1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:padding="5dp"
+                fancy:fb_borderColor="#0B0C11"
+                fancy:fb_borderWidth="1dp"
+                fancy:fb_defaultColor="#383F47"
+                fancy:fb_focusColor="#88383F47"
+                fancy:fb_iconResource="@drawable/twitter"
+                fancy:fb_radiusBottomRight="10dp"
+                fancy:fb_radiusTopLeft="10dp"
+                fancy:fb_radiusTopRight="10dp"
+                fancy:fb_radiusBottomLeft="10dp"
+                fancy:fb_text="" 
+                fancy:fb_textColor="#FFFFFF"  
+    ></com.lsy.ViewStyle.FancyButton>
+</LinearLayout>
