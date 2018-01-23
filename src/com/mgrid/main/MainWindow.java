@@ -1397,9 +1397,7 @@ public class MainWindow extends ViewGroup {
 //						//lsy add 为了优化SgIsolationEventSetter控件 因为控件重启后无法判断是什么状态
 
 						m_oShareObject.m_SgIsolationEventSetter.put(strUniqueID,oBindingExpression);
-						MGridActivity.m_DoubleButton=m_oShareObject.m_SgIsolationEventSetter	;						
-							
-								
+						MGridActivity.m_DoubleButton=m_oShareObject.m_SgIsolationEventSetter;																					
 					}
 					// TODO: ...
 				}

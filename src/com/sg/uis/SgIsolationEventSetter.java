@@ -8,12 +8,14 @@ import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -34,6 +36,7 @@ import com.mgrid.util.XmlUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.UtExpressionParser.stBindingExpression;
+import com.sun.mail.dsn.message_deliverystatus;
 
 import data_model.ipc_cfg_trigger_value;
 
@@ -77,8 +80,7 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 					synchronized (m_rRenderWindow.m_oShareObject) {
 						SgIsolationEventSetter.this.setEnabled(false);
 						handler.postDelayed(runnable, 5000);
-						m_rRenderWindow.m_oShareObject.m_mapTriggerCommand.put(
-								getUniqueID(), isChecked() ? "1" : "0");
+						m_rRenderWindow.m_oShareObject.m_mapTriggerCommand.put(getUniqueID(), isChecked() ? "1" : "0");
 						if (isChecked()) {
 							setTextColor(Color.BLUE);
 
@@ -101,6 +103,14 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 		// setPadding(0, 0, 0, 0);
 		setTextOn(m_strTextOn);
 		setTextOff(m_strTextOff);
+
+		try {
+			dbf = DocumentBuilderFactory.newInstance();
+			db = dbf.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	@SuppressLint("DrawAllocation")
@@ -111,8 +121,8 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 		 * 
 		 * if (m_bPressed) { int nWidth = (int) (((float)(m_nWidth) /
 		 * (float)MainWindow.FORM_WIDTH) * (m_rRenderWindow.VIEW_RIGHT -
-		 * m_rRenderWindow.VIEW_LEFT)); int nHeight = (int) (((float)(m_nHeight)
-		 * / (float)MainWindow.FORM_HEIGHT) * (m_rRenderWindow.VIEW_BOTTOM -
+		 * m_rRenderWindow.VIEW_LEFT)); int nHeight = (int) (((float)(m_nHeight) /
+		 * (float)MainWindow.FORM_HEIGHT) * (m_rRenderWindow.VIEW_BOTTOM -
 		 * m_rRenderWindow.VIEW_TOP));
 		 * 
 		 * m_oPaint.setColor(0x50FF00F0); m_oPaint.setStyle(Paint.Style.FILL);
@@ -125,10 +135,8 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 	public void doLayout(boolean bool, int l, int t, int r, int b) {
 		if (m_rRenderWindow == null)
 			return;
-		int nX = l
-				+ (int) (((float) m_nPosX / (float) MainWindow.FORM_WIDTH) * (r - l));
-		int nY = t
-				+ (int) (((float) m_nPosY / (float) MainWindow.FORM_HEIGHT) * (b - t));
+		int nX = l + (int) (((float) m_nPosX / (float) MainWindow.FORM_WIDTH) * (r - l));
+		int nY = t + (int) (((float) m_nPosY / (float) MainWindow.FORM_HEIGHT) * (b - t));
 		int nWidth = (int) (((float) (m_nWidth) / (float) MainWindow.FORM_WIDTH) * (r - l));
 		int nHeight = (int) (((float) (m_nHeight) / (float) MainWindow.FORM_HEIGHT) * (b - t));
 
@@ -164,8 +172,7 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 		rWin.removeView(this);
 	}
 
-	public void parseProperties(String strName, String strValue,
-			String strResFolder) {
+	public void parseProperties(String strName, String strValue, String strResFolder) {
 
 		if ("ZIndex".equals(strName)) {
 			m_nZIndex = Integer.parseInt(strValue);
@@ -212,9 +219,8 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 				@Override
 				public void run() {
 					while (true) {
-					//	System.out.println(DataGetter.isLoading+"::"+MGridActivity.isLoading);
-						if (!DataGetter.isLoading&&!MGridActivity.isLoading) {
-							
+						// System.out.println(DataGetter.isLoading+"::"+MGridActivity.isLoading);
+						if (!DataGetter.isLoading && !MGridActivity.isLoading) {
 							setEnabled();
 							break;
 						}
@@ -245,13 +251,11 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 			nFlag |= Gravity.TOP;
 		else if ("Bottom".equals(m_strVerticalContentAlignment)) {
 			nFlag |= Gravity.BOTTOM;
-			double padSize = CFGTLS.getPadHeight(m_nHeight,
-					MainWindow.FORM_HEIGHT, getTextSize());
+			double padSize = CFGTLS.getPadHeight(m_nHeight, MainWindow.FORM_HEIGHT, getTextSize());
 			setPadding(0, (int) padSize, 0, 0);
 		} else if ("Center".equals(m_strVerticalContentAlignment)) {
 			nFlag |= Gravity.CENTER_VERTICAL;
-			double padSize = CFGTLS.getPadHeight(m_nHeight,
-					MainWindow.FORM_HEIGHT, getTextSize()) / 2;
+			double padSize = CFGTLS.getPadHeight(m_nHeight, MainWindow.FORM_HEIGHT, getTextSize()) / 2;
 			setPadding(0, (int) padSize, 0, (int) padSize);
 		}
 
@@ -338,23 +342,29 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 					setText("ON");
 				setChecked(true);
 				setTextColor(Color.BLUE);
- 
+
 				break;
-				
+
 			case 2:
 
-				String s=msg.obj.toString();
-				Toast.makeText(getContext(),
-						"设备Id" + s + "并没有找到,检查一下吧", 200)
-						.show();
+				String s = msg.obj.toString();
+				Toast.makeText(getContext(), "设备Id" + s + "并没有找到,检查一下吧", 200).show();
 
 				break;
 			case 3:
 
-			
-				Toast.makeText(getContext(),
-						"屏蔽整个设备时发生错误", 200)
-						.show();
+				Toast.makeText(getContext(), "屏蔽整个设备时发生错误", 200).show();
+
+				break;
+			case 4:
+
+				String ss = (String) msg.obj;
+				
+				new AlertDialog.Builder(getContext())
+				.setTitle("错误")
+				.setMessage(
+						"读取"+ m_strID +" 异常，停止加载！\n详情：" + ss.toString())
+				.show();
 
 				break;
 			}
@@ -363,105 +373,113 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 	};
 
 	public void setEnabled() {
-		stBindingExpression oBindingExpression = m_rRenderWindow.m_oShareObject.m_SgIsolationEventSetter
-				.get(m_strID);
+
+		stBindingExpression oBindingExpression = null;
+		try {
+			oBindingExpression = m_rRenderWindow.m_oShareObject.m_SgIsolationEventSetter.get(m_strID);
+		} catch (Exception e) {
+			Message message = new Message();
+			int a = 0, b = 0, c = 0;
+			if (m_rRenderWindow == null) {
+				a = 1;
+			} else if (m_rRenderWindow.m_oShareObject == null) {
+				b = 1;
+			} else if (m_rRenderWindow.m_oShareObject.m_SgIsolationEventSetter == null) {
+				c = 1;
+			}
+			message.obj = a + " " + b + "  " + c;
+			message.what = 4;
+			handler.sendMessage(message);
+		}
+
 		if (oBindingExpression == null)
 			return;
 
-		List<ipc_cfg_trigger_value> trigger_value_list = DataGetter
-				.getTrigger_list().get(oBindingExpression.nEquipId + "");
+		// 判断是否拥有该设备id
+		List<ipc_cfg_trigger_value> trigger_value_list = DataGetter.getTrigger_list()
+				.get(oBindingExpression.nEquipId + "");
 		if (trigger_value_list == null) {
-			Message mess=new Message();
-			mess.obj=oBindingExpression.nEquipId;
-			mess.what=2;
+			Message mess = new Message();
+			mess.obj = oBindingExpression.nEquipId;
+			mess.what = 2;
 			hand.sendMessage(mess);
 			return;
 		}
-		Iterator<ipc_cfg_trigger_value> trigger_value_it = trigger_value_list
-				.iterator();
+
+		// 当表达式的evenid=0;则查找主xml判断是否屏蔽
 		int enabled = -1;
-		while (trigger_value_it.hasNext()) {
-			ipc_cfg_trigger_value ipc_trigger = trigger_value_it.next();
-			if (oBindingExpression.nEventId == 0) {
+		if (oBindingExpression.nEventId == 0) {
+			try {
+				if (doc == null)
+					doc = db.parse(new File("/data/mgrid/sampler/XmlCfg/" + XmlUtils.getXml().Mainpath));
+			} catch (Exception e) {
+				e.printStackTrace();
+				hand.sendEmptyMessage(3);
+			}
+			list1 = doc.getElementsByTagName("CfgEquipment");
+			for (int i = 0; i < list1.getLength(); i++) {
+				Element element1 = (Element) list1.item(i);
+				String EquipId = element1.getAttribute("EquipId");
+				if (!EquipId.equals(oBindingExpression.nEquipId + ""))
+					continue;
+				String EventLocked = element1.getAttribute("EventLocked");
+				if (EventLocked.equals("false")) {
+					enabled = 1;
 
-				
-				try {
-					dbf = DocumentBuilderFactory.newInstance();
-					db = dbf.newDocumentBuilder();
-//					doc = db.parse(new File(
-//							"/data/mgrid/sampler/XmlCfg/MonitorUnitVTU.xml"));
-					doc = db.parse(new File("/data/mgrid/sampler/XmlCfg/"+XmlUtils.getXml().Mainpath));
-
-				} catch (Exception e) {
-					e.printStackTrace();
-					hand.sendEmptyMessage(3);
-				}
-
-				list1 = doc.getElementsByTagName("CfgEquipment");
-				for (int i = 0; i < list1.getLength(); i++) {
-					Element element1 = (Element) list1.item(i);
-					String EquipId = element1.getAttribute("EquipId");
-					if (!EquipId.equals(oBindingExpression.nEquipId + ""))
-						continue;
-					String EventLocked = element1.getAttribute("EventLocked");
-					if (EventLocked.equals("false")) {
-						enabled = 1;
-
-					} else {
-						enabled = 0;
-							MGridActivity.LabelList.add(oBindingExpression.nEquipId
-									+ "");								
-					}
-
-				}
-
-			} else {
-
-			
-				
-				if (ipc_trigger.eventid == oBindingExpression.nEventId) {
-					enabled = ipc_trigger.enabled;
-
-				}
-				
-				if (enabled == 0) {
-					
-					XmlUtils xml = XmlUtils.getXml();
-					synchronized(xml){
-						String TemplateId = xml
-								.getTemplateId(oBindingExpression.nEquipId + "");
-						
-					
-						NodeList list = xml.getNodeList("EquipEvent", TemplateId);
-						System.out.println("::::"+TemplateId);
-						for (int i = 0; i < list.getLength(); i++) {
-							Element element = (Element) list.item(i);
-							String EvenId = element.getAttribute("EventId");
-							if (EvenId.equals(oBindingExpression.nEventId+"")) {
-								
-								String StartExpression = element
-										.getAttribute("StartExpression");
-					
-								String SingalId=StartExpression.substring(4,StartExpression.length()-1);
-								
-								Map<String, String> map = new HashMap<String, String>();
-								map.put(oBindingExpression.nEquipId + "", SingalId);
-								MGridActivity.EventClose.put(m_strID, map);
-							
-							}
-						}
-					}
-	
+				} else {
+					enabled = 0;
+					MGridActivity.LabelList.add(oBindingExpression.nEquipId + "");
 				}
 			}
-			isIn = false;
+		} else {// 当表达式的evenid!=0;则查找trigger_value_it中的enabled判断是否屏蔽
 
+			Iterator<ipc_cfg_trigger_value> trigger_value_it = trigger_value_list.iterator();
+			while (trigger_value_it.hasNext()) {
+				ipc_cfg_trigger_value ipc_trigger = trigger_value_it.next();
+
+				if (ipc_trigger.eventid == oBindingExpression.nEventId) {
+					enabled = ipc_trigger.enabled;
+					setLabelOff(oBindingExpression, enabled);
+					break;
+				}
+				isIn = false;
+
+			}
 		}
 		if (enabled == 1) {
 			hand.sendEmptyMessage(1);
-			
+
 		} else if (enabled == 0) {
 			hand.sendEmptyMessage(0);
+		}
+	}
+
+	private void setLabelOff(stBindingExpression oBindingExpression, int enabled) {
+		if (enabled == 0) {
+
+			XmlUtils xml = XmlUtils.getXml();
+			synchronized (xml) {
+				String TemplateId = xml.getTemplateId(oBindingExpression.nEquipId + "");
+
+				NodeList list = xml.getNodeList("EquipEvent", TemplateId);
+				System.out.println("::::" + TemplateId);
+				for (int i = 0; i < list.getLength(); i++) {
+					Element element = (Element) list.item(i);
+					String EvenId = element.getAttribute("EventId");
+					if (EvenId.equals(oBindingExpression.nEventId + "")) {
+
+						String StartExpression = element.getAttribute("StartExpression");
+
+						String SingalId = StartExpression.substring(4, StartExpression.length() - 1);
+
+						Map<String, String> map = new HashMap<String, String>();
+						map.put(oBindingExpression.nEquipId + "", SingalId);
+						MGridActivity.EventClose.put(m_strID, map);
+
+					}
+				}
+			}
+
 		}
 	}
 

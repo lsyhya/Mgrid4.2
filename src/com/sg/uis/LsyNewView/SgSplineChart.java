@@ -20,6 +20,18 @@ import org.xclcharts.chart.SplineChart;
 import org.xclcharts.chart.SplineData;
 import org.xclcharts.renderer.XEnum;
 
+import com.demo.xclcharts.view.SplineChart03View;
+import com.mgrid.data.DataGetter;
+import com.mgrid.main.MainWindow;
+import com.mgrid.main.R;
+import com.mgrid.util.CustomPopWindow;
+import com.mgrid.util.ExpressionUtils;
+import com.mgrid.util.TimeUtils;
+import com.sg.common.CFGTLS;
+import com.sg.common.IObject;
+import com.sg.common.MyAdapter;
+import com.sg.common.SgRealTimeData;
+
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -37,18 +49,6 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.demo.xclcharts.view.SplineChart03View;
-import com.mgrid.data.DataGetter;
-import com.mgrid.main.MainWindow;
-import com.mgrid.main.R;
-import com.mgrid.util.CustomPopWindow;
-import com.mgrid.util.ExpressionUtils;
-import com.mgrid.util.TimeUtils;
-import com.sg.common.CFGTLS;
-import com.sg.common.IObject;
-import com.sg.common.MyAdapter;
-import com.sg.common.SgRealTimeData;
 
 /** mPUE曲线图 */
 @SuppressLint({ "ShowToast", "InflateParams", "RtlHardcoded",
@@ -356,10 +356,14 @@ public class SgSplineChart extends TextView implements IObject {
 			labels.add("4");
 			labels.add("8");
 			labels.add("12");
+			labels.add("");
 			break;
 		}
 		Schart.setCategories(labels);
+		if(index!=4)
 		Schart.setCategoryAxisMax(Integer.parseInt(labels.get(labels.size() - 1)));
+		else
+		Schart.setCategoryAxisMax(16);
 	}
 
 	private void parse_color(String strValue) {
@@ -750,6 +754,7 @@ public class SgSplineChart extends TextView implements IObject {
 			String Sintime = TimeUtils.getScroce();
 
 			if (isFirstIN) {
+				System.out.println("我进来读数据了");
 				for (int j = 1; j <= 4; j++) {
 					List<LinkedHashMap<Double, Double>> linePointData = linePointMapData
 							.get(j);
@@ -992,6 +997,7 @@ public class SgSplineChart extends TextView implements IObject {
 				String str = "";
 				while ((str = br.readLine()) != null) {
 					String[] s = str.split("-");
+					System.out.println(fileName+":::"+str);
 					data.put(Double.parseDouble(s[0]), Double.parseDouble(s[1]));
 				}
 				br.close();
