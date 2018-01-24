@@ -188,13 +188,9 @@ public class MainWindow extends ViewGroup {
 							IObject obj_Z = m_mapUIs.get(strKey);
 				            if(obj_Z.getType().equals("tigerLabel"))
 				            {
-
-				            
 				            	if(obj_Y.getBindingExpression().contains(ExpressionUtils.getExpressionUtils().removeBindingString(obj_Z.getBindingExpression())))
 				            	{
-
-				            		obj_Z.needupdate(true);
-				            		
+				            		obj_Z.needupdate(true);				            		
 				            	}
 				            }						
 						}						
@@ -220,9 +216,7 @@ public class MainWindow extends ViewGroup {
 		m_oShareObject.clearFromTcpValue(); // instance one share object here
 		m_oShareObject.m_oInvalidateHandler = m_oInvalidateHandler; // 赋予该主线程handler
 																	// 接受线程池的msg（子线程）
-
 		// timer.schedule(timertask, 0, 3000);
-
 	}
 
 

@@ -32,6 +32,7 @@ import android.widget.ToggleButton;
 import com.mgrid.data.DataGetter;
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
+import com.mgrid.util.DialogUtils;
 import com.mgrid.util.XmlUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
@@ -41,6 +42,9 @@ import com.sun.mail.dsn.message_deliverystatus;
 import data_model.ipc_cfg_trigger_value;
 
 public class SgIsolationEventSetter extends ToggleButton implements IObject {
+
+	private stBindingExpression oBindingExpression;
+
 	public SgIsolationEventSetter(Context context) {
 		super(context);
 
@@ -77,32 +81,26 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 				// 发送控制命令
 				if ("".equals(m_strCmdExpression) == false) {
 					// TODO: 依据当前告警状态区分设定还是切换显示状态
-					synchronized (m_rRenderWindow.m_oShareObject) {
-						SgIsolationEventSetter.this.setEnabled(false);
-						handler.postDelayed(runnable, 5000);
-						m_rRenderWindow.m_oShareObject.m_mapTriggerCommand.put(getUniqueID(), isChecked() ? "1" : "0");
-						if (isChecked()) {
-							setTextColor(Color.BLUE);
-
-							//
-						} else {
-							setTextColor(Color.RED);
-
+	
+						synchronized (m_rRenderWindow.m_oShareObject) {
+					
+							SgIsolationEventSetter.this.setEnabled(false);
+							handler.postDelayed(runnable, 3000);
+							m_rRenderWindow.m_oShareObject.m_mapTriggerCommand.put(getUniqueID(),
+									isChecked() ? "1" : "0");
+							if (isChecked()) {
+								setTextColor(Color.BLUE);
+							} else {
+								setTextColor(Color.RED);
+							}
 						}
-
 					}
 				}
-			}
+			
 		});
 
 		m_oPaint = new Paint();
 		m_rBBox = new Rect();
-
-		// setBackgroundResource(com.mgrid.main.R.drawable.sg_button_up);
-		// setBackgroundResource(R.drawable.btn_default);
-		// setPadding(0, 0, 0, 0);
-		setTextOn(m_strTextOn);
-		setTextOff(m_strTextOff);
 
 		try {
 			dbf = DocumentBuilderFactory.newInstance();
@@ -112,6 +110,13 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 		}
 
 	}
+
+	// private boolean xmlState()
+	// {
+	//
+	//
+	// return false;
+	// }
 
 	@SuppressLint("DrawAllocation")
 	protected void onDraw(Canvas canvas) {
@@ -233,7 +238,6 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 					}
 				}
 			}).start();
-
 		}
 	}
 
@@ -317,6 +321,7 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 	Runnable runnable = new Runnable() {
 		public void run() {
 			SgIsolationEventSetter.this.setEnabled(true);
+			
 		} // end of run
 	};
 
@@ -359,13 +364,8 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 			case 4:
 
 				String ss = (String) msg.obj;
-				
-				new AlertDialog.Builder(getContext())
-				.setTitle("错误")
-				.setMessage(
-						"读取"+ m_strID +" 异常，停止加载！\n详情：" + ss.toString())
-				.show();
-
+				DialogUtils.getDialog().showDialog(getContext(), "错误",
+						"读取" + m_strID + " 异常，停止加载！\n详情：" + ss.toString());
 				break;
 			}
 
@@ -374,7 +374,6 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 
 	public void setEnabled() {
 
-		stBindingExpression oBindingExpression = null;
 		try {
 			oBindingExpression = m_rRenderWindow.m_oShareObject.m_SgIsolationEventSetter.get(m_strID);
 		} catch (Exception e) {
