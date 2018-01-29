@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.TreeMap;
 
 import org.xclcharts.chart.BarChart;
@@ -219,7 +220,7 @@ public class SgBarChartView extends TextView implements IObject {
 		} else if ("IsBold".equals(strName)) {
 			m_bIsBold = Boolean.parseBoolean(strValue);
 			isNenghao = m_bIsBold;
-			if (!isNenghao) {
+			if (!isNenghao) {				
 				for (int i = 0; i < rButton.size(); i++) {
 					rButton.get(i).setVisibility(View.INVISIBLE);
 				}
@@ -401,6 +402,7 @@ public class SgBarChartView extends TextView implements IObject {
 			switch (msg.what) {
 			case 0:
 
+				System.out.println("hehehehehehe"+max_Value+":::"+chartData.size());
 				Bchart.getDataAxis().setAxisMax((int) max_Value);
 				Bchart.getDataAxis().setAxisSteps((int) max_Value / 5 / 2);
 				Bchart.setDataSource(chartData);
@@ -689,6 +691,8 @@ public class SgBarChartView extends TextView implements IObject {
 	}
 
 	private boolean updateData() {
+		
+		
 		if (data_cmd.size() <= 0)
 			return false;
 
@@ -707,19 +711,19 @@ public class SgBarChartView extends TextView implements IObject {
 				signal = spl[2];
 				newValue = DataGetter.getSignalValue(equail, signal);
 				// Random random = new Random();
-				// newValue = random.nextInt(100) + "";
+				// newValue = random.nextInt(100) + ""; 
 				if (newValue == null || newValue.equals(""))
-					return false;
+					continue;
+				
 				value = Float.parseFloat(newValue);
 				dataSeriesA.add((double) value);
 			}
-
 			compareMax(dataSeriesA);
 			BarData BarDataA = new BarData(data_label.get(i), dataSeriesA,
 					Color.parseColor(data_color.get(i)));
 			chartData.add(BarDataA);
 			i++;
-		}
+		} 
 
 		m_bneedupdate = false;
 		return true;

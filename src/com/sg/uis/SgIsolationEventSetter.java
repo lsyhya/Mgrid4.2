@@ -56,7 +56,6 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 				case MotionEvent.ACTION_DOWN:
 					m_bPressed = true;
 					view.invalidate();
-
 					m_xscal = event.getX();
 					m_yscal = event.getY();
 					break;
@@ -84,7 +83,9 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 	
 						synchronized (m_rRenderWindow.m_oShareObject) {
 					
+							m_rRenderWindow.setEnabled(false);
 							SgIsolationEventSetter.this.setEnabled(false);
+							
 							handler.postDelayed(runnable, 3000);
 							m_rRenderWindow.m_oShareObject.m_mapTriggerCommand.put(getUniqueID(),
 									isChecked() ? "1" : "0");

@@ -52,7 +52,7 @@ public class GridviewActivity extends Activity {
 		if(MGridActivity.whatLanguage)
 		button.setText("·µ»Ø");
 		else
-			button.setText("Back");
+		button.setText("Back");
 		RelativeLayout.LayoutParams buttonParams = new LayoutParams(100,80); 
 		buttonParams.setMargins(900, 580, 1000, 650); 
 		button.setOnClickListener(l);

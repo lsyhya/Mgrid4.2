@@ -6,6 +6,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import com.mgrid.data.DataGetter;
+import com.mgrid.main.MGridActivity;
+import com.mgrid.main.MainWindow;
+import com.mgrid.main.R;
+import com.mgrid.main.SoundService;
+import com.mgrid.util.ShellUtils;
+import com.mgrid.util.ShellUtils.CommandResult;
+import com.sg.common.CFGTLS;
+import com.sg.common.IObject;
+import com.sg.common.UtExpressionParser;
+import com.sg.common.UtExpressionParser.stBindingExpression;
+import com.sg.common.UtExpressionParser.stExpression;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -27,21 +40,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.mgrid.data.DataGetter;
-import com.mgrid.main.MGridActivity;
-import com.mgrid.main.MainWindow;
-import com.mgrid.main.R;
-import com.mgrid.main.SoundService;
-import com.mgrid.util.ShellUtils;
-import com.mgrid.util.ShellUtils.CommandResult;
-import com.sg.common.CFGTLS;
-import com.sg.common.IObject;
-import com.sg.common.UtExpressionParser;
-import com.sg.common.UtExpressionParser.stBindingExpression;
-import com.sg.common.UtExpressionParser.stExpression;
 import comm_service.service;
-
 import data_model.ipc_control;
 
 /** 按钮 */
@@ -315,25 +314,30 @@ public class SgButton extends TextView implements IObject {
 				// restartApplication();
 
 			} else if ("导出数据".equals(m_strClickEvent)) {
-
-				dialog = ProgressDialog.show(getContext(), "提示",
-						"正在导出,请不要进行其他操作");
+//
+//				dialog = ProgressDialog.show(getContext(), "提示",
+//						"正在导出,请不要进行其他操作");
 				new Thread(new Runnable() {
 
 					@Override
 					public void run() {
-						String[] commands = new String[] { "sh /data/mgrid/lsy_usb_out.sh &" };
+						
+						//String[] commands = new String[] {"cp  -a /mgrid/log/event/hisevent-1.dat   /log/hisevent-1.dat"};
+						String[] commands = new String[] {"cp  -a /mgrid/log/event/hisevent-1.dat   /log/hisevent-1.dat"};
 						CommandResult result = ShellUtils.execCommand(commands,
 								true);
+						System.out.println("执行了");
 						System.out.println(result.errorMsg);
 //						FileUtil fileUtil=new FileUtil();
-//						fileUtil.copyFile("/mgrid/log/his_equip_sig/1#2017-04-05.dat", MGridActivity.usbName+"/1.dat");
+//						fileUtil.copyFile("/mgrid/log/his_equip_sig/1#2000-01-01.dat", MGridActivity.usbName+"/1.dat");
+					
+				
 
 					}
 				}).start();
 
 			} else if ("跳转应用".equals(m_strClickEvent)) {                                                                            
-				// 包名 类名都知道
+				// 包名 类名都知道 
 				ComponentName componetName = new ComponentName(
 				// 这个是另外一个应用程序的包名
 						"com.mcu.iVMSHD",
@@ -380,7 +384,7 @@ public class SgButton extends TextView implements IObject {
 				// }
 
 			} else if (m_strClickEvent.equals("关闭告警")) {
-
+ 
 				Intent intent = new Intent(m_rRenderWindow.m_oMgridActivity,
 						SoundService.class);
 				intent.putExtra("playing", false);

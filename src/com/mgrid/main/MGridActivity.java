@@ -258,16 +258,14 @@ public class MGridActivity extends Activity {
 					// 拍照功能是否开启
 					if (m_bTakePhoto) {
 						// 打开拍照工具
-						final CameraUtils cameraUtils = new CameraUtils(getApplicationContext());
+//						final CameraUtils cameraUtils = new CameraUtils(getApplicationContext());
+//						cameraUtils.openCamera();
+						//启动拍照页面
+						isNOChangPage=false;
+					    Intent intent=new Intent(MGridActivity.this,CameraActivity.class);
+					    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					    startActivity(intent);
 
-						// MGridActivity.xianChengChi.execute(new Runnable() {
-						//
-						// @Override
-						// public void run() {
-						// 拍照并保存
-						cameraUtils.openCamera();
-						// }
-						// });
 					}
 				}
 

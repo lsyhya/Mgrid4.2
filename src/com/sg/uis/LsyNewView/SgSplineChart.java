@@ -754,7 +754,7 @@ public class SgSplineChart extends TextView implements IObject {
 			String Sintime = TimeUtils.getScroce();
 
 			if (isFirstIN) {
-				System.out.println("我进来读数据了");
+			
 				for (int j = 1; j <= 4; j++) {
 					List<LinkedHashMap<Double, Double>> linePointData = linePointMapData
 							.get(j);
@@ -967,7 +967,7 @@ public class SgSplineChart extends TextView implements IObject {
 			case -1:
 				Yeartime = Integer.parseInt(Yeartime) - 1 + "";
 				fileName = RC_signal + Yeartime + "-" + eqstr + "-" + sistr;
-				System.out.println(fileName);
+			
 				break;
 			case 1:// 一小时
 
@@ -997,7 +997,7 @@ public class SgSplineChart extends TextView implements IObject {
 				String str = "";
 				while ((str = br.readLine()) != null) {
 					String[] s = str.split("-");
-					System.out.println(fileName+":::"+str);
+					
 					data.put(Double.parseDouble(s[0]), Double.parseDouble(s[1]));
 				}
 				br.close();
