@@ -69,35 +69,34 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
-    
-    <!--自定义dialog背景全透明无边框theme -->
+
+    <!-- 自定义dialog背景全透明无边框theme -->
     <style name="MyDialog" parent="android:style/Theme.Dialog">
-        <!--背景颜色及和透明程度-->
+
+        <!-- 背景颜色及和透明程度 -->
         <item name="android:windowBackground">@android:color/transparent</item>
-        <!--是否去除标题 -->
+        <!-- 是否去除标题 -->
         <item name="android:windowNoTitle">true</item>
-        <!--是否去除边框-->
+        <!-- 是否去除边框 -->
         <item name="android:windowFrame">@null</item>
-        <!--是否浮现在activity之上-->
+        <!-- 是否浮现在activity之上 -->
         <item name="android:windowIsFloating">true</item>
-        <!--是否模糊-->
+        <!-- 是否模糊 -->
         <item name="android:backgroundDimEnabled">true</item>
     </style>
-    
-    
 
-
-    <style name="DialogStyle" parent="@android:style/Theme.Dialog">  
+    <style name="DialogStyle" parent="@android:style/Theme.Dialog">
 
         <!-- dialog背景样式 -->
 
-        <item name="android:windowBackground"> @android:color/background_dark</item>  
+        <item name="android:windowBackground"> @android:color/background_dark</item>
 
         <!-- 背景透明 -->
 
-        <item name="android:backgroundDimEnabled">false</item>    </style>           
-       <style name="custom_dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
 
+    <style name="custom_dialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
 
         <!-- Dialog的windowFrame框为无 -->
@@ -111,11 +110,8 @@
         <!-- 是否半透明 -->
 
         <item name="android:windowNoTitle">true</item>
-
         <item name="android:background">@android:color/transparent</item>
-
         <item name="android:windowBackground">@android:color/transparent</item>
-
         <item name="android:windowContentOverlay">@null</item>
 
         <!-- 去除黑色边框的关键设置项 -->
@@ -125,8 +121,14 @@
         <!-- 屏幕背景是否变暗 -->
 
         <item name="android:backgroundDimAmount">0.6</item>
-
     </style>
 
+    <style name="MyTest" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
 
 </resources>

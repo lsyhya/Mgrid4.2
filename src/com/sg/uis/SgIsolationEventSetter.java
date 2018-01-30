@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.mgrid.MyDialog.SelfDialog;
 import com.mgrid.data.DataGetter;
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
@@ -44,10 +45,13 @@ import data_model.ipc_cfg_trigger_value;
 public class SgIsolationEventSetter extends ToggleButton implements IObject {
 
 	private stBindingExpression oBindingExpression;
-
+    private SelfDialog dialog=null;
+	
+	
 	public SgIsolationEventSetter(Context context) {
 		super(context);
 
+		dialog=new SelfDialog(context);
 		// 监听 按钮 触控事件
 		this.setOnTouchListener(new OnTouchListener() {
 			@Override
@@ -77,15 +81,16 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 		setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				
+				dialog.show();
 				// 发送控制命令
 				if ("".equals(m_strCmdExpression) == false) {
 					// TODO: 依据当前告警状态区分设定还是切换显示状态
 	
 						synchronized (m_rRenderWindow.m_oShareObject) {
 					
-							m_rRenderWindow.setEnabled(false);
-							SgIsolationEventSetter.this.setEnabled(false);
 							
+							SgIsolationEventSetter.this.setEnabled(false);							
 							handler.postDelayed(runnable, 3000);
 							m_rRenderWindow.m_oShareObject.m_mapTriggerCommand.put(getUniqueID(),
 									isChecked() ? "1" : "0");
@@ -322,7 +327,7 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 	Runnable runnable = new Runnable() {
 		public void run() {
 			SgIsolationEventSetter.this.setEnabled(true);
-			
+			dialog.dismiss();
 		} // end of run
 	};
 

@@ -62,7 +62,7 @@ int drawable mgrid 0x7f020012
 int drawable pop_bg 0x7f020013
 int drawable popup_bg 0x7f020014
 int drawable twitter 0x7f020015
-int id FB1 0x7f07002c
+int id FB1 0x7f07002e
 int id bg_button 0x7f070013
 int id bottom 0x7f070003
 int id btn3 0x7f070014
@@ -73,7 +73,7 @@ int id center_vertical 0x7f070004
 int id clip_horizontal 0x7f07000b
 int id clip_vertical 0x7f07000a
 int id dialog_loading_view 0x7f070019
-int id dialog_view 0x7f07002d
+int id dialog_view 0x7f07002f
 int id end 0x7f07000d
 int id etPWD 0x7f070012
 int id et_change 0x7f070018
@@ -90,13 +90,14 @@ int id itemText 0x7f070021
 int id lastpagebtn 0x7f070026
 int id layout_pageID 0x7f070028
 int id left 0x7f070000
-int id linLayout 0x7f07002e
-int id list_info 0x7f070030
-int id list_title 0x7f07002f
+int id linLayout 0x7f070030
+int id list_info 0x7f070032
+int id list_title 0x7f070031
 int id lv_list 0x7f07002b
 int id nextbtn 0x7f070027
 int id pageet 0x7f07002a
 int id pagetv 0x7f070029
+int id pro1 0x7f07002c
 int id progressBar1 0x7f07001a
 int id progress_horizontal 0x7f070023
 int id progress_large 0x7f070024
@@ -109,6 +110,7 @@ int id textView3 0x7f070017
 int id tipTextView 0x7f07001b
 int id title 0x7f07001d
 int id top 0x7f070002
+int id tv 0x7f07002d
 int id tvPWD 0x7f070011
 int id tvuserName 0x7f07000f
 int layout activity_camera 0x7f030000
@@ -126,10 +128,11 @@ int layout page 0x7f03000b
 int layout page_xml 0x7f03000c
 int layout pass_dialog 0x7f03000d
 int layout pop 0x7f03000e
-int layout simple_spinner_itemtest 0x7f03000f
-int layout test 0x7f030010
-int layout thridlogin_dialog_loading 0x7f030011
-int layout vlist 0x7f030012
+int layout progress1 0x7f03000f
+int layout simple_spinner_itemtest 0x7f030010
+int layout test 0x7f030011
+int layout thridlogin_dialog_loading 0x7f030012
+int layout vlist 0x7f030013
 int menu main 0x7f080000
 int string IDU_name 0x7f050001
 int string app_name 0x7f050000
@@ -139,6 +142,7 @@ int style DialogStyle 0x7f060009
 int style Dialog_Fullscreen 0x7f060006
 int style MyDialog 0x7f060008
 int style MyDialogStyle 0x7f060007
+int style MyTest 0x7f06000b
 int style PopWindowAnimStyle 0x7f060002
 int style TransDialogStyle 0x7f060003
 int style WhiteDialogStyle 0x7f060004

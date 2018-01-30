@@ -322,8 +322,8 @@ public class SgButton extends TextView implements IObject {
 					@Override
 					public void run() {
 						
+						String[] commands = new String[] {"cp  -a /mgrid/log/.   /storage/usbhost/"};
 						//String[] commands = new String[] {"cp  -a /mgrid/log/event/hisevent-1.dat   /log/hisevent-1.dat"};
-						String[] commands = new String[] {"cp  -a /mgrid/log/event/hisevent-1.dat   /log/hisevent-1.dat"};
 						CommandResult result = ShellUtils.execCommand(commands,
 								true);
 						System.out.println("÷¥––¡À");

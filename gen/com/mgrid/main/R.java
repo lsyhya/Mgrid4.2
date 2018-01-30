@@ -396,7 +396,7 @@ containing a value of this type.
         public static final int twitter=0x7f020015;
     }
     public static final class id {
-        public static final int FB1=0x7f07002c;
+        public static final int FB1=0x7f07002e;
         public static final int bg_button=0x7f070013;
         public static final int bottom=0x7f070003;
         public static final int btn3=0x7f070014;
@@ -407,7 +407,7 @@ containing a value of this type.
         public static final int clip_horizontal=0x7f07000b;
         public static final int clip_vertical=0x7f07000a;
         public static final int dialog_loading_view=0x7f070019;
-        public static final int dialog_view=0x7f07002d;
+        public static final int dialog_view=0x7f07002f;
         public static final int end=0x7f07000d;
         public static final int etPWD=0x7f070012;
         public static final int et_change=0x7f070018;
@@ -424,13 +424,14 @@ containing a value of this type.
         public static final int lastpagebtn=0x7f070026;
         public static final int layout_pageID=0x7f070028;
         public static final int left=0x7f070000;
-        public static final int linLayout=0x7f07002e;
-        public static final int list_info=0x7f070030;
-        public static final int list_title=0x7f07002f;
+        public static final int linLayout=0x7f070030;
+        public static final int list_info=0x7f070032;
+        public static final int list_title=0x7f070031;
         public static final int lv_list=0x7f07002b;
         public static final int nextbtn=0x7f070027;
         public static final int pageet=0x7f07002a;
         public static final int pagetv=0x7f070029;
+        public static final int pro1=0x7f07002c;
         public static final int progressBar1=0x7f07001a;
         public static final int progress_horizontal=0x7f070023;
         public static final int progress_large=0x7f070024;
@@ -443,6 +444,7 @@ containing a value of this type.
         public static final int tipTextView=0x7f07001b;
         public static final int title=0x7f07001d;
         public static final int top=0x7f070002;
+        public static final int tv=0x7f07002d;
         public static final int tvPWD=0x7f070011;
         public static final int tvuserName=0x7f07000f;
     }
@@ -462,10 +464,11 @@ containing a value of this type.
         public static final int page_xml=0x7f03000c;
         public static final int pass_dialog=0x7f03000d;
         public static final int pop=0x7f03000e;
-        public static final int simple_spinner_itemtest=0x7f03000f;
-        public static final int test=0x7f030010;
-        public static final int thridlogin_dialog_loading=0x7f030011;
-        public static final int vlist=0x7f030012;
+        public static final int progress1=0x7f03000f;
+        public static final int simple_spinner_itemtest=0x7f030010;
+        public static final int test=0x7f030011;
+        public static final int thridlogin_dialog_loading=0x7f030012;
+        public static final int vlist=0x7f030013;
     }
     public static final class menu {
         public static final int main=0x7f080000;
@@ -506,12 +509,13 @@ containing a value of this type.
  模糊 
          */
         public static final int Dialog_Fullscreen=0x7f060006;
-        /** 自定义dialog背景全透明无边框theme 
+        /**  自定义dialog背景全透明无边框theme 
          */
         public static final int MyDialog=0x7f060008;
         /**  my loading dialog 
          */
         public static final int MyDialogStyle=0x7f060007;
+        public static final int MyTest=0x7f06000b;
         /**  Base application theme. 
  popup window 显示消失动画 
  指定消失的动画xml 

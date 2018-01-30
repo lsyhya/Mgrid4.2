@@ -146,12 +146,11 @@ public class SgSplineChart extends TextView implements IObject {
 					int position, long id) {
 				btn.setText(nameList.get(position));
 
-				popupWindow.onDismiss();
-				
+				popupWindow.onDismiss();				
 				m_bneedupdate = true;
+				
 			}
 		});
-
 	}
 
 	private OnClickListener linClickListener = new OnClickListener() {
@@ -312,7 +311,6 @@ public class SgSplineChart extends TextView implements IObject {
 				} catch (Exception e) {
 					Toast.makeText(getContext(), "曲线图配置出错", 200).show();
 				}
-
 			}
 		} else if ("Ycount".equals(strName)) {
 			if (!strValue.isEmpty() && strValue != null && !strValue.equals("")) {
@@ -346,24 +344,30 @@ public class SgSplineChart extends TextView implements IObject {
 			labels.add("24");
 			break;
 		case 3:// 一月
-			labels.add("0");
-			labels.add("10");
-			labels.add("20");
-			labels.add("30");
+			for (int i = 1; i <=31; i++) {
+				labels.add(i+"");
+			}
+//			labels.add("0");
+//			labels.add("10");
+//			labels.add("20");
+//			labels.add("30");
 			break;
 		case 4:// 一年
-			labels.add("0");
-			labels.add("4");
-			labels.add("8");
-			labels.add("12");
-			labels.add("");
+			for (int i = 1; i <=13; i++) {
+				labels.add(i+"");
+			}
+//			labels.add("0");
+//			labels.add("4");
+//			labels.add("8");
+//			labels.add("12");
+//			labels.add("");
 			break;
 		}
 		Schart.setCategories(labels);
-		if(index!=4)
+//		if(index!=4)
 		Schart.setCategoryAxisMax(Integer.parseInt(labels.get(labels.size() - 1)));
-		else
-		Schart.setCategoryAxisMax(16);
+//		else
+//		Schart.setCategoryAxisMax(16);
 	}
 
 	private void parse_color(String strValue) {
@@ -641,10 +645,10 @@ public class SgSplineChart extends TextView implements IObject {
 				time = Double.parseDouble(Daytime)
 						+ (Double.parseDouble(HourTime) / 24)
 						+ (Double.parseDouble(Mintime) / 24 / 60)
-						+ (Double.parseDouble(Sintime) / 24 / 60 / 60);
+						+ (Double.parseDouble(Sintime) / 24 / 60 / 60);				
 				Double M = Double.parseDouble(Monthtime);
 				linePointMapData.get(3).get(i)
-						.put(time, Double.parseDouble(value));
+						.put(time-1, Double.parseDouble(value));
 				if (M != currentMonth) {
 					currentMonth = M;
 					cleanData(3);
@@ -658,7 +662,7 @@ public class SgSplineChart extends TextView implements IObject {
 						+ (Double.parseDouble(Sintime) / 31 / 24 / 60 / 60);
 				Double Y = Double.parseDouble(Yeartime);
 				linePointMapData.get(4).get(i)
-						.put(time, Double.parseDouble(value));
+						.put(time-1, Double.parseDouble(value));
 				if (Y != currentYear) {
 					currentYear = Y;
 					cleanData(4);
@@ -794,7 +798,7 @@ public class SgSplineChart extends TextView implements IObject {
 						+ (Double.parseDouble(Sintime) / 24 / 60 / 60);
 				Double M = Double.parseDouble(Monthtime);
 				linePointMapData.get(3).get(i)
-						.put(time, Double.parseDouble(value));
+						.put(time-1, Double.parseDouble(value));
 				if (M != currentMonth) {
 					currentMonth = M;
 					cleanData(3);
@@ -808,7 +812,7 @@ public class SgSplineChart extends TextView implements IObject {
 						+ (Double.parseDouble(Sintime) / 31 / 24 / 60 / 60);
 				Double Y = Double.parseDouble(Yeartime);
 				linePointMapData.get(4).get(i)
-						.put(time, Double.parseDouble(value));
+						.put(time-1, Double.parseDouble(value));
 				if (Y != currentYear) {
 					currentYear = Y;
 					cleanData(4);
@@ -944,6 +948,9 @@ public class SgSplineChart extends TextView implements IObject {
 				Entry<Double, Double> entry = iterator.next();
 				double d1 = entry.getKey();
 				double d2 = entry.getValue();
+				if(index==3||index==4)
+				bw.write((d1+1) + "-" + d2);
+				else
 				bw.write(d1 + "-" + d2);
 				bw.newLine();
 			}
@@ -997,8 +1004,10 @@ public class SgSplineChart extends TextView implements IObject {
 				String str = "";
 				while ((str = br.readLine()) != null) {
 					String[] s = str.split("-");
-					
-					data.put(Double.parseDouble(s[0]), Double.parseDouble(s[1]));
+					if(index==3||index==4)
+					data.put(Double.parseDouble(s[0])-1, Double.parseDouble(s[1]));
+					else
+					data.put(Double.parseDouble(s[0]), Double.parseDouble(s[1]));	
 				}
 				br.close();
 			}

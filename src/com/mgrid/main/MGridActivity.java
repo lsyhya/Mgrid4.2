@@ -55,6 +55,7 @@ import android.widget.Toast;
 
 import com.lsy.Service.TilmePlush.TimePlushService;
 import com.mgrid.MyDialog.MyDialog;
+import com.mgrid.MyDialog.SelfDialog;
 import com.mgrid.data.DataGetter;
 import com.mgrid.util.CameraUtils;
 import com.mgrid.util.FileUtil;
@@ -89,8 +90,9 @@ public class MGridActivity extends Activity {
 	private long starttime = 0;
 	private DataGetter mDataGetter;
 	private ContainerView mContainer;
-	private MyDialog dialog;
 	private FlikerProgressBar bar;
+	private SelfDialog dialog=null;
+	
 	public static String logeFilePath = Environment.getExternalStorageDirectory().getPath() + "/login" + ".login";
 	public WakeLock mWakeLock;// 锁屏类
 	public SgVideoView svv = null; // 播放视频
@@ -186,7 +188,7 @@ public class MGridActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+          
 		init();
 	}
 
@@ -223,10 +225,11 @@ public class MGridActivity extends Activity {
 
 		setBroadcastReceiver(); // 注册广播
 		if (parseMgridIni()) {
-			if (isLogin) {
-				LoginUtil loginUtil = new LoginUtil(context);
-				loginUtil.showWaiterAuthorizationDialog();
-			}
+//			if (isLogin) {
+//				LoginUtil loginUtil = new LoginUtil(context);
+//				loginUtil.showWaiterAuthorizationDialog();
+//			}
+			setProgressDialog();
 			if (!SIP.equals("")) {
 				startTimeFlush();
 			}
@@ -238,9 +241,9 @@ public class MGridActivity extends Activity {
 	}
 
 	private void setProgressDialog() {
-		dialog = new MyDialog(this);
+		dialog = new SelfDialog(this);	
 		dialog.show();
-		bar = dialog.getBar();
+		dialog.settext("加载中...");
 	}
 
 	// 广播注册
@@ -792,7 +795,7 @@ public class MGridActivity extends Activity {
 						Toast.makeText(MGridActivity.this, Load, Toast.LENGTH_LONG).show();
 						isLoading = false;
 						isNOChangPage = true;
-
+						dialog.dismiss();
 						// bar.finishLoad();
 						// dialog.dismiss();
 
