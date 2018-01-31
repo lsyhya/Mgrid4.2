@@ -5,7 +5,6 @@
   android:installLocation="preferExternal"
   android:versionCode="12"
   android:versionName="4.23"
-  android:sharedUserId="android.uid.system"
  >
   
    

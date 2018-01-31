@@ -353,9 +353,10 @@ public class SgSplineChart extends TextView implements IObject {
 //			labels.add("30");
 			break;
 		case 4:// Ò»Äê
-			for (int i = 1; i <=13; i++) {
+			for (int i = 1; i <=12; i++) {
 				labels.add(i+"");
 			}
+			labels.add("");
 //			labels.add("0");
 //			labels.add("4");
 //			labels.add("8");
@@ -364,10 +365,10 @@ public class SgSplineChart extends TextView implements IObject {
 			break;
 		}
 		Schart.setCategories(labels);
-//		if(index!=4)
+		if(index!=4)
 		Schart.setCategoryAxisMax(Integer.parseInt(labels.get(labels.size() - 1)));
-//		else
-//		Schart.setCategoryAxisMax(16);
+		else
+		Schart.setCategoryAxisMax(13);
 	}
 
 	private void parse_color(String strValue) {

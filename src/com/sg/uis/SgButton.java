@@ -329,10 +329,7 @@ public class SgButton extends TextView implements IObject {
 						System.out.println("执行了");
 						System.out.println(result.errorMsg);
 //						FileUtil fileUtil=new FileUtil();
-//						fileUtil.copyFile("/mgrid/log/his_equip_sig/1#2000-01-01.dat", MGridActivity.usbName+"/1.dat");
-					
-				
-
+//						fileUtil.copyFile("/mgrid/log/his_equip_sig/1#2000-01-01.dat", MGridActivity.usbName+"/1.dat");							
 					}
 				}).start();
 
@@ -421,7 +418,6 @@ public class SgButton extends TextView implements IObject {
 								if (s.equals(str[0] + ".xml")) // 如果当前页面为权限页面（只支持在一个总权限页面）
 								{
 									isNeedPW = false;
-
 								}
 							}
 						}
