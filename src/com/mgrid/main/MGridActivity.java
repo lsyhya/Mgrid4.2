@@ -229,7 +229,7 @@ public class MGridActivity extends Activity {
 //				LoginUtil loginUtil = new LoginUtil(context);
 //				loginUtil.showWaiterAuthorizationDialog();
 //			}
-			setProgressDialog();
+//			setProgressDialog();
 			if (!SIP.equals("")) {
 				startTimeFlush();
 			}
@@ -243,7 +243,7 @@ public class MGridActivity extends Activity {
 	private void setProgressDialog() {
 		dialog = new SelfDialog(this);	
 		dialog.show();
-		dialog.settext("加载中...");
+		dialog.settext("");
 	}
 
 	// 广播注册
@@ -657,6 +657,7 @@ public class MGridActivity extends Activity {
 			e.printStackTrace();
 			new AlertDialog.Builder(this).setTitle("错误").setMessage("读取配置文件 [ pagelist ] 异常，停止加载！\n详情：" + e.toString())
 					.show();
+			
 			return false;
 		}
 
@@ -795,6 +796,7 @@ public class MGridActivity extends Activity {
 						Toast.makeText(MGridActivity.this, Load, Toast.LENGTH_LONG).show();
 						isLoading = false;
 						isNOChangPage = true;
+						if(dialog!=null)
 						dialog.dismiss();
 						// bar.finishLoad();
 						// dialog.dismiss();
@@ -1143,7 +1145,6 @@ public class MGridActivity extends Activity {
 		if (resultCode == 1) {
 
 		}
-
 	}
 
 }

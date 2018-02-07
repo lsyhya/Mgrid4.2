@@ -79,7 +79,8 @@ public class UtTable extends ListView {
 				if(i>=listContends.size())
 					continue;
 				List<String> lst = listContends.get(i);
-
+				if(lst==null) continue;
+                
 				TableRow contendRow = m_tableAdapter.getItem(i);
 				for (int j = 0; j < contendRow.getSize(); ++j) {
 					TableCell cell = contendRow.getCellValue(j);
@@ -113,7 +114,6 @@ public class UtTable extends ListView {
 				m_tableAdapter.addRow(new TableRow(cells));
 
 			}
-
 		}
 
 		// 调整水位

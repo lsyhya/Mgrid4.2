@@ -60,22 +60,20 @@ public class DataGetter extends Thread {
 		if (equipment.myThread.isAlive()) {
 
 		} else {
-			equipment.myThread.start();
+			//equipment.myThread.start();  //2018/2/6注释
 		}
 	}
 
 	public void run() {
 		// System.out.println("DataGetterXXX:Run开始运行"+Thread.currentThread().getName());
 		if (null == equipment.rtalarm_req) {
-			equipment.rtalarm_req = protocol
-					.build_query_all_active_alarm_list();
+			equipment.rtalarm_req = protocol.build_query_all_active_alarm_list();
 		}
 		// TODO: 初始化告警配置信息，IPC现无法获取完整告警配置信息。
 
 		while (true) {
 
-			List<ipc_equipment> equip_list = service.get_equipment_list(
-					service.IP, service.PORT);
+			List<ipc_equipment> equip_list = service.get_equipment_list(service.IP, service.PORT);
 
 			if (equip_list.isEmpty()) {
 				try {
@@ -91,15 +89,12 @@ public class DataGetter extends Thread {
 			Iterator<ipc_equipment> it = equip_list.iterator();
 			while (it.hasNext()) {
 				ipc_equipment equip = it.next();
-				equipment.htEquipments
-						.put(String.valueOf(equip.id), equip.name);
+				equipment.htEquipments.put(String.valueOf(equip.id), equip.name);
 
-				Equipment equipobj = equipment.htEquipmentData.get(String
-						.valueOf(equip.id));
+				Equipment equipobj = equipment.htEquipmentData.get(String.valueOf(equip.id));
 				if (null == equipobj) {
 					equipobj = equipment.new Equipment();
-					equipment.htEquipmentData.put(String.valueOf(equip.id),
-							equipobj);
+					equipment.htEquipmentData.put(String.valueOf(equip.id), equipobj);
 				}
 
 				equipobj.m_equipid = String.valueOf(equip.id);
@@ -107,15 +102,12 @@ public class DataGetter extends Thread {
 				equipobj.m_category = String.valueOf(equip.category);
 				equipobj.m_name = equip.name;
 				equipobj.m_xmlfile = equip.xmlname;
-				equipobj.signal_req = protocol
-						.build_query_signal_rt_list(equip.id);
+				equipobj.signal_req = protocol.build_query_signal_rt_list(equip.id);
 
 				Hashtable<String, EventCfg> equip_event_cfg = new Hashtable<String, EventCfg>();
 
-				List<ipc_cfg_event> event_cfg_list = service
-						.get_event_cfg_list(service.IP, service.PORT, equip.id);
-				Iterator<ipc_cfg_event> event_cfg_it = event_cfg_list
-						.iterator();
+				List<ipc_cfg_event> event_cfg_list = service.get_event_cfg_list(service.IP, service.PORT, equip.id);
+				Iterator<ipc_cfg_event> event_cfg_it = event_cfg_list.iterator();
 				while (event_cfg_it.hasNext()) {
 					EventCfg eventcfg = equipment.new EventCfg();
 					ipc_cfg_event ipc_evtcfg = event_cfg_it.next();
@@ -123,70 +115,55 @@ public class DataGetter extends Thread {
 					eventcfg.eventid = ipc_evtcfg.id;
 					eventcfg.eventname = ipc_evtcfg.name;
 
-					equip_event_cfg
-							.put(String.valueOf(ipc_evtcfg.id), eventcfg);
-					equipobj.htEventCfg.put(String.valueOf(ipc_evtcfg.id),
-							eventcfg);
+					equip_event_cfg.put(String.valueOf(ipc_evtcfg.id), eventcfg);
+					equipobj.htEventCfg.put(String.valueOf(ipc_evtcfg.id), eventcfg);
 				}
 
-				equipment.htEventCfg.put(String.valueOf(equip.id),
-						equip_event_cfg);
+				equipment.htEventCfg.put(String.valueOf(equip.id), equip_event_cfg);
 
-				List<ipc_cfg_trigger_value> trigger_value_list = service
-						.get_cfg_trigger_value(service.IP, service.PORT,
-								equip.id);
+				List<ipc_cfg_trigger_value> trigger_value_list = service.get_cfg_trigger_value(service.IP, service.PORT,
+						equip.id);
 				trigger_list.put(equip.id + "", trigger_value_list);
 				// System.out.println("消息已传递，设备id是：" + equip.id);
-				Iterator<ipc_cfg_trigger_value> trigger_value_it = trigger_value_list
-						.iterator();
+				Iterator<ipc_cfg_trigger_value> trigger_value_it = trigger_value_list.iterator();
 				EventCfg evtcfg = null;
 				while (trigger_value_it.hasNext()) {
 					ipc_cfg_trigger_value ipc_trigger = trigger_value_it.next();
 
-					evtcfg = equip_event_cfg.get(String
-							.valueOf(ipc_trigger.eventid));
+					evtcfg = equip_event_cfg.get(String.valueOf(ipc_trigger.eventid));
 					if (null == evtcfg)
 						continue;
 					evtcfg.enabled = ipc_trigger.enabled;
 
-					EventConditionCfg condcfg = evtcfg.htConditions.get(String
-							.valueOf(ipc_trigger.conditionid));
+					EventConditionCfg condcfg = evtcfg.htConditions.get(String.valueOf(ipc_trigger.conditionid));
 					if (null == condcfg) {
 						condcfg = equipment.new EventConditionCfg();
-						evtcfg.htConditions.put(
-								String.valueOf(ipc_trigger.conditionid),
-								condcfg);
+						evtcfg.htConditions.put(String.valueOf(ipc_trigger.conditionid), condcfg);
 
 						condcfg.conditionid = ipc_trigger.conditionid;
 					}
 
 					condcfg.severity = ipc_trigger.eventseverity;
-					condcfg.startcompare = String
-							.valueOf(ipc_trigger.startvalue);
+					condcfg.startcompare = String.valueOf(ipc_trigger.startvalue);
 					condcfg.endcompare = String.valueOf(ipc_trigger.stopvalue);
 					condcfg.severity = ipc_trigger.eventseverity;
 
-					EventCfg equipEvtCfg = equipobj.htEventCfg.get(String
-							.valueOf(ipc_trigger.eventid));
+					EventCfg equipEvtCfg = equipobj.htEventCfg.get(String.valueOf(ipc_trigger.eventid));
 					if (null == equipEvtCfg)
 						continue;
-					equipEvtCfg.htConditions.put(
-							String.valueOf(ipc_trigger.conditionid), condcfg);
+					equipEvtCfg.htConditions.put(String.valueOf(ipc_trigger.conditionid), condcfg);
 				}
 
-				List<ipc_cfg_signal> signal_cfg = service.get_signal_cfg_list(
-						service.IP, service.PORT, equip.id);
+				List<ipc_cfg_signal> signal_cfg = service.get_signal_cfg_list(service.IP, service.PORT, equip.id);
 
 				Iterator<ipc_cfg_signal> signal_cfg_it = signal_cfg.iterator();
 				while (signal_cfg_it.hasNext()) {
 					ipc_cfg_signal ipc_signalcfg = signal_cfg_it.next();
-					Signal signal = equipobj.htSignalData.get(String
-							.valueOf(ipc_signalcfg.id));
+					Signal signal = equipobj.htSignalData.get(String.valueOf(ipc_signalcfg.id));
 
 					if (null == signal) {
 						signal = equipment.new Signal();
-						equipobj.htSignalData.put(
-								String.valueOf(ipc_signalcfg.id), signal);
+						equipobj.htSignalData.put(String.valueOf(ipc_signalcfg.id), signal);
 
 					}
 
@@ -197,19 +174,14 @@ public class DataGetter extends Thread {
 					signal.description = ipc_signalcfg.description;
 				}
 
-				List<ipc_cfg_control> command_cfg = service
-						.get_control_cfg_list(service.IP, service.PORT,
-								equip.id);
-				Iterator<ipc_cfg_control> command_cfg_it = command_cfg
-						.iterator();
+				List<ipc_cfg_control> command_cfg = service.get_control_cfg_list(service.IP, service.PORT, equip.id);
+				Iterator<ipc_cfg_control> command_cfg_it = command_cfg.iterator();
 				while (command_cfg_it.hasNext()) {
 					ipc_cfg_control ipc_commandcfg = command_cfg_it.next();
-					CommandCfg command = equipobj.htCmdCfg.get(String
-							.valueOf(ipc_commandcfg.id));
+					CommandCfg command = equipobj.htCmdCfg.get(String.valueOf(ipc_commandcfg.id));
 					if (null == command) {
 						command = equipment.new CommandCfg();
-						equipobj.htCmdCfg.put(
-								String.valueOf(ipc_commandcfg.id), command);
+						equipobj.htCmdCfg.put(String.valueOf(ipc_commandcfg.id), command);
 					}
 
 					command.cmdid = ipc_commandcfg.id;
@@ -220,20 +192,14 @@ public class DataGetter extends Thread {
 				}
 
 				List<ipc_cfg_ctrl_parameaning> cmd_parameaning_cfg = service
-						.get_control_parameaning_cfg_list(service.IP,
-								service.PORT, equip.id);
-				Iterator<ipc_cfg_ctrl_parameaning> cmd_parameaning_it = cmd_parameaning_cfg
-						.iterator();
+						.get_control_parameaning_cfg_list(service.IP, service.PORT, equip.id);
+				Iterator<ipc_cfg_ctrl_parameaning> cmd_parameaning_it = cmd_parameaning_cfg.iterator();
 				while (cmd_parameaning_it.hasNext()) {
-					ipc_cfg_ctrl_parameaning ipc_cmdparamcfg = cmd_parameaning_it
-							.next();
-					CommandCfg command = equipobj.htCmdCfg.get(String
-							.valueOf(ipc_cmdparamcfg.ctrlid));
+					ipc_cfg_ctrl_parameaning ipc_cmdparamcfg = cmd_parameaning_it.next();
+					CommandCfg command = equipobj.htCmdCfg.get(String.valueOf(ipc_cmdparamcfg.ctrlid));
 					if (null == command) {
 						command = equipment.new CommandCfg();
-						equipobj.htCmdCfg
-								.put(String.valueOf(ipc_cmdparamcfg.ctrlid),
-										command);
+						equipobj.htCmdCfg.put(String.valueOf(ipc_cmdparamcfg.ctrlid), command);
 					}
 
 					CmdParameaningCfg cmdparam = command.new CmdParameaningCfg();
@@ -283,22 +249,19 @@ public class DataGetter extends Thread {
 				Equipment pageEquipObj = null;// 当前页面设备
 
 				while (true) {
-					HashSet<String> equipSet = equipment.htPageEquipSet
-							.get(currentPage);
+					HashSet<String> equipSet = equipment.htPageEquipSet.get(currentPage);
 					if (null == equipSet)
 						continue;
 					// fix java.util.ConcurrentModificationException
 					if (bIsLoading)
-						equipNamePage = new CopiedIterator<String>(equipSet
-								.iterator());
+						equipNamePage = new CopiedIterator<String>(equipSet.iterator());
 					else
 						equipNamePage = equipSet.iterator();
 
 					// System.out.println("循环1的次数"+equipSet.size());
 					while (equipNamePage.hasNext()) {
 
-						pageEquipObj = equipment.htEquipmentData
-								.get(equipNamePage.next());
+						pageEquipObj = equipment.htEquipmentData.get(equipNamePage.next());
 						if (null == pageEquipObj)
 							continue;
 						// System.out.println("我是XXX线程1 "+pageEquipObj.m_equipid);
@@ -309,8 +272,7 @@ public class DataGetter extends Thread {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						pageEquipObj.lUpdateTime = java.lang.System
-								.currentTimeMillis();
+						pageEquipObj.lUpdateTime = java.lang.System.currentTimeMillis();
 
 					}
 					try {
@@ -330,8 +292,6 @@ public class DataGetter extends Thread {
 		// int flag_times = 0;
 		while (true) {
 
-			// 1注释：
-			// System.out.println("我是DataGetter线程");
 			try {
 				sleep(5); // 保护sleep
 			} catch (InterruptedException e1) {
@@ -339,15 +299,18 @@ public class DataGetter extends Thread {
 			}
 
 			proc_allrtalarm();
+			equipment.addEventList();
+						
 			try {
 				sleep(100); // sleep(100);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
+			
+			
 
 			try {
-
-				// System.out.println("我是XXX线程1");
+				
 				// 摔性能一些数据空间 比如说sigleList...
 				Set<String> autoEquipList = equipment.autoAnyPapeRefreshEquip;
 				if (autoEquipList == null)
@@ -364,7 +327,7 @@ public class DataGetter extends Thread {
 						if (currEquipObj == null)
 							break;
 
-						// System.out.println("名字："+currEquipObj.m_name+"  id:"+str_equip);
+						// System.out.println("名字："+currEquipObj.m_name+" id:"+str_equip);
 						proc_autosignal(currEquipObj);
 						sleep(500);// sleep(500);
 					}
@@ -389,8 +352,7 @@ public class DataGetter extends Thread {
 
 			// 一些表达式为value的设备 比如Sglabel控件
 			if (bIsLoading)
-				equipNameIt = new CopiedIterator<String>(
-						equipment.hsEquipSet.iterator());
+				equipNameIt = new CopiedIterator<String>(equipment.hsEquipSet.iterator());
 			else
 				equipNameIt = equipment.hsEquipSet.iterator();
 			while (equipNameIt.hasNext()) {
@@ -399,11 +361,10 @@ public class DataGetter extends Thread {
 
 				currEquipObj = equipment.htEquipmentData
 
-				.get(equipNameIt.next());
+						.get(equipNameIt.next());
 				if (null == currEquipObj)
 					continue;
-				long l = java.lang.System.currentTimeMillis()
-						- currEquipObj.lUpdateTime;
+				long l = java.lang.System.currentTimeMillis() - currEquipObj.lUpdateTime;
 				if (l < 30000)
 					continue;
 				proc_rtsignal(currEquipObj);
@@ -432,15 +393,10 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取设备信号集，线程安全。
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @return 成功返回实例信号集Hashtable，否则返回null。
-	 * @throws
+	 * @param String 设备实例ID @return 成功返回实例信号集Hashtable，否则返回null。 @throws
 	 */
-	public static Hashtable<String, Signal> getEquipSignalList(
-			String equipmentid) {
-		EquipmentDataModel.Equipment equip = equipment.htEquipmentData
-				.get(equipmentid);
+	public static Hashtable<String, Signal> getEquipSignalList(String equipmentid) {
+		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
 
 		if (null == equip)
 			return null;
@@ -451,9 +407,7 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getEquipSignalList
 	 * 
-	 * @param int 设备实例ID
-	 * @return 成功返回实例信号集Hashtable，否则返回null。
-	 * @throws
+	 * @param int 设备实例ID @return 成功返回实例信号集Hashtable，否则返回null。 @throws
 	 */
 	public static Hashtable<String, Signal> getEquipSignalList(int equipmentid) {
 		return getEquipSignalList(String.valueOf(equipmentid));
@@ -462,9 +416,7 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取 全局实时告警列表，线程安全。
 	 * 
-	 * @param
-	 * @return 全局告警信息Hashtable。
-	 * @throws
+	 * @param @return 全局告警信息Hashtable。 @throws
 	 */
 	public static Hashtable<String, Hashtable<String, Event>> getRTEventList() {
 		return equipment.htEventData;
@@ -473,12 +425,9 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取 设备实时告警列表，线程安全。
 	 * 
-	 * @param
-	 * @return 设备设备告警信息Hashtable。
-	 * @throws
+	 * @param @return 设备设备告警信息Hashtable。 @throws
 	 */
-	public static Hashtable<String, Hashtable<String, Event>> getEquipRTEventList(
-			String equipid) {
+	public static Hashtable<String, Hashtable<String, Event>> getEquipRTEventList(String equipid) {
 		// TODO: 尚未完成
 		Hashtable<String, Hashtable<String, Event>> hashtable = new Hashtable<String, Hashtable<String, Event>>();
 
@@ -489,28 +438,19 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter of 获取 设备实时告警列表，线程安全。
 	 * 
-	 * @param
-	 * @return 设备告警信息Hashtable。
-	 * @throws
+	 * @param @return 设备告警信息Hashtable。 @throws
 	 */
-	public static Hashtable<String, Hashtable<String, Event>> getEquipRTEventList(
-			int nEquipId) {
+	public static Hashtable<String, Hashtable<String, Event>> getEquipRTEventList(int nEquipId) {
 		return getEquipRTEventList(String.valueOf(nEquipId));
 	}
 
 	/**
 	 * 获取信号名， 线程安全。
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            信号ID
-	 * @return String 信号名
-	 * @throws
+	 * @param String 设备实例ID @param String 信号ID @return String 信号名 @throws
 	 */
 	public static String getSignalName(String equipmentid, String signalid) {
-		EquipmentDataModel.Equipment equip = equipment.htEquipmentData
-				.get(equipmentid);
+		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
 
 		if (null == equip)
 			return "";
@@ -523,32 +463,20 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getSignalName
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 信号ID
-	 * @return String 信号名
-	 * @throws
+	 * @param int 设备实例ID @param int 信号ID @return String 信号名 @throws
 	 */
 	public static String getSignalName(int equipmentid, int signalid) {
-		return getSignalName(String.valueOf(equipmentid),
-				String.valueOf(signalid));
+		return getSignalName(String.valueOf(equipmentid), String.valueOf(signalid));
 	}
 
 	/**
 	 * 设置信号名， 线程安全。
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            信号ID
-	 * @param String
-	 *            信号名
-	 * @return boolean true为成功
-	 * @throws
+	 * @param String 设备实例ID @param String 信号ID @param String 信号名 @return boolean
+	 * true为成功 @throws
 	 */
-	public static boolean setSignalName(String equipmentid, String signalid,
-			String signalname) {
-		EquipmentDataModel.Equipment equip = equipment.htEquipmentData
-				.get(equipmentid);
+	public static boolean setSignalName(String equipmentid, String signalid, String signalname) {
+		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
 
 		if (null == equip)
 			return false;
@@ -572,32 +500,20 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter setSignalName
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 信号ID
-	 * @param String
-	 *            信号名
-	 * @return boolean true为成功
-	 * @throws
+	 * @param int 设备实例ID @param int 信号ID @param String 信号名 @return boolean
+	 * true为成功 @throws
 	 */
-	public static boolean setSignalName(int equipmentid, int signalid,
-			String signalname) {
-		return setSignalName(String.valueOf(equipmentid),
-				String.valueOf(signalid), signalname);
+	public static boolean setSignalName(int equipmentid, int signalid, String signalname) {
+		return setSignalName(String.valueOf(equipmentid), String.valueOf(signalid), signalname);
 	}
 
 	/**
 	 * 获取信号值， 线程安全。
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            信号ID
-	 * @return String 信号值
-	 * @throws
+	 * @param String 设备实例ID @param String 信号ID @return String 信号值 @throws
 	 */
 	public static String getSignalValue(String equipmentid, String signalid) {
-		EquipmentDataModel.Equipment equip = equipment.htEquipmentData
-				.get(equipmentid);
+		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
 
 		if (null == equip)
 			return "";
@@ -610,29 +526,19 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getSignalValue
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 信号ID
-	 * @return String 信号值
-	 * @throws
+	 * @param int 设备实例ID @param int 信号ID @return String 信号值 @throws
 	 */
 	public static String getSignalValue(int equipmentid, int signalid) {
-		return getSignalValue(String.valueOf(equipmentid),
-				String.valueOf(signalid));
+		return getSignalValue(String.valueOf(equipmentid), String.valueOf(signalid));
 	}
 
 	/**
 	 * 获取信号含义， 线程安全。
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            信号ID
-	 * @return String 信号含义
-	 * @throws
+	 * @param String 设备实例ID @param String 信号ID @return String 信号含义 @throws
 	 */
 	public static String getSignalMeaning(String equipmentid, String signalid) {
-		EquipmentDataModel.Equipment equip = equipment.htEquipmentData
-				.get(equipmentid);
+		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
 
 		if (null == equip)
 			return "";
@@ -645,31 +551,20 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getSignalMeaning
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 信号ID
-	 * @return String 信号含义
-	 * @throws
+	 * @param int 设备实例ID @param int 信号ID @return String 信号含义 @throws
 	 */
 	public static String getSignalMeaning(int equipmentid, int signalid) {
-		return getSignalMeaning(String.valueOf(equipmentid),
-				String.valueOf(signalid));
+		return getSignalMeaning(String.valueOf(equipmentid), String.valueOf(signalid));
 	}
 
 	// fjw add
 	/**
 	 * 获取信号值， 线程安全。
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            信号ID
-	 * @return String 信号值
-	 * @throws
+	 * @param String 设备实例ID @param String 信号ID @return String 信号值 @throws
 	 */
-	public static String getSignalValueAndTime(String equipmentid,
-			String signalid) {
-		EquipmentDataModel.Equipment equip = equipment.htEquipmentData
-				.get(equipmentid);
+	public static String getSignalValueAndTime(String equipmentid, String signalid) {
+		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
 
 		if (null == equip)
 			return "";
@@ -684,14 +579,10 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getSignalValueAndTime
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 信号ID
-	 * @return String 信号值
-	 * @throws
+	 * @param int 设备实例ID @param int 信号ID @return String 信号值 @throws
 	 */
 	public static String getSignalValueAndTime(int equipmentid, int signalid) {
-		return getSignalValue(String.valueOf(equipmentid),
-				String.valueOf(signalid));
+		return getSignalValue(String.valueOf(equipmentid), String.valueOf(signalid));
 	}
 
 	// fjw add end
@@ -699,17 +590,10 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取信号描述， 线程安全。
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            信号ID
-	 * @return String 信号描述
-	 * @throws
+	 * @param String 设备实例ID @param String 信号ID @return String 信号描述 @throws
 	 */
-	public static String getSignalDescription(String equipmentid,
-			String signalid) {
-		EquipmentDataModel.Equipment equip = equipment.htEquipmentData
-				.get(equipmentid);
+	public static String getSignalDescription(String equipmentid, String signalid) {
+		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
 
 		if (null == equip)
 			return "";
@@ -722,29 +606,19 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getSignalDescription
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 信号ID
-	 * @return String 信号描述
-	 * @throws
+	 * @param int 设备实例ID @param int 信号ID @return String 信号描述 @throws
 	 */
 	public static String getSignalDescription(int equipmentid, int signalid) {
-		return getSignalDescription(String.valueOf(equipmentid),
-				String.valueOf(signalid));
+		return getSignalDescription(String.valueOf(equipmentid), String.valueOf(signalid));
 	}
 
 	/**
 	 * 获取信号告警级别， 线程安全。
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            信号ID
-	 * @return int 告警级别
-	 * @throws
+	 * @param String 设备实例ID @param String 信号ID @return int 告警级别 @throws
 	 */
 	public static int getSignalSeverity(String equipmentid, String signalid) {
-		EquipmentDataModel.Equipment equip = equipment.htEquipmentData
-				.get(equipmentid);
+		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
 
 		if (null == equip)
 			return 0;
@@ -757,30 +631,20 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getSignalSeverity
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 信号ID
-	 * @return int 告警级别
-	 * @throws
+	 * @param int 设备实例ID @param int 信号ID @return int 告警级别 @throws
 	 */
 	public static int getSignalSeverity(int equipmentid, int signalid) {
-		return getSignalSeverity(String.valueOf(equipmentid),
-				String.valueOf(signalid));
+		return getSignalSeverity(String.valueOf(equipmentid), String.valueOf(signalid));
 	}
 
 	/**
 	 * 获取控制参数含义集合。
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            告警ID
-	 * @return List<CmdParameaningCfg> 告警参数配置信息集
-	 * @throws
+	 * @param String 设备实例ID @param String 告警ID @return List<CmdParameaningCfg>
+	 * 告警参数配置信息集 @throws
 	 */
-	public static List<CmdParameaningCfg> getCtrlParameaning(
-			String equipmentid, String commandid) {
-		EquipmentDataModel.Equipment equip = equipment.htEquipmentData
-				.get(equipmentid);
+	public static List<CmdParameaningCfg> getCtrlParameaning(String equipmentid, String commandid) {
+		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
 
 		if (null == equip)
 			return null;
@@ -793,15 +657,11 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getSignalSeverity
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 告警ID
-	 * @return List<CmdParameaningCfg> 告警参数配置信息集
-	 * @throws
+	 * @param int 设备实例ID @param int 告警ID @return List<CmdParameaningCfg>
+	 * 告警参数配置信息集 @throws
 	 */
-	public static List<CmdParameaningCfg> getCtrlParameaning(int equipmentid,
-			int commandid) {
-		return getCtrlParameaning(String.valueOf(equipmentid),
-				String.valueOf(commandid));
+	public static List<CmdParameaningCfg> getCtrlParameaning(int equipmentid, int commandid) {
+		return getCtrlParameaning(String.valueOf(equipmentid), String.valueOf(commandid));
 	}
 
 	/**
@@ -815,10 +675,7 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取设备名称，若不存在则返回空字符串。
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @return String 设备名称
-	 * @throws
+	 * @param String 设备实例ID @return String 设备名称 @throws
 	 */
 	public static String getEquipmentName(String equipmentid) {
 		String equipname = equipment.htEquipments.get(equipmentid);
@@ -828,9 +685,7 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getEquipmentName
 	 * 
-	 * @param int 设备实例ID
-	 * @return String 设备名称
-	 * @throws
+	 * @param int 设备实例ID @return String 设备名称 @throws
 	 */
 	public static String getEquipmentName(int equipmentid) {
 		return getEquipmentName(String.valueOf(equipmentid));
@@ -839,16 +694,10 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取告警名称
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            告警ID
-	 * @return String 告警名称
-	 * @throws
+	 * @param String 设备实例ID @param String 告警ID @return String 告警名称 @throws
 	 */
 	public static String getEventName(String equipmentid, String eventid) {
-		Hashtable<String, EventCfg> equip_cfg = equipment.htEventCfg
-				.get(equipmentid);
+		Hashtable<String, EventCfg> equip_cfg = equipment.htEventCfg.get(equipmentid);
 		if (null == equip_cfg)
 			return "";
 
@@ -862,31 +711,21 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getEventName
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 告警ID
-	 * @return String 告警名称
-	 * @throws
+	 * @param int 设备实例ID @param int 告警ID @return String 告警名称 @throws
 	 */
 	public static String getEventName(int equipmentid, int eventid) {
-		return getEventName(String.valueOf(equipmentid),
-				String.valueOf(eventid));
+		return getEventName(String.valueOf(equipmentid), String.valueOf(eventid));
 	}
 
 	/**
 	 * 获取设备通信状态 告警值
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            告警ID
-	 * @return String 告警值
-	 * @throws
+	 * @param String 设备实例ID @param String 告警ID @return String 告警值 @throws
 	 */
 	public static String getEquipState(String equipmentid, String eventid) {
 		if (equipmentid == null)
 			return null;
-		Hashtable<String, Event> equip_date = equipment.htEventData
-				.get(equipmentid);
+		Hashtable<String, Event> equip_date = equipment.htEventData.get(equipmentid);
 		if (null == equip_date)
 			return "0"; // 0 打勾通信正常状态
 
@@ -900,32 +739,20 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getEventName
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 告警ID
-	 * @return String 告警值
-	 * @throws
+	 * @param int 设备实例ID @param int 告警ID @return String 告警值 @throws
 	 */
 	public static String getEquipState(int equipmentid, int eventid) {
-		return getEquipState(String.valueOf(equipmentid),
-				String.valueOf(eventid));
+		return getEquipState(String.valueOf(equipmentid), String.valueOf(eventid));
 	}
 
 	/**
 	 * 设置告警名称
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            告警ID
-	 * @param String
-	 *            告警名称
-	 * @return boolean true为成功
-	 * @throws
+	 * @param String 设备实例ID @param String 告警ID @param String 告警名称 @return boolean
+	 * true为成功 @throws
 	 */
-	public static boolean setEventName(String equipmentid, String eventid,
-			String eventname) {
-		Hashtable<String, EventCfg> equip_cfg = equipment.htEventCfg
-				.get(equipmentid);
+	public static boolean setEventName(String equipmentid, String eventid, String eventname) {
+		Hashtable<String, EventCfg> equip_cfg = equipment.htEventCfg.get(equipmentid);
 		if (null == equip_cfg)
 			return false;
 
@@ -947,19 +774,11 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取告警条件开始比较阈值
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            告警ID
-	 * @param String
-	 *            条件ID
-	 * @return String 起始阈值
-	 * @throws
+	 * @param String 设备实例ID @param String 告警ID @param String 条件ID @return String
+	 * 起始阈值 @throws
 	 */
-	public static String getStartCmpValue(String equipmentid, String eventid,
-			String conditionId) {
-		Hashtable<String, EventCfg> equip_cfg = equipment.htEventCfg
-				.get(equipmentid);
+	public static String getStartCmpValue(String equipmentid, String eventid, String conditionId) {
+		Hashtable<String, EventCfg> equip_cfg = equipment.htEventCfg.get(equipmentid);
 		if (null == equip_cfg)
 			return "";
 
@@ -977,47 +796,30 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter setEventName
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 告警ID
-	 * @param String
-	 *            告警名称
-	 * @return boolean true为成功
-	 * @throws
+	 * @param int 设备实例ID @param int 告警ID @param String 告警名称 @return boolean
+	 * true为成功 @throws
 	 */
-	public static boolean setEventName(int equipmentid, int eventid,
-			String eventname) {
-		return setEventName(String.valueOf(equipmentid),
-				String.valueOf(eventid), eventname);
+	public static boolean setEventName(int equipmentid, int eventid, String eventname) {
+		return setEventName(String.valueOf(equipmentid), String.valueOf(eventid), eventname);
 	}
 
 	/**
 	 * Adapter getStartCmpValue
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 告警ID
-	 * @param int 条件ID
-	 * @return String 起始阈值
-	 * @throws
+	 * @param int 设备实例ID @param int 告警ID @param int 条件ID @return String 起始阈值 @throws
 	 */
-	public static String getStartCmpValue(int equipmentid, int eventid,
-			int conditionId) {
-		return getStartCmpValue(String.valueOf(equipmentid),
-				String.valueOf(eventid), String.valueOf(conditionId));
+	public static String getStartCmpValue(int equipmentid, int eventid, int conditionId) {
+		return getStartCmpValue(String.valueOf(equipmentid), String.valueOf(eventid), String.valueOf(conditionId));
 	}
 
 	/**
 	 * 获取告警使能状态
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            告警ID
-	 * @return String 使能状态, 未找到告警配置项则返回空字符串。
-	 * @throws
+	 * @param String 设备实例ID @param String 告警ID @return String 使能状态,
+	 * 未找到告警配置项则返回空字符串。 @throws
 	 */
 	public static String getEventState(String equipmentid, String eventid) {
-		Hashtable<String, EventCfg> equip_cfg = equipment.htEventCfg
-				.get(equipmentid);
+		Hashtable<String, EventCfg> equip_cfg = equipment.htEventCfg.get(equipmentid);
 		if (null == equip_cfg)
 			return "";
 
@@ -1031,32 +833,21 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getEventState
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 告警ID
-	 * @return String 使能状态, 未找到告警配置项则返回空字符串。
-	 * @throws
+	 * @param int 设备实例ID @param int 告警ID @return String 使能状态,
+	 * 未找到告警配置项则返回空字符串。 @throws
 	 */
 	public static String getEventState(int equipmentid, int eventid) {
-		return getEventState(String.valueOf(equipmentid),
-				String.valueOf(eventid));
+		return getEventState(String.valueOf(equipmentid), String.valueOf(eventid));
 	}
 
 	/**
 	 * 设定告警使能状态
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            告警ID
-	 * @param String
-	 *            使能状态， 1 告警， 0 不告警。
-	 * @return boolean 设定成功返回 true, 未找到相关告警配置返回 false.
-	 * @throws
+	 * @param String 设备实例ID @param String 告警ID @param String 使能状态， 1 告警， 0
+	 * 不告警。 @return boolean 设定成功返回 true, 未找到相关告警配置返回 false. @throws
 	 */
-	public static boolean setEventState(String equipmentid, String eventid,
-			String enable) {
-		Hashtable<String, EventCfg> equip_cfg = equipment.htEventCfg
-				.get(equipmentid);
+	public static boolean setEventState(String equipmentid, String eventid, String enable) {
+		Hashtable<String, EventCfg> equip_cfg = equipment.htEventCfg.get(equipmentid);
 		if (null == equip_cfg)
 			return false;
 
@@ -1072,74 +863,52 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter setEventState
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 告警ID
-	 * @param int 使能状态， 1 告警， 0 不告警。
-	 * @return boolean 设定成功返回 true, 未找到相关告警配置返回 false.
-	 * @throws
+	 * @param int 设备实例ID @param int 告警ID @param int 使能状态， 1 告警， 0 不告警。 @return
+	 * boolean 设定成功返回 true, 未找到相关告警配置返回 false. @throws
 	 */
 	public static boolean setEventState(int equipmentid, int eventid, int enable) {
-		return setEventState(String.valueOf(equipmentid),
-				String.valueOf(eventid), String.valueOf(enable));
+		return setEventState(String.valueOf(equipmentid), String.valueOf(eventid), String.valueOf(enable));
 	}
 
 	// fjw add
-	public static save_curve_signal getCurveSignal(String equipmentid,
-			String signalid, String objId) {
+	public static save_curve_signal getCurveSignal(String equipmentid, String signalid, String objId) {
 		if (equipment.htEquipmentData == null)
 			return null;
 		if (equipment.htEquipmentData.get(equipmentid).h_ESigId_curveList == null)
 			return null;
-		if (equipment.htEquipmentData.get(equipmentid).h_ESigId_curveList
-				.get(objId) == null)
+		if (equipment.htEquipmentData.get(equipmentid).h_ESigId_curveList.get(objId) == null)
 			return null;
 
-		return equipment.htEquipmentData.get(equipmentid).h_ESigId_curveList
-				.get(objId).get(signalid);
+		return equipment.htEquipmentData.get(equipmentid).h_ESigId_curveList.get(objId).get(signalid);
 	}
 
-	public static save_curve_signal getCurveSignal(int equipmentid,
-			int signalid, String objId) {
-		return getCurveSignal(String.valueOf(equipmentid),
-				String.valueOf(signalid), objId);
+	public static save_curve_signal getCurveSignal(int equipmentid, int signalid, String objId) {
+		return getCurveSignal(String.valueOf(equipmentid), String.valueOf(signalid), objId);
 	}
 
 	// fjw add
-	public static save_multipoint_signal getCurvesSignal(String equipmentid,
-			String signalid, String objId) {
+	public static save_multipoint_signal getCurvesSignal(String equipmentid, String signalid, String objId) {
 		if (equipment.htEquipmentData == null)
 			return null;
 		if (equipment.htEquipmentData.get(equipmentid).h_ESigId_curvesList == null)
 			return null;
-		if (equipment.htEquipmentData.get(equipmentid).h_ESigId_curvesList
-				.get(objId) == null)
+		if (equipment.htEquipmentData.get(equipmentid).h_ESigId_curvesList.get(objId) == null)
 			return null;
 
-		return equipment.htEquipmentData.get(equipmentid).h_ESigId_curvesList
-				.get(objId).get(signalid);
+		return equipment.htEquipmentData.get(equipmentid).h_ESigId_curvesList.get(objId).get(signalid);
 	}
 
-	public static save_multipoint_signal getCurvesSignal(int equipmentid,
-			int signalid, String objId) {
-		return getCurvesSignal(String.valueOf(equipmentid),
-				String.valueOf(signalid), objId);
+	public static save_multipoint_signal getCurvesSignal(int equipmentid, int signalid, String objId) {
+		return getCurvesSignal(String.valueOf(equipmentid), String.valueOf(signalid), objId);
 	}
 
 	/**
 	 * 登记到信号名称， Attention： 非线程安全
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            信号ID
-	 * @param String
-	 *            页面名称
-	 * @param IObject
-	 * @return boolean true成功，false失败。
-	 * @throws
+	 * @param String 设备实例ID @param String 信号ID @param String 页面名称 @param
+	 * IObject @return boolean true成功，false失败。 @throws
 	 */
-	public static boolean regSignalName(String equipmentid, String signalid,
-			String pagename, IObject object) {
+	public static boolean regSignalName(String equipmentid, String signalid, String pagename, IObject object) {
 		if (null == equipmentid || null == signalid || null == pagename)
 			return false;
 
@@ -1154,15 +923,13 @@ public class DataGetter extends Thread {
 
 		equipset.add(equipmentid);
 
-		EquipmentDataModel.Equipment equip = equipment.htEquipmentData
-				.get(equipmentid);
+		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
 
 		if (null == equip) {
 			equip = equipment.new Equipment();
 			equip.m_equipid = equipmentid;
 
-			equip.signal_req = protocol.build_query_signal_list(Integer
-					.parseInt(equipmentid));
+			equip.signal_req = protocol.build_query_signal_list(Integer.parseInt(equipmentid));
 
 			equipment.htEquipmentData.put(equipmentid, equip);
 		}
@@ -1189,36 +956,21 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter登记到信号名称， Attention： 非线程安全
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 信号ID
-	 * @param String
-	 *            页面名称
-	 * @param IObject
-	 * @return boolean true成功，false失败。
-	 * @throws
+	 * @param int 设备实例ID @param int 信号ID @param String 页面名称 @param IObject @return
+	 * boolean true成功，false失败。 @throws
 	 */
-	public static boolean regSignalName(int nEquipId, int nSignalId,
-			String pagename, IObject object) {
-		return regSignalName(String.valueOf(nEquipId),
-				String.valueOf(nSignalId), pagename, object);
+	public static boolean regSignalName(int nEquipId, int nSignalId, String pagename, IObject object) {
+		return regSignalName(String.valueOf(nEquipId), String.valueOf(nSignalId), pagename, object);
 
 	}
 
 	/**
 	 * 登记信号， Attention： 非线程安全
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            信号ID
-	 * @param String
-	 *            页面名称
-	 * @param IObject
-	 * @return boolean true成功，false失败。
-	 * @throws
+	 * @param String 设备实例ID @param String 信号ID @param String 页面名称 @param
+	 * IObject @return boolean true成功，false失败。 @throws
 	 */
-	public static boolean setSignal(String equipmentid, String signalid,
-			String pagename, IObject object) {
+	public static boolean setSignal(String equipmentid, String signalid, String pagename, IObject object) {
 		if (null == equipmentid || null == signalid || null == pagename)
 			return false;
 
@@ -1233,15 +985,13 @@ public class DataGetter extends Thread {
 
 		equipset.add(equipmentid);
 
-		EquipmentDataModel.Equipment equip = equipment.htEquipmentData
-				.get(equipmentid);
+		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
 
 		if (null == equip) {
 			equip = equipment.new Equipment();
 			equip.m_equipid = equipmentid;
 
-			equip.signal_req = protocol.build_query_signal_list(Integer
-					.parseInt(equipmentid));
+			equip.signal_req = protocol.build_query_signal_list(Integer.parseInt(equipmentid));
 
 			equipment.htEquipmentData.put(equipmentid, equip);
 		}
@@ -1260,41 +1010,31 @@ public class DataGetter extends Thread {
 
 			if ("SignalCurve".equals(object.getType())) {
 				equipment.autoAnyPapeRefreshEquip.add(equipmentid);
-				equipment.htEquipmentData.get(equipmentid).registedBackgroundListObj
-						.put(object.getUniqueID(), object);
-				equipment.htEquipmentData.get(equipmentid).registedObjID_SignalID
-						.put(object.getUniqueID(), signalid);
+				equipment.htEquipmentData.get(equipmentid).registedBackgroundListObj.put(object.getUniqueID(), object);
+				equipment.htEquipmentData.get(equipmentid).registedObjID_SignalID.put(object.getUniqueID(), signalid);
 				//
 			}
 			if ("SignalCurves".equals(object.getType())) {
 				equipment.autoAnyPapeRefreshEquip.add(equipmentid);
-				equipment.htEquipmentData.get(equipmentid).registedBackgroundListObj
-						.put(object.getUniqueID(), object);
-				equipment.htEquipmentData.get(equipmentid).registedObjID_SignalID
-						.put(object.getUniqueID(), signalid);
+				equipment.htEquipmentData.get(equipmentid).registedBackgroundListObj.put(object.getUniqueID(), object);
+				equipment.htEquipmentData.get(equipmentid).registedObjID_SignalID.put(object.getUniqueID(), signalid);
 
 			}
 			if ("SaveSignal".equals(object.getType())) {
 				equipment.autoAnyPapeRefreshEquip.add(equipmentid);
-				equipment.htEquipmentData.get(equipmentid).registedBackgroundListObj
-						.put(object.getUniqueID(), object);
-				equipment.htEquipmentData.get(equipmentid).registedSignalID
-						.add(signalid);
+				equipment.htEquipmentData.get(equipmentid).registedBackgroundListObj.put(object.getUniqueID(), object);
+				equipment.htEquipmentData.get(equipmentid).registedSignalID.add(signalid);
 
 			}
-			if ("AutoSig".equals(object.getType())
-					|| "AutoSigList".equals(object.getType())) {
+			if ("AutoSig".equals(object.getType()) || "AutoSigList".equals(object.getType())) {
 				equipment.autoAnyPapeRefreshEquip.add(equipmentid);
-				equipment.htEquipmentData.get(equipmentid).registedBackgroundListObj
-						.put(object.getUniqueID(), object);
+				equipment.htEquipmentData.get(equipmentid).registedBackgroundListObj.put(object.getUniqueID(), object);
 
 			}
 			if ("RC_Label".equals(object.getType())) {
 				equipment.autoAnyPapeRefreshEquip.add(equipmentid);
-				equipment.htEquipmentData.get(equipmentid).registedBackgroundListObj
-						.put(object.getUniqueID(), object);
-				equipment.htEquipmentData.get(equipmentid).registedRCSignalID
-						.add(signalid);
+				equipment.htEquipmentData.get(equipmentid).registedBackgroundListObj.put(object.getUniqueID(), object);
+				equipment.htEquipmentData.get(equipmentid).registedRCSignalID.add(signalid);
 				// Log.e("RC_Label","RC_Label注册done!");
 			} else {
 				// TODO: 处理可能出现的特殊情况下的重复添加。
@@ -1312,36 +1052,21 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter登记信号， Attention： 非线程安全
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 信号ID
-	 * @param String
-	 *            页面名称
-	 * @param IObject
-	 * @return boolean true成功，false失败。
-	 * @throws
+	 * @param int 设备实例ID @param int 信号ID @param String 页面名称 @param IObject @return
+	 * boolean true成功，false失败。 @throws
 	 */
-	public static boolean setSignal(int nEquipId, int nSignalId,
-			String pagename, IObject object) {
-		return setSignal(String.valueOf(nEquipId), String.valueOf(nSignalId),
-				pagename, object);
+	public static boolean setSignal(int nEquipId, int nSignalId, String pagename, IObject object) {
+		return setSignal(String.valueOf(nEquipId), String.valueOf(nSignalId), pagename, object);
 
 	}
 
 	/**
 	 * 登记到告警名， Attention： 非线程安全
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            告警ID
-	 * @param String
-	 *            页面名称
-	 * @param IObject
-	 * @return boolean true成功，false失败。
-	 * @throws
+	 * @param String 设备实例ID @param String 告警ID @param String 页面名称 @param
+	 * IObject @return boolean true成功，false失败。 @throws
 	 */
-	public static boolean regEventName(String equipmentid, String eventid,
-			String pagename, IObject object) {
+	public static boolean regEventName(String equipmentid, String eventid, String pagename, IObject object) {
 		// TODO: 尚未实现。 需实现告警名称改变时通知相关控件更新。
 		return false;
 	}
@@ -1349,79 +1074,48 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter 登记到告警名
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 告警ID
-	 * @param String
-	 *            页面名称
-	 * @param IObject
-	 * @return boolean true成功，false失败。
-	 * @throws
+	 * @param int 设备实例ID @param int 告警ID @param String 页面名称 @param IObject @return
+	 * boolean true成功，false失败。 @throws
 	 */
-	public static boolean regEventName(int nEquipId, int nEventId,
-			String pagename, IObject object) {
-		return regEventName(String.valueOf(nEquipId), String.valueOf(nEventId),
-				pagename, object);
+	public static boolean regEventName(int nEquipId, int nEventId, String pagename, IObject object) {
+		return regEventName(String.valueOf(nEquipId), String.valueOf(nEventId), pagename, object);
 	}
 
 	/**
 	 * 登记告警控件， Attention： 非线程安全
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            信号ID
-	 * @param String
-	 *            页面名称
-	 * @param IObject
-	 * @return boolean true成功，false失败。
-	 * @throws
+	 * @param String 设备实例ID @param String 信号ID @param String 页面名称 @param
+	 * IObject @return boolean true成功，false失败。 @throws
 	 */
-	public static boolean setAlarmSignal(String equipmentid, String signalid,
-			String pagename, IObject object) {
+	public static boolean setAlarmSignal(String equipmentid, String signalid, String pagename, IObject object) {
 		if (null == object)
 			return false;
 
 		if (!setSignal(equipmentid, signalid, pagename, null))
 			return false;
 
-		equipment.htEquipmentData.get(equipmentid).htSignalData.get(signalid).registedAlarmObj
-				.add(object);
+		equipment.htEquipmentData.get(equipmentid).htSignalData.get(signalid).registedAlarmObj.add(object);
 		return true;
 	}
 
 	/**
 	 * Adapter 登记告警控件
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 信号ID
-	 * @param String
-	 *            页面名称
-	 * @param IObject
-	 * @return boolean true成功，false失败。
-	 * @throws
+	 * @param int 设备实例ID @param int 信号ID @param String 页面名称 @param IObject @return
+	 * boolean true成功，false失败。 @throws
 	 */
-	public static boolean setAlarmSignal(int nEquipId, int nSignalId,
-			String pagename, IObject object) {
-		return setAlarmSignal(String.valueOf(nEquipId),
-				String.valueOf(nSignalId), pagename, object);
+	public static boolean setAlarmSignal(int nEquipId, int nSignalId, String pagename, IObject object) {
+		return setAlarmSignal(String.valueOf(nEquipId), String.valueOf(nSignalId), pagename, object);
 	}
 
 	// fjw add
 	/**
 	 * 登记本地保存数据控件， Attention： 非线程安全
 	 * 
-	 * @param String
-	 *            设备实例ID
-	 * @param String
-	 *            信号ID
-	 * @param String
-	 *            页面名称
-	 * @param IObject
-	 * @return boolean true成功，false失败。
-	 * @throws
+	 * @param String 设备实例ID @param String 信号ID @param String 页面名称 @param
+	 * IObject @return boolean true成功，false失败。 @throws
 	 */
-	public static boolean setLocalSignal(final String equipId, String pagename,
-			final IObject object) {
+	public static boolean setLocalSignal(final String equipId, final String pagename, final IObject object) {
 		//
 		if (null == object)
 			return false;
@@ -1440,28 +1134,29 @@ public class DataGetter extends Thread {
 		// equipment.htEquipmentData.get(equipId).registedBackgroundListObj.put(
 		// object.getUniqueID(), object);
 		// equipment.autoAnyPapeRefreshEquip.add(equipId);
+		
 		MGridActivity.xianChengChi.execute(new Runnable() {
 
 			@Override
 			public void run() {
-
+				long startTime=System.currentTimeMillis();
 				while (true) {
-				
+
+					
 					if (!isLoading) {
 						if (equipment.htEquipmentData.containsKey(equipId)) {
-							equipment.htEquipmentData.get(equipId).registedBackgroundListObj
-									.put(object.getUniqueID(), object);
-							equipment.autoAnyPapeRefreshEquip.add(equipId);
+							synchronized (equipment.htEquipmentData.get(equipId).registedBackgroundListObj) {
+								synchronized(equipment.autoAnyPapeRefreshEquip)
+								{
+									equipment.htEquipmentData.get(equipId).registedBackgroundListObj.put(object.getUniqueID(),
+											object);							
+									equipment.autoAnyPapeRefreshEquip.add(equipId);
+								}
+							}
 						}
 						break;
 					}
-					try {
-						Thread.sleep(500);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
 				}
-
 			}
 		});
 
@@ -1472,16 +1167,10 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter 登记本地保存数据控件
 	 * 
-	 * @param int 设备实例ID
-	 * @param int 信号ID
-	 * @param String
-	 *            页面名称
-	 * @param IObject
-	 * @return boolean true成功，false失败。
-	 * @throws
+	 * @param int 设备实例ID @param int 信号ID @param String 页面名称 @param IObject @return
+	 * boolean true成功，false失败。 @throws
 	 */
-	public static boolean setLocalSignal(int nEquipId, String pagename,
-			IObject object) {
+	public static boolean setLocalSignal(int nEquipId, String pagename, IObject object) {
 		return setLocalSignal(String.valueOf(nEquipId), pagename, object);
 	}
 
@@ -1490,28 +1179,20 @@ public class DataGetter extends Thread {
 	/**
 	 * 注册信号列表控件， Attention： 非线程安全
 	 * 
-	 * @param String
-	 *            equipId 设备实例ID
-	 * @param String
-	 *            pagename 页面名称
-	 * @param IObject
-	 * @return boolean true成功，false失败。
-	 * @throws
+	 * @param String equipId 设备实例ID @param String pagename 页面名称 @param
+	 * IObject @return boolean true成功，false失败。 @throws
 	 */
-	public static boolean setSignalList(String equipId, String pagename,
-			IObject object) {
+	public static boolean setSignalList(String equipId, String pagename, IObject object) {
 		if (null == equipId || null == object)
 			return false;
 
-		EquipmentDataModel.Equipment equip = equipment.htEquipmentData
-				.get(equipId);
+		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipId);
 
 		if (null == equip) {
 			equip = equipment.new Equipment();
 			equip.m_equipid = equipId;
 
-			equip.signal_req = protocol.build_query_signal_list(Integer
-					.parseInt(equipId));
+			equip.signal_req = protocol.build_query_signal_list(Integer.parseInt(equipId));
 
 			equipment.htEquipmentData.put(equipId, equip);
 		}
@@ -1531,24 +1212,17 @@ public class DataGetter extends Thread {
 	/**
 	 * setSignalList Adapter
 	 * 
-	 * @param int nEquipId 设备实例ID
-	 * @param String
-	 *            pagename 页面名称
-	 * @param IObject
-	 * @return boolean true成功，false失败。
-	 * @throws
+	 * @param int nEquipId 设备实例ID @param String pagename 页面名称 @param IObject @return
+	 * boolean true成功，false失败。 @throws
 	 */
-	public static boolean setSignalList(int nEquipId, String pagename,
-			IObject object) {
+	public static boolean setSignalList(int nEquipId, String pagename, IObject object) {
 		return setSignalList(String.valueOf(nEquipId), pagename, object);
 	}
 
 	/**
 	 * 注册全局告警列表控件
 	 * 
-	 * @param IObject
-	 * @return boolean true成功，false失败。
-	 * @throws
+	 * @param IObject @return boolean true成功，false失败。 @throws
 	 */
 	public static boolean setMainAlarmList(IObject object) {
 		if (null == object)
@@ -1559,9 +1233,7 @@ public class DataGetter extends Thread {
 	/**
 	 * 注册全局告警列表控件
 	 * 
-	 * @param IObject
-	 * @return boolean true成功，false失败。
-	 * @throws
+	 * @param IObject @return boolean true成功，false失败。 @throws
 	 */
 	public static boolean setEquipState(String equipId, IObject object) {
 		if (null == object)
@@ -1584,8 +1256,7 @@ public class DataGetter extends Thread {
 
 	// ---------------------------------------------------------------
 	// fjw add
-	private static boolean deal_clearEquip(Equipment equipObj, int sig_no,
-			Signal signal, String[] blocks) {
+	private static boolean deal_clearEquip(Equipment equipObj, int sig_no, Signal signal, String[] blocks) {
 
 		for (int i = 0; i < sig_no; i++) {
 			try {
@@ -1616,8 +1287,7 @@ public class DataGetter extends Thread {
 						sleep(200);
 					}
 
-					Iterator<IObject> regalarmobj_it = signal.registedAlarmObj
-							.iterator();
+					Iterator<IObject> regalarmobj_it = signal.registedAlarmObj.iterator();
 					while (regalarmobj_it.hasNext()) {
 						regalarmobj_it.next().needupdate(true);
 
@@ -1625,8 +1295,7 @@ public class DataGetter extends Thread {
 
 					}
 
-					Iterator<IObject> reglstobj_it = equipObj.registedLstObj
-							.iterator();
+					Iterator<IObject> reglstobj_it = equipObj.registedLstObj.iterator();
 					while (reglstobj_it.hasNext()) {
 						IObject object = reglstobj_it.next();
 						// if("SignalList".equals(object.getType()) ) break;
@@ -1650,8 +1319,7 @@ public class DataGetter extends Thread {
 		if (null == equipObj.signal_req)
 			return false;
 
-		byte[] recv_buf = service.send_and_receive(equipObj.signal_req,
-				service.IP, service.PORT);
+		byte[] recv_buf = service.send_and_receive(equipObj.signal_req, service.IP, service.PORT);
 
 		if (null == recv_buf)
 			return false;
@@ -1666,8 +1334,7 @@ public class DataGetter extends Thread {
 		byte[] body_buf = new byte[head.length];
 		if (head.length > 1) {
 			try {
-				System.arraycopy(recv_buf, protocol.MSG_HEAD_LEN, body_buf, 0,
-						head.length);
+				System.arraycopy(recv_buf, protocol.MSG_HEAD_LEN, body_buf, 0, head.length);
 				recv_buf = null; // 清空数组内存
 			} catch (Exception e) {
 				return false;
@@ -1693,8 +1360,7 @@ public class DataGetter extends Thread {
 				String[] f_items = blocks[sig_no - 1].split("`");
 				signal = equipObj.htSignalData.get(f_items[1]);
 				// String str_signal = signal.value;
-				equipObj.oldSameUpdateTime = Integer
-						.parseInt(equipObj.strSampleUpdateTime);
+				equipObj.oldSameUpdateTime = Integer.parseInt(equipObj.strSampleUpdateTime);
 				// String str_lastSignalValue = str_signal.substring(0,6);
 
 				if (equipObj.lUpdateTime / 1000 - equipObj.oldSameUpdateTime > 180) {
@@ -1752,8 +1418,7 @@ public class DataGetter extends Thread {
 					haseveritychanged = true;
 					signal.severity = severity;
 
-					Iterator<IObject> regalarmobj_it = signal.registedAlarmObj
-							.iterator();
+					Iterator<IObject> regalarmobj_it = signal.registedAlarmObj.iterator();
 					while (regalarmobj_it.hasNext()) {
 						// System.out.println("123severity不一样：我更新了");
 						regalarmobj_it.next().needupdate(true);
@@ -1841,8 +1506,7 @@ public class DataGetter extends Thread {
 		if (null == equipObj.signal_req)
 			return s;
 
-		byte[] recv_buf = service.send_and_receive(equipObj.signal_req,
-				service.IP, service.PORT);
+		byte[] recv_buf = service.send_and_receive(equipObj.signal_req, service.IP, service.PORT);
 
 		if (null == recv_buf)
 			return s;
@@ -1857,8 +1521,7 @@ public class DataGetter extends Thread {
 		byte[] body_buf = new byte[head.length];
 		if (head.length > 1) {
 			try {
-				System.arraycopy(recv_buf, protocol.MSG_HEAD_LEN, body_buf, 0,
-						head.length);
+				System.arraycopy(recv_buf, protocol.MSG_HEAD_LEN, body_buf, 0, head.length);
 				recv_buf = null; // 清空数组内存
 			} catch (Exception e) {
 				return s;
@@ -1898,8 +1561,7 @@ public class DataGetter extends Thread {
 
 		if (equipment.rtalarm_req == null)
 			return false;
-		byte[] recv_buf = service.send_and_receive(equipment.rtalarm_req,
-				service.IP, service.PORT);
+		byte[] recv_buf = service.send_and_receive(equipment.rtalarm_req, service.IP, service.PORT);
 		if (recv_buf == null) {
 			return false;
 		}
@@ -1917,8 +1579,7 @@ public class DataGetter extends Thread {
 		byte[] body_buf = new byte[head.length];
 		if (head.length > 1) {
 			try {
-				System.arraycopy(recv_buf, protocol.MSG_HEAD_LEN, body_buf, 0,
-						head.length);
+				System.arraycopy(recv_buf, protocol.MSG_HEAD_LEN, body_buf, 0, head.length);
 				recv_buf = null; // 释放数组内存
 			} catch (Exception e) {
 
@@ -1927,25 +1588,26 @@ public class DataGetter extends Thread {
 			// fjw add
 			if (alarm_flag) {
 
-				equipment.htEventData = null;
+				synchronized (equipment.htEventData) {
+					equipment.htEventData = null;
 
-				Iterator<IObject> reglstobj_it = equipment.lstRegistedMainAlarmList
-						.iterator();
-				while (reglstobj_it.hasNext()) {
-					//System.out.println("我更新了："+reglstobj_it.next().getType());
-					reglstobj_it.next().needupdate(true);
-					try {
+					Iterator<IObject> reglstobj_it = equipment.lstRegistedMainAlarmList.iterator();
+					while (reglstobj_it.hasNext()) {
+						// System.out.println("我更新了："+reglstobj_it.next().getType());
+						reglstobj_it.next().needupdate(true);
+						try {
 
-						sleep(50);
-					} catch (Exception e) {
-						;
+							sleep(50);
+						} catch (Exception e) {
+							;
+						}
+
 					}
-
 				}
+				alarm_flag = false;
+				// fjw add end
+				return false; // 没有告警内容返回false
 			}
-			alarm_flag = false;
-			// fjw add end
-			return false; // 没有告警内容返回false
 		}
 
 		String body = new String(body_buf);
@@ -1996,8 +1658,7 @@ public class DataGetter extends Thread {
 				event.meaning = (null == items[6] ? "" : new String(items[6]));
 
 				if ((items[0] != null) && ("10001".equals(items[1]))) {
-					int state = service.get_Equipment_State(Integer
-							.valueOf(items[0]));
+					int state = service.get_Equipment_State(Integer.valueOf(items[0]));
 					if (state == 1) {
 						flag_state = 1;
 						event.state = "1";
@@ -2015,8 +1676,7 @@ public class DataGetter extends Thread {
 		equipment.htEventData = eventData;
 		alarm_flag = true;
 
-		Iterator<IObject> reglstobj_it = equipment.lstRegistedMainAlarmList
-				.iterator();
+		Iterator<IObject> reglstobj_it = equipment.lstRegistedMainAlarmList.iterator();
 		while (reglstobj_it.hasNext()) {
 			reglstobj_it.next().needupdate(true);
 			try {
@@ -2025,14 +1685,12 @@ public class DataGetter extends Thread {
 			} catch (Exception e) {
 				;
 			}
-
 		}
 
 		// fjw add
 		if (flag_state == 1) {
 			flag_state = 0;
-			Iterator<IObject> reglstobj_it2 = equipment.registedStateObj
-					.iterator();
+			Iterator<IObject> reglstobj_it2 = equipment.registedStateObj.iterator();
 			while (reglstobj_it2.hasNext()) {
 				reglstobj_it2.next().needupdate(true);
 				try {
@@ -2058,8 +1716,7 @@ public class DataGetter extends Thread {
 
 		if (null == equipObj.signal_req)
 			return false;
-		byte[] recv_buf = service.send_and_receive(equipObj.signal_req,
-				service.IP, service.PORT);
+		byte[] recv_buf = service.send_and_receive(equipObj.signal_req, service.IP, service.PORT);
 
 		if (null == recv_buf)
 			return false;
@@ -2075,8 +1732,7 @@ public class DataGetter extends Thread {
 		byte[] body_buf = new byte[head.length];
 		if (head.length > 1) {
 			try {
-				System.arraycopy(recv_buf, protocol.MSG_HEAD_LEN, body_buf, 0,
-						head.length);
+				System.arraycopy(recv_buf, protocol.MSG_HEAD_LEN, body_buf, 0, head.length);
 				recv_buf = null; //
 			} catch (Exception e) {
 				return false;
@@ -2121,8 +1777,7 @@ public class DataGetter extends Thread {
 			try {
 				time = Integer.parseInt(items[2]);
 
-				SimpleDateFormat formatter = new SimpleDateFormat(
-						"yyyy-MM-dd HH:mm:ss");
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				Date date = new Date(time * 1000);
 				sampletime = formatter.format(date);
 				dateTime = sampletime.substring(0, 10);
@@ -2151,16 +1806,14 @@ public class DataGetter extends Thread {
 		blocks = null;
 
 		String str_lastSignalValue = signal.value.substring(0, 6);
-		if (("10001".equals(signal.id))
-				&& ("0.0000".equals(str_lastSignalValue))) {
+		if (("10001".equals(signal.id)) && ("0.0000".equals(str_lastSignalValue))) {
 
 			return false;
 		}
 
 		if (equipObj.registedBackgroundListObj == null)
 			return false;
-		Iterator<String> obj_idList = equipObj.registedBackgroundListObj
-				.keySet().iterator();// 遍历出该设备所关联的控件id
+		Iterator<String> obj_idList = equipObj.registedBackgroundListObj.keySet().iterator();// 遍历出该设备所关联的控件id
 
 		while (obj_idList.hasNext()) {
 			String obj_id = obj_idList.next();
@@ -2176,22 +1829,17 @@ public class DataGetter extends Thread {
 			}
 			if ("SaveSignal".equals(iobject.getType())) {
 
-				loadSignalData(time, iobject, equipObj, str_equip_signal,
-						dateTime);
+				loadSignalData(time, iobject, equipObj, str_equip_signal, dateTime);
 			}
-			if ("SaveEquipt".equals(iobject.getType())
-					|| "HistorySignalList".equals(iobject.getType())) {
+			if ("SaveEquipt".equals(iobject.getType()) || "HistorySignalList".equals(iobject.getType())) {
 
-				loadEquipSignalData(time, iobject, equipObj, str_equip_signal,
-						dateTime);
+				loadEquipSignalData(time, iobject, equipObj, str_equip_signal, dateTime);
 			}
 			if ("RC_Label".equals(iobject.getType())) {
 
-				loadRCData(time, iobject, equipObj, str_equip_signal,
-						sampletime);
+				loadRCData(time, iobject, equipObj, str_equip_signal, sampletime);
 			}
-			if ("AutoSig".equals(iobject.getType())
-					|| "AutoSigList".equals(iobject.getType())) {
+			if ("AutoSig".equals(iobject.getType()) || "AutoSigList".equals(iobject.getType())) {
 
 				iobject.needupdate(true);
 
@@ -2205,8 +1853,8 @@ public class DataGetter extends Thread {
 
 	// ---------------------fjw add-----------------------
 
-	private static boolean saveSignalCurveData(long time, IObject ui_object,
-			Equipment equipObj, String[] str_equip_signal) {
+	private static boolean saveSignalCurveData(long time, IObject ui_object, Equipment equipObj,
+			String[] str_equip_signal) {
 
 		String obj_Id = ui_object.getUniqueID();
 		String obj_sigId = equipObj.registedObjID_SignalID.get(obj_Id);
@@ -2270,8 +1918,8 @@ public class DataGetter extends Thread {
 		return true;
 	}
 
-	private static boolean saveSignalCurvesData(long time, IObject ui_object,
-			Equipment equipObj, String[] str_equip_signal) {
+	private static boolean saveSignalCurvesData(long time, IObject ui_object, Equipment equipObj,
+			String[] str_equip_signal) {
 
 		String obj_Id = ui_object.getUniqueID();
 		String obj_sigId = equipObj.registedObjID_SignalID.get(obj_Id);
@@ -2335,17 +1983,15 @@ public class DataGetter extends Thread {
 		return true;
 	}
 
-	private static boolean loadSignalData(long time, IObject ui_object,
-			Equipment equipObj, String[] str_equip_signal, String dateTime) {
+	private static boolean loadSignalData(long time, IObject ui_object, Equipment equipObj, String[] str_equip_signal,
+			String dateTime) {
 
-		if (flag3_map.isEmpty()
-				|| !flag3_map.containsKey(equipObj.m_equipid)
+		if (flag3_map.isEmpty() || !flag3_map.containsKey(equipObj.m_equipid)
 				|| (time - flag3_map.get(equipObj.m_equipid) >= SaveSignal.save_time)) {
 
 			flag_equipid = equipObj.m_equipid;
 			flag_time = time;
-			if ((flag_equipid == "") || (flag_equipid == null)
-					|| flag_time == 0) {
+			if ((flag_equipid == "") || (flag_equipid == null) || flag_time == 0) {
 				return true;
 			}
 			flag3_map.put(flag_equipid, flag_time);
@@ -2362,8 +2008,7 @@ public class DataGetter extends Thread {
 					String sigstr = str_equip_signal[no - 1];
 
 					local_file l_file = new local_file();
-					l_file.has_file(flag_equipid + "-" + str_no + "#"
-							+ dateTime, 2);
+					l_file.has_file(flag_equipid + "-" + str_no + "#" + dateTime, 2);
 
 					l_file.write_line(sigstr);
 
@@ -2383,17 +2028,15 @@ public class DataGetter extends Thread {
 		return true;
 	}
 
-	private static boolean loadEquipSignalData(long time, IObject ui_object,
-			Equipment equipObj, String[] equip_his_signal, String dateTime) {
+	private static boolean loadEquipSignalData(long time, IObject ui_object, Equipment equipObj,
+			String[] equip_his_signal, String dateTime) {
 
-		if (flag4_map.isEmpty()
-				|| !flag4_map.containsKey(equipObj.m_equipid)
+		if (flag4_map.isEmpty() || !flag4_map.containsKey(equipObj.m_equipid)
 				|| (time - flag4_map.get(equipObj.m_equipid) >= SaveEquipt.save_time)) {
 
 			flag_equipid = equipObj.m_equipid;
 			flag_time = time;
-			if ((flag_equipid == "") || (flag_equipid == null)
-					|| flag_time == 0) {
+			if ((flag_equipid == "") || (flag_equipid == null) || flag_time == 0) {
 				return true;
 			}
 			try {
@@ -2424,8 +2067,8 @@ public class DataGetter extends Thread {
 		return true;
 	}
 
-	private static boolean loadRCData(long time, IObject ui_object,
-			Equipment equipObj, String[] str_equip_signal, String sampletime) {
+	private static boolean loadRCData(long time, IObject ui_object, Equipment equipObj, String[] str_equip_signal,
+			String sampletime) {
 
 		int now_hour = Integer.parseInt(sampletime.substring(11, 13));
 		int now_min = Integer.parseInt(sampletime.substring(14, 16));
@@ -2483,8 +2126,7 @@ public class DataGetter extends Thread {
 		}
 
 		public void remove() {
-			throw new UnsupportedOperationException(
-					"This is a read-only iterator.");
+			throw new UnsupportedOperationException("This is a read-only iterator.");
 		}
 
 		public T next() {

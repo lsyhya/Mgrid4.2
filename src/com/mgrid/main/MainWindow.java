@@ -1503,9 +1503,7 @@ public class MainWindow extends ViewGroup {
 							// SgIsolationSwitch.class.isInstance(m_mapUIs.get(strUniqueId))
 							strStr = DataGetter.getSignalValue(
 									oExpress.nEquipId, oExpress.nSignalId);
-
 						}
-
 						else {
 							strStr = getRealTimeValueFromTcp(oExpress);
 							strData = DataGetter.getSignalValue(

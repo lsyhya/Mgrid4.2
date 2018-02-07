@@ -54,6 +54,7 @@ public class SoundService extends Service {
 	public void onDestroy() {
 
 		super.onDestroy();
+		if(mp!=null)
 		mp.release();
 		stopSelf();
 	}
