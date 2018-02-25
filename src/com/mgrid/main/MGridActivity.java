@@ -225,10 +225,6 @@ public class MGridActivity extends Activity {
 
 		setBroadcastReceiver(); // 注册广播
 		if (parseMgridIni()) {
-//			if (isLogin) {
-//				LoginUtil loginUtil = new LoginUtil(context);
-//				loginUtil.showWaiterAuthorizationDialog();
-//			}
 //			setProgressDialog();
 			if (!SIP.equals("")) {
 				startTimeFlush();
@@ -745,11 +741,17 @@ public class MGridActivity extends Activity {
 						pagename = m_oPageList.get(tmp_load_pageseek);
 					} else {
 
-						tmp_flag_loading = false;
-						DataGetter.bIsLoading = false;
-						// Toast.makeText(MGridActivity.this, Load,
-						// Toast.LENGTH_LONG).show();
-						isLoading = false;
+						 tmp_flag_loading = false;
+						 DataGetter.bIsLoading = false;
+						 isChangPage = true;
+						 
+						 Toast.makeText(MGridActivity.this, Load,
+						 Toast.LENGTH_LONG).show();
+						 isNOChangPage = true;
+						 isLoading = false;
+						 if(dialog!=null)
+								dialog.dismiss();
+						 System.out.println("所用时间：" + (System.currentTimeMillis() - starttime));
 						// bar.finishLoad();
 						// dialog.dismiss();
 						return;
@@ -792,7 +794,6 @@ public class MGridActivity extends Activity {
 						tmp_flag_loading = false;
 						DataGetter.bIsLoading = false;
 						isChangPage = true;
-						MGridActivity.handler.sendEmptyMessage(1);
 						Toast.makeText(MGridActivity.this, Load, Toast.LENGTH_LONG).show();
 						isLoading = false;
 						isNOChangPage = true;

@@ -9,15 +9,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.xclcharts.common.SysinfoHelper;
-
-import E_Mail.MailSenderInfo;
-import E_Mail.SendMessageNew;
-import E_Mail.SimpleMailSender;
-
 import com.mgrid.main.MGridActivity;
 import com.sg.common.IObject;
 
+import E_Mail.SendMessageNew;
 import data_model.save_curve_signal;
 import data_model.save_multipoint_signal;
 
