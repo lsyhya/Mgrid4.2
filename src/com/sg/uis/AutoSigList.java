@@ -51,10 +51,10 @@ public class AutoSigList extends View implements IObject {
 
 		ridobuttons = new RadioButton[4];
 		ridobuttons[0] = new RadioButton(context);
-		ridobuttons[0].setText("1 h");
+		ridobuttons[0].setText("1 hr");
 		ridobuttons[0].setChecked(true);
 		ridobuttons[1] = new RadioButton(context);
-		ridobuttons[1].setText("24 h");
+		ridobuttons[1].setText("24 hr");
 		ridobuttons[2] = new RadioButton(context);
 		ridobuttons[2].setText("1 mon");
 		ridobuttons[3] = new RadioButton(context);
