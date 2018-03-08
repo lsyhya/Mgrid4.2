@@ -146,20 +146,20 @@ public class HisEvent extends HisEventTable implements IObject {
 			
 			set="…Ë÷√";
 		} else {
-			DeviceName = "DeviceName";
-			AlarmName = "AlarmName";
-			AlarmMeaning = "AlarmMeaning";
-			Numericalsignal = "Numericalsignal";
-			AlarmSeverity = "AlarmSeverity";
-			StartTime = "StartTime";
-			EndTime = "EndTime";
+			DeviceName = "Device Name";
+			AlarmName = "Alarm Name";
+			AlarmMeaning = "Alarm Meaning";
+			Numericalsignal = "Numerical Signal";
+			AlarmSeverity = "Alarm Severity";
+			StartTime = "Start Time";
+			EndTime = "End Time";
 
 			DeviceList = "  Device°˝   ";
-			SetTime = "SetTime";
-			PreveDay = "PreveDay";
-			NextDay = "NextDay";
-			Receive = "  Receive   ";
-			AllDevice = "AllDevice";
+			SetTime = "Set Time";
+			PreveDay = "Previous Day";
+			NextDay = "Next Day";
+			Receive = "  Receipt   ";
+			AllDevice = "All Device";
 			
 			one="Notice";
 			two="GeneralAlarm";

@@ -38,8 +38,8 @@ public class SgChangePassWord extends TextView implements IObject {
 			oldPw="¾ÉÃÜÂë:";
 			newPw="ÐÂÃÜÂë:";		
 		}else{
-			oldPw="OldPassword";
-			newPw="NewPassword";		
+			oldPw="Old Password";
+			newPw="New Password";		
 		}
 
 		
@@ -384,16 +384,16 @@ public class SgChangePassWord extends TextView implements IObject {
 
 	// Êý¾Ý
 	String m_strID = "";
-	String m_strType = "";
+	String m_strType = ""; 
 	int m_nZIndex = 10;
 	int m_nPosX = 152;
-	int m_nPosY = 287;
+	int m_nPosY = 287; 
 	int m_nWidth = 75;
 	int m_nHeight = 23;
 	float m_fAlpha = 1.0f;
 	boolean m_bIsBold = false;
 	String m_strFontFamily = "Î¢ÈíÑÅºÚ";
-	int m_cBackgroundColor = 0xFFFCFCFC;
+	int m_cBackgroundColor = 0xFFFCFCFC; 
 	int m_cFontColor = 0xFF000000;
 	String m_strContent = "Setting";
 	String m_strCmdExpression = "";
@@ -403,8 +403,8 @@ public class SgChangePassWord extends TextView implements IObject {
 	float m_fFontSize = 6.0f;
 	boolean m_bPressed = false;
 	Paint m_oPaint = null;
-	Rect m_rBBox = null;
-	InputMethodManager imm = null;
+	Rect m_rBBox = null; 
+	InputMethodManager imm = null; 
 	EditText m_oEditTextNEW = null;
 	EditText m_oEditTextOLD = null;
 	TextView tvOld = null;

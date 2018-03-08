@@ -16,6 +16,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -85,7 +86,7 @@ public class SgEventList extends UtTable implements IObject {
 		// lstTitles.add("信号数值");
 		lstTitles.add(AlarmSeverity);
 		lstTitles.add(StartTime);
-		// lstTitles.add("结束时间  ");
+		//lstTitles.add("结束时间  ");
 
 		lstContends = new ArrayList<List<String>>();
 		mythread.start();
@@ -252,13 +253,16 @@ public class SgEventList extends UtTable implements IObject {
 			this.setFontColor(m_cForeColor);
 		} else if ("BackgroundColor".equals(strName)) {
 			m_cBackgroundColor = Color.parseColor(strValue);
+			Log.d("背景颜色", strValue);
 			this.setBackgroundColor(m_cBackgroundColor);
 		} else if ("BorderColor".equals(strName)) {
 			m_cBorderColor = Color.parseColor(strValue);
 		} else if ("OddRowBackground".equals(strName)) {
 			m_cOddRowBackground = Color.parseColor(strValue);
+			ji=strValue;
 		} else if ("EvenRowBackground".equals(strName)) {
 			m_cEvenRowBackground = Color.parseColor(strValue);
+			ou=strValue;
 		} else if ("CmdExpression".equals(strName)) {
 			m_strCmdExpression = strValue;
 			parseCmdExpression(m_strCmdExpression);
@@ -643,7 +647,7 @@ public class SgEventList extends UtTable implements IObject {
 	String m_strExpression = "Binding{[Equip[Equip:115]]}";
 	String m_strCmdExpression = "";
 	int m_cForeColor = 0xFF00FF00;
-	int m_cBackgroundColor = 0xFF000000;
+	int m_cBackgroundColor = 0x00000000;
 	int m_cBorderColor = 0xFFFFFFFF;
 	MainWindow m_rRenderWindow = null;
 	Rect m_rBBox = null;
@@ -667,4 +671,6 @@ public class SgEventList extends UtTable implements IObject {
 	ArrayList<List<String>> lstContends = null;
 	ArrayList<List<String>> lstContends_two = null;
 	String one,two,three,four;
+
 }
+

@@ -24,6 +24,9 @@ import com.sg.common.IObject;
 import com.sg.common.SgRealTimeData;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
+import com.sg.uis.LsyNewView.shimmer.Shimmer;
+import com.sg.uis.LsyNewView.shimmer.ShimmerTextView;
+
 import comm_service.service;
 
 import data_model.ipc_control;
@@ -31,12 +34,31 @@ import data_model.ipc_control;
 /** ±Í«© */
 public class SgLabel extends TextView implements IObject {
 
+//	ShimmerTextView shimmerTv;
+//	Shimmer sr;
+	
 	public SgLabel(Context context) {
 		super(context);
-		this.setClickable(true);
-		this.setBackgroundColor(0x00000000);
+		
+//		shimmerTv=new ShimmerTextView(context);
+//		shimmerTv.setGravity(Gravity.CENTER);
+//		
+//		sr=new Shimmer();
+//		sr.start(shimmerTv);
+//		sr.setDuration(2000);
+//		init(shimmerTv);
+		init(this);
+	    
+
+	}
+	
+	
+	private void init(View view)
+	{
+		view.setClickable(true);
+		view.setBackgroundColor(0x00000000);
 		m_rBBox = new Rect();
-		this.setOnClickListener(new OnClickListener() {
+		view.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -143,8 +165,8 @@ public class SgLabel extends TextView implements IObject {
 
 			}
 		});
-
 	}
+	
 
 	@Override
 	public void doLayout(boolean bool, int l, int t, int r, int b) {
@@ -163,6 +185,8 @@ public class SgLabel extends TextView implements IObject {
 		m_rBBox.bottom = nY + nHeight;
 		if (m_rRenderWindow.isLayoutVisible(m_rBBox)) {
 			layout(nX, nY, nX + nWidth, nY + nHeight);
+//			shimmerTv.layout(nX, nY, nX + nWidth, nY + nHeight);
+//			shimmerTv.setPadding(0, nHeight/8, 0, 0);
 		}
 	}
 
@@ -188,6 +212,7 @@ public class SgLabel extends TextView implements IObject {
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
 		rWin.addView(this);
+		//rWin.addView(shimmerTv);
 	}
 
 	@Override
@@ -218,6 +243,7 @@ public class SgLabel extends TextView implements IObject {
 			m_strContent = strValue;
 			c_Content = strValue;
 			this.setText(m_strContent);
+			//shimmerTv.setText(m_strContent);
 		} else if ("FontFamily".equals(strName)) {
 			m_strFontFamily = strValue;
 		//	this.setTypeface(Typeface.MONOSPACE);
@@ -226,12 +252,14 @@ public class SgLabel extends TextView implements IObject {
 					/ (float) MainWindow.FORM_WIDTH;
 			m_fFontSize = Float.parseFloat(strValue) * fWinScale;
 			this.setTextSize(m_fFontSize);
+			//shimmerTv.setTextSize(m_fFontSize);
 		} else if ("IsBold".equals(strName))
 			m_bIsBold = Boolean.parseBoolean(strValue);
 		else if ("FontColor".equals(strName)) {
 			m_cFontColor = Color.parseColor(strValue);
 			m_cStartFillColor = m_cFontColor;
 			this.setTextColor(m_cFontColor);
+			//shimmerTv.setTextColor(m_cFontColor);
 		} else if ("HorizontalContentAlignment".equals(strName))
 			m_strHorizontalContentAlignment = strValue;
 		else if ("VerticalContentAlignment".equals(strName))
@@ -282,6 +310,7 @@ public class SgLabel extends TextView implements IObject {
 		}
 
 		setGravity(nFlag);
+		//shimmerTv.setGravity(nFlag);
 	}
 
 	public String getBindingExpression() {
@@ -294,6 +323,9 @@ public class SgLabel extends TextView implements IObject {
 		this.setText(m_strContent);
 		this.invalidate();
 
+//		shimmerTv.setTextColor(m_cFontColor);
+//		shimmerTv.setText(m_strContent);
+//		shimmerTv.invalidate();
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

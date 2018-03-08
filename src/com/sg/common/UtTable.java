@@ -7,6 +7,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.widget.ListView;
 
 import com.sg.common.UtTableAdapter.TableCell;
@@ -48,12 +49,13 @@ public class UtTable extends ListView {
 		int count = Math.min(m_tableAdapter.getCount(), updatecount); //
 		if (m_bUseTitle && count < 1) {//如果使用标题 并且count<1
 
+			
 			m_tableAdapter.m_cTexColor = m_cFontColor;
 
 			TableCell[] titles = new TableCell[listTitles.size()];
 			for (int i = 0; i < column; i++) {
 				titles[i] = new TableCell(listTitles.get(i), width,
-						LayoutParams.MATCH_PARENT, TableCell.STRING, 0x00000000);
+						LayoutParams.MATCH_PARENT, TableCell.STRING, Color.BLACK);//0x00000000
 			}
 			m_tableAdapter.addRow(new TableRow(titles)); 		
 
@@ -64,7 +66,7 @@ public class UtTable extends ListView {
 			for (int i = 1; i < count; ++i) {
 				List<String> lst = listContends.get(i - 1);
 
-				TableRow contendRow = m_tableAdapter.getItem(i);
+				TableRow contendRow = m_tableAdapter.getItem(i); 
 				for (int j = 0; j < contendRow.getSize(); ++j) {
 					TableCell cell = contendRow.getCellValue(j);
 					cell.value = lst.get(j);
@@ -104,8 +106,10 @@ public class UtTable extends ListView {
 				List<String> lst = listContends.get(i);
 
 				TableCell[] cells = new TableCell[listTitles.size()];
-				int cColor = i % 2 == 0 ? m_cEvenRowBackground
-						: m_cOddRowBackground;
+				
+			
+				int cColor = i % 2 == 0 ? Color.parseColor(ji)
+						:  Color.parseColor(ou);
 				for (int j = 0; j < lst.size(); ++j) {
 					cells[j] = new TableCell(lst.get(j), width,
 							LayoutParams.MATCH_PARENT, TableCell.STRING, cColor);
@@ -148,8 +152,9 @@ public class UtTable extends ListView {
 	protected int m_nTableHeight = 0;
 
 	protected int m_cFontColor = Color.GREEN;
-	public int m_cOddRowBackground = 0xFF000000; // 奇数 
-	public int m_cEvenRowBackground =0xFF000000; // 偶数
+	public int m_cOddRowBackground = 0x00000000; // 奇数 
+	public int m_cEvenRowBackground =0x00000000; // 偶数
+	public String ji,ou;
 	public boolean m_bUseTitle = true;
 	int m_nLayoutBottomOffset = 1; // 动态调节layout大小
 }

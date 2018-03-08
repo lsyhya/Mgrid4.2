@@ -90,7 +90,7 @@ public class UtTableAdapter extends BaseAdapter {
 				}
 			}
 			
-			this.setBackgroundColor(Color.WHITE);
+			//this.setBackgroundColor(Color.WHITE);
 		}
 		
 		public void updatavalue(TableRow tableRow)

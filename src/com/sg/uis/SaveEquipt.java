@@ -107,19 +107,19 @@ public class SaveEquipt extends UtTable implements IObject {
 		}
 		else
 		{
-			DeviceName="DeviceName";
-			SignalName="SignalName";
+			DeviceName="Device Name";
+			SignalName="Signal Name";
 			Value="Value";
-			Unit="Numericalsignal";
-			ValueType="ValueType";
-			AlarmSeverity="AlarmSeverity";
-			AcquisitionTime="AcquisitionTime";
+			Unit="Numerical Signal";
+			ValueType="Value Type";
+			AlarmSeverity="Alarm Severity";
+			AcquisitionTime="Acquisition Time";
 			
 			DeviceList="  Device↓   ";
-			SetTime="SetTime";
-			PreveDay="PreveDay";
-			NextDay="NextDay";
-			Receive="  Receive   ";
+			SetTime="Set Time";
+			PreveDay="Previous Day";
+			NextDay="Next Day";
+			Receive="  Receipt   ";
 		}
 		
 		//标头标题
