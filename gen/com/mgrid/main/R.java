@@ -382,27 +382,28 @@ containing a value of this type.
     }
     public static final class drawable {
         public static final int bg_shadow=0x7f020000;
-        public static final int dialog_loading=0x7f020001;
-        public static final int dialog_loading_img=0x7f020002;
-        public static final int et_bg_f=0x7f020003;
-        public static final int et_bg_nf=0x7f020004;
-        public static final int et_select=0x7f020005;
-        public static final int fjw=0x7f020006;
-        public static final int flicker=0x7f020007;
-        public static final int flicker_1=0x7f020008;
-        public static final int free_dialog_bg=0x7f020009;
-        public static final int hi=0x7f02000a;
-        public static final int hj=0x7f02000b;
-        public static final int hk=0x7f02000c;
-        public static final int ic_jiqiren=0x7f02000d;
-        public static final int ic_launcher=0x7f02000e;
-        public static final int kstart=0x7f02000f;
-        public static final int loading_bg=0x7f020010;
-        public static final int loading_icon=0x7f020011;
-        public static final int mgrid=0x7f020012;
-        public static final int pop_bg=0x7f020013;
-        public static final int popup_bg=0x7f020014;
-        public static final int twitter=0x7f020015;
+        public static final int btn_bg1=0x7f020001;
+        public static final int dialog_loading=0x7f020002;
+        public static final int dialog_loading_img=0x7f020003;
+        public static final int et_bg_f=0x7f020004;
+        public static final int et_bg_nf=0x7f020005;
+        public static final int et_select=0x7f020006;
+        public static final int fjw=0x7f020007;
+        public static final int flicker=0x7f020008;
+        public static final int flicker_1=0x7f020009;
+        public static final int free_dialog_bg=0x7f02000a;
+        public static final int hi=0x7f02000b;
+        public static final int hj=0x7f02000c;
+        public static final int hk=0x7f02000d;
+        public static final int ic_jiqiren=0x7f02000e;
+        public static final int ic_launcher=0x7f02000f;
+        public static final int kstart=0x7f020010;
+        public static final int loading_bg=0x7f020011;
+        public static final int loading_icon=0x7f020012;
+        public static final int mgrid=0x7f020013;
+        public static final int pop_bg=0x7f020014;
+        public static final int popup_bg=0x7f020015;
+        public static final int twitter=0x7f020016;
     }
     public static final class id {
         public static final int FB1=0x7f07002e;

@@ -49,17 +49,19 @@ public class Dial extends View implements IObject {
 		int nHeight = (int) (((float) (m_nHeight) / (float) MainWindow.FORM_HEIGHT) * (m_rRenderWindow.VIEW_BOTTOM - m_rRenderWindow.VIEW_TOP));
 
 		int pad = 4; // 外圆边距
-		m_rRectF1.left = pad + m_nfillWidth / 2;
-		m_rRectF1.top = pad + m_nfillWidth / 2;
+
 		if (nWidth < nHeight) { // 用小的一边长度 保证为圆不变形
+			m_nfillWidth=nWidth/6;
 			m_rRectF1.right = nWidth - pad - m_nfillWidth / 2;
-			;
 			m_rRectF1.bottom = nWidth - pad - m_nfillWidth / 2;
 		} else {
+			m_nfillWidth=nHeight/6;
 			m_rRectF1.right = nHeight - pad - m_nfillWidth / 2;
 			m_rRectF1.bottom = nHeight - pad - m_nfillWidth / 2;
 		}
 
+		m_rRectF1.left = pad + m_nfillWidth / 2;
+		m_rRectF1.top = pad + m_nfillWidth / 2;
 		if (mode == 8) { // 显示标签
 			m_oPaint.setColor(m_cLineColor);
 			m_oPaint.setTextSize(40);

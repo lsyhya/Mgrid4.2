@@ -50,17 +50,24 @@ public class Dial_A extends View implements IObject {
         int nWidth = (int) (((float)(m_nWidth) / (float)MainWindow.FORM_WIDTH) * (m_rRenderWindow.VIEW_RIGHT - m_rRenderWindow.VIEW_LEFT));
 		int nHeight = (int) (((float)(m_nHeight) / (float)MainWindow.FORM_HEIGHT) * (m_rRenderWindow.VIEW_BOTTOM - m_rRenderWindow.VIEW_TOP));
 
+		
+		
+		
 		float angle = 360/maxValue * data_value;
 		int pad = 2;  //Õ‚‘≤±ﬂæ‡
-		m_rRectF1.left = pad+m_nfillWidth/2;
-		m_rRectF1.top = pad+m_nfillWidth/2;
+		
 		if(nWidth<nHeight){    
-			m_rRectF1.right = nWidth-pad-m_nfillWidth/2;;
+			m_nfillWidth=nWidth/10;
+			m_rRectF1.right = nWidth-pad-m_nfillWidth/2;
 			m_rRectF1.bottom = nWidth-pad-m_nfillWidth/2;
 		}else{
+			m_nfillWidth=nHeight/10;
 			m_rRectF1.right = nHeight-pad-m_nfillWidth/2;
 			m_rRectF1.bottom = nHeight-pad-m_nfillWidth/2;
 		}
+		
+		m_rRectF1.left = pad+m_nfillWidth/2;
+		m_rRectF1.top = pad+m_nfillWidth/2;
 	
 		if(mode==1){
 

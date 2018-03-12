@@ -110,7 +110,7 @@ public class SgChangXmlPW extends TextView implements IObject {
 		tvNew.setPadding(0, 0, 0, 0);
 		T_CPassword.setPadding(0, 0, 0, 0);
 		tvOld.setPadding(0, 0, 0, 0);
-		MakeBtn.setPadding(0, 10, 0, 0);
+		MakeBtn.setPadding(0, 0, 0, 0);
 
 		tvNew.setTextSize(15);
 		T_CPassword.setTextSize(15);
@@ -360,7 +360,12 @@ public class SgChangXmlPW extends TextView implements IObject {
 					+ (int) (nHeight * 1f));
 
 		}
-		MakeBtn.setPadding(0,(int)(nHeight * 0.18)/4, 0, 0);
+		Rect rect=new Rect();
+		getPaint().getTextBounds("ÐÞ¸Ä", 0, 2, rect);
+		int h=rect.height();
+		
+		System.out.println(nHeight * 0.18+":¸ß¶È£º"+h);
+		//MakeBtn.setPadding(0,(int)(nHeight * 0.18-h)/2, 0, 0);
 
 	}
 
@@ -420,7 +425,7 @@ public class SgChangXmlPW extends TextView implements IObject {
 		    	m_oEditTextNEW.setBackgroundResource(R.drawable.et_select);
 				m_oEditTextOLD.setBackgroundResource(R.drawable.et_select);
 				E_CPassword.setBackgroundResource(R.drawable.et_select);
-				MakeBtn.setBackgroundResource(R.drawable.bg_shadow);
+				MakeBtn.setBackgroundResource(R.drawable.btn_bg1);
 		    }else
 		    {
 		    	m_cBackgroundColor = Color.parseColor(strValue);
