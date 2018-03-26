@@ -26,6 +26,7 @@ import com.mgrid.data.EquipmentDataModel.EventConditionCfg;
 import com.mgrid.data.EquipmentDataModel.Signal;
 import com.mgrid.main.MGridActivity;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 import com.sg.uis.SaveEquipt;
 import com.sg.uis.SaveSignal;
 import comm_service.local_file;
@@ -1268,14 +1269,16 @@ public class DataGetter extends Thread {
 
 				signal.meaning = "0.0";
 				if (i == sig_no - 1) {
-					if (MGridActivity.whatLanguage) {
-						signal.meaning = "通信中断";
-						signal.value = "0.00000";
-					} else {
-						signal.meaning = "Lost";
-						signal.value = "0.00000";
-					}
-
+					
+					
+//					if (MGridActivity.whatLanguage) {
+//						signal.meaning = "通信中断";		
+//					} else {
+//						signal.meaning = "Lost";					
+//					}
+					
+					signal.meaning = LanguageStr.meaning;	
+					signal.value = "0.00000";
 				}
 
 				if (signal.severity != 4) {

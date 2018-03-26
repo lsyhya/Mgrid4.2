@@ -28,6 +28,7 @@ import com.mgrid.main.MainWindow;
 import com.mgrid.main.SoundService;
 import com.mgrid.util.ExpressionUtils;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 import com.sg.common.TotalVariable;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
@@ -40,11 +41,11 @@ import data_model.ipc_control;
 /** 事件列表 */
 public class SgEventList extends UtTable implements IObject {
 
-	private String DeviceName;
-	private String AlarmName;
-	private String AlarmMeaning;
-	private String AlarmSeverity;
-	private String StartTime;
+	private String DeviceName=LanguageStr.DeviceName;
+	private String AlarmName=LanguageStr.AlarmName;
+	private String AlarmMeaning=LanguageStr.AlarmMeaning;
+	private String AlarmSeverity=LanguageStr.AlarmSeverity;
+	private String StartTime=LanguageStr.StartTime;
     private Hashtable<String, Hashtable<String, Event>> listEvents = null;
 	private List<String> cmd_list = new ArrayList<String>();
 
@@ -54,28 +55,28 @@ public class SgEventList extends UtTable implements IObject {
 		m_listTempEvents = new Hashtable<String, Hashtable<String, Event>>();
 
 		// System.out.println(MGridActivity.whatLanguage);
-		if (MGridActivity.whatLanguage) {
-			DeviceName = "设备名称";
-			AlarmName = "告警名称";
-			AlarmMeaning = "告警含义";
-			AlarmSeverity = "告警等级";
-			StartTime = "开始时间";
-			one="通知";
-			two="一般告警";
-			three="严重告警";
-			four="致命告警";
-
-		} else {
-			DeviceName = "DeviceName";
-			AlarmName = "AlarmName";
-			AlarmMeaning = "AlarmMeaning";
-			AlarmSeverity = "AlarmSeverity";
-			StartTime = "StartTime";
-			one="Notice";
-			two="GeneralAlarm";
-			three="CriticalAlarm";
-			four="FatalAlarm";
-		}
+//		if (MGridActivity.whatLanguage) {
+//			DeviceName = "设备名称";
+//			AlarmName = "告警名称";
+//			AlarmMeaning = "告警含义";
+//			AlarmSeverity = "告警等级";
+//			StartTime = "开始时间";
+//			one="通知";
+//			two="一般告警";
+//			three="严重告警";
+//			four="致命告警";
+//
+//		} else {
+//			DeviceName = "DeviceName";
+//			AlarmName = "AlarmName";
+//			AlarmMeaning = "AlarmMeaning";
+//			AlarmSeverity = "AlarmSeverity";
+//			StartTime = "StartTime";
+//			one="Notice";
+//			two="GeneralAlarm";
+//			three="CriticalAlarm";
+//			four="FatalAlarm";
+//		}
 
 		// 表头
 		lstTitles = new ArrayList<String>();
@@ -259,10 +260,10 @@ public class SgEventList extends UtTable implements IObject {
 			m_cBorderColor = Color.parseColor(strValue);
 		} else if ("OddRowBackground".equals(strName)) {
 			m_cOddRowBackground = Color.parseColor(strValue);
-			ji=strValue;
+			//ji=strValue;
 		} else if ("EvenRowBackground".equals(strName)) {
 			m_cEvenRowBackground = Color.parseColor(strValue);
-			ou=strValue;
+			//ou=strValue;
 		} else if ("CmdExpression".equals(strName)) {
 			m_strCmdExpression = strValue;
 			parseCmdExpression(m_strCmdExpression);
@@ -670,7 +671,7 @@ public class SgEventList extends UtTable implements IObject {
 	List<String> lstTitles = null;
 	ArrayList<List<String>> lstContends = null;
 	ArrayList<List<String>> lstContends_two = null;
-	String one,two,three,four;
+	String one=LanguageStr.one,two=LanguageStr.two,three=LanguageStr.three,four=LanguageStr.four;
 
 }
 

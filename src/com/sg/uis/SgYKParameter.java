@@ -16,6 +16,7 @@ import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 import com.sg.common.MutiThreadShareObject;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
@@ -52,7 +53,7 @@ import android.widget.Toast;
 public class SgYKParameter extends TextView implements IObject {
 
 	
-	private String Chooose;
+	private String Chooose=LanguageStr.Chooose;
 	
 	public SgYKParameter(Context context) {
 		super(context); 
@@ -87,15 +88,15 @@ public class SgYKParameter extends TextView implements IObject {
         });
         
         
-    	if(MGridActivity.whatLanguage)
-		{
-		  Chooose="ÇëÑ¡Ôñ ¡ý";
-		}
-		else
-		{
-			Chooose="Choose¡ý";
-		
-		}
+//    	if(MGridActivity.whatLanguage)
+//		{
+//		  Chooose="ÇëÑ¡Ôñ ¡ý";
+//		}
+//		else
+//		{
+//			Chooose="Choose¡ý";
+//		
+//		}
         
         
         m_oPaint = new Paint();

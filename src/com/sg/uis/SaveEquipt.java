@@ -18,6 +18,7 @@ import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 import com.sg.common.MyAdapter;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtTable;
@@ -61,19 +62,19 @@ import android.widget.AdapterView.OnItemSelectedListener;
 public class SaveEquipt extends UtTable implements IObject {
 
 	//方便中英文切换
-	private String DeviceName;
-	private String SignalName;
-	private String Value;
-	private String Unit;
-	private String ValueType;
-	private String AlarmSeverity;
-	private String AcquisitionTime;
+	private String DeviceName=LanguageStr.DeviceName;
+	private String SignalName=LanguageStr.SignalName;
+	private String Value=LanguageStr.Value;
+	private String Unit=LanguageStr.Unit;
+	private String ValueType=LanguageStr.ValueType;
+	private String AlarmSeverity=LanguageStr.AlarmSeverity;
+	private String AcquisitionTime=LanguageStr.AcquisitionTime;
 	
-	private String DeviceList;
-	private String SetTime;
-	private String PreveDay;
-	private String NextDay;
-	private String Receive;
+	private String DeviceList=LanguageStr.DeviceList;
+	private String SetTime=LanguageStr.SetTime;
+	private String PreveDay=LanguageStr.PreveDay;
+	private String NextDay=LanguageStr.NextDay;
+	private String Receive=LanguageStr.Receive;
 	
 	
 	private String textColor="#FF000000";
@@ -89,38 +90,38 @@ public class SaveEquipt extends UtTable implements IObject {
 		m_rBBox = new Rect();
 		
 
-		if(MGridActivity.whatLanguage)
-		{
-		    DeviceName="设备名称";
-		    SignalName="信号名称";
-		    Value="数值";
-		    Unit="单位";
-		    ValueType="数值类型";
-		    AlarmSeverity="告警等级";
-		    AcquisitionTime="采集时间";
-			
-			DeviceList="  设备↓   ";
-			SetTime="设置日期";
-			PreveDay="前一天";
-			NextDay="后一天";
-			Receive="  获取   ";
-		}
-		else
-		{
-			DeviceName="Device Name";
-			SignalName="Signal Name";
-			Value="Value";
-			Unit="Numerical Signal";
-			ValueType="Value Type";
-			AlarmSeverity="Alarm Severity";
-			AcquisitionTime="Acquisition Time";
-			
-			DeviceList="  Device↓   ";
-			SetTime="Set Time";
-			PreveDay="Previous Day";
-			NextDay="Next Day";
-			Receive="  Receipt   ";
-		}
+//		if(MGridActivity.whatLanguage)
+//		{
+//		    DeviceName="设备名称";
+//		    SignalName="信号名称";
+//		    Value="数值";
+//		    Unit="单位";
+//		    ValueType="数值类型";
+//		    AlarmSeverity="告警等级";
+//		    AcquisitionTime="采集时间";
+//			
+//			DeviceList="  设备↓   ";
+//			SetTime="设置日期";
+//			PreveDay="前一天";
+//			NextDay="后一天";
+//			Receive="  获取   ";
+//		}
+//		else
+//		{
+//			DeviceName="Device Name";
+//			SignalName="Signal Name";
+//			Value="Value";
+//			Unit="Numerical Signal";
+//			ValueType="Value Type";
+//			AlarmSeverity="Alarm Severity";
+//			AcquisitionTime="Acquisition Time";
+//			
+//			DeviceList="  Device↓   ";
+//			SetTime="Set Time";
+//			PreveDay="Previous Day";
+//			NextDay="Next Day";
+//			Receive="  Receipt   ";
+//		}
 		
 		//标头标题
 		lstTitles = new ArrayList<String>();

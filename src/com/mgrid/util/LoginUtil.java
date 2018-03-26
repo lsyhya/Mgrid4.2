@@ -1,10 +1,8 @@
 package com.mgrid.util;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import com.mgrid.main.MGridActivity;
+import com.mgrid.main.R;
+import com.sg.common.LanguageStr;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -16,42 +14,39 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.mgrid.main.MGridActivity;
-import com.mgrid.main.R;
-
 public class LoginUtil {
 
-	private String yes = "";
-	private String no = "";
-	private String systemExit = "";
+	private String yes = LanguageStr.yes;
+	private String no =  LanguageStr.no;
+	private String systemExit =  LanguageStr.systemExit;
 
-	private String Text1 = "";
-	private String Text2 = "";
+	private String Text1 = LanguageStr.Text1;
+	private String Text2 = LanguageStr.Text2;
 
 	Context context;
 	String filePath = Environment.getExternalStorageDirectory().getPath();
 
 	public LoginUtil(Context context) {
 		this.context = context;
-		if (MGridActivity.whatLanguage) {
-
-			yes = "进入";
-			no = "退出";
-			systemExit = "登陆";
-
-			Text1 = "请输入正确";
-			Text2 = "用户名或密码错误";
-
-		} else {
-
-			yes = "ok";
-			no = "cancel";
-			systemExit = "LOGIN";
-
-			Text1 = "Please enter sure！！";
-			Text2 = "Password or user name error";
-
-		}
+//		if (MGridActivity.whatLanguage) {
+//
+//			yes = "进入";
+//			no = "退出";
+//			systemExit = "登陆";
+//
+//			Text1 = "请输入正确";
+//			Text2 = "用户名或密码错误";
+//
+//		} else {
+//
+//			yes = "ok";
+//			no = "cancel";
+//			systemExit = "LOGIN";
+//
+//			Text1 = "Please enter sure！！";
+//			Text2 = "Password or user name error";
+//
+//		}
 	}
 
 //	private void saveLogin(String text) {

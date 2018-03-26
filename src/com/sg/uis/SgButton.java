@@ -15,6 +15,7 @@ import com.mgrid.util.ShellUtils;
 import com.mgrid.util.ShellUtils.CommandResult;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtExpressionParser.stExpression;
@@ -47,10 +48,11 @@ import data_model.ipc_control;
 public class SgButton extends TextView implements IObject {
 
 	
-	private String Prompt = "";
-	private String problem = "";
-	private String OK = "";
-	private String ON = "";
+	private String Prompt =LanguageStr.Prompt;
+	private String problem = LanguageStr.problem;
+	private String OK = LanguageStr.OK;
+	private String ON = LanguageStr.ON;
+	private String text = LanguageStr.text;
 	
 	public SgButton(Context context) {
 		super(context);
@@ -89,21 +91,22 @@ public class SgButton extends TextView implements IObject {
 
 		m_oPaint = new Paint();
 		m_rBBox = new Rect();
-		
-		if (MGridActivity.whatLanguage) {
-
-			Prompt = "提示";
-			problem = "是否确定?";
-			OK = "确认:";
-			ON = "取消";
-
-		} else {
-
-			Prompt = "Hint";
-			problem = "Are you sure? ";
-			OK = "yes";
-			ON = "cancel";
-		}
+//		
+//		if (MGridActivity.whatLanguage) {
+//
+//			Prompt = "提示";
+//			problem = "是否确定?";
+//			OK = "确认:";
+//			ON = "取消";
+//			text="删除成功,请自行重启机器";
+//		} else {
+//
+//			Prompt = "Hint";
+//			problem = "Are you sure? ";
+//			OK = "yes";
+//			ON = "cancel";
+//			text="Delete Success, Please Restart";
+//		}
 
 		// setBackgroundResource(com.mgrid.main.R.drawable.sg_button_up);
 		// setBackgroundDrawable(new
@@ -675,21 +678,9 @@ public class SgButton extends TextView implements IObject {
 
 	//
 	private void showHint() {
-		if(MGridActivity.whatLanguage)
-		new AlertDialog.Builder(getContext())
-				.setTitle("删除" + isDelete + ",请自行重启机器")
-				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						// TODO Auto-generated method stub
-
-					}
-				}).create().show();
-		else
 			new AlertDialog.Builder(getContext())
-		.setTitle("Delete Success, Please Restart")
-		.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		.setTitle(text)
+		.setPositiveButton(OK, new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface arg0, int arg1) {

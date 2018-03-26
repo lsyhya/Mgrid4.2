@@ -108,8 +108,8 @@ public class UtTable extends ListView {
 				TableCell[] cells = new TableCell[listTitles.size()];
 				
 			
-				int cColor = i % 2 == 0 ? Color.parseColor(ji)
-						:  Color.parseColor(ou);
+				int cColor = i % 2 == 0 ? m_cOddRowBackground
+						:  m_cEvenRowBackground;
 				for (int j = 0; j < lst.size(); ++j) {
 					cells[j] = new TableCell(lst.get(j), width,
 							LayoutParams.MATCH_PARENT, TableCell.STRING, cColor);
@@ -154,7 +154,7 @@ public class UtTable extends ListView {
 	protected int m_cFontColor = Color.GREEN;
 	public int m_cOddRowBackground = 0x00000000; // 奇数 
 	public int m_cEvenRowBackground =0x00000000; // 偶数
-	public String ji,ou;
+	//public String ji,ou;
 	public boolean m_bUseTitle = true;
 	int m_nLayoutBottomOffset = 1; // 动态调节layout大小
 }

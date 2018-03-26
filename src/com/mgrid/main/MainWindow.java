@@ -36,6 +36,7 @@ import com.mgrid.data.EquipmentDataModel.Signal;
 import com.mgrid.util.ExpressionUtils;
 import com.sg.common.Calculator;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 import com.sg.common.MutiThreadShareObject;
 import com.sg.common.SgRealTimeData;
 import com.sg.common.TotalVariable;
@@ -118,6 +119,7 @@ import com.sg.uis.LsyNewView.CoolButton;
 import com.sg.uis.LsyNewView.EquipHistoryAlarm;
 import com.sg.uis.LsyNewView.EventLevelAlter;
 import com.sg.uis.LsyNewView.HistoryCurveChart;
+import com.sg.uis.LsyNewView.LanguageChange;
 import com.sg.uis.LsyNewView.OnClickBtn;
 import com.sg.uis.LsyNewView.SgBARS;
 import com.sg.uis.LsyNewView.SgBarChartView;
@@ -144,6 +146,8 @@ import data_model.save_multipoint_signal;
 /** 主窗口 */
 public class MainWindow extends ViewGroup {
 
+	
+	
 		
 	public MainWindow(final MGridActivity context) {
 		super(context);
@@ -165,11 +169,11 @@ public class MainWindow extends ViewGroup {
 					break;
 
 				case 1:
-					if(MGridActivity.whatLanguage)
-					Toast.makeText(context, "设置成功",
-							Toast.LENGTH_SHORT).show();
-					else
-					Toast.makeText(context, "Success",
+//					if(MGridActivity.whatLanguage)
+//					Toast.makeText(context, "设置成功",
+//							Toast.LENGTH_SHORT).show();
+//					else
+					Toast.makeText(context, LanguageStr.Success,
 								Toast.LENGTH_SHORT).show();
 					String uid=((String) msg.obj).replace("设置成功.", "");
 					if(uid==null) return;
@@ -200,11 +204,11 @@ public class MainWindow extends ViewGroup {
 
 				case 2:
 					if(MGridActivity.whatLanguage)
-					new AlertDialog.Builder(context).setTitle("错误")
+					new AlertDialog.Builder(context).setTitle(LanguageStr.Fail)
 							.setMessage((String) msg.obj).show();
 					else
 					new AlertDialog.Builder(context).setTitle("Title")
-						    .setMessage("Fail").show();
+						    .setMessage(LanguageStr.Fail).show();
 					break;
 
 				default:
@@ -1057,6 +1061,10 @@ public class MainWindow extends ViewGroup {
 						{
 							SgPieChart3D spc=new SgPieChart3D(this.getContext());
 							m_mapUIs.put(strID, spc);
+						}else if("LanguageChange".equals(strType))
+						{
+							LanguageChange LC=new LanguageChange(this.getContext());
+							m_mapUIs.put(strID, LC);
 						}
  
  
@@ -1178,7 +1186,8 @@ public class MainWindow extends ViewGroup {
 								|| "HistoryCurveChart".equals(strElementType)
 								|| "OnClickBtn".equals(strElementType)
 								|| "CoolButton".equals(strElementType)
-								|| "SgPieChart3D".equals(strElementType)) {
+								|| "SgPieChart3D".equals(strElementType)
+								|| "LanguageChange".equals(strElementType)) {
 							try {
 								iCurrentObj.parseProperties(strName, strValue,
 										m_strResFolder);

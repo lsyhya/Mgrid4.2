@@ -63,6 +63,7 @@ import com.mgrid.util.LoginUtil;
 import com.mgrid.util.XmlUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtIniReader;
 import com.sg.uis.SaveEquipt;
@@ -91,8 +92,8 @@ public class MGridActivity extends Activity {
 	private DataGetter mDataGetter;
 	private ContainerView mContainer;
 	private FlikerProgressBar bar;
-	private SelfDialog dialog=null;
-	
+	private SelfDialog dialog = null;
+
 	public static String logeFilePath = Environment.getExternalStorageDirectory().getPath() + "/login" + ".login";
 	public WakeLock mWakeLock;// 锁屏类
 	public SgVideoView svv = null; // 播放视频
@@ -112,6 +113,7 @@ public class MGridActivity extends Activity {
 	public static Context context = null;
 	public static String XmlFile = "";
 	public static String SIP = "192.168.1.238";
+	public static String Language = "";
 
 	public InputMethodManager mImm = null;
 	// 加载用
@@ -188,7 +190,7 @@ public class MGridActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-          
+
 		init();
 	}
 
@@ -207,12 +209,6 @@ public class MGridActivity extends Activity {
 		context = this;
 		m_oViewGroups = new HashMap<String, MainWindow>();
 		m_oPageList = new ArrayList<String>();
-		whatLanguage = whatLanguage();
-		if (whatLanguage) {
-			Load = "加载完";
-		} else {
-			Load = "Loaded";
-		}
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 强制为横屏
 		mImm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);// 输入法窗口
@@ -225,7 +221,7 @@ public class MGridActivity extends Activity {
 
 		setBroadcastReceiver(); // 注册广播
 		if (parseMgridIni()) {
-//			setProgressDialog();
+			// setProgressDialog();
 			if (!SIP.equals("")) {
 				startTimeFlush();
 			}
@@ -236,8 +232,25 @@ public class MGridActivity extends Activity {
 
 	}
 
+//	private void selectLanguage() {
+//		LanguageStr.whatLanguageSystem(context);
+//		if (Language == null) {
+//			if (whatLanguage) {
+//				Load = "加载完";
+//			} else {
+//				Load = "Loaded";
+//			}
+//		} else {
+//			if (Language.equals("Chinese")) {
+//				Load = "加载完";
+//			} else {
+//				Load = "Loaded";
+//			}
+//		}
+//	}
+
 	private void setProgressDialog() {
-		dialog = new SelfDialog(this);	
+		dialog = new SelfDialog(this);
 		dialog.show();
 		dialog.settext("");
 	}
@@ -257,13 +270,13 @@ public class MGridActivity extends Activity {
 					// 拍照功能是否开启
 					if (m_bTakePhoto) {
 						// 打开拍照工具
-//						final CameraUtils cameraUtils = new CameraUtils(getApplicationContext());
-//						cameraUtils.openCamera();
-						//启动拍照页面
-						isNOChangPage=false;
-					    Intent intent=new Intent(MGridActivity.this,CameraActivity.class);
-					    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-					    startActivity(intent);
+						// final CameraUtils cameraUtils = new CameraUtils(getApplicationContext());
+						// cameraUtils.openCamera();
+						// 启动拍照页面
+						isNOChangPage = false;
+						Intent intent = new Intent(MGridActivity.this, CameraActivity.class);
+						intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+						startActivity(intent);
 
 					}
 				}
@@ -297,15 +310,7 @@ public class MGridActivity extends Activity {
 		getApplicationContext().registerReceiver(BroastcastScreenOn, filter);
 	}
 
-	// 获取系统语言
-	private boolean whatLanguage() {
-		Locale locale = getResources().getConfiguration().locale;
-		String language = locale.getLanguage();
-		if (language.endsWith("zh"))
-			return true;
-		else
-			return false;
-	}
+
 
 	private boolean parseMgridIni() {
 
@@ -323,6 +328,10 @@ public class MGridActivity extends Activity {
 		if (iniReader == null) {
 			return false;
 		}
+
+		LanguageStr.iniLanguage = iniReader.getValue("SysConf", "Language");
+		LanguageStr.setLanguage();
+		Load=LanguageStr.Load;
 
 		m_sRootFolder = iniReader.getValue("SysConf", "FolderRoot");
 		m_sMainPage = iniReader.getValue("SysConf", "MainPage");
@@ -653,7 +662,7 @@ public class MGridActivity extends Activity {
 			e.printStackTrace();
 			new AlertDialog.Builder(this).setTitle("错误").setMessage("读取配置文件 [ pagelist ] 异常，停止加载！\n详情：" + e.toString())
 					.show();
-			
+
 			return false;
 		}
 
@@ -741,17 +750,16 @@ public class MGridActivity extends Activity {
 						pagename = m_oPageList.get(tmp_load_pageseek);
 					} else {
 
-						 tmp_flag_loading = false;
-						 DataGetter.bIsLoading = false;
-						 isChangPage = true;
-						 
-						 Toast.makeText(MGridActivity.this, Load,
-						 Toast.LENGTH_LONG).show();
-						 isNOChangPage = true;
-						 isLoading = false;
-						 if(dialog!=null)
-								dialog.dismiss();
-						 System.out.println("所用时间：" + (System.currentTimeMillis() - starttime));
+						tmp_flag_loading = false;
+						DataGetter.bIsLoading = false;
+						isChangPage = true;
+
+						Toast.makeText(MGridActivity.this, Load, Toast.LENGTH_LONG).show();
+						isNOChangPage = true;
+						isLoading = false;
+						if (dialog != null)
+							dialog.dismiss();
+						System.out.println("所用时间：" + (System.currentTimeMillis() - starttime));
 						// bar.finishLoad();
 						// dialog.dismiss();
 						return;
@@ -797,8 +805,8 @@ public class MGridActivity extends Activity {
 						Toast.makeText(MGridActivity.this, Load, Toast.LENGTH_LONG).show();
 						isLoading = false;
 						isNOChangPage = true;
-						if(dialog!=null)
-						dialog.dismiss();
+						if (dialog != null)
+							dialog.dismiss();
 						// bar.finishLoad();
 						// dialog.dismiss();
 

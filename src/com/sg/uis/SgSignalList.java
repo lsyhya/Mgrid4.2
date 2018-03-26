@@ -19,6 +19,7 @@ import com.mgrid.data.EquipmentDataModel.Signal;
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 import com.sg.common.UtTable;
 
 /** 信号 */
@@ -26,34 +27,34 @@ public class SgSignalList extends UtTable implements IObject {
 
 	
 	//方便中英文切换
-	private String Name;
-	private String RefreshTime;
-	private String Value;
-	private String Implication;
-	private String Unit;
+	private String Name=LanguageStr.Names;
+	private String RefreshTime=LanguageStr.RefreshTime;
+	private String Value=LanguageStr.Value;
+	private String Implication=LanguageStr.Implication;
+	private String Unit=LanguageStr.Unit;
 
 
 	public SgSignalList(Context context) {
 		super(context);
 		m_rBBox = new Rect();
 		
-		if(MGridActivity.whatLanguage)
-		{
-			Name="名称";
-			RefreshTime="刷新时间";
-			Value="值";
-			Implication="含义";
-			Unit="单位";
-		}
-		else
-		{
-			Name="Name";
-			RefreshTime="RefreshTime";
-			Value="Value";
-			Implication="Implication";
-			Unit="Unit";
-		
-		}
+//		if(MGridActivity.whatLanguage)
+//		{
+//			Name="名称";
+//			RefreshTime="刷新时间";
+//			Value="值";
+//			Implication="含义";
+//			Unit="单位";
+//		}
+//		else
+//		{
+//			Name="Name";
+//			RefreshTime="RefreshTime";
+//			Value="Value";
+//			Implication="Implication";
+//			Unit="Unit";
+//		
+//		}
 		
 		lstTitles = new ArrayList<String>();
 		lstTitles.add(Name);

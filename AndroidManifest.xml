@@ -4,7 +4,7 @@
   package="com.mgrid.main"
   android:installLocation="preferExternal"
   android:versionCode="12"
-  android:versionName="4.24"
+  android:versionName="4.25"
  >
   
    

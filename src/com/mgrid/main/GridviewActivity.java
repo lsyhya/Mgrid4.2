@@ -3,6 +3,7 @@ package com.mgrid.main;
 import java.io.File;
 
 import com.mgrid.fuction.PhotoGridview;
+import com.sg.common.LanguageStr;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,10 +50,10 @@ public class GridviewActivity extends Activity {
 		RelativeLayout.LayoutParams photoParams = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
 		
 		button= new Button(this);
-		if(MGridActivity.whatLanguage)
-		button.setText("·µ»Ø");
-		else
-		button.setText("Back");
+//		if(MGridActivity.whatLanguage)
+//		button.setText("·µ»Ø");
+//		else
+		button.setText(LanguageStr.back);
 		RelativeLayout.LayoutParams buttonParams = new LayoutParams(100,80); 
 		buttonParams.setMargins(900, 580, 1000, 650); 
 		button.setOnClickListener(l);

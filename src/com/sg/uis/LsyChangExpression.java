@@ -24,6 +24,7 @@ import com.mgrid.main.R;
 import com.mgrid.util.XmlUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtExpressionParser.stExpression;
@@ -40,17 +41,12 @@ public class LsyChangExpression extends TextView implements IObject {
 		this.setClickable(true);
 		this.setGravity(Gravity.CENTER);
 		setBackgroundResource(android.R.drawable.btn_default);
-//		setPadding(0, 0, 0, 0);
 		this.setTextSize(20);
 		setTextColor(Color.BLACK);
 		m_rBBox = new Rect();
 		Et_ChangeValue = new EditText(context);
 		Et_ChangeValue.setBackgroundResource(android.R.drawable.edit_text);
 		
-	//	Et_ChangeValue.setBackgroundResource(R.drawable.et_select);
-	//	setBackgroundResource(R.drawable.bg_shadow);
-		
-//		Et_ChangeValue.setPadding(0, 0, 0, 0);
 		Et_ChangeValue.setTextSize(20);
 		Et_ChangeValue.setTextColor(Color.BLACK);
 		Et_ChangeValue.setSingleLine();
@@ -68,6 +64,7 @@ public class LsyChangExpression extends TextView implements IObject {
 
 			}
 		});
+		
 		Et_ChangeValue.setCursorVisible(true);
 
 		this.setOnClickListener(new OnClickListener() {
@@ -88,10 +85,10 @@ public class LsyChangExpression extends TextView implements IObject {
 					if (sId.equals(signalId+"")) {
 						element = element1;
 						element.setAttribute("Expression", value);		
-						if(MGridActivity.whatLanguage)
-						Toast.makeText(context, "修改成功", 500).show();
-						else
-						Toast.makeText(context, "Success", 500).show();	
+//						if(MGridActivity.whatLanguage)
+//						Toast.makeText(context, "修改成功", 500).show();
+//						else
+						Toast.makeText(context, LanguageStr.Success, 500).show();	
 						break;
 					}
 				}

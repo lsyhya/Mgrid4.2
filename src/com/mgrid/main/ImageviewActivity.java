@@ -1,6 +1,7 @@
 package com.mgrid.main;
 
 import com.mgrid.fuction.PhotoImage;
+import com.sg.common.LanguageStr;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -44,10 +45,10 @@ public class ImageviewActivity extends Activity {
 		photo.setPhoto(name);                      
 		RelativeLayout.LayoutParams photoParams = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
 		Button button = new Button(this);
-		if(MGridActivity.whatLanguage)
-			button.setText("·µ»Ø");
-			else
-			button.setText("Back");
+//		if(MGridActivity.whatLanguage)
+//			button.setText("·µ»Ø");
+//			else
+			button.setText(LanguageStr.back);
 		RelativeLayout.LayoutParams buttonParams = new LayoutParams(100,80); 
 		buttonParams.setMargins(900, 580, 1000, 650); 
 		button.setOnClickListener(l); 

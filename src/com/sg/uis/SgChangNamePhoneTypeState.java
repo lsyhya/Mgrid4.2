@@ -37,6 +37,7 @@ import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 
 /**
  * 改号码
@@ -46,18 +47,20 @@ import com.sg.common.IObject;
  */
 public class SgChangNamePhoneTypeState extends TextView implements IObject {
 
-	private String Name;
-	private String Phone;
-	private String Type;
-	private String Level;
-	private String Show;
-	private String Add;
-	private String Alter;
-	private String State;
-	private String Please_Choose;
-	private String delete;
-	private String OK;
-	private String NO;
+	private String Name=LanguageStr.Name;
+	private String Phone=LanguageStr.Phone;
+
+	private String Level=LanguageStr.Level;
+	private String Show=LanguageStr.Show;
+	private String Add=LanguageStr.Add;
+	private String Alter=LanguageStr.Alter;
+	private String State=LanguageStr.State;
+
+	private String delete=LanguageStr.delete;
+
+	private String text4=LanguageStr.text4, text5=LanguageStr.text5, text6=LanguageStr.text6, text7=LanguageStr.text7, text8=LanguageStr.text8, text9=LanguageStr.text9, text10=LanguageStr.text10;
+
+	private String NO=LanguageStr.NO;
 	boolean isdelete = true;
 	SgChangNamePhoneTypeState scnp;
 
@@ -95,35 +98,44 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 			}
 		});
 
-		if (MGridActivity.whatLanguage) {
-			Name = "姓名";
-			Phone = "号码";
-			Type = "选择";
-			Level = "等级";
-			Show = "显示";
-			Add = "添加";
-			Alter = "修改";
-			State = "状态";
-			Please_Choose = "请选择";
-			OK = "确定";
-			NO = "取消";
-			delete = "删除";
-		} else {
-			Name = "Name";
-			Phone = "Phone";
-			Type = "Choose";
-			Level = "Level";
-			Show = "Show";
-			Add = "Add";
-			Alter = "Alter";
-			State = "State";
-			Please_Choose = "Please Choose";
-			OK = "OK";
-			NO = "NO";
-			delete = "Delete";
-		}
+//		if (MGridActivity.whatLanguage) {
+//			Name = "姓名";
+//			Phone = "号码";
+//			Level = "等级";
+//			Show = "显示";
+//			Add = "添加";
+//			Alter = "修改";
+//			State = "状态";
+//			NO = "取消";
+//			delete = "删除";
+//			text4 = "读取文件出错，可能没有这个文件";
+//			text5 = "该列暂未添加号码";
+//			text6 = "修改成功";
+//			text7 = "号码位数不对";
+//			text8 = "请输入完整";
+//			text9 = "添加成功";
+//			text10 = "删除成功";
+//
+//		} else {
+//			Name = "Name";
+//			Phone = "Phone";
+//			Level = "Level";
+//			Show = "Show";
+//			Add = "Add";
+//			Alter = "Alter";
+//			State = "State";
+//			NO = "NO";
+//			delete = "Delete";
+//			text4 = "NO File";
+//			text5 = "NO Phone";
+//			text6 = "Success";
+//			text7 = "phone num error";
+//			text8 = "Please input full";
+//			text9 = "Success";
+//			text10 = "Success";
+//
+//		}
 
-	
 		setPadding(0, 0, 0, 0);
 
 		m_oPaint = new Paint();
@@ -143,20 +155,18 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 		// btState=new Button(context);
 		btDelete = new Button(context);
 
-//		etName.setBackgroundResource(android.R.drawable.edit_text);
-//		etPhone.setBackgroundResource(android.R.drawable.edit_text);
-//		etState.setBackgroundResource(android.R.drawable.edit_text);
-//		etType.setBackgroundResource(android.R.drawable.edit_text);
-//		btDelete.setBackgroundResource(android.R.drawable.btn_default_small);
-//		setBackgroundResource(android.R.drawable.btn_default);
+		// etName.setBackgroundResource(android.R.drawable.edit_text);
+		// etPhone.setBackgroundResource(android.R.drawable.edit_text);
+		// etState.setBackgroundResource(android.R.drawable.edit_text);
+		// etType.setBackgroundResource(android.R.drawable.edit_text);
+		// btDelete.setBackgroundResource(android.R.drawable.btn_default_small);
+		// setBackgroundResource(android.R.drawable.btn_default);
 		etName.setBackgroundResource(R.drawable.et_select);
 		etPhone.setBackgroundResource(R.drawable.et_select);
 		etState.setBackgroundResource(R.drawable.et_select);
 		etType.setBackgroundResource(R.drawable.et_select);
 		btDelete.setBackgroundResource(R.drawable.bg_shadow);
 		setBackgroundResource(R.drawable.bg_shadow);
-
-	
 
 		tvName.setPadding(0, 0, 0, 0);
 		tvPhone.setPadding(0, 0, 0, 0);
@@ -165,7 +175,7 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 		tvTagorder.setPadding(0, 0, 0, 0);
 
 		// btState.setPadding(0, 0, 0, 0);
-	
+
 		tvName.setTextSize(15);
 		tvPhone.setTextSize(15);
 		tvState.setTextSize(15);
@@ -216,47 +226,6 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 		tvTagorder.setGravity(Gravity.CENTER);
 		btDelete.setGravity(Gravity.CENTER);
 
-		//final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		// btState.setOnClickListener(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View arg0) {
-		//
-		// builder.setIcon(null);
-		// builder.setTitle(Please_Choose);
-		// final String[] sagr = {"true", "false"};
-		//
-		// builder.setSingleChoiceItems(sagr, 1, new
-		// DialogInterface.OnClickListener()
-		// {
-		// @Override
-		// public void onClick(DialogInterface dialog, int which)
-		// {
-		// Toast.makeText(getContext(), "选择为：" + sagr[which],
-		// Toast.LENGTH_SHORT).show();
-		// btState.setText(sagr[which]);
-		// }
-		// });
-		// builder.setPositiveButton(OK, new DialogInterface.OnClickListener()
-		// {
-		// @Override
-		// public void onClick(DialogInterface dialog, int which)
-		// {
-		//
-		// }
-		// });
-		// builder.setNegativeButton(NO, new DialogInterface.OnClickListener()
-		// {
-		// @Override
-		// public void onClick(DialogInterface dialog, int which)
-		// {
-		//
-		// }
-		// });
-		// builder.show();
-		// }
-		// });
-
 		btDelete.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -269,8 +238,7 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 
 				try {
 					db = dbf.newDocumentBuilder();
-					doc = db.parse(new File(
-							"/data/mgrid/sampler/XmlCfg/sms_notification.xml"));
+					doc = db.parse(new File("/data/mgrid/sampler/XmlCfg/sms_notification.xml"));
 					list1 = doc.getElementsByTagName("user");
 					list2 = doc.getElementsByTagName("rule");
 
@@ -279,10 +247,8 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 					e.printStackTrace();
 				}
 
-				Element users = (Element) doc.getElementsByTagName("users")
-						.item(0);
-				Element rules = (Element) doc.getElementsByTagName("rules")
-						.item(0);
+				Element users = (Element) doc.getElementsByTagName("users").item(0);
+				Element rules = (Element) doc.getElementsByTagName("rules").item(0);
 
 				for (int i = 0; i < list1.getLength(); i++) {
 
@@ -292,10 +258,7 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 					if (pn.equals(name) && np.equals(phone)) {
 						users.removeChild(element1);
 						saveXmlData();
-						if(MGridActivity.whatLanguage)
-						Toast.makeText(getContext(), "删除成功", 500).show();
-						else
-							Toast.makeText(getContext(), "Success", 500).show();
+						Toast.makeText(getContext(), text10, 500).show();
 						btDelete.setEnabled(false);
 						etName.setText("");
 						etPhone.setText("");
@@ -320,13 +283,6 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 						saveXmlData();
 					}
 
-				}
-
-				if (isdelete) {
-					if(MGridActivity.whatLanguage)
-					Toast.makeText(getContext(), "删除失败", 500).show();
-					else
-						Toast.makeText(getContext(), "Fail", 500).show();
 				}
 
 			}
@@ -389,8 +345,7 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 		// etState.setInputType(EditorInfo.TYPE_CLASS_PHONE);
 		etType.setInputType(EditorInfo.TYPE_CLASS_PHONE);
 
-		imm = (InputMethodManager) context
-				.getSystemService(Context.INPUT_METHOD_SERVICE);// 显示输入法窗口
+		imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);// 显示输入法窗口
 
 	}
 
@@ -401,14 +356,16 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 		if (m_rRenderWindow.isLayoutVisible(getBBox()) == false)
 			return;
 
-//		if (m_bPressed) {
-//			int nWidth = (int) (((float) (m_nWidth) / (float) MainWindow.FORM_WIDTH) * (m_rRenderWindow.VIEW_RIGHT - m_rRenderWindow.VIEW_LEFT));
-//			int nHeight = (int) (((float) (m_nHeight) / (float) MainWindow.FORM_HEIGHT) * (m_rRenderWindow.VIEW_BOTTOM - m_rRenderWindow.VIEW_TOP));
-//
-//			m_oPaint.setColor(0x50FF00F0);
-//			m_oPaint.setStyle(Paint.Style.FILL);
-//			canvas.drawRect(0, 0, nWidth, nHeight, m_oPaint);
-//		}
+		// if (m_bPressed) {
+		// int nWidth = (int) (((float) (m_nWidth) / (float) MainWindow.FORM_WIDTH) *
+		// (m_rRenderWindow.VIEW_RIGHT - m_rRenderWindow.VIEW_LEFT));
+		// int nHeight = (int) (((float) (m_nHeight) / (float) MainWindow.FORM_HEIGHT) *
+		// (m_rRenderWindow.VIEW_BOTTOM - m_rRenderWindow.VIEW_TOP));
+		//
+		// m_oPaint.setColor(0x50FF00F0);
+		// m_oPaint.setStyle(Paint.Style.FILL);
+		// canvas.drawRect(0, 0, nWidth, nHeight, m_oPaint);
+		// }
 		super.onDraw(canvas);
 	}
 
@@ -428,65 +385,53 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 			return;
 		try {
 			db = dbf.newDocumentBuilder();
-			doc = db.parse(new File(
-					"/data/mgrid/sampler/XmlCfg/sms_notification.xml"));
+			doc = db.parse(new File("/data/mgrid/sampler/XmlCfg/sms_notification.xml"));
 			list1 = doc.getElementsByTagName("user");
 			list2 = doc.getElementsByTagName("rule");
 
 		} catch (Exception e) {
 
 			e.printStackTrace();
-		} 
+		}
 
-		if(list1==null||list2==null)
-		{
-			if(MGridActivity.whatLanguage)
-			Toast.makeText(getContext(), "读取文件出错，可能没有这个文件", 200).show();
-			else
-				Toast.makeText(getContext(), "NO File", 200).show();
+		if (list1 == null || list2 == null) {
+			Toast.makeText(getContext(), text4, 200).show();
 			return;
 		}
 		if (this.getText().equals(Show)) {
-			boolean isAdd=true;
+			boolean isAdd = true;
 			for (int i = 0; i < list1.getLength(); i++) {
 				Element element1 = (Element) list1.item(i);
-				String rule_type=element1.getAttribute("rule_type");
-				if(rule_type.equals(xmlPhoneNumber+""))
-				{
+				String rule_type = element1.getAttribute("rule_type");
+				if (rule_type.equals(xmlPhoneNumber + "")) {
 					etName.setText(element1.getAttribute("name"));
 					etPhone.setText(element1.getAttribute("tel_number"));
 					for (int j = 0; j < list2.getLength(); j++) {
 						Element element2 = (Element) list2.item(j);
 						if (rule_type.equals(element2.getAttribute("type"))) {
-							etType.setText(element2
-									.getAttribute("alarm_level"));
+							etType.setText(element2.getAttribute("alarm_level"));
 						}
 					}
-					this.setText(Alter); 
+					this.setText(Alter);
 					btDelete.setEnabled(true);
-					isAdd=false;
+					isAdd = false;
 					break;
-				}				
+				}
 			}
-			if(isAdd)
-			{
-				if(MGridActivity.whatLanguage)
-			Toast.makeText(getContext(), "该列暂未添加号码", 200).show();
-				else
-					Toast.makeText(getContext(), "NO Phone", 200).show();
-			this.setText(Add);	
+			if (isAdd) {
+
+				Toast.makeText(getContext(), text5, 200).show();
+				this.setText(Add);
 			}
 		}
 
 		else if (this.getText().equals(Alter)) {
 
-
 			for (int i = 0; i < list1.getLength(); i++) {
 
-			
 				Element ele = (Element) list1.item(i);
-				String rule_type=ele.getAttribute("rule_type");
-				if (!(xmlPhoneNumber+"").equals(rule_type)) {
+				String rule_type = ele.getAttribute("rule_type");
+				if (!(xmlPhoneNumber + "").equals(rule_type)) {
 					continue;
 				}
 
@@ -507,82 +452,53 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 						}
 
 						isSave = true;
-						if(MGridActivity.whatLanguage)
-						Toast.makeText(getContext(), "修改成功", Toast.LENGTH_SHORT)
-								.show();
-						else {
-							Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT)
-							.show();
-						}
+
+						Toast.makeText(getContext(), text6, Toast.LENGTH_SHORT).show();
+
 					} else {
-						if(MGridActivity.whatLanguage)
-						Toast.makeText(getContext(), "号码位数不对",
-								Toast.LENGTH_SHORT).show();
-						else
-							Toast.makeText(getContext(), "Please input full", Toast.LENGTH_SHORT)
-							.show();
+
+						Toast.makeText(getContext(), text7, Toast.LENGTH_SHORT).show();
 					}
 
 				} else {
-					if(MGridActivity.whatLanguage)
-					Toast.makeText(getContext(), "请输入完整", Toast.LENGTH_SHORT)
-							.show();
-					else
-						Toast.makeText(getContext(), "Please input full", Toast.LENGTH_SHORT)
-						.show();
+
+					Toast.makeText(getContext(), text8, Toast.LENGTH_SHORT).show();
 				}
 			}
 		} else if (this.getText().equals(Add)) {
-			
+
 			if ((name.equals("") || level.equals("") || phone.equals("")) != true) {
 				if (phone.length() == 11) {
 					Element user = doc.createElement("user");
 					user.setAttribute("name", name);
 					user.setAttribute("tel_number", phone);
 					user.setAttribute("enable", "true");
-					Element users = (Element) doc.getElementsByTagName("users")
-							.item(0);
-	
-						user.setAttribute("rule_type", ""
-								+ xmlPhoneNumber);
-						Element rule = doc.createElement("rule");
-						rule.setAttribute("type", "" + xmlPhoneNumber);
-						rule.setAttribute("alarm_level", level);
-						Element rules = (Element) doc.getElementsByTagName(
-								"rules").item(0);
-						rules.appendChild(rule);
+					Element users = (Element) doc.getElementsByTagName("users").item(0);
+
+					user.setAttribute("rule_type", "" + xmlPhoneNumber);
+					Element rule = doc.createElement("rule");
+					rule.setAttribute("type", "" + xmlPhoneNumber);
+					rule.setAttribute("alarm_level", level);
+					Element rules = (Element) doc.getElementsByTagName("rules").item(0);
+					rules.appendChild(rule);
 
 					users.appendChild(user);
 					isSave = true;
-					if(MGridActivity.whatLanguage)
-					Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT)
-							.show();
-					else
-						Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT)
-						.show();
+					
+						Toast.makeText(getContext(), text9, Toast.LENGTH_SHORT).show();
 					this.setText(Alter);
 					btDelete.setEnabled(true);
 				} else {
-					if(MGridActivity.whatLanguage)
-					Toast.makeText(getContext(), "号码位数不对", Toast.LENGTH_SHORT)
-							.show();
-					else
-						Toast.makeText(getContext(), "phone num error", Toast.LENGTH_SHORT)
-						.show();
+				
+						Toast.makeText(getContext(), text7, Toast.LENGTH_SHORT).show();
 				}
 			} else {
-				if(MGridActivity.whatLanguage)
-				Toast.makeText(getContext(), "请输入完整", Toast.LENGTH_SHORT)
-						.show();
-				else
-					Toast.makeText(getContext(), "Please input full", Toast.LENGTH_SHORT)
-					.show();
+				
+					Toast.makeText(getContext(), text8, Toast.LENGTH_SHORT).show();
 			}
 		} else {
-			if(MGridActivity.whatLanguage)
-			Toast.makeText(getContext(), "请输入完整", Toast.LENGTH_SHORT).show();
-			else
-				Toast.makeText(getContext(), "Please input full", Toast.LENGTH_SHORT).show();	
+			
+				Toast.makeText(getContext(), text8, Toast.LENGTH_SHORT).show();
 		}
 
 		if (isSave) {
@@ -601,8 +517,7 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 			// 设置编码类
 			tran.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 			StreamResult result = new StreamResult(
-					new FileOutputStream(new File(
-							"/data/mgrid/sampler/XmlCfg/sms_notification.xml")));
+					new FileOutputStream(new File("/data/mgrid/sampler/XmlCfg/sms_notification.xml")));
 			tran.transform(dom, result);
 			// Toast.makeText(getContext(), "修改成功", Toast.LENGTH_SHORT).show();
 		} catch (Exception e) {
@@ -614,10 +529,8 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 	public void doLayout(boolean bool, int l, int t, int r, int b) {
 		if (m_rRenderWindow == null)
 			return;
-		int nX = l
-				+ (int) (((float) m_nPosX / (float) MainWindow.FORM_WIDTH) * (r - l));
-		int nY = t
-				+ (int) (((float) m_nPosY / (float) MainWindow.FORM_HEIGHT) * (b - t));
+		int nX = l + (int) (((float) m_nPosX / (float) MainWindow.FORM_WIDTH) * (r - l));
+		int nY = t + (int) (((float) m_nPosY / (float) MainWindow.FORM_HEIGHT) * (b - t));
 		int nWidth = (int) (((float) (m_nWidth) / (float) MainWindow.FORM_WIDTH) * (r - l));
 		int nHeight = (int) (((float) (m_nHeight) / (float) MainWindow.FORM_HEIGHT) * (b - t));
 
@@ -628,35 +541,29 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 
 		if (m_rRenderWindow.isLayoutVisible(m_rBBox)) {
 
-			tvTagorder.layout(nX, (int) (nY + 0.15 * nHeight), nX
-					+ (int) (nWidth * 0.05f), nY + nHeight);
-			tvName.layout(nX + (int) (nWidth * 0.051f),
-					(int) (nY + 0.15 * nHeight), nX + (int) (nWidth * 0.111f),
+			tvTagorder.layout(nX, (int) (nY + 0.15 * nHeight), nX + (int) (nWidth * 0.05f), nY + nHeight);
+			tvName.layout(nX + (int) (nWidth * 0.051f), (int) (nY + 0.15 * nHeight), nX + (int) (nWidth * 0.111f),
 					nY + nHeight);
-			etName.layout(nX + (int) (nWidth * 0.112f), nY+nHeight/10, nX
-					+ (int) (nWidth * 0.262f), nY + nHeight-nHeight/10);
-			tvPhone.layout(nX + (int) (nWidth * 0.263f),
-					(int) (nY + 0.15 * nHeight), nX + (int) (nWidth * 0.323f),
+			etName.layout(nX + (int) (nWidth * 0.112f), nY + nHeight / 10, nX + (int) (nWidth * 0.262f),
+					nY + nHeight - nHeight / 10);
+			tvPhone.layout(nX + (int) (nWidth * 0.263f), (int) (nY + 0.15 * nHeight), nX + (int) (nWidth * 0.323f),
 					nY + nHeight);
-			etPhone.layout(nX + (int) (nWidth * 0.324f), nY+nHeight/10, nX
-					+ (int) (nWidth * 0.474f), nY + nHeight-nHeight/10);
-			tvType.layout(nX + (int) (nWidth * 0.475f),
-					(int) (nY + 0.15 * nHeight), nX + (int) (nWidth * 0.535f),
+			etPhone.layout(nX + (int) (nWidth * 0.324f), nY + nHeight / 10, nX + (int) (nWidth * 0.474f),
+					nY + nHeight - nHeight / 10);
+			tvType.layout(nX + (int) (nWidth * 0.475f), (int) (nY + 0.15 * nHeight), nX + (int) (nWidth * 0.535f),
 					nY + nHeight);
-			etType.layout(nX + (int) (nWidth * 0.536f), nY+nHeight/10, nX
-					+ (int) (nWidth * 0.686f), nY + nHeight-nHeight/10);
-			this.layout(nX + (int) (nWidth * 0.687f), nY, nX
-					+ (int) (nWidth * 0.788f), nY + nHeight);
-			btDelete.layout(nX + (int) (nWidth * 0.789f), nY, nX
-					+ (int) (nWidth * 0.890f), nY + nHeight);
+			etType.layout(nX + (int) (nWidth * 0.536f), nY + nHeight / 10, nX + (int) (nWidth * 0.686f),
+					nY + nHeight - nHeight / 10);
+			this.layout(nX + (int) (nWidth * 0.687f), nY, nX + (int) (nWidth * 0.788f), nY + nHeight);
+			btDelete.layout(nX + (int) (nWidth * 0.789f), nY, nX + (int) (nWidth * 0.890f), nY + nHeight);
 		}
-		
-		btDelete.setPadding(0, nHeight/5, 0, 0);
-		etName.setPadding(0, nHeight/5, 0, 0);
-		etPhone.setPadding(0, nHeight/5, 0, 0);
-		etState.setPadding(0,nHeight/5, 0, 0);
-		etType.setPadding(0, nHeight/5, 0, 0);
-	    this.setPadding(0, nHeight/5, 0, 0);
+
+		btDelete.setPadding(0, nHeight / 5, 0, 0);
+		etName.setPadding(0, nHeight / 5, 0, 0);
+		etPhone.setPadding(0, nHeight / 5, 0, 0);
+		etState.setPadding(0, nHeight / 5, 0, 0);
+		etType.setPadding(0, nHeight / 5, 0, 0);
+		this.setPadding(0, nHeight / 5, 0, 0);
 
 	}
 
@@ -685,8 +592,7 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 	}
 
 	@Override
-	public void parseProperties(String strName, String strValue,
-			String strResFolder) throws Exception {
+	public void parseProperties(String strName, String strValue, String strResFolder) throws Exception {
 
 		if ("ZIndex".equals(strName)) {
 			m_nZIndex = Integer.parseInt(strValue);
@@ -710,15 +616,13 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 		else if ("IsBold".equals(strName))
 			m_bIsBold = Boolean.parseBoolean(strValue);
 		else if ("BackgroundColor".equals(strName))
-			//m_cBackgroundColor = Color.parseColor(strValue);
+		// m_cBackgroundColor = Color.parseColor(strValue);
 		{
-			if(strValue!=null&&!strValue.equals("#FF000000"))
-			{
+			if (strValue != null && !strValue.equals("#FF000000")) {
 				btDelete.setBackgroundResource(android.R.drawable.btn_default_small);
 				setBackgroundResource(android.R.drawable.btn_default);
 			}
-		}
-		else if ("FontColor".equals(strName)) {
+		} else if ("FontColor".equals(strName)) {
 			m_cFontColor = Color.parseColor(strValue);
 			this.setTextColor(m_cFontColor);
 			btDelete.setTextColor(m_cFontColor);
@@ -727,8 +631,7 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 			tvState.setTextColor(m_cFontColor);
 			tvType.setTextColor(m_cFontColor);
 			tvTagorder.setTextColor(m_cFontColor);
-			
-			
+
 		} else if ("CmdExpression".equals(strName)) {
 			m_strCmdExpression = strValue;
 		} else if ("IsValueRelateSignal".equals(strName)) {
@@ -740,25 +643,22 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 			m_fButtonWidthRate = Float.parseFloat(strValue);
 		} else if ("Labelorder".equals(strName)) {
 			tvTagorder.setText(strValue);
-		}else if("FontSize".equals(strName))
-		{
-			 fontSize=Integer.parseInt(strValue);
-			 tvName.setTextSize(fontSize);
-				tvPhone.setTextSize(fontSize);
-				tvState.setTextSize(fontSize);
-				tvType.setTextSize(fontSize);
-				tvTagorder.setTextSize(fontSize);
+		} else if ("FontSize".equals(strName)) {
+			fontSize = Integer.parseInt(strValue);
+			tvName.setTextSize(fontSize);
+			tvPhone.setTextSize(fontSize);
+			tvState.setTextSize(fontSize);
+			tvType.setTextSize(fontSize);
+			tvTagorder.setTextSize(fontSize);
 
-				// btState.setTextSize(20);
-				btDelete.setTextSize(fontSize);
+			// btState.setTextSize(20);
+			btDelete.setTextSize(fontSize);
 
-				etName.setTextSize(fontSize);
-				etPhone.setTextSize(fontSize);
-				etState.setTextSize(fontSize);
-				etType.setTextSize(fontSize);
-				this.setTextSize(fontSize);
-				
-		
+			etName.setTextSize(fontSize);
+			etPhone.setTextSize(fontSize);
+			etState.setTextSize(fontSize);
+			etType.setTextSize(fontSize);
+			this.setTextSize(fontSize);
 
 		}
 	}
@@ -767,8 +667,7 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 	public void initFinished() {
 		setGravity(Gravity.CENTER);
 
-		double padSize = CFGTLS.getPadHeight(m_nHeight, MainWindow.FORM_HEIGHT,
-				getTextSize()) / 2;
+		double padSize = CFGTLS.getPadHeight(m_nHeight, MainWindow.FORM_HEIGHT, getTextSize()) / 2;
 		setPadding(0, (int) padSize, 0, (int) padSize);
 
 	}
@@ -889,8 +788,8 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 	public void setNumber(int number) {
 		xmlPhoneNumber = number;
 	}
-	
-	int fontSize=15;
+
+	int fontSize = 15;
 
 	// 记录触摸坐标，过滤滑动操作。解决滑动误操作点击问题。
 	public float m_xscal = 0;

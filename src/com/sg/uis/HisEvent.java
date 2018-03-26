@@ -41,6 +41,7 @@ import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 import com.sg.common.MyAdapter;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.lsyBase.HisEventTable;
@@ -56,20 +57,20 @@ import data_model.local_his_event;
 public class HisEvent extends HisEventTable implements IObject {
 
 	// 方便中英文切换
-	private String DeviceName;
-	private String AlarmName;
-	private String AlarmMeaning;
-	private String Numericalsignal;
-	private String AlarmSeverity;
-	private String StartTime;
-	private String EndTime;
+	private String DeviceName=LanguageStr.DeviceName;
+	private String AlarmName=LanguageStr.AlarmName;
+	private String AlarmMeaning=LanguageStr.AlarmMeaning;
+	private String Numericalsignal=LanguageStr.Numericalsignal;
+	private String AlarmSeverity=LanguageStr.AlarmSeverity;
+	private String StartTime=LanguageStr.StartTime;
+	private String EndTime=LanguageStr.EndTime;
 
-	private String DeviceList;
-	private String SetTime;
-	private String PreveDay;
-	private String NextDay;
-	private String Receive;
-	private String AllDevice;
+	private String DeviceList=LanguageStr.DeviceList;
+	private String SetTime=LanguageStr.SetTime;
+	private String PreveDay=LanguageStr.PreveDay;
+	private String NextDay=LanguageStr.NextDay;
+	private String Receive=LanguageStr.Receive;
+	private String AllDevice=LanguageStr.AllDevice;
 
 	
 	private String textColor="#FF000000";
@@ -123,50 +124,50 @@ public class HisEvent extends HisEventTable implements IObject {
 			}
 		});
 
-		if (MGridActivity.whatLanguage) {
-			DeviceName = "设备名称";
-			AlarmName = "告警名称";
-			AlarmMeaning = "告警含义";
-			Numericalsignal = "信号数值";
-			AlarmSeverity = "告警等级";
-			StartTime = "开始时间";
-			EndTime = "结束时间";
-
-			DeviceList = "  设备↓   ";
-			SetTime = "设置日期";
-			PreveDay = "结束时间";
-			NextDay = "开始时间";
-			Receive = "  获取   ";
-			AllDevice = "全部设备";
-			
-			one="通知";
-			two="一般告警";
-			three="严重告警";
-			four="致命告警";
-			
-			set="设置";
-		} else {
-			DeviceName = "Device Name";
-			AlarmName = "Alarm Name";
-			AlarmMeaning = "Alarm Meaning";
-			Numericalsignal = "Numerical Signal";
-			AlarmSeverity = "Alarm Severity";
-			StartTime = "Start Time";
-			EndTime = "End Time";
-
-			DeviceList = "  Device↓   ";
-			SetTime = "Set Time";
-			PreveDay = "Previous Day";
-			NextDay = "Next Day";
-			Receive = "  Receipt   ";
-			AllDevice = "All Device";
-			
-			one="Notice";
-			two="GeneralAlarm";
-			three="CriticalAlarm";
-			four="FatalAlarm";
-			set="Set";
-		}
+//		if (MGridActivity.whatLanguage) {
+//			DeviceName = "设备名称";
+//			AlarmName = "告警名称";
+//			AlarmMeaning = "告警含义";
+//			Numericalsignal = "信号数值";
+//			AlarmSeverity = "告警等级";
+//			StartTime = "开始时间";
+//			EndTime = "结束时间";
+//
+//			DeviceList = "  设备↓   ";
+//			SetTime = "设置日期";
+//			PreveDay = "结束时间";
+//			NextDay = "开始时间";
+//			Receive = "  获取   ";
+//			AllDevice = "全部设备";
+//			
+//			one="通知";
+//			two="一般告警";
+//			three="严重告警";
+//			four="致命告警";
+//			
+//			set="设置";
+//		} else {
+//			DeviceName = "Device Name";
+//			AlarmName = "Alarm Name";
+//			AlarmMeaning = "Alarm Meaning";
+//			Numericalsignal = "Numerical Signal";
+//			AlarmSeverity = "Alarm Severity";
+//			StartTime = "Start Time";
+//			EndTime = "End Time";
+//
+//			DeviceList = "  Device↓   ";
+//			SetTime = "Set Time";
+//			PreveDay = "Previous Day";
+//			NextDay = "Next Day";
+//			Receive = "  Receipt   ";
+//			AllDevice = "All Device";
+//			
+//			one="Notice";
+//			two="GeneralAlarm";
+//			three="CriticalAlarm";
+//			four="FatalAlarm";
+//			set="Set";
+//		}
 
 		// 标头标题
 		lstTitles = new ArrayList<String>();
@@ -1349,6 +1350,6 @@ public class HisEvent extends HisEventTable implements IObject {
 
 	private int X, Y, mY;
 	private int index = 1;
-	String one,two,three,four;
-    String set;
+	String one=LanguageStr.one,two=LanguageStr.two,three=LanguageStr.three,four=LanguageStr.four;
+    String set=LanguageStr.set;
 }

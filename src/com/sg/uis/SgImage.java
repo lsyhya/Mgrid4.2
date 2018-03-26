@@ -35,6 +35,7 @@ import com.mgrid.main.R;
 import com.mgrid.util.MediaUtil;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 import com.sg.common.SgRealTimeData;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stIfElseExpression;
@@ -44,17 +45,17 @@ import com.sg.common.UtGifHelper;
 @SuppressLint({ "InflateParams", "ShowToast", "ClickableViewAccessibility" })
 public class SgImage extends View implements IObject {
 
-	private String denglu = "";
-	private String yes = "";
-	private String no = "";
-	private String systemExit = "";
-	private String pwText="";
+	private String denglu = LanguageStr.denglu;
+	private String yes = LanguageStr.yes;
+	private String no = LanguageStr.no;
+	private String systemExit = LanguageStr.systemExit;
+	private String pwText=LanguageStr.pwText;
 	
-	private String Text1="";
-	private String Text2="";
+	private String Text18=LanguageStr.text18;
+	private String Text19=LanguageStr.text19;
 	
-	private String userName="";
-	private String PWD="";
+	private String userName=LanguageStr.userName;
+	private String PWD=LanguageStr.PWD;
 	
 	
 
@@ -115,32 +116,32 @@ public class SgImage extends View implements IObject {
 			}
 		});
 
-		if (MGridActivity.whatLanguage) {
-
-			denglu = "用户权限登录";
-			yes = "确认";
-			no = "取消";
-			systemExit = "系统维护";
-			pwText="密码";
-			Text1="请等待加载完成！！";
-			Text2="用户名或密码错误";
-			userName="用户名：";
-			PWD="密    码：";
-
-		} else {
-
-			denglu = "Login";
-			yes = "ok";
-			no = "cancel";
-			systemExit = "Exit";
-			pwText="PassWord";
-			Text1="Please wait for loading to complete！！";
-			Text2="Password or user name error";
-			userName="User  ID:";
-			     PWD="PassWord:";
-
-
-		}
+//		if (MGridActivity.whatLanguage) {
+//
+//			denglu = "用户权限登录";
+//			yes = "确认";
+//			no = "取消";
+//			systemExit = "系统维护";
+//			pwText="密码";
+//			Text18="请等待加载完成！！";
+//			Text19="用户名或密码错误";
+//			userName="用户名：";
+//			PWD="密    码：";
+//
+//		} else {
+//
+//			denglu = "Login";
+//			yes = "ok";
+//			no = "cancel";
+//			systemExit = "Exit";
+//			pwText="PassWord";
+//			Text18="Please wait for loading to complete！！";
+//			Text19="Password or user name error";
+//			userName="User  ID:";
+//			     PWD="PassWord:";
+//
+//
+//		}
 
 		// WARN: 以下方式可能产生内存泄露。 -- Charles
 		m_oInvalidateHandler = new MyHandler(this);
@@ -512,7 +513,7 @@ public class SgImage extends View implements IObject {
 
 					}
 				} else {
-					Toast.makeText(getContext(), Text1, 1000).show();
+					Toast.makeText(getContext(), Text18, 1000).show();
 				}
 			}
 		} else {
@@ -573,7 +574,7 @@ public class SgImage extends View implements IObject {
 							}
 						} else {
 							Toast.makeText(m_rRenderWindow.getContext(),
-									Text2, Toast.LENGTH_SHORT).show();
+									Text19, Toast.LENGTH_SHORT).show();
 							// Toast.makeText(m_rRenderWindow.getContext(),
 							// "Incorrect username or password!",
 							// Toast.LENGTH_SHORT).show();
@@ -672,7 +673,7 @@ public class SgImage extends View implements IObject {
 								m_rRenderWindow.showTaskUI(true);
 						} else {
 							Toast.makeText(m_rRenderWindow.getContext(),
-									Text2, Toast.LENGTH_SHORT).show();
+									Text19, Toast.LENGTH_SHORT).show();
 							// Toast.makeText(m_rRenderWindow.getContext(),
 							// "Incorrect username or password!",
 							// Toast.LENGTH_SHORT).show();

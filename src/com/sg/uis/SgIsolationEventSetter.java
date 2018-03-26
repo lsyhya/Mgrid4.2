@@ -37,6 +37,7 @@ import com.mgrid.util.DialogUtils;
 import com.mgrid.util.XmlUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sun.mail.dsn.message_deliverystatus;
 
@@ -46,11 +47,24 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 
 	private stBindingExpression oBindingExpression;
     private SelfDialog dialog=null;
-	
+	private String off=LanguageStr.off,on=LanguageStr.on;
+    
 	
 	public SgIsolationEventSetter(Context context) {
 		super(context);
 
+		
+//		if (MGridActivity.whatLanguage)
+//		{
+//			off="告警屏蔽";
+//			on="告警开启";
+//			
+//		}else
+//		{
+//			off="OFF";
+//			on="ON";
+//		}
+//		
 		dialog=new SelfDialog(context);
 		// 监听 按钮 触控事件
 		this.setOnTouchListener(new OnTouchListener() {
@@ -336,10 +350,8 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 			switch (msg.what) {
 			case 0:
 
-				if (MGridActivity.whatLanguage)
-					setText("告警屏蔽");
-				else
-					setText("OFF");
+				
+				setText(off);
 				setChecked(false);
 				setTextColor(Color.RED);
 
@@ -347,10 +359,8 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 
 			case 1:
 
-				if (MGridActivity.whatLanguage)
-					setText("告警开启");
-				else
-					setText("ON");
+				
+				setText(on);
 				setChecked(true);
 				setTextColor(Color.BLUE);
 
@@ -359,12 +369,12 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 			case 2:
 
 				String s = msg.obj.toString();
-				Toast.makeText(getContext(), "设备Id" + s + "并没有找到,检查一下吧", 200).show();
+				//Toast.makeText(getContext(), "设备Id" + s + "并没有找到,检查一下吧", 200).show();
 
 				break;
 			case 3:
 
-				Toast.makeText(getContext(), "屏蔽整个设备时发生错误", 200).show();
+				//Toast.makeText(getContext(), "屏蔽整个设备时发生错误", 200).show();
 
 				break;
 			case 4:

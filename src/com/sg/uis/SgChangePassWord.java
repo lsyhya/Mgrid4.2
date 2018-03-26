@@ -19,6 +19,7 @@ import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 
 /**
  * 改密码
@@ -29,18 +30,27 @@ import com.sg.common.IObject;
 public class SgChangePassWord extends TextView implements IObject {
 
 	
-	private String oldPw="";
-	private String newPw="";
+	private String oldPw=LanguageStr.oldPw;
+	private String newPw=LanguageStr.newPw;
+	private String text1=LanguageStr.text1;
+	private String text2=LanguageStr.text2;
+	private String text3=LanguageStr.text3;
 	public SgChangePassWord(Context context) {
 		super(context);		
-		if(MGridActivity.whatLanguage)
-		{
-			oldPw="旧密码:";
-			newPw="新密码:";		
-		}else{
-			oldPw="Old Password";
-			newPw="New Password";		
-		}
+//		if(MGridActivity.whatLanguage)
+//		{
+//			oldPw="旧密码:";
+//			newPw="新密码:";		
+//			text1="密码修改成功";
+//			text2="旧密码输入错误，请重新输入";
+//			text3="密码输入不完整";
+//		}else{
+//			oldPw="Old Password";
+//			newPw="New Password";	
+//			text1="Password changes succeeded";
+//			text2="Old password entered error, please re-enter";
+//			text3="The password input is incomplete";
+//		}
 
 		
 		
@@ -168,30 +178,18 @@ public class SgChangePassWord extends TextView implements IObject {
 			if (oldPassWord.equals(MGridActivity.m_PassWord)||oldPassWord.equals("88888888")) {
 
 				changPassWord(newPassWord);
-				if(MGridActivity.whatLanguage)
-					Toast.makeText(m_rRenderWindow.getContext(), "密码修改成功",
-							Toast.LENGTH_SHORT).show();
-					else
-						Toast.makeText(m_rRenderWindow.getContext(), "Password changes succeeded ",
+				Toast.makeText(m_rRenderWindow.getContext(),text1,
 								Toast.LENGTH_SHORT).show();
 
 			} else {
-				if(MGridActivity.whatLanguage)
-					Toast.makeText(m_rRenderWindow.getContext(), "旧密码输入错误，请重新输入",
-							Toast.LENGTH_SHORT).show();
-					else
-						Toast.makeText(m_rRenderWindow.getContext(), "Old password entered error, please re-enter",
-								Toast.LENGTH_SHORT).show();
+				Toast.makeText(m_rRenderWindow.getContext(),text2,
+						Toast.LENGTH_SHORT).show();
 			}
 			m_oEditTextOLD.setText("");
 			m_oEditTextNEW.setText("");
 		} else {
-			if(MGridActivity.whatLanguage)
-				Toast.makeText(m_rRenderWindow.getContext(), "密码输入不完整",
-						Toast.LENGTH_SHORT).show();
-				else
-					Toast.makeText(m_rRenderWindow.getContext(), "The password input is incomplete ",
-							Toast.LENGTH_SHORT).show();
+			Toast.makeText(m_rRenderWindow.getContext(),text3,
+					Toast.LENGTH_SHORT).show();
 		}
 	}
 
