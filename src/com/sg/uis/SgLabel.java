@@ -5,6 +5,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.mgrid.main.MGridActivity;
+import com.mgrid.main.MainWindow;
+import com.sg.common.CFGTLS;
+import com.sg.common.IObject;
+import com.sg.common.SgRealTimeData;
+import com.sg.common.UtExpressionParser;
+import com.sg.common.UtExpressionParser.stBindingExpression;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,19 +24,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.mgrid.main.MGridActivity;
-import com.mgrid.main.MainWindow;
-import com.sg.common.CFGTLS;
-import com.sg.common.IObject;
-import com.sg.common.SgRealTimeData;
-import com.sg.common.UtExpressionParser;
-import com.sg.common.UtExpressionParser.stBindingExpression;
-import com.sg.uis.LsyNewView.shimmer.Shimmer;
-import com.sg.uis.LsyNewView.shimmer.ShimmerTextView;
-
 import comm_service.service;
-
 import data_model.ipc_control;
 
 /** 标签 */
@@ -40,16 +36,8 @@ public class SgLabel extends TextView implements IObject {
 	public SgLabel(Context context) {
 		super(context);
 		
-//		shimmerTv=new ShimmerTextView(context);
-//		shimmerTv.setGravity(Gravity.CENTER);
-//		
-//		sr=new Shimmer();
-//		sr.start(shimmerTv);
-//		sr.setDuration(2000);
-//		init(shimmerTv);
 		init(this);
-	    
-
+		
 	}
 	
 	
@@ -245,8 +233,8 @@ public class SgLabel extends TextView implements IObject {
 			this.setText(m_strContent);
 			//shimmerTv.setText(m_strContent);
 		} else if ("FontFamily".equals(strName)) {
-			m_strFontFamily = strValue;
-		//	this.setTypeface(Typeface.MONOSPACE);
+			m_strFontFamily = strValue;		
+			//this.setTypeface(MyApplication.typeface);
 		} else if ("FontSize".equals(strName)) {
 			float fWinScale = (float) MainWindow.SCREEN_WIDTH
 					/ (float) MainWindow.FORM_WIDTH;
@@ -280,7 +268,7 @@ public class SgLabel extends TextView implements IObject {
 
 			} catch (Exception e) {
 				System.out.println(e);
-				Toast.makeText(getContext(), "Label出错了", 500).show();
+				Toast.makeText(getContext(),MGridActivity.XmlFile+":"+getUniqueID()+"出错", Toast.LENGTH_LONG).show();
 			}
 
 	}
@@ -345,8 +333,9 @@ public class SgLabel extends TextView implements IObject {
 
 		if (strValue == null || "".equals(strValue) == true)
 			return false;
-		if (MGridActivity.LabelList != null
-				|| MGridActivity.LabelList.size() != 0) {
+		
+		
+		if (MGridActivity.LabelList.size() != 0) {
 
 			if (MGridActivity.LabelList.contains(oBindingExpression.nEquipId
 					+ "")) {
@@ -430,7 +419,7 @@ public class SgLabel extends TextView implements IObject {
 				}
 
 			} catch (Exception e) {
-				// Toast.makeText(getContext(), "Label读数时出错", 500).show();
+				
 			}
 
 			return true;

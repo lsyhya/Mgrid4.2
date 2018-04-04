@@ -116,9 +116,14 @@ public class LsyChangExpression extends TextView implements IObject {
 		m_rBBox.bottom = nY + nHeight;
 		if (m_rRenderWindow.isLayoutVisible(m_rBBox)) {
 
-			Et_ChangeValue.layout(nX, nY+nHeight/10, nX + (int) (0.69 * nWidth), nY
-					+ nHeight-nHeight/10);
-			layout(nX + (int) (0.7 * nWidth), nY, nX + nWidth, nY + nHeight);
+//			Et_ChangeValue.layout(nX, nY+nHeight/10, nX + (int) (0.69 * nWidth), nY
+//					+ nHeight-nHeight/10);
+//			layout(nX + (int) (0.7 * nWidth), nY, nX + nWidth, nY + nHeight);
+			this.layout(nX + (int) (nWidth * 0.65f), nY, nX + nWidth, nY
+					+ nHeight);
+
+			Et_ChangeValue.layout(nX, nY + nHeight / 10, nX
+					+ (int) (nWidth * 0.64f), nY + nHeight - nHeight / 10);
 		}
 		Et_ChangeValue.setPadding(0, nHeight/5, 0, 0);
 		this.setPadding((int)(0.3 * nWidth/5), nHeight/5, 0, 0);

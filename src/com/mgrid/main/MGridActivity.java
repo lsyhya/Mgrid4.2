@@ -17,13 +17,31 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import com.lsy.Service.TilmePlush.TimePlushService;
+import com.mgrid.MyDialog.SelfDialog;
+import com.mgrid.data.DataGetter;
+import com.mgrid.util.FileUtil;
+import com.mgrid.util.XmlUtils;
+import com.sg.common.CFGTLS;
+import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
+import com.sg.common.UtExpressionParser.stBindingExpression;
+import com.sg.common.UtIniReader;
+import com.sg.uis.SaveEquipt;
+import com.sg.uis.SgAlarmAction;
+import com.sg.uis.SgAlarmChangTime;
+import com.sg.uis.SgImage;
+import com.sg.uis.LsyNewView.AlarmShieldTime;
+import com.sg.uis.LsyNewView.ChangeLabelBtn;
+import com.sg.uis.LsyNewView.FlikerProgressBar;
+import com.sg.uis.LsyNewView.SgVideoView;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -52,30 +70,7 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
-
-import com.lsy.Service.TilmePlush.TimePlushService;
-import com.mgrid.MyDialog.MyDialog;
-import com.mgrid.MyDialog.SelfDialog;
-import com.mgrid.data.DataGetter;
-import com.mgrid.util.CameraUtils;
-import com.mgrid.util.FileUtil;
-import com.mgrid.util.LoginUtil;
-import com.mgrid.util.XmlUtils;
-import com.sg.common.CFGTLS;
-import com.sg.common.IObject;
-import com.sg.common.LanguageStr;
-import com.sg.common.UtExpressionParser.stBindingExpression;
-import com.sg.common.UtIniReader;
-import com.sg.uis.SaveEquipt;
-import com.sg.uis.SgAlarmAction;
-import com.sg.uis.SgAlarmChangTime;
-import com.sg.uis.SgImage;
-import com.sg.uis.LsyNewView.AlarmShieldTime;
-import com.sg.uis.LsyNewView.ChangeLabelBtn;
-import com.sg.uis.LsyNewView.FlikerProgressBar;
-import com.sg.uis.LsyNewView.SgVideoView;
 import comm_service.service;
-
 import data_model.ipc_control;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -88,6 +83,9 @@ public class MGridActivity extends Activity {
 	private MainWindow m_oSgSgRenderManager = null;
 	private HashMap<String, MainWindow> m_oViewGroups = null;
 	private String Load = "";
+	private static String PSS = "";
+	private static String PSF = "";
+	
 	private long starttime = 0;
 	private DataGetter mDataGetter;
 	private ContainerView mContainer;
@@ -330,8 +328,11 @@ public class MGridActivity extends Activity {
 		}
 
 		LanguageStr.iniLanguage = iniReader.getValue("SysConf", "Language");
+		LanguageStr.whatLanguageSystem(context);;
 		LanguageStr.setLanguage();
 		Load=LanguageStr.Load;
+		PSS=LanguageStr.PSS;
+		PSF=LanguageStr.PSF;
 
 		m_sRootFolder = iniReader.getValue("SysConf", "FolderRoot");
 		m_sMainPage = iniReader.getValue("SysConf", "MainPage");
@@ -1071,16 +1072,12 @@ public class MGridActivity extends Activity {
 				// Toast.makeText(context, "没有前置摄像头", Toast.LENGTH_LONG).show();
 				break;
 			case 4:
-				if (whatLanguage)
-					Toast.makeText(context, "照片保存成功", Toast.LENGTH_LONG).show();
-				else
-					Toast.makeText(context, "Save success", Toast.LENGTH_LONG).show();
+				
+					Toast.makeText(context, PSS, Toast.LENGTH_LONG).show();
 				break;
 			case 5:
-				if (whatLanguage)
-					Toast.makeText(context, "照片保存失败", Toast.LENGTH_LONG).show();
-				else
-					Toast.makeText(context, "Save failure", Toast.LENGTH_LONG).show();
+			
+					Toast.makeText(context, PSF, Toast.LENGTH_LONG).show();
 				break;
 			}
 			super.handleMessage(msg);

@@ -72,6 +72,7 @@ public class HisEvent extends HisEventTable implements IObject {
 	private String Receive=LanguageStr.Receive;
 	private String AllDevice=LanguageStr.AllDevice;
 
+	private String ON=LanguageStr.ON;
 	
 	private String textColor="#FF000000";
 	private String btnColor="#FFC0C0C0";
@@ -124,50 +125,7 @@ public class HisEvent extends HisEventTable implements IObject {
 			}
 		});
 
-//		if (MGridActivity.whatLanguage) {
-//			DeviceName = "设备名称";
-//			AlarmName = "告警名称";
-//			AlarmMeaning = "告警含义";
-//			Numericalsignal = "信号数值";
-//			AlarmSeverity = "告警等级";
-//			StartTime = "开始时间";
-//			EndTime = "结束时间";
-//
-//			DeviceList = "  设备↓   ";
-//			SetTime = "设置日期";
-//			PreveDay = "结束时间";
-//			NextDay = "开始时间";
-//			Receive = "  获取   ";
-//			AllDevice = "全部设备";
-//			
-//			one="通知";
-//			two="一般告警";
-//			three="严重告警";
-//			four="致命告警";
-//			
-//			set="设置";
-//		} else {
-//			DeviceName = "Device Name";
-//			AlarmName = "Alarm Name";
-//			AlarmMeaning = "Alarm Meaning";
-//			Numericalsignal = "Numerical Signal";
-//			AlarmSeverity = "Alarm Severity";
-//			StartTime = "Start Time";
-//			EndTime = "End Time";
-//
-//			DeviceList = "  Device↓   ";
-//			SetTime = "Set Time";
-//			PreveDay = "Previous Day";
-//			NextDay = "Next Day";
-//			Receive = "  Receipt   ";
-//			AllDevice = "All Device";
-//			
-//			one="Notice";
-//			two="GeneralAlarm";
-//			three="CriticalAlarm";
-//			four="FatalAlarm";
-//			set="Set";
-//		}
+
 
 		// 标头标题
 		lstTitles = new ArrayList<String>();
@@ -189,9 +147,7 @@ public class HisEvent extends HisEventTable implements IObject {
 		view_text.setGravity(Gravity.CENTER);
 		view_text.setPadding(2, 2, 2, 2);
 	    view_text.setBackgroundColor(Color.argb(100, 100, 100, 100));
-//		view_text.setBackgroundColor(Color.parseColor(btnColor));
-//
-//		view_text.setTextColor(Color.parseColor(textColor));
+
 
 		// 日期选择button
 		view_timeButton = new Button(context);
@@ -200,19 +156,15 @@ public class HisEvent extends HisEventTable implements IObject {
 		view_timeButton.setTextSize(15);
 		view_timeButton.setPadding(2, 2, 2, 2);
 		view_timeButton.setOnClickListener(l);// 设置该控件的监听
-//		view_timeButton.setBackgroundResource(android.R.drawable.btn_default);
-//		view_timeButton.setBackgroundColor(Color.parseColor(btnColor));
-//		view_timeButton.setTextColor(Color.parseColor(textColor));
+
 		// 结束时间button
 		view_PerveDay = new Button(context);
-		view_PerveDay.setText(PreveDay); // PreveDay
+		view_PerveDay.setText(EndTime); // PreveDay
 		 view_PerveDay.setTextColor(Color.BLACK);
 		view_PerveDay.setTextSize(15);
 		view_PerveDay.setPadding(2, 2, 2, 2);
 		view_PerveDay.setOnClickListener(l);// 设置该控件的监听
-//		view_PerveDay.setBackgroundColor(Color.parseColor(btnColor));
-//		view_PerveDay.setTextColor(Color.parseColor(textColor));
-//		view_PerveDay.setBackgroundResource(android.R.drawable.btn_default);
+
 
 		view_Text = new TextView(context);
 		view_Text.setText("——");
@@ -222,14 +174,12 @@ public class HisEvent extends HisEventTable implements IObject {
 
 		// 开始时间button
 		view_NextDay = new Button(context);
-		view_NextDay.setText(NextDay); // NextDay
+		view_NextDay.setText(StartTime); // NextDay
 		 view_NextDay.setTextColor(Color.BLACK);
 		view_NextDay.setTextSize(15);
 		view_NextDay.setPadding(2, 2, 2, 2);
 		view_NextDay.setOnClickListener(l);// 设置该控件的监听
-//		view_NextDay.setBackgroundColor(Color.parseColor(btnColor));
-//		view_NextDay.setTextColor(Color.parseColor(textColor));
-//		view_NextDay.setBackgroundResource(android.R.drawable.btn_default);
+
 
 		// 接收receive
 		view_Receive = new Button(context);
@@ -238,21 +188,30 @@ public class HisEvent extends HisEventTable implements IObject {
 		view_Receive.setTextSize(15);
 		view_Receive.setPadding(2, 2, 2, 2);
 		view_Receive.setOnClickListener(l);
-//		view_Receive.setBackgroundColor(Color.parseColor(btnColor));
-//		view_Receive.setTextColor(Color.parseColor(textColor));
-//		view_NextDay.setBackgroundResource(android.R.drawable.btn_default);
+
 
 		calendar = Calendar.getInstance();
 		year = calendar.get(Calendar.YEAR);
 		month = calendar.get(Calendar.MONTH);
 		day = calendar.get(Calendar.DAY_OF_MONTH);
-		dialog = new DatePickerDialog(context, new OnDateSetListener() {
+//		dialog = new DatePickerDialog(context, new OnDateSetListener() {
+//			@Override
+//			public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
+//
+//			}
+//		}, year, month, day);
+		
+		dialog = new DatePickerDialog(context,null, year, month, day);
+		dialog.setButton(DialogInterface.BUTTON_POSITIVE, ON,new DialogInterface.OnClickListener() {
+			
 			@Override
-			public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-
+			public void onClick(DialogInterface dialog, int which) {
+				
+				
 			}
-		}, year, month, day);
-
+		});
+		dialog.setTitle("");
+		dialog.getDatePicker().setCalendarViewShown(false);
 		nameList.add(DeviceList);
 		nameList.add(AllDevice);
 
@@ -370,16 +329,20 @@ public class HisEvent extends HisEventTable implements IObject {
 			if (arg0 == view_NextDay) {
 				calendar = Calendar.getInstance();
 				dialog_before = new DatePickerDialog(getContext(),
-						new OnDateSetListener() {
-							@Override
-							public void onDateSet(DatePicker arg0, int arg1,
-									int arg2, int arg3) {
-
-							}
-						}, calendar.get(Calendar.YEAR),
+						null, calendar.get(Calendar.YEAR),
 						calendar.get(Calendar.MONTH),
 						calendar.get(Calendar.DAY_OF_MONTH));
 
+				dialog_before.setTitle("");
+				dialog_before.getDatePicker().setCalendarViewShown(false);
+				dialog_before.setButton(DialogInterface.BUTTON_POSITIVE, ON,new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						
+						
+					}
+				});
 				dialog_before.setButton(DialogInterface.BUTTON_NEGATIVE, set,
 						new DialogInterface.OnClickListener() {
 
@@ -421,15 +384,19 @@ public class HisEvent extends HisEventTable implements IObject {
 			if (arg0 == view_PerveDay) {
 				calendar = Calendar.getInstance();
 				dialog_after = new DatePickerDialog(getContext(),
-						new OnDateSetListener() {
-							@Override
-							public void onDateSet(DatePicker arg0, int arg1,
-									int arg2, int arg3) {
-
-							}
-						}, calendar.get(Calendar.YEAR),
+					null, calendar.get(Calendar.YEAR),
 						calendar.get(Calendar.MONTH),
 						calendar.get(Calendar.DAY_OF_MONTH));
+				dialog_after.setTitle("");
+				dialog_after.getDatePicker().setCalendarViewShown(false);
+				dialog_after.setButton(DialogInterface.BUTTON_POSITIVE, ON,new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						
+						
+					}
+				});
 
 				dialog_after.setButton(DialogInterface.BUTTON_NEGATIVE, set,
 						new DialogInterface.OnClickListener() {

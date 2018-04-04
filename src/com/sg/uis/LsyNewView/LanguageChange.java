@@ -6,12 +6,15 @@ import java.util.ArrayList;
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
+import com.mgrid.util.DialogUtils;
 import com.mgrid.util.FileUtil;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 import com.sg.common.MyAdapter;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -34,7 +37,7 @@ import android.widget.Toast;
 @SuppressLint({ "ShowToast", "InflateParams", "RtlHardcoded", "ClickableViewAccessibility" })
 public class LanguageChange extends TextView implements IObject {
 
-	public static int index = 0;// 0-中文 1-English
+	public static int index = -1;// 0-中文 1-English
 
 	private TextView tvSelectLan = null;
 	private Button btnSetUp = null;
@@ -63,6 +66,15 @@ public class LanguageChange extends TextView implements IObject {
 
 	private static final String tempPath = "tmp/reboot.txt";
 
+	
+	private String set=LanguageStr.set;
+	
+	private String title=LanguageStr.title;
+	
+	private String content=LanguageStr.content;
+	
+	private String fail=LanguageStr.Fail;
+	
 	public LanguageChange(Context context) {
 		super(context);
 
@@ -90,7 +102,7 @@ public class LanguageChange extends TextView implements IObject {
 		list.add("English");
 
 		btnSetUp.setBackgroundResource(android.R.drawable.btn_default);
-		btnSetUp.setText("设置");
+		btnSetUp.setText(set);
 		btnSetUp.setTextSize(15);
 		btnSetUp.setTextColor(Color.BLACK);
 		btnSetUp.setGravity(Gravity.CENTER);
@@ -118,8 +130,7 @@ public class LanguageChange extends TextView implements IObject {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						tvSelectLan.setText(list.get(position));
-						index = position;
-						System.out.println("index:" + index);
+						index = position;					
 						popupWindow.dismiss();
 					}
 				});
@@ -132,6 +143,8 @@ public class LanguageChange extends TextView implements IObject {
 			@Override
 			public void onClick(View v) {
 
+				if(index!=-1)
+				btnSetUp.setEnabled(false);
 				copyFile();
 
 			}
@@ -158,7 +171,7 @@ public class LanguageChange extends TextView implements IObject {
 					util.copyFolder(mainPath + "/" + chinaFile + "/" + sam_Dir + "/" + so_Dir, soPath + "/" + so_Dir);
 					util.copyFolder(mainPath + "/" + chinaFile + "/" + sam_Dir + "/" + xml_Dir, soPath + "/" + xml_Dir);
 
-				} else {
+				} else if(index==1){
 					System.out.println("替换英文");
 
 					util.deleteDir(new File(mainPath + "/" + ini_File));
@@ -171,10 +184,13 @@ public class LanguageChange extends TextView implements IObject {
 					util.copyFolder(mainPath + "/" + engFile + "/" + sam_Dir + "/" + so_Dir, soPath + "/" + so_Dir);
 					util.copyFolder(mainPath + "/" + engFile + "/" + sam_Dir + "/" + xml_Dir, soPath + "/" + xml_Dir);
 
+				}else
+				{
+					hand.sendEmptyMessage(1);
+					return;
 				}
-				System.out.println("重启");
 				util.deleteDir(new File(mainPath + "/" + tempPath));
-				// hand.sendEmptyMessage(0);
+			    hand.sendEmptyMessage(0);
 			}
 		});
 	}
@@ -185,7 +201,12 @@ public class LanguageChange extends TextView implements IObject {
 			switch (msg.what) {
 			case 0:
 
-				Toast.makeText(getContext(), "切换完成,等待重启", 1000).show();
+				DialogUtils.getDialog().showDialog(getContext(), title, content);
+
+				break;
+			case 1:
+
+				Toast.makeText(getContext(), fail, 1000).show();
 
 				break;
 			}
@@ -258,7 +279,7 @@ public class LanguageChange extends TextView implements IObject {
 
 		} else if ("Content".equals(strName)) {
 			m_strContent = strValue;
-			btnSetUp.setText(m_strContent);
+		//	btnSetUp.setText(m_strContent);
 
 		} else if ("FontFamily".equals(strName))
 			m_strFontFamily = strValue;

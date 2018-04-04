@@ -146,9 +146,6 @@ import data_model.save_multipoint_signal;
 /** 主窗口 */
 public class MainWindow extends ViewGroup {
 
-	
-	
-		
 	public MainWindow(final MGridActivity context) {
 		super(context);
 		setFocusableInTouchMode(true);
@@ -169,46 +166,44 @@ public class MainWindow extends ViewGroup {
 					break;
 
 				case 1:
-//					if(MGridActivity.whatLanguage)
-//					Toast.makeText(context, "设置成功",
-//							Toast.LENGTH_SHORT).show();
-//					else
-					Toast.makeText(context, LanguageStr.Success,
-								Toast.LENGTH_SHORT).show();
-					String uid=((String) msg.obj).replace("设置成功.", "");
-					if(uid==null) return;
-					
+					// if(MGridActivity.whatLanguage)
+					// Toast.makeText(context, "设置成功",
+					// Toast.LENGTH_SHORT).show();
+					// else
+					Toast.makeText(context, LanguageStr.Success, Toast.LENGTH_SHORT).show();
+					String uid = ((String) msg.obj).replace("设置成功.", "");
+					if (uid == null)
+						return;
+
 					final IObject obj_Y = m_mapUIs.get(uid);
-					
-					if(obj_Y==null) return;
-					
+
+					if (obj_Y == null)
+						return;
+
 					MGridActivity.xianChengChi.execute(new Runnable() {
-					
-					@Override
-					public void run() {
-						Iterator<String> iter =m_mapUIs.keySet().iterator();	
-						while (iter.hasNext()) {
-							String strKey = iter.next();
-							IObject obj_Z = m_mapUIs.get(strKey);
-				            if(obj_Z.getType().equals("tigerLabel"))
-				            {
-				            	if(obj_Y.getBindingExpression().contains(ExpressionUtils.getExpressionUtils().removeBindingString(obj_Z.getBindingExpression())))
-				            	{
-				            		obj_Z.needupdate(true);				            		
-				            	}
-				            }						
-						}						
-					}
-			       });
+
+						@Override
+						public void run() {
+							Iterator<String> iter = m_mapUIs.keySet().iterator();
+							while (iter.hasNext()) {
+								String strKey = iter.next();
+								IObject obj_Z = m_mapUIs.get(strKey);
+								if (obj_Z.getType().equals("tigerLabel")) {
+									if (obj_Y.getBindingExpression().contains(ExpressionUtils.getExpressionUtils()
+											.removeBindingString(obj_Z.getBindingExpression()))) {
+										obj_Z.needupdate(true);
+									}
+								}
+							}
+						}
+					});
 					break;
 
 				case 2:
-					if(MGridActivity.whatLanguage)
-					new AlertDialog.Builder(context).setTitle(LanguageStr.Fail)
-							.setMessage((String) msg.obj).show();
+					if (MGridActivity.whatLanguage)
+						new AlertDialog.Builder(context).setTitle(LanguageStr.Fail).setMessage((String) msg.obj).show();
 					else
-					new AlertDialog.Builder(context).setTitle("Title")
-						    .setMessage(LanguageStr.Fail).show();
+						new AlertDialog.Builder(context).setTitle("Title").setMessage(LanguageStr.Fail).show();
 					break;
 
 				default:
@@ -222,7 +217,6 @@ public class MainWindow extends ViewGroup {
 																	// 接受线程池的msg（子线程）
 		// timer.schedule(timertask, 0, 3000);
 	}
-
 
 	/** 更新变化的界面数据 */
 	void updateWidgets() {
@@ -322,25 +316,19 @@ public class MainWindow extends ViewGroup {
 				this.setScaleX(m_fScale);
 				this.setScaleY(m_fScale);
 				// reset translate
-				if (this.getLeft() - this.getRight() * 0.5f * (m_fScale - 1.0f)
-						- m_fOffsetX >= 0) {
-					m_fOffsetX += this.getLeft() - this.getRight() * 0.5f
-							* (m_fScale - 1.0f) - m_fOffsetX;
+				if (this.getLeft() - this.getRight() * 0.5f * (m_fScale - 1.0f) - m_fOffsetX >= 0) {
+					m_fOffsetX += this.getLeft() - this.getRight() * 0.5f * (m_fScale - 1.0f) - m_fOffsetX;
 				}
-				if (this.getRight() + this.getRight() * 0.5f
-						* (m_fScale - 1.0f) - m_fOffsetX <= SCREEN_WIDTH) {
-					m_fOffsetX += this.getRight() + this.getRight() * 0.5f
-							* (m_fScale - 1.0f) - m_fOffsetX - SCREEN_WIDTH;
+				if (this.getRight() + this.getRight() * 0.5f * (m_fScale - 1.0f) - m_fOffsetX <= SCREEN_WIDTH) {
+					m_fOffsetX += this.getRight() + this.getRight() * 0.5f * (m_fScale - 1.0f) - m_fOffsetX
+							- SCREEN_WIDTH;
 				}
-				if (this.getTop() - this.getBottom() * 0.5f * (m_fScale - 1.0f)
-						- m_fOffsetY >= 0) {
-					m_fOffsetY += this.getTop() - this.getBottom() * 0.5f
-							* (m_fScale - 1.0f) - m_fOffsetY;
+				if (this.getTop() - this.getBottom() * 0.5f * (m_fScale - 1.0f) - m_fOffsetY >= 0) {
+					m_fOffsetY += this.getTop() - this.getBottom() * 0.5f * (m_fScale - 1.0f) - m_fOffsetY;
 				}
-				if (this.getBottom() + this.getBottom() * 0.5f
-						* (m_fScale - 1.0f) - m_fOffsetY <= SCREEN_HEIGHT) {
-					m_fOffsetY += this.getBottom() + this.getBottom() * 0.5f
-							* (m_fScale - 1.0f) - m_fOffsetY - SCREEN_HEIGHT;
+				if (this.getBottom() + this.getBottom() * 0.5f * (m_fScale - 1.0f) - m_fOffsetY <= SCREEN_HEIGHT) {
+					m_fOffsetY += this.getBottom() + this.getBottom() * 0.5f * (m_fScale - 1.0f) - m_fOffsetY
+							- SCREEN_HEIGHT;
 				}
 				if (m_fScale <= 1.0f) {
 					m_fOffsetX = 0.0f;
@@ -352,26 +340,24 @@ public class MainWindow extends ViewGroup {
 
 				if (m_fScale <= 1.0f) {
 					// TODO: 滑屏操作，应加入画面跟随手指动画。 -- CharlesChen
-					break; 
+					break;
 				}
 
 				float fEllipseX = m_fOldX - event.getX();
 				float fEllipseY = m_fOldY - event.getY();
- 
+
 				m_fOldX = event.getX();
 				m_fOldY = event.getY();
 
-				if (this.getLeft() - this.getRight() * 0.5f * (m_fScale - 1.0f)
-						- (m_fOffsetX + fEllipseX) > 0)
+				if (this.getLeft() - this.getRight() * 0.5f * (m_fScale - 1.0f) - (m_fOffsetX + fEllipseX) > 0)
 					fEllipseX = 0.0f;
-				if (this.getRight() + this.getRight() * 0.5f
-						* (m_fScale - 1.0f) - (m_fOffsetX + fEllipseX) < SCREEN_WIDTH)
+				if (this.getRight() + this.getRight() * 0.5f * (m_fScale - 1.0f)
+						- (m_fOffsetX + fEllipseX) < SCREEN_WIDTH)
 					fEllipseX = 0.0f;
-				if (this.getTop() - this.getBottom() * 0.5f * (m_fScale - 1.0f)
-						- (m_fOffsetY + fEllipseY) > 0)
+				if (this.getTop() - this.getBottom() * 0.5f * (m_fScale - 1.0f) - (m_fOffsetY + fEllipseY) > 0)
 					fEllipseY = 0.0f;
-				if (this.getBottom() + this.getBottom() * 0.5f
-						* (m_fScale - 1.0f) - (m_fOffsetY + fEllipseY) < SCREEN_HEIGHT)
+				if (this.getBottom() + this.getBottom() * 0.5f * (m_fScale - 1.0f)
+						- (m_fOffsetY + fEllipseY) < SCREEN_HEIGHT)
 					fEllipseY = 0.0f;
 
 				m_fOffsetX += fEllipseX * 0.75f;
@@ -383,22 +369,19 @@ public class MainWindow extends ViewGroup {
 			break;
 
 		case MotionEvent.ACTION_POINTER_UP:
-			
-			
+
 			m_bTwoFigerDown = false; // 会引起缩放操作时误切页 -- CharlesChen
 			break;
 
 		case MotionEvent.ACTION_UP:
-			
-			
-//			
-//			if(timer!=null&&timertask!=null)
-//			{
-//			   isChangePage=true;
-//			}
+
+			//
+			// if(timer!=null&&timertask!=null)
+			// {
+			// isChangePage=true;
+			// }
 			this.requestFocus();
-			m_oMgridActivity.mImm.hideSoftInputFromWindow(
-					this.getWindowToken(), 0);
+			m_oMgridActivity.mImm.hideSoftInputFromWindow(this.getWindowToken(), 0);
 
 			m_bOneFigerDown = false;
 			m_fDragEndX = event.getX();
@@ -420,59 +403,49 @@ public class MainWindow extends ViewGroup {
 				}
 
 				if (m_fDragEndX - m_fDragStartX == 0
-						|| Math.abs((m_fDragEndY - m_fDragStartY)
-								/ (m_fDragEndX - m_fDragStartX)) > 0.6)
+						|| Math.abs((m_fDragEndY - m_fDragStartY) / (m_fDragEndX - m_fDragStartX)) > 0.6)
 					break;
 
-				if (velocityY > 300 && velocityY != 0
-						&& Math.abs(velocityX / velocityY) < 2.8)
+				if (velocityY > 300 && velocityY != 0 && Math.abs(velocityX / velocityY) < 2.8)
 					break;
 
 				// 有待改善啊，暂时只支持一个权限页面，有多个权限页面将不需要密码直接滑进页面。
-				if (velocityX > SNAP_VELOCITY && null != m_oPrevPage && !m_oPrevPage.m_strCurrentPage.equals("动态图.xml")) {
-                      boolean isPage=true;
-                      if(MGridActivity.m_MaskPage!=null)
-                      {
-                          for(String ss[]:MGridActivity.m_MaskPage)
-                          {
-                        	  for(String s:ss)
-                        	  {
-                        		  if(s.equals(m_oPrevPage.m_strCurrentPage))
-                             	 {
-                             		 isPage=false;
-                             	 }
-                        	  }
-                        	
-                          }
-                      }
+				if (velocityX > SNAP_VELOCITY && null != m_oPrevPage
+						&& !m_oPrevPage.m_strCurrentPage.equals("动态图.xml")) {
+					boolean isPage = true;
+					if (MGridActivity.m_MaskPage != null) {
+						for (String ss[] : MGridActivity.m_MaskPage) {
+							for (String s : ss) {
+								if (s.equals(m_oPrevPage.m_strCurrentPage)) {
+									isPage = false;
+								}
+							}
 
-                      if(isPage)
-                      {
-                    	  m_oMgridActivity.onPageChange(m_oPrevPage.m_strCurrentPage);
-                      }
+						}
+					}
 
-				} else if (velocityX < -SNAP_VELOCITY && null != m_oNextPage &&!m_oNextPage.m_strCurrentPage.equals("动态图.xml")) {
+					if (isPage) {
+						m_oMgridActivity.onPageChange(m_oPrevPage.m_strCurrentPage);
+					}
 
-					 boolean isPage=true;
-					
-                    if(MGridActivity.m_MaskPage!=null)
-                    {
-                    	 for(String ss[]:MGridActivity.m_MaskPage)
-                         {
-                        	 for(String s:ss)
-                        	 {
-                        		 if(s.equals(m_oNextPage.m_strCurrentPage))
-                               	 {
-                               		 isPage=false;
-                               	 }
-                        	 }
-                       	 
-                         }
-                    }
-                     if(isPage)
-                     {
-                   	  m_oMgridActivity.onPageChange(m_oNextPage.m_strCurrentPage);
-                     }
+				} else if (velocityX < -SNAP_VELOCITY && null != m_oNextPage
+						&& !m_oNextPage.m_strCurrentPage.equals("动态图.xml")) {
+
+					boolean isPage = true;
+
+					if (MGridActivity.m_MaskPage != null) {
+						for (String ss[] : MGridActivity.m_MaskPage) {
+							for (String s : ss) {
+								if (s.equals(m_oNextPage.m_strCurrentPage)) {
+									isPage = false;
+								}
+							}
+
+						}
+					}
+					if (isPage) {
+						m_oMgridActivity.onPageChange(m_oNextPage.m_strCurrentPage);
+					}
 
 				} else {
 
@@ -547,13 +520,11 @@ public class MainWindow extends ViewGroup {
 		m_oCaculateThread = new SgExpressionCacularThread();
 		m_oCaculateThread.setHasRandomData(m_bHasRandomData);
 
-		
 		Iterator<String> iter = m_mapUIs.keySet().iterator();
 		while (iter.hasNext()) {
 			String strKey = iter.next();
 			IObject obj = m_mapUIs.get(strKey);
-			m_oCaculateThread.addExpression(obj.getUniqueID(), obj.getType(),
-					obj.getBindingExpression());
+			m_oCaculateThread.addExpression(obj.getUniqueID(), obj.getType(), obj.getBindingExpression());
 
 			obj.initFinished();
 		}
@@ -610,11 +581,9 @@ public class MainWindow extends ViewGroup {
 
 	private void showMsgDlg(String title, String message) {
 		if (++NUMOFDAILOG < 10 && MGridActivity.m_bErrMsgParser) {
-			new AlertDialog.Builder(m_oMgridActivity).setTitle(title)
-					.setMessage(message).show();
+			new AlertDialog.Builder(m_oMgridActivity).setTitle(title).setMessage(message).show();
 		} else if (NUMOFDAILOG == 10 && MGridActivity.m_bErrMsgParser) {
-			new AlertDialog.Builder(m_oMgridActivity).setTitle("无法显示更多错误信息")
-					.setMessage("该组态配置中错误过多！！！").show();
+			new AlertDialog.Builder(m_oMgridActivity).setTitle("无法显示更多错误信息").setMessage("该组态配置中错误过多！！！").show();
 		}
 	}
 
@@ -649,23 +618,19 @@ public class MainWindow extends ViewGroup {
 	/**
 	 * @throws FileNotFoundException
 	 */
-	
-	
-	
+
 	public void parseXml(String xmlFile) throws FileNotFoundException {
 		String[] arrStr = xmlFile.split("\\.");
 		m_strResFolder = m_strRootFolder + arrStr[0] + ".files/";
-       System.out.println("xmlFile:"+xmlFile);
-       System.out.println(Thread.currentThread().getName());
-        MGridActivity.XmlFile=xmlFile;
-		InputStream is = new BufferedInputStream(new FileInputStream(
-				Environment.getExternalStorageDirectory().getPath()
-						+ m_strRootFolder + xmlFile));
+		System.out.println("xmlFile:" + xmlFile);
+		System.out.println(Thread.currentThread().getName());
+		MGridActivity.XmlFile = xmlFile;
+		InputStream is = new BufferedInputStream(
+				new FileInputStream(Environment.getExternalStorageDirectory().getPath() + m_strRootFolder + xmlFile));
 		parseStream(is);
 
 		for (int i = 0; i <= MAXZINDEX; i++) {
-			Iterator<HashMap.Entry<String, IObject>> entry_it = m_mapUIs
-					.entrySet().iterator();
+			Iterator<HashMap.Entry<String, IObject>> entry_it = m_mapUIs.entrySet().iterator();
 			while (entry_it.hasNext()) {
 				HashMap.Entry<String, IObject> entry = entry_it.next();
 				IObject obj = entry.getValue();
@@ -701,8 +666,7 @@ public class MainWindow extends ViewGroup {
 
 					if ("Element".equals(name)) {
 						String strID = pullParser.getAttributeValue("", "ID");
-						String strType = pullParser.getAttributeValue("",
-								"Type");
+						String strType = pullParser.getAttributeValue("", "Type");
 						strElementType = strType;
 
 						boolean bExit = true;
@@ -713,109 +677,86 @@ public class MainWindow extends ViewGroup {
 							SgLabel sgLabel = new SgLabel(this.getContext());
 							m_mapUIs.put(strID, sgLabel);
 						} else if ("TextClock".equals(strType)) {
-							SgTextClock sgTextClock = new SgTextClock(
-									this.getContext());
+							SgTextClock sgTextClock = new SgTextClock(this.getContext());
 							m_mapUIs.put(strID, sgTextClock);
 						} else if ("StraightLine".equals(strType)) {
-							SgStraightLine sgStraightLine = new SgStraightLine(
-									this.getContext());
+							SgStraightLine sgStraightLine = new SgStraightLine(this.getContext());
 							m_mapUIs.put(strID, sgStraightLine);
 						} else if ("Rectangle".equals(strType)) {
-							SgRectangle sgRectangle = new SgRectangle(
-									this.getContext());
+							SgRectangle sgRectangle = new SgRectangle(this.getContext());
 							m_mapUIs.put(strID, sgRectangle);
 						} else if ("Ellipse".equals(strType)) {
-							SgEllipse sgEllipse = new SgEllipse(
-									this.getContext());
+							SgEllipse sgEllipse = new SgEllipse(this.getContext());
 							m_mapUIs.put(strID, sgEllipse);
 						} else if ("Polyline".equals(strType)) {
-							SgPolyline sgPolyline = new SgPolyline(
-									this.getContext());
+							SgPolyline sgPolyline = new SgPolyline(this.getContext());
 							m_mapUIs.put(strID, sgPolyline);
 						} else if ("Image".equals(strType)) {
 							SgImage sgImage = new SgImage(this.getContext());
 							m_mapUIs.put(strID, sgImage);
 						} else if ("Button".equals(strType)) {
 							SgButton sgButton = new SgButton(this.getContext());
-							//SgButton_new  sgButton = new SgButton_new(this.getContext());
+							// SgButton_new sgButton = new SgButton_new(this.getContext());
 							m_mapUIs.put(strID, sgButton);
 						} else if ("TextBox".equals(strType)) {
-							SgTextBox sgTextBox = new SgTextBox(
-									this.getContext());
+							SgTextBox sgTextBox = new SgTextBox(this.getContext());
 							m_mapUIs.put(strID, sgTextBox);
 						} else if ("Table".equals(strType)) {
 							SgTable sgTable = new SgTable(this.getContext());
 							m_mapUIs.put(strID, sgTable);
 						} else if ("CommandButton".equals(strType)) {
-							SgCommandButton sgCommandButton = new SgCommandButton(
-									this.getContext());
+							SgCommandButton sgCommandButton = new SgCommandButton(this.getContext());
 							m_mapUIs.put(strID, sgCommandButton);
 						} else if ("YTParameter".equals(strType)) {
-							SgYTParameter sgYTParameter = new SgYTParameter(
-									this.getContext());
+							SgYTParameter sgYTParameter = new SgYTParameter(this.getContext());
 							m_mapUIs.put(strID, sgYTParameter);
 						} else if ("YKParameter".equals(strType)) {
-							SgYKParameter sgYKParameter = new SgYKParameter(
-									this.getContext());
+							SgYKParameter sgYKParameter = new SgYKParameter(this.getContext());
 							m_mapUIs.put(strID, sgYKParameter);
 							m_YKobj.add(sgYKParameter.m_oSpinner);
 						} else if ("AlarmLight".equals(strType)) {
-							SgAlarmLight sgAlarmLight = new SgAlarmLight(
-									this.getContext());
+							SgAlarmLight sgAlarmLight = new SgAlarmLight(this.getContext());
 							m_mapUIs.put(strID, sgAlarmLight);
 						} else if ("Thermometer".equals(strType)) {
-							SgThermometer sgThermometer = new SgThermometer(
-									this.getContext());
+							SgThermometer sgThermometer = new SgThermometer(this.getContext());
 							m_mapUIs.put(strID, sgThermometer);
 						} else if ("Ammeter".equals(strType)) {
-							SgAmmeter sgAmmeter = new SgAmmeter(
-									this.getContext());
+							SgAmmeter sgAmmeter = new SgAmmeter(this.getContext());
 							m_mapUIs.put(strID, sgAmmeter);
 						} else if ("SignalList".equals(strType)) {
-							SgSignalList sgSignalList = new SgSignalList(
-									this.getContext());
+							SgSignalList sgSignalList = new SgSignalList(this.getContext());
 							m_mapUIs.put(strID, sgSignalList);
 						} else if ("EventList".equals(strType)) {
-							SgEventList sgEventList = new SgEventList(
-									this.getContext());
+							SgEventList sgEventList = new SgEventList(this.getContext());
 							m_mapUIs.put(strID, sgEventList);
 						} else if ("StatePanel".equals(strType)) {
-							SgStatePanel sgStatePanel = new SgStatePanel(
-									this.getContext());
+							SgStatePanel sgStatePanel = new SgStatePanel(this.getContext());
 							m_mapUIs.put(strID, sgStatePanel);
 						} else if ("ThreeDPieChart".equals(strType)) {
-							SgChart sgMultiChart = new SgChart(
-									this.getContext());
+							SgChart sgMultiChart = new SgChart(this.getContext());
 							sgMultiChart.setChartType("Pie");
 							m_mapUIs.put(strID, sgMultiChart);
 						} else if ("MultiChart".equals(strType)) {
-							SgChart sgMultiChart = new SgChart(
-									this.getContext());
+							SgChart sgMultiChart = new SgChart(this.getContext());
 							sgMultiChart.setChartType("Bar");
 							m_mapUIs.put(strID, sgMultiChart);
 						} else if ("EventConditionStartSetter".equals(strType)) {
-							SgTriggerSetter triggerSetter = new SgTriggerSetter(
-									this.getContext());
+							SgTriggerSetter triggerSetter = new SgTriggerSetter(this.getContext());
 							m_mapUIs.put(strID, triggerSetter);
 						} else if ("HistorySignalCurve".equals(strType)) {
-							SgCurveLineChart sgLineChart = new SgCurveLineChart(
-									this.getContext());
+							SgCurveLineChart sgLineChart = new SgCurveLineChart(this.getContext());
 							m_mapUIs.put(strID, sgLineChart);
 						} else if ("IsolationSwitch".equals(strType)) {
-							SgIsolationSwitch sgIsolationSwitch = new SgIsolationSwitch(
-									this.getContext());
+							SgIsolationSwitch sgIsolationSwitch = new SgIsolationSwitch(this.getContext());
 							m_mapUIs.put(strID, sgIsolationSwitch);
 						} else if ("DoubleImageButton".equals(strType)) {
-							SgIsolationEventSetter isolationEventSetter = new SgIsolationEventSetter(
-									this.getContext());
+							SgIsolationEventSetter isolationEventSetter = new SgIsolationEventSetter(this.getContext());
 							m_mapUIs.put(strID, isolationEventSetter);
 						} else if ("SignalNameSetter".equals(strType)) {
-							SgSignalNameSetter signalNameSetter = new SgSignalNameSetter(
-									this.getContext());
+							SgSignalNameSetter signalNameSetter = new SgSignalNameSetter(this.getContext());
 							m_mapUIs.put(strID, signalNameSetter);
 						} else if ("CableTerminal".equals(strType)) {
-							SgCableTerminal cableTerminal = new SgCableTerminal(
-									this.getContext());
+							SgCableTerminal cableTerminal = new SgCableTerminal(this.getContext());
 							m_mapUIs.put(strID, cableTerminal);
 						} else if ("GND".equals(strType)) {
 							SgGND end = new SgGND(this.getContext());
@@ -823,44 +764,34 @@ public class MainWindow extends ViewGroup {
 						}
 						// fjw add
 						else if ("fjw_history_SignalList".equals(strType)) {
-							fjw_history_SignalList fjw_his_sig = new fjw_history_SignalList(
-									this.getContext());
+							fjw_history_SignalList fjw_his_sig = new fjw_history_SignalList(this.getContext());
 							m_mapUIs.put(strID, fjw_his_sig);
 						} else if ("LocalList".equals(strType)) {
-							LocalList locallist = new LocalList(
-									this.getContext());
+							LocalList locallist = new LocalList(this.getContext());
 							m_mapUIs.put(strID, locallist);
 						} else if ("HisEvent".equals(strType)) {
-							HisEvent hiseventlist = new HisEvent(
-									this.getContext());
+							HisEvent hiseventlist = new HisEvent(this.getContext());
 							m_mapUIs.put(strID, hiseventlist);
 						} else if ("HistoryEventList".equals(strType)) {
-							HistoryEventList hiseventlist = new HistoryEventList(
-									this.getContext());
+							HistoryEventList hiseventlist = new HistoryEventList(this.getContext());
 							m_mapUIs.put(strID, hiseventlist);
 						} else if ("HistorySignalList".equals(strType)) {
-							HistorySignalList saveequipt = new HistorySignalList(
-									this.getContext());
+							HistorySignalList saveequipt = new HistorySignalList(this.getContext());
 							m_mapUIs.put(strID, saveequipt);
 						} else if ("SaveSignal".equals(strType)) {
-							SaveSignal savesignal = new SaveSignal(
-									this.getContext());
+							SaveSignal savesignal = new SaveSignal(this.getContext());
 							m_mapUIs.put(strID, savesignal);
 						} else if ("SaveEquipt".equals(strType)) {
-							SaveEquipt saveequipt = new SaveEquipt(
-									this.getContext());
+							SaveEquipt saveequipt = new SaveEquipt(this.getContext());
 							m_mapUIs.put(strID, saveequipt);
 						} else if ("SignalCurve".equals(strType)) {
-							SignalCurve signalcurve = new SignalCurve(
-									this.getContext());
+							SignalCurve signalcurve = new SignalCurve(this.getContext());
 							m_mapUIs.put(strID, signalcurve);
 						} else if ("SignalCurves".equals(strType)) {
-							SignalCurves signalcurves = new SignalCurves(
-									this.getContext());
+							SignalCurves signalcurves = new SignalCurves(this.getContext());
 							m_mapUIs.put(strID, signalcurves);
 						} else if ("multi_data".equals(strType)) {
-							multi_data multiData = new multi_data(
-									this.getContext());
+							multi_data multiData = new multi_data(this.getContext());
 							m_mapUIs.put(strID, multiData);
 						} else if ("RC_Label".equals(strType)) {
 							RC_Label rc_label = new RC_Label(this.getContext());
@@ -869,19 +800,16 @@ public class MainWindow extends ViewGroup {
 							AutoSig autosig = new AutoSig(this.getContext());
 							m_mapUIs.put(strID, autosig);
 						} else if ("AutoSigList".equals(strType)) {
-							AutoSigList autosiglist = new AutoSigList(
-									this.getContext());
+							AutoSigList autosiglist = new AutoSigList(this.getContext());
 							m_mapUIs.put(strID, autosiglist);
 						} else if ("SeeImage".equals(strType)) {
 							SeeImage seeimage = new SeeImage(this.getContext());
 							m_mapUIs.put(strID, seeimage);
 						} else if ("RC_Label_FFF".equals(strType)) {
-							RC_Label_FFF RC_Label_fff = new RC_Label_FFF(
-									this.getContext());
+							RC_Label_FFF RC_Label_fff = new RC_Label_FFF(this.getContext());
 							m_mapUIs.put(strID, RC_Label_fff);
 						} else if ("tigerLabel".equals(strType)) {
-							tigerLabel tigerLabel = new tigerLabel(
-									this.getContext());
+							tigerLabel tigerLabel = new tigerLabel(this.getContext());
 							m_mapUIs.put(strID, tigerLabel);
 						} else if ("Dial".equals(strType)) {
 							Dial dial = new Dial(this.getContext());
@@ -898,8 +826,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("Image_change".equals(strType)) {
 
 						} else if ("ELabel".equals(strType)) {
-							EventLabel eventLabel = new EventLabel(
-									this.getContext());
+							EventLabel eventLabel = new EventLabel(this.getContext());
 							m_mapUIs.put(strID, eventLabel);
 						} else if ("Pilar".equals(strType)) {
 							Pilar pilar = new Pilar(this.getContext());
@@ -908,166 +835,119 @@ public class MainWindow extends ViewGroup {
 							Pilar_A pilar_a = new Pilar_A(this.getContext());
 							m_mapUIs.put(strID, pilar_a);
 						} else if ("test_quxian".equals(strType)) {
-							test_quxian autosiglist = new test_quxian(
-									this.getContext());
+							test_quxian autosiglist = new test_quxian(this.getContext());
 							m_mapUIs.put(strID, autosiglist);
 						} else if ("ChangePassWord".equals(strType)) {
-							SgChangePassWord cpw = new SgChangePassWord(
-									this.getContext());
+							SgChangePassWord cpw = new SgChangePassWord(this.getContext());
 							m_mapUIs.put(strID, cpw);
 						} else if ("ChangeIP".equals(strType)) {
 							SgChangIP CIP = new SgChangIP(this.getContext());
 							m_mapUIs.put(strID, CIP);
 
 						} else if ("SMSConfig".equals(strType)) {
-							SgChangNamePhoneTypeState CNPTS = new SgChangNamePhoneTypeState(
-									this.getContext());
+							SgChangNamePhoneTypeState CNPTS = new SgChangNamePhoneTypeState(this.getContext());
 							m_mapUIs.put(strID, CNPTS);
 
 						} else if ("ChangXmlPW".equals(strType)) {
-							SgChangXmlPW xmlPW = new SgChangXmlPW(
-									this.getContext());
+							SgChangXmlPW xmlPW = new SgChangXmlPW(this.getContext());
 							m_mapUIs.put(strID, xmlPW);
 
 						} else if ("multi_Event_data".equals(strType)) {
-							multi_Event_data mEd = new multi_Event_data(
-			 						this.getContext());
-		 					m_mapUIs.put(strID, mEd);
+							multi_Event_data mEd = new multi_Event_data(this.getContext());
+							m_mapUIs.put(strID, mEd);
 
-						}else if("RC_RealTime".equals(strType))
-						{
-							RC_RealTime RCrt=new RC_RealTime(this.getContext());
+						} else if ("RC_RealTime".equals(strType)) {
+							RC_RealTime RCrt = new RC_RealTime(this.getContext());
 							m_mapUIs.put(strID, RCrt);
-						}
-						else if("AlarmAction".equals(strType))
-						{
-							SgAlarmAction SgAA=new SgAlarmAction(this.getContext());
+						} else if ("AlarmAction".equals(strType)) {
+							SgAlarmAction SgAA = new SgAlarmAction(this.getContext());
 							m_mapUIs.put(strID, SgAA);
-						}
-						else if("ChangExpression".equals(strType))
-						{
-							LsyChangExpression Lve=new LsyChangExpression(this.getContext());
+						} else if ("ChangExpression".equals(strType)) {
+							LsyChangExpression Lve = new LsyChangExpression(this.getContext());
 							m_mapUIs.put(strID, Lve);
-						}
-						else if("SgAlarmActionShow".equals(strType))
-						{
-							SgAlarmActionShow Sas=new SgAlarmActionShow(this.getContext());
+						} else if ("SgAlarmActionShow".equals(strType)) {
+							SgAlarmActionShow Sas = new SgAlarmActionShow(this.getContext());
 							m_mapUIs.put(strID, Sas);
-						}
-						else if("SgControlAlarmWay".equals(strType))
-						{
-							SgControlAlarmWay Sca=new SgControlAlarmWay(this.getContext());
+						} else if ("SgControlAlarmWay".equals(strType)) {
+							SgControlAlarmWay Sca = new SgControlAlarmWay(this.getContext());
 							m_mapUIs.put(strID, Sca);
-						}
-						else if("SgCircleChart".equals(strType))
-						{
-							SgCircleChart Scc=new SgCircleChart(this.getContext());
+						} else if ("SgCircleChart".equals(strType)) {
+							SgCircleChart Scc = new SgCircleChart(this.getContext());
 							m_mapUIs.put(strID, Scc);
-						}
-						else if("Breaker".equals(strType))
-						{
-							Breaker Bk=new Breaker(this.getContext());
+						} else if ("Breaker".equals(strType)) {
+							Breaker Bk = new Breaker(this.getContext());
 							m_mapUIs.put(strID, Bk);
-						}else if("SgAlarmChangTime".equals(strType))
-						{
-							SgAlarmChangTime sact=new SgAlarmChangTime(this.getContext());
+						} else if ("SgAlarmChangTime".equals(strType)) {
+							SgAlarmChangTime sact = new SgAlarmChangTime(this.getContext());
 							m_mapUIs.put(strID, sact);
-						}else if("SgBrokenLine".equals(strType))
-						{
-							SgBrokenLine SBL=new SgBrokenLine(this.getContext());
+						} else if ("SgBrokenLine".equals(strType)) {
+							SgBrokenLine SBL = new SgBrokenLine(this.getContext());
 							m_mapUIs.put(strID, SBL);
-						}else if("SgBARS".equals(strType))
-						{
-							SgBARS BARS=new SgBARS(this.getContext());
+						} else if ("SgBARS".equals(strType)) {
+							SgBARS BARS = new SgBARS(this.getContext());
 							m_mapUIs.put(strID, BARS);
-						}else if("SgDial".equals(strType))
-						{
-							SgDial SD=new SgDial(this.getContext());
+						} else if ("SgDial".equals(strType)) {
+							SgDial SD = new SgDial(this.getContext());
 							m_mapUIs.put(strID, SD);
-						}else if("SgVideoView".equals(strType))
-						{
-							SgVideoView SVV=new SgVideoView(this.getContext());
+						} else if ("SgVideoView".equals(strType)) {
+							SgVideoView SVV = new SgVideoView(this.getContext());
 							m_mapUIs.put(strID, SVV);
-						}	else if("AlarmLevel".equals(strType))
-						{
-							AlarmLevel AL=new AlarmLevel(this.getContext());
+						} else if ("AlarmLevel".equals(strType)) {
+							AlarmLevel AL = new AlarmLevel(this.getContext());
 							m_mapUIs.put(strID, AL);
-						}
-						else if("AlarmCount".equals(strType))
-						{
-							AlarmCount AC=new AlarmCount(this.getContext());
+						} else if ("AlarmCount".equals(strType)) {
+							AlarmCount AC = new AlarmCount(this.getContext());
 							m_mapUIs.put(strID, AC);
-						}
-						else if("ChangeLabel".equals(strType))
-						{
-							ChangeLabel CL=new ChangeLabel(this.getContext());
+						} else if ("ChangeLabel".equals(strType)) {
+							ChangeLabel CL = new ChangeLabel(this.getContext());
 							m_mapUIs.put(strID, CL);
-						}
-						else if("ChangeLabelBtn".equals(strType))
-						{
-							ChangeLabelBtn CLB=new ChangeLabelBtn(this.getContext());
+						} else if ("ChangeLabelBtn".equals(strType)) {
+							ChangeLabelBtn CLB = new ChangeLabelBtn(this.getContext());
 							m_mapUIs.put(strID, CLB);
-						}else if("SgHalfCircleChar".equals(strType))
-						{
-							SgHalfCircleChart SCC=new SgHalfCircleChart(this.getContext());
+						} else if ("SgHalfCircleChar".equals(strType)) {
+							SgHalfCircleChart SCC = new SgHalfCircleChart(this.getContext());
 							m_mapUIs.put(strID, SCC);
-						}
-						else if("SgClickPieChart".equals(strType))
-						{
-							SgClickPieChart SCPC=new SgClickPieChart(this.getContext());
+						} else if ("SgClickPieChart".equals(strType)) {
+							SgClickPieChart SCPC = new SgClickPieChart(this.getContext());
 							m_mapUIs.put(strID, SCPC);
-						}
-						else if("SgSplineChart".equals(strType)) 
-						{
-							SgSplineChart SSC=new SgSplineChart(this.getContext());
+						} else if ("SgSplineChart".equals(strType)) {
+							SgSplineChart SSC = new SgSplineChart(this.getContext());
 							m_mapUIs.put(strID, SSC);
-						}else if("AlarmRectangle".equals(strType))
-						{
-							AlarmRectangle AR=new AlarmRectangle(this.getContext());
+						} else if ("AlarmRectangle".equals(strType)) {
+							AlarmRectangle AR = new AlarmRectangle(this.getContext());
 							m_mapUIs.put(strID, AR);
-						}else if("SgBarChartView".equals(strType))
-						{
-							SgBarChartView SBCV=new SgBarChartView(this.getContext());
+						} else if ("SgBarChartView".equals(strType)) {
+							SgBarChartView SBCV = new SgBarChartView(this.getContext());
 							m_mapUIs.put(strID, SBCV);
-						}else if("SgStackBarChart".equals(strType))
-						{
-							SgStackBarChart SSBC=new SgStackBarChart(this.getContext());
+						} else if ("SgStackBarChart".equals(strType)) {
+							SgStackBarChart SSBC = new SgStackBarChart(this.getContext());
 							m_mapUIs.put(strID, SSBC);
-						}else if("AlarmShieldTime".equals(strType))
-						{
-							AlarmShieldTime AST=new AlarmShieldTime(this.getContext());
+						} else if ("AlarmShieldTime".equals(strType)) {
+							AlarmShieldTime AST = new AlarmShieldTime(this.getContext());
 							m_mapUIs.put(strID, AST);
-						}else if("EquipHistoryAlarm".equals(strType))
-						{
-							EquipHistoryAlarm EHA=new EquipHistoryAlarm(this.getContext());
+						} else if ("EquipHistoryAlarm".equals(strType)) {
+							EquipHistoryAlarm EHA = new EquipHistoryAlarm(this.getContext());
 							m_mapUIs.put(strID, EHA);
-						}else if("EventLevelAlter".equals(strType))
-						{
-							EventLevelAlter ELA=new EventLevelAlter(this.getContext());
+						} else if ("EventLevelAlter".equals(strType)) {
+							EventLevelAlter ELA = new EventLevelAlter(this.getContext());
 							m_mapUIs.put(strID, ELA);
-						}else if("HistoryCurveChart".equals(strType))
-						{
-							HistoryCurveChart HCC=new HistoryCurveChart(this.getContext());
+						} else if ("HistoryCurveChart".equals(strType)) {
+							HistoryCurveChart HCC = new HistoryCurveChart(this.getContext());
 							m_mapUIs.put(strID, HCC);
-						}else if("OnClickBtn".equals(strType))
-						{
-							OnClickBtn OCB=new OnClickBtn(this.getContext());
+						} else if ("OnClickBtn".equals(strType)) {
+							OnClickBtn OCB = new OnClickBtn(this.getContext());
 							m_mapUIs.put(strID, OCB);
-						}else if("CoolButton".equals(strType))
-						{
-							CoolButton CB=new CoolButton(this.getContext());
+						} else if ("CoolButton".equals(strType)) {
+							CoolButton CB = new CoolButton(this.getContext());
 							m_mapUIs.put(strID, CB);
-						}else if("SgPieChart3D".equals(strType))
-						{
-							SgPieChart3D spc=new SgPieChart3D(this.getContext());
+						} else if ("SgPieChart3D".equals(strType)) {
+							SgPieChart3D spc = new SgPieChart3D(this.getContext());
 							m_mapUIs.put(strID, spc);
-						}else if("LanguageChange".equals(strType))
-						{
-							LanguageChange LC=new LanguageChange(this.getContext());
+						} else if ("LanguageChange".equals(strType)) {
+							LanguageChange LC = new LanguageChange(this.getContext());
 							m_mapUIs.put(strID, LC);
 						}
- 
- 
+
 						else {
 							showMsgDlg("警告", "不支持的控件类型： " + strType);
 							bExit = false;
@@ -1082,128 +962,81 @@ public class MainWindow extends ViewGroup {
 
 					} else if ("Property".equals(name)) {
 
-						String strName = pullParser.getAttributeValue("",
-								"Name");
-						String strOrigValue = pullParser.getAttributeValue("",
-								"Value");
+						String strName = pullParser.getAttributeValue("", "Name");
+						String strOrigValue = pullParser.getAttributeValue("", "Value");
 
 						String strValue = strOrigValue;
 
 						if (m_strReplaceX1 != null)
-							strValue = replaceString(strOrigValue, "X1",
-									m_strReplaceX1); // 模板字符串替换
+							strValue = replaceString(strOrigValue, "X1", m_strReplaceX1); // 模板字符串替换
 
 						if (iCurrentObj == null)
 							continue;
 
 						/* 无意义的判断 -- CharlesChen */
-						if ("Form".equals(strElementType)
-								|| "AlarmLight".equals(strElementType)
-								|| "Ammeter".equals(strElementType)
-								|| "Button".equals(strElementType)
-								|| "CommandButton".equals(strElementType)
-								|| "Ellipse".equals(strElementType)
-								|| "Image".equals(strElementType)
-								|| "Label".equals(strElementType)
-								|| "TextClock".equals(strElementType)
-								|| "Polyline".equals(strElementType)
-								|| "YTParameter".equals(strElementType)
-								|| "YKParameter".equals(strElementType)
-								|| "Rectangle".equals(strElementType)
-								|| "StatePanel".equals(strElementType)
-								|| "StraightLine".equals(strElementType)
-								|| "Table".equals(strElementType)
-								|| "TextBox".equals(strElementType)
-								|| "Thermometer".equals(strElementType)
-								|| "EventList".equals(strElementType)
-								|| "SignalList".equals(strElementType)
-								|| "ThreeDPieChart".equals(strElementType)
-								|| "MultiChart".equals(strElementType)
+						if ("Form".equals(strElementType) || "AlarmLight".equals(strElementType)
+								|| "Ammeter".equals(strElementType) || "Button".equals(strElementType)
+								|| "CommandButton".equals(strElementType) || "Ellipse".equals(strElementType)
+								|| "Image".equals(strElementType) || "Label".equals(strElementType)
+								|| "TextClock".equals(strElementType) || "Polyline".equals(strElementType)
+								|| "YTParameter".equals(strElementType) || "YKParameter".equals(strElementType)
+								|| "Rectangle".equals(strElementType) || "StatePanel".equals(strElementType)
+								|| "StraightLine".equals(strElementType) || "Table".equals(strElementType)
+								|| "TextBox".equals(strElementType) || "Thermometer".equals(strElementType)
+								|| "EventList".equals(strElementType) || "SignalList".equals(strElementType)
+								|| "ThreeDPieChart".equals(strElementType) || "MultiChart".equals(strElementType)
 								|| "HistorySignalCurve".equals(strElementType)
 								|| "IsolationSwitch".equals(strElementType)
 								|| "DoubleImageButton".equals(strElementType)
 								|| "SignalNameSetter".equals(strElementType)
-								|| "EventConditionStartSetter"
-										.equals(strElementType)
-								|| "CableTerminal".equals(strElementType)
-								|| "GND".equals(strElementType)
-								|| "LocalList".equals(strElementType)
-								|| "HisEvent".equals(strElementType)
+								|| "EventConditionStartSetter".equals(strElementType)
+								|| "CableTerminal".equals(strElementType) || "GND".equals(strElementType)
+								|| "LocalList".equals(strElementType) || "HisEvent".equals(strElementType)
 								|| "HistoryEventList".equals(strElementType)
-								|| "HistorySignalList".equals(strElementType)
-								|| "SaveSignal".equals(strElementType)
-								|| "SaveEquipt".equals(strElementType)
-								|| "SignalCurve".equals(strElementType)
-								|| "SignalCurves".equals(strElementType)
-								|| "multi_data".equals(strElementType)
-								|| "RC_Label".equals(strElementType)
-								|| "AutoSig".equals(strElementType)
-								|| "AutoSigList".equals(strElementType)
-								|| "SeeImage".equals(strElementType)
-								|| "test_quxian".equals(strElementType)
-								|| "RC_Label_FFF".equals(strElementType)
-								|| "tigerLabel".equals(strElementType)
-								|| "Dial".equals(strElementType)
-								|| "Image_change".equals(strElementType)
-								|| "Pilar".equals(strElementType)
-								|| "Pilar_A".equals(strElementType)
-								|| "Dial_A".equals(strElementType)
-								|| "Dial_B".equals(strElementType)
-								|| "Dial_C".equals(strElementType)
-								|| "ELabel".equals(strElementType)
-								|| "fjw_history_SignalList"
-										.equals(strElementType)
-								|| "ChangePassWord".equals(strElementType)
-								|| "ChangeIP".equals(strElementType)
-								|| "SMSConfig".equals(strElementType)
-								|| "ChangXmlPW".equals(strElementType)
-								|| "multi_Event_data".equals(strElementType)
-								|| "RC_RealTime".equals(strElementType)
-								|| "AlarmAction".equals(strElementType)
-								|| "ChangExpression".equals(strElementType)
+								|| "HistorySignalList".equals(strElementType) || "SaveSignal".equals(strElementType)
+								|| "SaveEquipt".equals(strElementType) || "SignalCurve".equals(strElementType)
+								|| "SignalCurves".equals(strElementType) || "multi_data".equals(strElementType)
+								|| "RC_Label".equals(strElementType) || "AutoSig".equals(strElementType)
+								|| "AutoSigList".equals(strElementType) || "SeeImage".equals(strElementType)
+								|| "test_quxian".equals(strElementType) || "RC_Label_FFF".equals(strElementType)
+								|| "tigerLabel".equals(strElementType) || "Dial".equals(strElementType)
+								|| "Image_change".equals(strElementType) || "Pilar".equals(strElementType)
+								|| "Pilar_A".equals(strElementType) || "Dial_A".equals(strElementType)
+								|| "Dial_B".equals(strElementType) || "Dial_C".equals(strElementType)
+								|| "ELabel".equals(strElementType) || "fjw_history_SignalList".equals(strElementType)
+								|| "ChangePassWord".equals(strElementType) || "ChangeIP".equals(strElementType)
+								|| "SMSConfig".equals(strElementType) || "ChangXmlPW".equals(strElementType)
+								|| "multi_Event_data".equals(strElementType) || "RC_RealTime".equals(strElementType)
+								|| "AlarmAction".equals(strElementType) || "ChangExpression".equals(strElementType)
 								|| "SgAlarmActionShow".equals(strElementType)
-								|| "SgControlAlarmWay".equals(strElementType)
-								|| "SgCircleChart".equals(strElementType)
-								|| "Breaker".equals(strElementType)
-								|| "SgAlarmChangTime".equals(strElementType)
-								|| "SgBrokenLine".equals(strElementType)
-								|| "SgBARS".equals(strElementType)
-								|| "SgDial".equals(strElementType)
-								|| "AlarmLevel".equals(strElementType)
-								|| "AlarmCount".equals(strElementType)
-								|| "SgVideoView".equals(strElementType)
-								|| "ChangeLabel".equals(strElementType)
-								|| "ChangeLabelBtn".equals(strElementType)
-								|| "SgHalfCircleChar".equals(strElementType)
-								|| "SgClickPieChart".equals(strElementType)
-								|| "SgSplineChart".equals(strElementType)
-								|| "AlarmRectangle".equals(strElementType)
-								|| "SgBarChartView".equals(strElementType)
-								|| "SgStackBarChart".equals(strElementType)
+								|| "SgControlAlarmWay".equals(strElementType) || "SgCircleChart".equals(strElementType)
+								|| "Breaker".equals(strElementType) || "SgAlarmChangTime".equals(strElementType)
+								|| "SgBrokenLine".equals(strElementType) || "SgBARS".equals(strElementType)
+								|| "SgDial".equals(strElementType) || "AlarmLevel".equals(strElementType)
+								|| "AlarmCount".equals(strElementType) || "SgVideoView".equals(strElementType)
+								|| "ChangeLabel".equals(strElementType) || "ChangeLabelBtn".equals(strElementType)
+								|| "SgHalfCircleChar".equals(strElementType) || "SgClickPieChart".equals(strElementType)
+								|| "SgSplineChart".equals(strElementType) || "AlarmRectangle".equals(strElementType)
+								|| "SgBarChartView".equals(strElementType) || "SgStackBarChart".equals(strElementType)
 								|| "AlarmShieldTime".equals(strElementType)
 								|| "EquipHistoryAlarm".equals(strElementType)
 								|| "EventLevelAlter".equals(strElementType)
-								|| "HistoryCurveChart".equals(strElementType)
-								|| "OnClickBtn".equals(strElementType)
-								|| "CoolButton".equals(strElementType)
-								|| "SgPieChart3D".equals(strElementType)
+								|| "HistoryCurveChart".equals(strElementType) || "OnClickBtn".equals(strElementType)
+								|| "CoolButton".equals(strElementType) || "SgPieChart3D".equals(strElementType)
 								|| "LanguageChange".equals(strElementType)) {
 							try {
-								iCurrentObj.parseProperties(strName, strValue,
-										m_strResFolder);
+								iCurrentObj.parseProperties(strName, strValue, m_strResFolder);
 							} catch (Throwable e) {
-		 						e.printStackTrace();
-								showMsgDlg("错误", "解析参数失败！\n\n参数名： [ " + strName
-										+ " ]\n参数值： [ " + strValue
-										+ " ]\n\n页面名称： [ " + m_strCurrentPage
-										+ " ]\n控件类型： [ " + strElementType
-										+ " ]\n资源路径： [ " + m_strResFolder
-										+ " ]\n\n错误信息：\n" + e.toString());
- 
+								e.printStackTrace();
+								showMsgDlg("错误",
+										"解析参数失败！\n\n参数名： [ " + strName + " ]\n参数值： [ " + strValue + " ]\n\n页面名称： [ "
+												+ m_strCurrentPage + " ]\n控件类型： [ " + strElementType + " ]\n资源路径： [ "
+												+ m_strResFolder + " ]\n\n错误信息：\n" + e.toString());
+
 							} // end of catch
-						} 
+						}
 					} /* else if ("Property".equals(name)) */
-				} /* if (eventType == XmlPullParser.START_TAG) */ 
+				} /* if (eventType == XmlPullParser.START_TAG) */
 
 				try {
 					eventType = pullParser.next();
@@ -1225,14 +1058,12 @@ public class MainWindow extends ViewGroup {
 			return false;
 		if (bb.top < 0 && bb.bottom <= 0)
 			return false;
-		if (bb.left >= MainWindow.SCREEN_WIDTH
-				&& bb.right > MainWindow.SCREEN_WIDTH)
+		if (bb.left >= MainWindow.SCREEN_WIDTH && bb.right > MainWindow.SCREEN_WIDTH)
 			return false;
-		if (bb.top >= MainWindow.SCREEN_WIDTH
-				&& bb.bottom > MainWindow.SCREEN_WIDTH)
+		if (bb.top >= MainWindow.SCREEN_WIDTH && bb.bottom > MainWindow.SCREEN_WIDTH)
 			return false;
 
-		return true; 
+		return true;
 	}
 
 	// Params:
@@ -1277,16 +1108,16 @@ public class MainWindow extends ViewGroup {
 
 	String m_strReplaceX1 = null;
 
-    public SgExpressionCacularThread m_oCaculateThread = null;
-    
-    public Map<String, stExpression> Event_data=new HashMap<String, stExpression>();
-    public   Map<String, stBindingExpression> Label_data=new HashMap<String, stBindingExpression>();
+	public SgExpressionCacularThread m_oCaculateThread = null;
+
+	public Map<String, stExpression> Event_data = new HashMap<String, stExpression>();
+	public Map<String, stBindingExpression> Label_data = new HashMap<String, stBindingExpression>();
 
 	static private short NUMOFDAILOG = 0;
 	// fjw add
 	static int n = 0;
-	
-	static int waitTime=3;
+
+	static int waitTime = 3;
 
 	long oldTime = 0;
 
@@ -1305,102 +1136,77 @@ public class MainWindow extends ViewGroup {
 
 		}
 
-		public void addExpression(String strUniqueID, String strUiType,
-				String strExpression) {
+		public void addExpression(String strUniqueID, String strUiType, String strExpression) {
 
-			stExpression oMathExpress = UtExpressionParser.getInstance()
-					.parseExpression(strExpression);
+			stExpression oMathExpress = UtExpressionParser.getInstance().parseExpression(strExpression);
 			if (oMathExpress != null) {
 				oMathExpress.strUiType = strUiType; // ui类型
 				m_mapExpression.put(strUniqueID, oMathExpress);// 添加控件id 和 控件表达式类
-				if(strUiType.equals("multi_Event_data"))   	//	只用于告警饼状图  multi_Event_data  lsy add
-				Event_data.put(strUniqueID, oMathExpress);	
-			    
+				if (strUiType.equals("multi_Event_data")) // 只用于告警饼状图 multi_Event_data lsy add
+					Event_data.put(strUniqueID, oMathExpress);
 
-				Iterator<HashMap.Entry<String, stBindingExpression>> it = oMathExpress.mapObjectExpress
-						.entrySet().iterator();
+				Iterator<HashMap.Entry<String, stBindingExpression>> it = oMathExpress.mapObjectExpress.entrySet()
+						.iterator();
 				while (it.hasNext()) {
-					stBindingExpression oBindingExpression = it.next()
-							.getValue();
+					stBindingExpression oBindingExpression = it.next().getValue();
 
-					if(strUiType.equals("Label"))                //	只用于 SgLable
+					if (strUiType.equals("Label")) // 只用于 SgLable
 					{
-						Label_data.put(strUniqueID, oBindingExpression);
-						//MGridActivity.m_Label=Label_data;
+						if (oMathExpress.mapObjectExpress.size() != 1)
+							break;
+						else
+							Label_data.put(strUniqueID, oBindingExpression);
+						
 					}
 					if (oMathExpress.strBindType.equals("Value")) {
 
-						DataGetter.setSignal(oBindingExpression.nEquipId,
-								oBindingExpression.nSignalId, m_strCurrentPage,
-								m_mapUIs.get(strUniqueID));
+						DataGetter.setSignal(oBindingExpression.nEquipId, oBindingExpression.nSignalId,
+								m_strCurrentPage, m_mapUIs.get(strUniqueID));
 					} else if (oMathExpress.strBindType.equals("EventSeverity")) {
 
-						DataGetter.setAlarmSignal(oBindingExpression.nEquipId,
-								oBindingExpression.nSignalId, m_strCurrentPage,
-								m_mapUIs.get(strUniqueID));
+						DataGetter.setAlarmSignal(oBindingExpression.nEquipId, oBindingExpression.nSignalId,
+								m_strCurrentPage, m_mapUIs.get(strUniqueID));
 					} else if (oMathExpress.strBindType.equals("Equip")) {
 						if (strUiType.equals("SignalList")) {
 
-							DataGetter
-									.setSignalList(oBindingExpression.nEquipId,
-											m_strCurrentPage,
-											m_mapUIs.get(strUniqueID));
-						} else if (strUiType.equals("EventList")||strUiType.equals("AlarmLevel")) {
+							DataGetter.setSignalList(oBindingExpression.nEquipId, m_strCurrentPage,
+									m_mapUIs.get(strUniqueID));
+						} else if (strUiType.equals("EventList") || strUiType.equals("AlarmLevel")) {
 
-							System.out.println("我注册了"+strUniqueID);
-							DataGetter.setMainAlarmList(m_mapUIs
-									.get(strUniqueID));
+							System.out.println("我注册了" + strUniqueID);
+							DataGetter.setMainAlarmList(m_mapUIs.get(strUniqueID));
 						} else if (strUiType.equals("LocalList")) {
 
-							DataGetter
-									.setLocalSignal(
-											oBindingExpression.nEquipId,
-											m_strCurrentPage,
-											m_mapUIs.get(strUniqueID));
+							DataGetter.setLocalSignal(oBindingExpression.nEquipId, m_strCurrentPage,
+									m_mapUIs.get(strUniqueID));
 						} else if (strUiType.equals("SaveEquipt")) {
 
-							DataGetter
-									.setLocalSignal(
-											oBindingExpression.nEquipId,
-											m_strCurrentPage,
-											m_mapUIs.get(strUniqueID));
+							DataGetter.setLocalSignal(oBindingExpression.nEquipId, m_strCurrentPage,
+									m_mapUIs.get(strUniqueID));
 						} else if (strUiType.equals("HistorySignalList")) {
 
-							DataGetter
-									.setLocalSignal(
-											oBindingExpression.nEquipId,
-											m_strCurrentPage,
-											m_mapUIs.get(strUniqueID));
+							DataGetter.setLocalSignal(oBindingExpression.nEquipId, m_strCurrentPage,
+									m_mapUIs.get(strUniqueID));
 						}
 					} else if (oMathExpress.strBindType.equals("State")) {
 
-						DataGetter.setEquipState(oBindingExpression.nEquipId,
-								m_mapUIs.get(strUniqueID));
+						DataGetter.setEquipState(oBindingExpression.nEquipId, m_mapUIs.get(strUniqueID));
 					} else if (oMathExpress.strBindType.equals("Name")) {
 
 						if (0 == oBindingExpression.nEquipId)
 							continue;
 
-						if (0 < oBindingExpression.nSignalId
-								&& 1 > oBindingExpression.nEventId)
-							DataGetter
-									.regSignalName(oBindingExpression.nEquipId,
-											oBindingExpression.nSignalId,
-											m_strCurrentPage,
-											m_mapUIs.get(strUniqueID));
-						else if (1 > oBindingExpression.nSignalId
-								&& 0 < oBindingExpression.nEventId)
-							DataGetter
-									.regEventName(oBindingExpression.nEquipId,
-											oBindingExpression.nSignalId,
-											m_strCurrentPage,
-											m_mapUIs.get(strUniqueID));
-					} else if(oMathExpress.strBindType.equals("Mask")) 
-					{
-//						//lsy add 为了优化SgIsolationEventSetter控件 因为控件重启后无法判断是什么状态
+						if (0 < oBindingExpression.nSignalId && 1 > oBindingExpression.nEventId)
+							DataGetter.regSignalName(oBindingExpression.nEquipId, oBindingExpression.nSignalId,
+									m_strCurrentPage, m_mapUIs.get(strUniqueID));
+						else if (1 > oBindingExpression.nSignalId && 0 < oBindingExpression.nEventId)
+							DataGetter.regEventName(oBindingExpression.nEquipId, oBindingExpression.nSignalId,
+									m_strCurrentPage, m_mapUIs.get(strUniqueID));
+					} else if (oMathExpress.strBindType.equals("Mask")) {
+						// //lsy add 为了优化SgIsolationEventSetter控件 因为控件重启后无法判断是什么状态
 
-						m_oShareObject.m_SgIsolationEventSetter.put(strUniqueID,oBindingExpression);
-						MGridActivity.m_DoubleButton=m_oShareObject.m_SgIsolationEventSetter;																					
+						m_oShareObject.m_SgIsolationEventSetter.put(strUniqueID, oBindingExpression);
+						MGridActivity.m_DoubleButton = m_oShareObject.m_SgIsolationEventSetter;
 					}
 					// TODO: ...
 				}
@@ -1409,46 +1215,36 @@ public class MainWindow extends ViewGroup {
 
 		public void pushMutiChartDatas(String strKey, stExpression oExpression) {
 			String strMutiChartKey = "";
-			Iterator<String> iterMuti = oExpression.mapObjectExpress.keySet()
-					.iterator();
+			Iterator<String> iterMuti = oExpression.mapObjectExpress.keySet().iterator();
 			List<String> listCharts = new ArrayList<String>();
 			while (iterMuti.hasNext()) {
 				strMutiChartKey = iterMuti.next();
-				stBindingExpression bindingExpression = oExpression.mapObjectExpress
-						.get(strMutiChartKey);
+				stBindingExpression bindingExpression = oExpression.mapObjectExpress.get(strMutiChartKey);
 				if ("Value".equals(bindingExpression.strBindType)) {
-					listCharts.add(DataGetter.getSignalValue(
-							bindingExpression.nEquipId,
-							bindingExpression.nSignalId));
+					listCharts.add(DataGetter.getSignalValue(bindingExpression.nEquipId, bindingExpression.nSignalId));
 
 				}
 			}
 			m_oShareObject.m_mapMutiChartDatas.put(strKey, listCharts);
 		}
 
-		private void pushSignalName(String strUniqueId,
-				stExpression oMathExpression) {
+		private void pushSignalName(String strUniqueId, stExpression oMathExpression) {
 			if (oMathExpression == null)
 				return;
 
 			String strRetValue = "";
 			String strKey = "";
-			Iterator<String> iter = oMathExpression.mapObjectExpress.keySet()
-					.iterator();
+			Iterator<String> iter = oMathExpression.mapObjectExpress.keySet().iterator();
 			if (iter.hasNext())
 				strKey = iter.next();
-			stBindingExpression oFirstBindingExp = oMathExpression.mapObjectExpress
-					.get(strKey);
+			stBindingExpression oFirstBindingExp = oMathExpression.mapObjectExpress.get(strKey);
 			if (oFirstBindingExp == null)
 				return;
 
 			if (0 < oFirstBindingExp.nSignalId && 1 > oFirstBindingExp.nEventId)
-				strRetValue = DataGetter.getSignalName(
-						oFirstBindingExp.nEquipId, oFirstBindingExp.nSignalId);
-			else if (1 > oFirstBindingExp.nSignalId
-					&& 0 < oFirstBindingExp.nEventId)
-				strRetValue = DataGetter.getEventName(
-						oFirstBindingExp.nEquipId, oFirstBindingExp.nEventId);
+				strRetValue = DataGetter.getSignalName(oFirstBindingExp.nEquipId, oFirstBindingExp.nSignalId);
+			else if (1 > oFirstBindingExp.nSignalId && 0 < oFirstBindingExp.nEventId)
+				strRetValue = DataGetter.getEventName(oFirstBindingExp.nEquipId, oFirstBindingExp.nEventId);
 			else
 				return;
 
@@ -1458,8 +1254,7 @@ public class MainWindow extends ViewGroup {
 			m_oShareObject.m_mapRealTimeDatas.put(strUniqueId, oRealTimeData);
 		}
 
-		private void pushRealTimeValue(String strUniqueId,
-				stExpression oMathExpression) {
+		private void pushRealTimeValue(String strUniqueId, stExpression oMathExpression) {
 			if (oMathExpression == null)
 				return;
 
@@ -1467,18 +1262,14 @@ public class MainWindow extends ViewGroup {
 			String strKey = "";
 			String strData = "0";
 
-			Iterator<String> iter = oMathExpression.mapObjectExpress.keySet()
-					.iterator();
+			Iterator<String> iter = oMathExpression.mapObjectExpress.keySet().iterator();
 			if (iter.hasNext())
-			strKey = iter.next();
-			stBindingExpression oFirstBindingExp = oMathExpression.mapObjectExpress
-					.get(strKey);
+				strKey = iter.next();
+			stBindingExpression oFirstBindingExp = oMathExpression.mapObjectExpress.get(strKey);
 			if (oFirstBindingExp == null)
 				return;
 
-			if (oFirstBindingExp.nValueType == 0
-					|| oFirstBindingExp.nValueType == 2
-					|| oFirstBindingExp.nValueType == 3
+			if (oFirstBindingExp.nValueType == 0 || oFirstBindingExp.nValueType == 2 || oFirstBindingExp.nValueType == 3
 					|| oFirstBindingExp.nValueType == 4) {
 				String strMathExpression = "";
 
@@ -1488,13 +1279,11 @@ public class MainWindow extends ViewGroup {
 					String strStr = oMathExpression.listMathExpress.get(i);
 
 					if (strStr.length() != 1) {
-						stBindingExpression oExpress = oMathExpression.mapObjectExpress
-								.get(strStr);
+						stBindingExpression oExpress = oMathExpression.mapObjectExpress.get(strStr);
 
 						if (nSize > 1) {
 
-							strStr = DataGetter.getSignalValue(
-									oExpress.nEquipId, oExpress.nSignalId);
+							strStr = DataGetter.getSignalValue(oExpress.nEquipId, oExpress.nSignalId);
 
 						}
 
@@ -1502,21 +1291,16 @@ public class MainWindow extends ViewGroup {
 							// m_mapUIs.get(strUniqueId) instanceof
 							// SgIsolationSwitch
 							// SgIsolationSwitch.class.isInstance(m_mapUIs.get(strUniqueId))
-							strStr = DataGetter.getSignalValue(
-									oExpress.nEquipId, oExpress.nSignalId);
+							strStr = DataGetter.getSignalValue(oExpress.nEquipId, oExpress.nSignalId);
 
-						}
-						else if (m_mapUIs.get(strUniqueId) instanceof Breaker) {
+						} else if (m_mapUIs.get(strUniqueId) instanceof Breaker) {
 							// m_mapUIs.get(strUniqueId) instanceof
 							// SgIsolationSwitch
 							// SgIsolationSwitch.class.isInstance(m_mapUIs.get(strUniqueId))
-							strStr = DataGetter.getSignalValue(
-									oExpress.nEquipId, oExpress.nSignalId);
-						}
-						else {
+							strStr = DataGetter.getSignalValue(oExpress.nEquipId, oExpress.nSignalId);
+						} else {
 							strStr = getRealTimeValueFromTcp(oExpress);
-							strData = DataGetter.getSignalValue(
-									oExpress.nEquipId, oExpress.nSignalId);
+							strData = DataGetter.getSignalValue(oExpress.nEquipId, oExpress.nSignalId);
 
 							// fjw add mark there is SignalCure into!
 
@@ -1532,50 +1316,47 @@ public class MainWindow extends ViewGroup {
 					SgRealTimeData oRealTimeData_multi = new SgRealTimeData();
 					oRealTimeData_multi.nDataType = oFirstBindingExp.nValueType;
 					oRealTimeData_multi.strValue = strMathExpression;
-					m_oShareObject.m_mapRealTimeDatas.put(strUniqueId,
-							oRealTimeData_multi);
+					m_oShareObject.m_mapRealTimeDatas.put(strUniqueId, oRealTimeData_multi);
 					return;
 				}
 				if ("AutoSig".equals(oMathExpression.strUiType)) {
 					SgRealTimeData oRealTimeData_multi = new SgRealTimeData();
 					oRealTimeData_multi.nDataType = oFirstBindingExp.nValueType;
 					oRealTimeData_multi.strValue = strMathExpression;
-					m_oShareObject.m_mapRealTimeDatas.put(strUniqueId,
-							oRealTimeData_multi);
+					m_oShareObject.m_mapRealTimeDatas.put(strUniqueId, oRealTimeData_multi);
 					return;
 				}
 				if ("SgBARS".equals(oMathExpression.strUiType)) {
 					SgRealTimeData oRealTimeData_multi = new SgRealTimeData();
 					oRealTimeData_multi.nDataType = oFirstBindingExp.nValueType;
 					oRealTimeData_multi.strValue = strMathExpression;
-					m_oShareObject.m_mapRealTimeDatas.put(strUniqueId,
-							oRealTimeData_multi);
+					m_oShareObject.m_mapRealTimeDatas.put(strUniqueId, oRealTimeData_multi);
 					return;
 				}
 				// fjw add end
-				//lsy add 2016_11_02
-//				if("RC_RealTime".equals(oMathExpression.strUiType))
-//				{
-//					SgRealTimeData oRealTimeData_multi = new SgRealTimeData();
-//					oRealTimeData_multi.nDataType = oFirstBindingExp.nValueType;
-//					oRealTimeData_multi.sigalName=DataGetter.getSignalName(oFirstBindingExp.nEquipId, oFirstBindingExp.nSignalId);
-//					oRealTimeData_multi.strValue =  getRealTimeValueFromTcp(oFirstBindingExp);
-//					if(oRealTimeData_multi.strValue.equals("-999999"))
-//					{
-//						oRealTimeData_multi.strValue="-1";
-//					}
-//					oRealTimeData_multi.strData=DataGetter.getSignalValue(oFirstBindingExp.nEquipId,
-//							oFirstBindingExp.nSignalId);
-//					m_oShareObject.m_mapRealTimeDatas.put(strUniqueId,
-//							oRealTimeData_multi);
-//					
-//				}
-				//lsy end 2016_11_02
+				// lsy add 2016_11_02
+				// if("RC_RealTime".equals(oMathExpression.strUiType))
+				// {
+				// SgRealTimeData oRealTimeData_multi = new SgRealTimeData();
+				// oRealTimeData_multi.nDataType = oFirstBindingExp.nValueType;
+				// oRealTimeData_multi.sigalName=DataGetter.getSignalName(oFirstBindingExp.nEquipId,
+				// oFirstBindingExp.nSignalId);
+				// oRealTimeData_multi.strValue = getRealTimeValueFromTcp(oFirstBindingExp);
+				// if(oRealTimeData_multi.strValue.equals("-999999"))
+				// {
+				// oRealTimeData_multi.strValue="-1";
+				// }
+				// oRealTimeData_multi.strData=DataGetter.getSignalValue(oFirstBindingExp.nEquipId,
+				// oFirstBindingExp.nSignalId);
+				// m_oShareObject.m_mapRealTimeDatas.put(strUniqueId,
+				// oRealTimeData_multi);
+				//
+				// }
+				// lsy end 2016_11_02
 
 				if ("".equals(strMathExpression) == false && nSize > 1) {
 					try {
-						strRetValue = m_oCalculator
-								.calculate(strMathExpression) + "";
+						strRetValue = m_oCalculator.calculate(strMathExpression) + "";
 						strData = strRetValue;
 					} catch (Exception e) {
 
@@ -1586,8 +1367,7 @@ public class MainWindow extends ViewGroup {
 
 			} else {
 				strRetValue = getRealTimeValueFromTcp(oFirstBindingExp);
-				strData = DataGetter.getSignalValue(oFirstBindingExp.nEquipId,
-						oFirstBindingExp.nSignalId);
+				strData = DataGetter.getSignalValue(oFirstBindingExp.nEquipId, oFirstBindingExp.nSignalId);
 
 			}
 
@@ -1597,8 +1377,6 @@ public class MainWindow extends ViewGroup {
 			oRealTimeData.strData = strData;
 			m_oShareObject.m_mapRealTimeDatas.put(strUniqueId, oRealTimeData);
 		}
-		
-		
 
 		public boolean getLocalData(stExpression oMathExpression) {
 			if (oMathExpression == null)
@@ -1606,8 +1384,7 @@ public class MainWindow extends ViewGroup {
 			try {
 
 				int f_eqiupid = 0;
-				Iterator<String> iter = oMathExpression.mapObjectExpress
-						.keySet().iterator();
+				Iterator<String> iter = oMathExpression.mapObjectExpress.keySet().iterator();
 				if (iter.hasNext()) {
 					String strKey = iter.next();
 					f_eqiupid = oMathExpression.mapObjectExpress.get(strKey).nEquipId;
@@ -1680,8 +1457,7 @@ public class MainWindow extends ViewGroup {
 				EquiptId = HistorySignalList.str_EquiptId;
 				get_date = HistorySignalList.get_day;
 			}
-			if (("".equals(EquiptId)) || (EquiptId == null)
-					|| ("".equals(get_date)))
+			if (("".equals(EquiptId)) || (EquiptId == null) || ("".equals(get_date)))
 				return false;
 			String file_name = EquiptId + "#" + get_date;
 
@@ -1732,8 +1508,7 @@ public class MainWindow extends ViewGroup {
 
 			String EquiptSignalId = SaveSignal.str_EquiptSignalId;
 			String get_date = SaveSignal.get_day;
-			if (("".equals(EquiptSignalId)) || (EquiptSignalId == null)
-					|| ("".equals(get_date)))
+			if (("".equals(EquiptSignalId)) || (EquiptSignalId == null) || ("".equals(get_date)))
 				return false;
 			String file_name = EquiptSignalId + "#" + get_date;
 
@@ -1780,38 +1555,30 @@ public class MainWindow extends ViewGroup {
 			return true;
 		}
 
-		public save_curve_signal getCurveSignal1(stExpression oMathExpression,
-				String ui_ID) {
+		public save_curve_signal getCurveSignal1(stExpression oMathExpression, String ui_ID) {
 			if (oMathExpression == null)
 				return null;
 
 			String strKey = "";
-			Iterator<String> iter = oMathExpression.mapObjectExpress.keySet()
-					.iterator();
+			Iterator<String> iter = oMathExpression.mapObjectExpress.keySet().iterator();
 			if (iter.hasNext())
 				strKey = iter.next();
 
-			return DataGetter.getCurveSignal(
-					oMathExpression.mapObjectExpress.get(strKey).nEquipId,
-					oMathExpression.mapObjectExpress.get(strKey).nSignalId,
-					ui_ID);
+			return DataGetter.getCurveSignal(oMathExpression.mapObjectExpress.get(strKey).nEquipId,
+					oMathExpression.mapObjectExpress.get(strKey).nSignalId, ui_ID);
 		}
 
-		public save_multipoint_signal getCurvesSignal1(
-				stExpression oMathExpression, String ui_ID) {
+		public save_multipoint_signal getCurvesSignal1(stExpression oMathExpression, String ui_ID) {
 			if (oMathExpression == null)
 				return null;
 
 			String strKey = "";
-			Iterator<String> iter = oMathExpression.mapObjectExpress.keySet()
-					.iterator();
+			Iterator<String> iter = oMathExpression.mapObjectExpress.keySet().iterator();
 			if (iter.hasNext())
 				strKey = iter.next();
 
-			return DataGetter.getCurvesSignal(
-					oMathExpression.mapObjectExpress.get(strKey).nEquipId,
-					oMathExpression.mapObjectExpress.get(strKey).nSignalId,
-					ui_ID);
+			return DataGetter.getCurvesSignal(oMathExpression.mapObjectExpress.get(strKey).nEquipId,
+					oMathExpression.mapObjectExpress.get(strKey).nSignalId, ui_ID);
 		}
 
 		public List<local_his_event> getHisEvent(String uiType) {
@@ -1850,9 +1617,9 @@ public class MainWindow extends ViewGroup {
 
 					his_event_list.add(his_event);
 
-//					if (his_event_list.size() > 500) {
-//						break;
-//					}
+					// if (his_event_list.size() > 500) {
+					// break;
+					// }
 					his_event = null;
 				}
 			} catch (Exception e) {
@@ -1865,25 +1632,20 @@ public class MainWindow extends ViewGroup {
 		public List<ipc_history_signal> get_test_his_list() {
 
 			List<ipc_history_signal> his_data = new ArrayList<ipc_history_signal>();
-			his_data = service.get_his_sig_list(service.IP, service.PORT, 9, 8,
-					fjw_history_SignalList.my_his_startTime,
-					fjw_history_SignalList.my_his_span,
-					fjw_history_SignalList.my_his_count, false);
+			his_data = service.get_his_sig_list(service.IP, service.PORT, 9, 8, fjw_history_SignalList.my_his_startTime,
+					fjw_history_SignalList.my_his_span, fjw_history_SignalList.my_his_count, false);
 			if (his_data == null) {
 
 			}
 			return his_data;
 		}
 
-		public List<ipc_history_signal> getHistorySinals(
-				stExpression oMathExpression) {
+		public List<ipc_history_signal> getHistorySinals(stExpression oMathExpression) {
 			if (oMathExpression == null)
 				return null;
 
-			
 			String strKey = "";
-			Iterator<String> iter = oMathExpression.mapObjectExpress.keySet()
-					.iterator();
+			Iterator<String> iter = oMathExpression.mapObjectExpress.keySet().iterator();
 
 			// fjw add
 			if (iter.hasNext()) {
@@ -1893,8 +1655,7 @@ public class MainWindow extends ViewGroup {
 
 			List<ipc_history_signal> list_his = new ArrayList<ipc_history_signal>();
 			List<ipc_history_signal> list_his1 = new ArrayList<ipc_history_signal>();
-			list_his1 = service.get_history_signal_list(service.IP,
-					service.PORT, 9);
+			list_his1 = service.get_history_signal_list(service.IP, service.PORT, 9);
 
 			for (int k = 0; k < list_his.size(); k++) {
 				ipc_history_signal his_sig = list_his1.get(k);
@@ -1906,8 +1667,7 @@ public class MainWindow extends ViewGroup {
 		}
 
 		/** 获取实时告警列表 */
-		private Hashtable<String, Hashtable<String, Event>> getActiveEvents(
-				stExpression oMathExpression) {
+		private Hashtable<String, Hashtable<String, Event>> getActiveEvents(stExpression oMathExpression) {
 			if (oMathExpression == null)
 				return null;
 
@@ -1916,19 +1676,15 @@ public class MainWindow extends ViewGroup {
 			return DataGetter.getRTEventList();
 		}
 
-		private Hashtable<String, Signal> getActiveSignals(
-				stExpression oMathExpression) {
+		private Hashtable<String, Signal> getActiveSignals(stExpression oMathExpression) {
 			if (oMathExpression == null)
 				return null;
 
 			String strKey = "";
-			Iterator<String> iter = oMathExpression.mapObjectExpress.keySet()
-					.iterator();
+			Iterator<String> iter = oMathExpression.mapObjectExpress.keySet().iterator();
 			if (iter.hasNext())
 				strKey = iter.next();
-			return DataGetter
-					.getEquipSignalList(oMathExpression.mapObjectExpress
-							.get(strKey).nEquipId);
+			return DataGetter.getEquipSignalList(oMathExpression.mapObjectExpress.get(strKey).nEquipId);
 		}
 
 		public void autoDestroy() {
@@ -1937,9 +1693,8 @@ public class MainWindow extends ViewGroup {
 
 		@Override
 		public void run() {
-			
-			m_oCaculateThread
-					.setPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);// 设置线程优先级
+
+			m_oCaculateThread.setPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);// 设置线程优先级
 
 			if (m_mapExpression.isEmpty())
 				return;
@@ -1952,33 +1707,27 @@ public class MainWindow extends ViewGroup {
 
 			HashMap<String, stExpression> mapNamings = new HashMap<String, stExpression>();
 
-			Iterator<HashMap.Entry<String, stExpression>> exp_it = m_mapExpression
-					.entrySet().iterator();
+			Iterator<HashMap.Entry<String, stExpression>> exp_it = m_mapExpression.entrySet().iterator();
 			while (exp_it.hasNext()) {
 				HashMap.Entry<String, stExpression> entry = exp_it.next();
 				String strKey = entry.getKey();// 获取的是UIid
 				stExpression oExpression = entry.getValue();
 
-			    
 				if (oExpression == null)
 					continue;
 
 				if ("Cmd".equals(oExpression.strBindType)) {
 					mapCmds.put(strKey, oExpression);
 					continue;
-				} else if ("Trigger".equals(oExpression.strBindType)
-						|| "Mask".equals(oExpression.strBindType)) {
-					
-					if(strKey.contains("tigerLabel"))
-					{
+				} else if ("Trigger".equals(oExpression.strBindType) || "Mask".equals(oExpression.strBindType)) {
+
+					if (strKey.contains("tigerLabel")) {
 						mapSignals.put(m_mapUIs.get(strKey), oExpression);
-						
-					}else
-					{
-                        mapTriggers.put(strKey, oExpression);
+
+					} else {
+						mapTriggers.put(strKey, oExpression);
 					}
-					
-					
+
 					continue;
 				} else if ("Naming".equals(oExpression.strBindType)
 						|| "SignalNameSetter".equals(oExpression.strUiType)) {
@@ -1996,42 +1745,38 @@ public class MainWindow extends ViewGroup {
 				int curveneedupdate = 7;
 
 				while (m_bIsRunning) {
-					
+
 					// 对于非活动页面的后台线程，使进入慢速运作状态。 -- CharlesChen
-					
+
 					if (!m_bIsActive) {
 
 						synchronized (MainWindow.this) {
-							MainWindow.this.wait(5*1000);
-//							waitTime++;
-//							if(waitTime>=8) waitTime=3;
+							MainWindow.this.wait(5 * 1000);
+							// waitTime++;
+							// if(waitTime>=8) waitTime=3;
 						}
 
-						//continue;
+						// continue;
 					}
-              
-				//	System.out.println("SgExpressionXXX:m_bIsRunning开始运行"+Thread.currentThread().getName());
+
+					// System.out.println("SgExpressionXXX:m_bIsRunning开始运行"+Thread.currentThread().getName());
 					if (m_oShareObject.m_listUpdateFromTcpValues.size() > 0) // 主线程是否已经处理完毕
 					{
 						yield(); // 切出CPU时间片代替死循环等待 -- CharlesChen
 						continue;
 					}
-                   
-					boolean hasupdate = false;
-					Iterator<HashMap.Entry<IObject, stExpression>> iter = mapSignals
-							.entrySet().iterator();
-	 				while (iter.hasNext()) {
 
-						HashMap.Entry<IObject, stExpression> entry = iter
-								.next();
-						IObject io=entry.getKey();
-						String s=io.getType();
-					
-						
+					boolean hasupdate = false;
+					Iterator<HashMap.Entry<IObject, stExpression>> iter = mapSignals.entrySet().iterator();
+					while (iter.hasNext()) {
+
+						HashMap.Entry<IObject, stExpression> entry = iter.next();
+						IObject io = entry.getKey();
+						String s = io.getType();
+
 						if (!entry.getKey().needupdate())
 							continue;
-						
-						
+
 						String strKey = entry.getKey().getUniqueID();
 
 						stExpression oExpression = entry.getValue();
@@ -2044,38 +1789,31 @@ public class MainWindow extends ViewGroup {
 
 								if (--listneedupdate != 0)
 									continue;
-				 				else
+								else
 									listneedupdate = 10;
 
-								m_oShareObject.m_mapSignalListDatas.put(strKey,
-										getActiveSignals(oExpression));
+								m_oShareObject.m_mapSignalListDatas.put(strKey, getActiveSignals(oExpression));
 							}
 
 							if ("EventList".equals(oExpression.strUiType)) {
 
-								m_oShareObject.m_mapEventListDatas.put(strKey,
-										getActiveEvents(oExpression));// 获取到的列表数据放入线程池共享数据
+								m_oShareObject.m_mapEventListDatas.put(strKey, getActiveEvents(oExpression));// 获取到的列表数据放入线程池共享数据
 							}
 
 							if ("SaveEquipt".equals(oExpression.strUiType)
-									|| ("HistorySignalList"
-											.equals(oExpression.strUiType))) {
+									|| ("HistorySignalList".equals(oExpression.strUiType))) {
 								if (getSaveEquiptList(oExpression.strUiType))
-									m_oShareObject.m_mapSaveEquipt.put(strKey,
-											his_equipt_list);
+									m_oShareObject.m_mapSaveEquipt.put(strKey, his_equipt_list);
 							}
 
 							if (("HisEvent".equals(oExpression.strUiType))
-									|| ("HistoryEventList"
-											.equals(oExpression.strUiType))) {
+									|| ("HistoryEventList".equals(oExpression.strUiType))) {
 
 								if (getHisEvent(oExpression.strUiType) != null)
-									m_oShareObject.m_mapLocalEvent.put(strKey,
-											his_event_list);
+									m_oShareObject.m_mapLocalEvent.put(strKey, his_event_list);
 							}
 
-							if ("fjw_history_SignalList"
-									.equals(oExpression.strUiType)) {
+							if ("fjw_history_SignalList".equals(oExpression.strUiType)) {
 
 							}
 							if ("LocalList".equals(oExpression.strUiType)) {
@@ -2094,12 +1832,9 @@ public class MainWindow extends ViewGroup {
 							pushSignalName(strKey, oExpression);
 						} else {
 
-							if ("HistorySignalCurve"
-									.equals(oExpression.strUiType)
-									|| "ThreeDPieChart"
-											.equals(oExpression.strUiType)
-									|| "MultiChart"
-											.equals(oExpression.strUiType)) {
+							if ("HistorySignalCurve".equals(oExpression.strUiType)
+									|| "ThreeDPieChart".equals(oExpression.strUiType)
+									|| "MultiChart".equals(oExpression.strUiType)) {
 
 								if (--curveneedupdate != 0)
 									continue;
@@ -2109,61 +1844,41 @@ public class MainWindow extends ViewGroup {
 								pushMutiChartDatas(strKey, oExpression);
 
 								/*
-								 * // 获取历史曲线数据 if
-								 * ("HistorySignalCurve".equals(oExpression
-								 * .strUiType)) { List<ipc_history_signal>
-								 * listHistorySignals =
-								 * getHistorySinals(oExpression);
-								 * List<List<ipc_history_signal>> mutiLines =
-								 * new ArrayList<List<ipc_history_signal>>();
-								 * for (int i = 0; i <
-								 * oExpression.mapObjectExpress.size(); ++i) {
-								 * mutiLines.add(new
-								 * ArrayList<ipc_history_signal>()); } for (int
-								 * i = 0; i < listHistorySignals.size(); ++i) {
-								 * ipc_history_signal si =
-								 * listHistorySignals.get(i); int nIndex1 = 0;
-								 * Iterator<String> iterMuti =
-								 * oExpression.mapObjectExpress
-								 * .keySet().iterator(); while
-								 * (iterMuti.hasNext()) { String
-								 * strHistorySignalKey = iterMuti.next();
-								 * stBindingExpression bindExp =
-								 * oExpression.mapObjectExpress
-								 * .get(strHistorySignalKey);
+								 * // 获取历史曲线数据 if ("HistorySignalCurve".equals(oExpression .strUiType)) {
+								 * List<ipc_history_signal> listHistorySignals = getHistorySinals(oExpression);
+								 * List<List<ipc_history_signal>> mutiLines = new
+								 * ArrayList<List<ipc_history_signal>>(); for (int i = 0; i <
+								 * oExpression.mapObjectExpress.size(); ++i) { mutiLines.add(new
+								 * ArrayList<ipc_history_signal>()); } for (int i = 0; i <
+								 * listHistorySignals.size(); ++i) { ipc_history_signal si =
+								 * listHistorySignals.get(i); int nIndex1 = 0; Iterator<String> iterMuti =
+								 * oExpression.mapObjectExpress .keySet().iterator(); while (iterMuti.hasNext())
+								 * { String strHistorySignalKey = iterMuti.next(); stBindingExpression bindExp =
+								 * oExpression.mapObjectExpress .get(strHistorySignalKey);
 								 * 
-								 * if (bindExp.nSignalId == si.sigid) {
-								 * mutiLines.get(nIndex1).add(si); break; }
+								 * if (bindExp.nSignalId == si.sigid) { mutiLines.get(nIndex1).add(si); break; }
 								 * nIndex1++; }
 								 * 
-								 * }
-								 * m_oShareObject.m_mapHistorySignals.put(strKey
-								 * , mutiLines); }
+								 * } m_oShareObject.m_mapHistorySignals.put(strKey , mutiLines); }
 								 */
-							} else if ("SaveSignal"
-									.equals(oExpression.strUiType)) {
+							} else if ("SaveSignal".equals(oExpression.strUiType)) {
 
 								if (getSaveSignalList())
-									m_oShareObject.m_mapSaveSignal.put(strKey,
-											his_signal_list);
-							} else if ("SignalCurves"
-									.equals(oExpression.strUiType)) {
+									m_oShareObject.m_mapSaveSignal.put(strKey, his_signal_list);
+							} else if ("SignalCurves".equals(oExpression.strUiType)) {
 
-								m_oShareObject.m_mapMultiPoint.put(strKey,
-										getCurvesSignal1(oExpression, strKey));
+								m_oShareObject.m_mapMultiPoint.put(strKey, getCurvesSignal1(oExpression, strKey));
 
-							} else if ("SignalCurve"
-									.equals(oExpression.strUiType)) {
+							} else if ("SignalCurve".equals(oExpression.strUiType)) {
 								// getCurveSignal();
-								m_oShareObject.m_mapHisPoint.put(strKey,
-										getCurveSignal1(oExpression, strKey));
+								m_oShareObject.m_mapHisPoint.put(strKey, getCurveSignal1(oExpression, strKey));
 
 							} else if ("RC_Label".equals(oExpression.strUiType)) {
 								// 待完善
 							} else if ("ELabel".equals(oExpression.strUiType)) {
 								// 待完善
 							} else if ("tigerLabel".equals(oExpression.strUiType)) {
-								
+
 							} else {
 
 								pushRealTimeValue(strKey, oExpression);
@@ -2173,11 +1888,10 @@ public class MainWindow extends ViewGroup {
 
 						if (entry.getKey().updateValue()) {
 							hasupdate = true; //
-							m_oShareObject.m_listUpdateFromTcpValues.add(entry
-									.getKey()); // 添加到需要更新UI列表 页面列表<更新的控件>
+							m_oShareObject.m_listUpdateFromTcpValues.add(entry.getKey()); // 添加到需要更新UI列表 页面列表<更新的控件>
 						}
 					} /* end of while (iter.hasNext()) */
- 
+
 					m_oShareObject.processCmdCommands(mapCmds);
 
 					m_oShareObject.processTriggerCommands(mapTriggers);
@@ -2197,8 +1911,8 @@ public class MainWindow extends ViewGroup {
 			// will stop
 			m_mapExpression.clear();
 			m_mapCaculateValues.clear();
-			m_oCalculator = null; 
-			//System.out.println("SgExpressionXXX:结束");
+			m_oCalculator = null;
+			// System.out.println("SgExpressionXXX:结束");
 			// local_data_list.clear();
 		} /* end of run() */
 
@@ -2215,21 +1929,17 @@ public class MainWindow extends ViewGroup {
 			}
 
 			if ("Value".equals(bindingExpression.strBindType)) {
-				String value = DataGetter
-						.getSignalMeaning(bindingExpression.nEquipId,
-								bindingExpression.nSignalId);
+				String value = DataGetter.getSignalMeaning(bindingExpression.nEquipId, bindingExpression.nSignalId);
 
 				if (!value.isEmpty())
 					return value;
 			} else if ("EventSeverity".equals(bindingExpression.strBindType)) {
 
-				return String.valueOf(DataGetter
-						.getSignalSeverity(bindingExpression.nEquipId,
-								bindingExpression.nSignalId));
+				return String
+						.valueOf(DataGetter.getSignalSeverity(bindingExpression.nEquipId, bindingExpression.nSignalId));
 			} else if ("State".equals(bindingExpression.strBindType)) {
 
-				String str = DataGetter.getEquipState(
-						bindingExpression.nEquipId, 10001);
+				String str = DataGetter.getEquipState(bindingExpression.nEquipId, 10001);
 				if (str == null)
 					str = "0";
 
@@ -2246,11 +1956,11 @@ public class MainWindow extends ViewGroup {
 		public Calculator m_oCalculator = null;
 		boolean m_bIsRunning = true;
 		boolean m_bHasRandomData = false;
-		
+
 		public List<local_his_signal> local_data_list = new ArrayList<local_his_signal>();
 		public List<local_his_signal> his_equipt_list = new ArrayList<local_his_signal>();
 		public List<local_his_signal> his_signal_list = new ArrayList<local_his_signal>();
 		public List<local_his_event> his_event_list = new ArrayList<local_his_event>();
-	
+
 	}
 }

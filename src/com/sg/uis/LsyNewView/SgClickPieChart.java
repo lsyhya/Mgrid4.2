@@ -1,14 +1,19 @@
 package com.sg.uis.LsyNewView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.xclcharts.chart.PieChart;
 import org.xclcharts.chart.PieData;
+
+import com.demo.xclcharts.view.ClickPieChart01View;
+import com.mgrid.data.DataGetter;
+import com.mgrid.main.MainWindow;
+import com.mgrid.util.ExpressionUtils;
+import com.sg.common.CFGTLS;
+import com.sg.common.IObject;
+import com.sg.common.TotalVariable;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -24,18 +29,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.demo.xclcharts.view.ClickPieChart01View;
-import com.mgrid.data.DataGetter;
-import com.mgrid.main.MGridActivity;
-import com.mgrid.main.MainWindow;
-import com.mgrid.util.ExpressionUtils;
-import com.sg.common.CFGTLS;
-import com.sg.common.IObject;
-import com.sg.common.TotalVariable;
-import com.sg.common.UtExpressionParser;
-import com.sg.common.UtExpressionParser.stBindingExpression;
-import com.sg.common.UtExpressionParser.stExpression;
 import comm_service.local_file;
 
 /** ±˝Õº */
@@ -156,8 +149,10 @@ public class SgClickPieChart extends TextView implements IObject {
 				|| m_strContent.equals("…Ë÷√ƒ⁄»›")) {
 			return;
 		}
+		System.out.println("m_strContent:"+m_strContent);
 		String[] s = m_strContent.split("\\|");
 		for (int i = 0; i < s.length; i++) {
+			System.out.println("s[i]:"+s[i]);
 			label_list.add(s[i]);
 		}
 	}

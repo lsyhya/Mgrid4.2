@@ -84,7 +84,7 @@ public class CameraActivity extends Activity {
 		
 		super.onDestroy();
 		MGridActivity.isNOChangPage=true;
-		System.out.println("我被销毁了");
+		
 	}
 	
 	// 初始化surface

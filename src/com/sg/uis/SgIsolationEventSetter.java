@@ -239,8 +239,8 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 			m_strVerticalContentAlignment = strValue;
 		else if ("Expression".equals(strName)) {
 			m_strCmdExpression = strValue;
-			new Thread(new Runnable() {
-
+			MGridActivity.xianChengChi.execute(new Runnable() {
+				
 				@Override
 				public void run() {
 					while (true) {
@@ -256,8 +256,10 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 							e.printStackTrace();
 						}
 					}
+					
 				}
-			}).start();
+			});
+				
 		}
 	}
 

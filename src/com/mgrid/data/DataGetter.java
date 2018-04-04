@@ -10,6 +10,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -61,7 +62,7 @@ public class DataGetter extends Thread {
 		if (equipment.myThread.isAlive()) {
 
 		} else {
-			//equipment.myThread.start();  //2018/2/6注释
+			// equipment.myThread.start(); //2018/2/6注释
 		}
 	}
 
@@ -301,17 +302,15 @@ public class DataGetter extends Thread {
 
 			proc_allrtalarm();
 			equipment.addEventList();
-						
+
 			try {
 				sleep(100); // sleep(100);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
-			
-			
 
 			try {
-				
+
 				// 摔性能一些数据空间 比如说sigleList...
 				Set<String> autoEquipList = equipment.autoAnyPapeRefreshEquip;
 				if (autoEquipList == null)
@@ -394,7 +393,8 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取设备信号集，线程安全。
 	 * 
-	 * @param String 设备实例ID @return 成功返回实例信号集Hashtable，否则返回null。 @throws
+	 * @param String
+	 *            设备实例ID @return 成功返回实例信号集Hashtable，否则返回null。 @throws
 	 */
 	public static Hashtable<String, Signal> getEquipSignalList(String equipmentid) {
 		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
@@ -408,7 +408,8 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getEquipSignalList
 	 * 
-	 * @param int 设备实例ID @return 成功返回实例信号集Hashtable，否则返回null。 @throws
+	 * @param int
+	 *            设备实例ID @return 成功返回实例信号集Hashtable，否则返回null。 @throws
 	 */
 	public static Hashtable<String, Signal> getEquipSignalList(int equipmentid) {
 		return getEquipSignalList(String.valueOf(equipmentid));
@@ -417,7 +418,8 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取 全局实时告警列表，线程安全。
 	 * 
-	 * @param @return 全局告警信息Hashtable。 @throws
+	 * @param @return
+	 *            全局告警信息Hashtable。 @throws
 	 */
 	public static Hashtable<String, Hashtable<String, Event>> getRTEventList() {
 		return equipment.htEventData;
@@ -426,7 +428,8 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取 设备实时告警列表，线程安全。
 	 * 
-	 * @param @return 设备设备告警信息Hashtable。 @throws
+	 * @param @return
+	 *            设备设备告警信息Hashtable。 @throws
 	 */
 	public static Hashtable<String, Hashtable<String, Event>> getEquipRTEventList(String equipid) {
 		// TODO: 尚未完成
@@ -439,7 +442,8 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter of 获取 设备实时告警列表，线程安全。
 	 * 
-	 * @param @return 设备告警信息Hashtable。 @throws
+	 * @param @return
+	 *            设备告警信息Hashtable。 @throws
 	 */
 	public static Hashtable<String, Hashtable<String, Event>> getEquipRTEventList(int nEquipId) {
 		return getEquipRTEventList(String.valueOf(nEquipId));
@@ -448,7 +452,8 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取信号名， 线程安全。
 	 * 
-	 * @param String 设备实例ID @param String 信号ID @return String 信号名 @throws
+	 * @param String
+	 *            设备实例ID @param String 信号ID @return String 信号名 @throws
 	 */
 	public static String getSignalName(String equipmentid, String signalid) {
 		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
@@ -464,7 +469,8 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getSignalName
 	 * 
-	 * @param int 设备实例ID @param int 信号ID @return String 信号名 @throws
+	 * @param int
+	 *            设备实例ID @param int 信号ID @return String 信号名 @throws
 	 */
 	public static String getSignalName(int equipmentid, int signalid) {
 		return getSignalName(String.valueOf(equipmentid), String.valueOf(signalid));
@@ -473,8 +479,9 @@ public class DataGetter extends Thread {
 	/**
 	 * 设置信号名， 线程安全。
 	 * 
-	 * @param String 设备实例ID @param String 信号ID @param String 信号名 @return boolean
-	 * true为成功 @throws
+	 * @param String
+	 *            设备实例ID @param String 信号ID @param String 信号名 @return boolean
+	 *            true为成功 @throws
 	 */
 	public static boolean setSignalName(String equipmentid, String signalid, String signalname) {
 		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
@@ -501,8 +508,9 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter setSignalName
 	 * 
-	 * @param int 设备实例ID @param int 信号ID @param String 信号名 @return boolean
-	 * true为成功 @throws
+	 * @param int
+	 *            设备实例ID @param int 信号ID @param String 信号名 @return boolean
+	 *            true为成功 @throws
 	 */
 	public static boolean setSignalName(int equipmentid, int signalid, String signalname) {
 		return setSignalName(String.valueOf(equipmentid), String.valueOf(signalid), signalname);
@@ -511,7 +519,8 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取信号值， 线程安全。
 	 * 
-	 * @param String 设备实例ID @param String 信号ID @return String 信号值 @throws
+	 * @param String
+	 *            设备实例ID @param String 信号ID @return String 信号值 @throws
 	 */
 	public static String getSignalValue(String equipmentid, String signalid) {
 		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
@@ -527,7 +536,8 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getSignalValue
 	 * 
-	 * @param int 设备实例ID @param int 信号ID @return String 信号值 @throws
+	 * @param int
+	 *            设备实例ID @param int 信号ID @return String 信号值 @throws
 	 */
 	public static String getSignalValue(int equipmentid, int signalid) {
 		return getSignalValue(String.valueOf(equipmentid), String.valueOf(signalid));
@@ -536,7 +546,8 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取信号含义， 线程安全。
 	 * 
-	 * @param String 设备实例ID @param String 信号ID @return String 信号含义 @throws
+	 * @param String
+	 *            设备实例ID @param String 信号ID @return String 信号含义 @throws
 	 */
 	public static String getSignalMeaning(String equipmentid, String signalid) {
 		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
@@ -552,7 +563,8 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getSignalMeaning
 	 * 
-	 * @param int 设备实例ID @param int 信号ID @return String 信号含义 @throws
+	 * @param int
+	 *            设备实例ID @param int 信号ID @return String 信号含义 @throws
 	 */
 	public static String getSignalMeaning(int equipmentid, int signalid) {
 		return getSignalMeaning(String.valueOf(equipmentid), String.valueOf(signalid));
@@ -562,7 +574,8 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取信号值， 线程安全。
 	 * 
-	 * @param String 设备实例ID @param String 信号ID @return String 信号值 @throws
+	 * @param String
+	 *            设备实例ID @param String 信号ID @return String 信号值 @throws
 	 */
 	public static String getSignalValueAndTime(String equipmentid, String signalid) {
 		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
@@ -580,7 +593,8 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getSignalValueAndTime
 	 * 
-	 * @param int 设备实例ID @param int 信号ID @return String 信号值 @throws
+	 * @param int
+	 *            设备实例ID @param int 信号ID @return String 信号值 @throws
 	 */
 	public static String getSignalValueAndTime(int equipmentid, int signalid) {
 		return getSignalValue(String.valueOf(equipmentid), String.valueOf(signalid));
@@ -591,7 +605,8 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取信号描述， 线程安全。
 	 * 
-	 * @param String 设备实例ID @param String 信号ID @return String 信号描述 @throws
+	 * @param String
+	 *            设备实例ID @param String 信号ID @return String 信号描述 @throws
 	 */
 	public static String getSignalDescription(String equipmentid, String signalid) {
 		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
@@ -607,7 +622,8 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getSignalDescription
 	 * 
-	 * @param int 设备实例ID @param int 信号ID @return String 信号描述 @throws
+	 * @param int
+	 *            设备实例ID @param int 信号ID @return String 信号描述 @throws
 	 */
 	public static String getSignalDescription(int equipmentid, int signalid) {
 		return getSignalDescription(String.valueOf(equipmentid), String.valueOf(signalid));
@@ -616,7 +632,8 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取信号告警级别， 线程安全。
 	 * 
-	 * @param String 设备实例ID @param String 信号ID @return int 告警级别 @throws
+	 * @param String
+	 *            设备实例ID @param String 信号ID @return int 告警级别 @throws
 	 */
 	public static int getSignalSeverity(String equipmentid, String signalid) {
 		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
@@ -632,7 +649,8 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getSignalSeverity
 	 * 
-	 * @param int 设备实例ID @param int 信号ID @return int 告警级别 @throws
+	 * @param int
+	 *            设备实例ID @param int 信号ID @return int 告警级别 @throws
 	 */
 	public static int getSignalSeverity(int equipmentid, int signalid) {
 		return getSignalSeverity(String.valueOf(equipmentid), String.valueOf(signalid));
@@ -641,8 +659,9 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取控制参数含义集合。
 	 * 
-	 * @param String 设备实例ID @param String 告警ID @return List<CmdParameaningCfg>
-	 * 告警参数配置信息集 @throws
+	 * @param String
+	 *            设备实例ID @param String 告警ID @return List<CmdParameaningCfg>
+	 *            告警参数配置信息集 @throws
 	 */
 	public static List<CmdParameaningCfg> getCtrlParameaning(String equipmentid, String commandid) {
 		EquipmentDataModel.Equipment equip = equipment.htEquipmentData.get(equipmentid);
@@ -658,8 +677,9 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getSignalSeverity
 	 * 
-	 * @param int 设备实例ID @param int 告警ID @return List<CmdParameaningCfg>
-	 * 告警参数配置信息集 @throws
+	 * @param int
+	 *            设备实例ID @param int 告警ID @return List<CmdParameaningCfg>
+	 *            告警参数配置信息集 @throws
 	 */
 	public static List<CmdParameaningCfg> getCtrlParameaning(int equipmentid, int commandid) {
 		return getCtrlParameaning(String.valueOf(equipmentid), String.valueOf(commandid));
@@ -676,7 +696,8 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取设备名称，若不存在则返回空字符串。
 	 * 
-	 * @param String 设备实例ID @return String 设备名称 @throws
+	 * @param String
+	 *            设备实例ID @return String 设备名称 @throws
 	 */
 	public static String getEquipmentName(String equipmentid) {
 		String equipname = equipment.htEquipments.get(equipmentid);
@@ -686,7 +707,8 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getEquipmentName
 	 * 
-	 * @param int 设备实例ID @return String 设备名称 @throws
+	 * @param int
+	 *            设备实例ID @return String 设备名称 @throws
 	 */
 	public static String getEquipmentName(int equipmentid) {
 		return getEquipmentName(String.valueOf(equipmentid));
@@ -695,7 +717,8 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取告警名称
 	 * 
-	 * @param String 设备实例ID @param String 告警ID @return String 告警名称 @throws
+	 * @param String
+	 *            设备实例ID @param String 告警ID @return String 告警名称 @throws
 	 */
 	public static String getEventName(String equipmentid, String eventid) {
 		Hashtable<String, EventCfg> equip_cfg = equipment.htEventCfg.get(equipmentid);
@@ -712,7 +735,8 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getEventName
 	 * 
-	 * @param int 设备实例ID @param int 告警ID @return String 告警名称 @throws
+	 * @param int
+	 *            设备实例ID @param int 告警ID @return String 告警名称 @throws
 	 */
 	public static String getEventName(int equipmentid, int eventid) {
 		return getEventName(String.valueOf(equipmentid), String.valueOf(eventid));
@@ -721,7 +745,8 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取设备通信状态 告警值
 	 * 
-	 * @param String 设备实例ID @param String 告警ID @return String 告警值 @throws
+	 * @param String
+	 *            设备实例ID @param String 告警ID @return String 告警值 @throws
 	 */
 	public static String getEquipState(String equipmentid, String eventid) {
 		if (equipmentid == null)
@@ -740,7 +765,8 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getEventName
 	 * 
-	 * @param int 设备实例ID @param int 告警ID @return String 告警值 @throws
+	 * @param int
+	 *            设备实例ID @param int 告警ID @return String 告警值 @throws
 	 */
 	public static String getEquipState(int equipmentid, int eventid) {
 		return getEquipState(String.valueOf(equipmentid), String.valueOf(eventid));
@@ -749,8 +775,9 @@ public class DataGetter extends Thread {
 	/**
 	 * 设置告警名称
 	 * 
-	 * @param String 设备实例ID @param String 告警ID @param String 告警名称 @return boolean
-	 * true为成功 @throws
+	 * @param String
+	 *            设备实例ID @param String 告警ID @param String 告警名称 @return boolean
+	 *            true为成功 @throws
 	 */
 	public static boolean setEventName(String equipmentid, String eventid, String eventname) {
 		Hashtable<String, EventCfg> equip_cfg = equipment.htEventCfg.get(equipmentid);
@@ -775,8 +802,9 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取告警条件开始比较阈值
 	 * 
-	 * @param String 设备实例ID @param String 告警ID @param String 条件ID @return String
-	 * 起始阈值 @throws
+	 * @param String
+	 *            设备实例ID @param String 告警ID @param String 条件ID @return String
+	 *            起始阈值 @throws
 	 */
 	public static String getStartCmpValue(String equipmentid, String eventid, String conditionId) {
 		Hashtable<String, EventCfg> equip_cfg = equipment.htEventCfg.get(equipmentid);
@@ -797,8 +825,9 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter setEventName
 	 * 
-	 * @param int 设备实例ID @param int 告警ID @param String 告警名称 @return boolean
-	 * true为成功 @throws
+	 * @param int
+	 *            设备实例ID @param int 告警ID @param String 告警名称 @return boolean
+	 *            true为成功 @throws
 	 */
 	public static boolean setEventName(int equipmentid, int eventid, String eventname) {
 		return setEventName(String.valueOf(equipmentid), String.valueOf(eventid), eventname);
@@ -807,7 +836,8 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getStartCmpValue
 	 * 
-	 * @param int 设备实例ID @param int 告警ID @param int 条件ID @return String 起始阈值 @throws
+	 * @param int
+	 *            设备实例ID @param int 告警ID @param int 条件ID @return String 起始阈值 @throws
 	 */
 	public static String getStartCmpValue(int equipmentid, int eventid, int conditionId) {
 		return getStartCmpValue(String.valueOf(equipmentid), String.valueOf(eventid), String.valueOf(conditionId));
@@ -816,8 +846,9 @@ public class DataGetter extends Thread {
 	/**
 	 * 获取告警使能状态
 	 * 
-	 * @param String 设备实例ID @param String 告警ID @return String 使能状态,
-	 * 未找到告警配置项则返回空字符串。 @throws
+	 * @param String
+	 *            设备实例ID @param String 告警ID @return String 使能状态,
+	 *            未找到告警配置项则返回空字符串。 @throws
 	 */
 	public static String getEventState(String equipmentid, String eventid) {
 		Hashtable<String, EventCfg> equip_cfg = equipment.htEventCfg.get(equipmentid);
@@ -834,8 +865,9 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter getEventState
 	 * 
-	 * @param int 设备实例ID @param int 告警ID @return String 使能状态,
-	 * 未找到告警配置项则返回空字符串。 @throws
+	 * @param int
+	 *            设备实例ID @param int 告警ID @return String 使能状态,
+	 *            未找到告警配置项则返回空字符串。 @throws
 	 */
 	public static String getEventState(int equipmentid, int eventid) {
 		return getEventState(String.valueOf(equipmentid), String.valueOf(eventid));
@@ -844,8 +876,9 @@ public class DataGetter extends Thread {
 	/**
 	 * 设定告警使能状态
 	 * 
-	 * @param String 设备实例ID @param String 告警ID @param String 使能状态， 1 告警， 0
-	 * 不告警。 @return boolean 设定成功返回 true, 未找到相关告警配置返回 false. @throws
+	 * @param String
+	 *            设备实例ID @param String 告警ID @param String 使能状态， 1 告警， 0 不告警。 @return
+	 *            boolean 设定成功返回 true, 未找到相关告警配置返回 false. @throws
 	 */
 	public static boolean setEventState(String equipmentid, String eventid, String enable) {
 		Hashtable<String, EventCfg> equip_cfg = equipment.htEventCfg.get(equipmentid);
@@ -864,8 +897,9 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter setEventState
 	 * 
-	 * @param int 设备实例ID @param int 告警ID @param int 使能状态， 1 告警， 0 不告警。 @return
-	 * boolean 设定成功返回 true, 未找到相关告警配置返回 false. @throws
+	 * @param int
+	 *            设备实例ID @param int 告警ID @param int 使能状态， 1 告警， 0 不告警。 @return
+	 *            boolean 设定成功返回 true, 未找到相关告警配置返回 false. @throws
 	 */
 	public static boolean setEventState(int equipmentid, int eventid, int enable) {
 		return setEventState(String.valueOf(equipmentid), String.valueOf(eventid), String.valueOf(enable));
@@ -906,8 +940,9 @@ public class DataGetter extends Thread {
 	/**
 	 * 登记到信号名称， Attention： 非线程安全
 	 * 
-	 * @param String 设备实例ID @param String 信号ID @param String 页面名称 @param
-	 * IObject @return boolean true成功，false失败。 @throws
+	 * @param String
+	 *            设备实例ID @param String 信号ID @param String 页面名称 @param
+	 *            IObject @return boolean true成功，false失败。 @throws
 	 */
 	public static boolean regSignalName(String equipmentid, String signalid, String pagename, IObject object) {
 		if (null == equipmentid || null == signalid || null == pagename)
@@ -957,8 +992,9 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter登记到信号名称， Attention： 非线程安全
 	 * 
-	 * @param int 设备实例ID @param int 信号ID @param String 页面名称 @param IObject @return
-	 * boolean true成功，false失败。 @throws
+	 * @param int
+	 *            设备实例ID @param int 信号ID @param String 页面名称 @param IObject @return
+	 *            boolean true成功，false失败。 @throws
 	 */
 	public static boolean regSignalName(int nEquipId, int nSignalId, String pagename, IObject object) {
 		return regSignalName(String.valueOf(nEquipId), String.valueOf(nSignalId), pagename, object);
@@ -968,8 +1004,9 @@ public class DataGetter extends Thread {
 	/**
 	 * 登记信号， Attention： 非线程安全
 	 * 
-	 * @param String 设备实例ID @param String 信号ID @param String 页面名称 @param
-	 * IObject @return boolean true成功，false失败。 @throws
+	 * @param String
+	 *            设备实例ID @param String 信号ID @param String 页面名称 @param
+	 *            IObject @return boolean true成功，false失败。 @throws
 	 */
 	public static boolean setSignal(String equipmentid, String signalid, String pagename, IObject object) {
 		if (null == equipmentid || null == signalid || null == pagename)
@@ -1053,8 +1090,9 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter登记信号， Attention： 非线程安全
 	 * 
-	 * @param int 设备实例ID @param int 信号ID @param String 页面名称 @param IObject @return
-	 * boolean true成功，false失败。 @throws
+	 * @param int
+	 *            设备实例ID @param int 信号ID @param String 页面名称 @param IObject @return
+	 *            boolean true成功，false失败。 @throws
 	 */
 	public static boolean setSignal(int nEquipId, int nSignalId, String pagename, IObject object) {
 		return setSignal(String.valueOf(nEquipId), String.valueOf(nSignalId), pagename, object);
@@ -1064,8 +1102,9 @@ public class DataGetter extends Thread {
 	/**
 	 * 登记到告警名， Attention： 非线程安全
 	 * 
-	 * @param String 设备实例ID @param String 告警ID @param String 页面名称 @param
-	 * IObject @return boolean true成功，false失败。 @throws
+	 * @param String
+	 *            设备实例ID @param String 告警ID @param String 页面名称 @param
+	 *            IObject @return boolean true成功，false失败。 @throws
 	 */
 	public static boolean regEventName(String equipmentid, String eventid, String pagename, IObject object) {
 		// TODO: 尚未实现。 需实现告警名称改变时通知相关控件更新。
@@ -1075,8 +1114,9 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter 登记到告警名
 	 * 
-	 * @param int 设备实例ID @param int 告警ID @param String 页面名称 @param IObject @return
-	 * boolean true成功，false失败。 @throws
+	 * @param int
+	 *            设备实例ID @param int 告警ID @param String 页面名称 @param IObject @return
+	 *            boolean true成功，false失败。 @throws
 	 */
 	public static boolean regEventName(int nEquipId, int nEventId, String pagename, IObject object) {
 		return regEventName(String.valueOf(nEquipId), String.valueOf(nEventId), pagename, object);
@@ -1085,8 +1125,9 @@ public class DataGetter extends Thread {
 	/**
 	 * 登记告警控件， Attention： 非线程安全
 	 * 
-	 * @param String 设备实例ID @param String 信号ID @param String 页面名称 @param
-	 * IObject @return boolean true成功，false失败。 @throws
+	 * @param String
+	 *            设备实例ID @param String 信号ID @param String 页面名称 @param
+	 *            IObject @return boolean true成功，false失败。 @throws
 	 */
 	public static boolean setAlarmSignal(String equipmentid, String signalid, String pagename, IObject object) {
 		if (null == object)
@@ -1102,8 +1143,9 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter 登记告警控件
 	 * 
-	 * @param int 设备实例ID @param int 信号ID @param String 页面名称 @param IObject @return
-	 * boolean true成功，false失败。 @throws
+	 * @param int
+	 *            设备实例ID @param int 信号ID @param String 页面名称 @param IObject @return
+	 *            boolean true成功，false失败。 @throws
 	 */
 	public static boolean setAlarmSignal(int nEquipId, int nSignalId, String pagename, IObject object) {
 		return setAlarmSignal(String.valueOf(nEquipId), String.valueOf(nSignalId), pagename, object);
@@ -1113,8 +1155,9 @@ public class DataGetter extends Thread {
 	/**
 	 * 登记本地保存数据控件， Attention： 非线程安全
 	 * 
-	 * @param String 设备实例ID @param String 信号ID @param String 页面名称 @param
-	 * IObject @return boolean true成功，false失败。 @throws
+	 * @param String
+	 *            设备实例ID @param String 信号ID @param String 页面名称 @param
+	 *            IObject @return boolean true成功，false失败。 @throws
 	 */
 	public static boolean setLocalSignal(final String equipId, final String pagename, final IObject object) {
 		//
@@ -1135,22 +1178,20 @@ public class DataGetter extends Thread {
 		// equipment.htEquipmentData.get(equipId).registedBackgroundListObj.put(
 		// object.getUniqueID(), object);
 		// equipment.autoAnyPapeRefreshEquip.add(equipId);
-		
+
 		MGridActivity.xianChengChi.execute(new Runnable() {
 
 			@Override
 			public void run() {
-				long startTime=System.currentTimeMillis();
+				long startTime = System.currentTimeMillis();
 				while (true) {
 
-					
 					if (!isLoading) {
 						if (equipment.htEquipmentData.containsKey(equipId)) {
 							synchronized (equipment.htEquipmentData.get(equipId).registedBackgroundListObj) {
-								synchronized(equipment.autoAnyPapeRefreshEquip)
-								{
-									equipment.htEquipmentData.get(equipId).registedBackgroundListObj.put(object.getUniqueID(),
-											object);							
+								synchronized (equipment.autoAnyPapeRefreshEquip) {
+									equipment.htEquipmentData.get(equipId).registedBackgroundListObj
+											.put(object.getUniqueID(), object);
 									equipment.autoAnyPapeRefreshEquip.add(equipId);
 								}
 							}
@@ -1168,8 +1209,9 @@ public class DataGetter extends Thread {
 	/**
 	 * Adapter 登记本地保存数据控件
 	 * 
-	 * @param int 设备实例ID @param int 信号ID @param String 页面名称 @param IObject @return
-	 * boolean true成功，false失败。 @throws
+	 * @param int
+	 *            设备实例ID @param int 信号ID @param String 页面名称 @param IObject @return
+	 *            boolean true成功，false失败。 @throws
 	 */
 	public static boolean setLocalSignal(int nEquipId, String pagename, IObject object) {
 		return setLocalSignal(String.valueOf(nEquipId), pagename, object);
@@ -1180,8 +1222,9 @@ public class DataGetter extends Thread {
 	/**
 	 * 注册信号列表控件， Attention： 非线程安全
 	 * 
-	 * @param String equipId 设备实例ID @param String pagename 页面名称 @param
-	 * IObject @return boolean true成功，false失败。 @throws
+	 * @param String
+	 *            equipId 设备实例ID @param String pagename 页面名称 @param IObject @return
+	 *            boolean true成功，false失败。 @throws
 	 */
 	public static boolean setSignalList(String equipId, String pagename, IObject object) {
 		if (null == equipId || null == object)
@@ -1213,8 +1256,9 @@ public class DataGetter extends Thread {
 	/**
 	 * setSignalList Adapter
 	 * 
-	 * @param int nEquipId 设备实例ID @param String pagename 页面名称 @param IObject @return
-	 * boolean true成功，false失败。 @throws
+	 * @param int
+	 *            nEquipId 设备实例ID @param String pagename 页面名称 @param IObject @return
+	 *            boolean true成功，false失败。 @throws
 	 */
 	public static boolean setSignalList(int nEquipId, String pagename, IObject object) {
 		return setSignalList(String.valueOf(nEquipId), pagename, object);
@@ -1223,7 +1267,8 @@ public class DataGetter extends Thread {
 	/**
 	 * 注册全局告警列表控件
 	 * 
-	 * @param IObject @return boolean true成功，false失败。 @throws
+	 * @param IObject
+	 * @return boolean true成功，false失败。 @throws
 	 */
 	public static boolean setMainAlarmList(IObject object) {
 		if (null == object)
@@ -1234,7 +1279,8 @@ public class DataGetter extends Thread {
 	/**
 	 * 注册全局告警列表控件
 	 * 
-	 * @param IObject @return boolean true成功，false失败。 @throws
+	 * @param IObject
+	 * @return boolean true成功，false失败。 @throws
 	 */
 	public static boolean setEquipState(String equipId, IObject object) {
 		if (null == object)
@@ -1269,50 +1315,81 @@ public class DataGetter extends Thread {
 
 				signal.meaning = "0.0";
 				if (i == sig_no - 1) {
-					
-					
-//					if (MGridActivity.whatLanguage) {
-//						signal.meaning = "通信中断";		
-//					} else {
-//						signal.meaning = "Lost";					
-//					}
-					
-					signal.meaning = LanguageStr.meaning;	
+
+					signal.meaning = LanguageStr.meaning;
 					signal.value = "0.00000";
 				}
 
 				if (signal.severity != 4) {
 					signal.severity = 4;
 
+					upadete(equipObj, signal);
+				}
+
+				if (MGridActivity.LabelList.contains(equipObj.m_equipid)) {
+
+					String str = equipObj.m_equipid + "_" + signal.id;
+
+					if (oldEList.contains(str))
+						break;
+					else
+						oldEList.add(str);
+
+					
 					Iterator<IObject> regobj_it = signal.registedObj.iterator();
 					while (regobj_it.hasNext()) {
+
 						regobj_it.next().needupdate(true);
 						sleep(200);
 					}
-
-					Iterator<IObject> regalarmobj_it = signal.registedAlarmObj.iterator();
-					while (regalarmobj_it.hasNext()) {
-						regalarmobj_it.next().needupdate(true);
-
-						sleep(200);
-
-					}
-
-					Iterator<IObject> reglstobj_it = equipObj.registedLstObj.iterator();
-					while (reglstobj_it.hasNext()) {
-						IObject object = reglstobj_it.next();
-						// if("SignalList".equals(object.getType()) ) break;
-						object.needupdate(true);
-						sleep(200);
-					}
-
 				}
+
+				// if (MGridActivity.EventClose.size() != oldEventClose) {
+				// oldEventClose = MGridActivity.EventClose.size();
+				// Iterator<IObject> regobj_it = signal.registedObj.iterator();
+				// while (regobj_it.hasNext()) {
+				//
+				// regobj_it.next().needupdate(true);
+				//
+				// sleep(200);
+				// }
+				// }
+
 			} catch (Exception e) {
 
 			}
 		}
 
 		return true;
+	}
+
+	// 提示信号刷新
+	private static void upadete(Equipment equipObj, Signal signal) throws InterruptedException {
+		Iterator<IObject> regobj_it = signal.registedObj.iterator();
+		while (regobj_it.hasNext()) {
+
+			regobj_it.next().needupdate(true);
+
+			sleep(200);
+		}
+
+		Iterator<IObject> regalarmobj_it = signal.registedAlarmObj.iterator();
+		while (regalarmobj_it.hasNext()) {
+
+			regalarmobj_it.next().needupdate(true);
+
+			sleep(200);
+
+		}
+
+		Iterator<IObject> reglstobj_it = equipObj.registedLstObj.iterator();
+		while (reglstobj_it.hasNext()) {
+			IObject object = reglstobj_it.next();
+
+			// if("SignalList".equals(object.getType()) ) break;
+			object.needupdate(true);
+			sleep(200);
+		}
 	}
 
 	// 请求、处理实时信号
@@ -1407,10 +1484,6 @@ public class DataGetter extends Thread {
 
 				if (!items[5].equals(signal.value)) {
 					equipupdated = true;
-					// float f=Float.parseFloat(items[5]);
-					// int ii=(int) (f*100);
-					// f=(float) (ii/100.0);
-					// signal.value = f+"";
 					signal.value = new String(items[5]);
 
 				}
@@ -1423,7 +1496,7 @@ public class DataGetter extends Thread {
 
 					Iterator<IObject> regalarmobj_it = signal.registedAlarmObj.iterator();
 					while (regalarmobj_it.hasNext()) {
-						// System.out.println("123severity不一样：我更新了");
+
 						regalarmobj_it.next().needupdate(true);
 
 					}
@@ -1439,6 +1512,7 @@ public class DataGetter extends Thread {
 				}
 
 				if (!meaning.equals(signal.meaning)) {
+
 					signal.meaning = new String(meaning);
 
 					Iterator<IObject> regobj_it = signal.registedObj.iterator();
@@ -1454,8 +1528,9 @@ public class DataGetter extends Thread {
 						} else if ("SignalCurves".equals(reg_ui.getType())) {
 							;
 						} else {
-							// System.out.println("123meaning不一样：我更新了");
+
 							reg_ui.needupdate(true);
+
 						}
 
 					}
@@ -1464,9 +1539,7 @@ public class DataGetter extends Thread {
 			} catch (Exception e) {
 
 			} finally {
-				// System.out.println("id123："+signal.id);
-				// System.out.println("value123："+signal.value);
-				// System.out.println("meaning123: "+signal.meaning);
+
 			}
 		} // end of for(sig_no)
 			// fjw add
@@ -1493,12 +1566,10 @@ public class DataGetter extends Thread {
 				} else {
 					// System.out.println("123value不一样：我更新了");
 					reg_ui.needupdate(true);
-
 				}
-
 			}
 		}
-		// System.out.println("实时处理XXX：6");
+
 		return true;
 	} // end of proc_rtsignal
 
@@ -2157,4 +2228,10 @@ public class DataGetter extends Thread {
 	public static HashMap<String, List<ipc_cfg_trigger_value>> trigger_list = null;
 	public static ArrayList<String> LabelList = null;
 	public static boolean isLoading = true;
+
+	//
+	public static int oldLabel = 0;
+	public static int oldEventClose = 0;
+	public static List<String> oldEList = new ArrayList<String>();
+
 }

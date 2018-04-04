@@ -64,7 +64,7 @@ public class SgRectangle extends View implements IObject {
 		        lg = new LinearGradient(nWidth/2, 0, nWidth/2, nHeight, m_arrGradientFillColor, 
 		        		m_arrGradientColorPos, TileMode.CLAMP);      	
 		    }
-		  
+		    m_oPaint.setColor(Color.BLACK);
 		    m_oPaint.setShader(lg);
         }
         else

@@ -10,6 +10,8 @@ public class LanguageStr {
 
 	// MgridActivity
 	public static String Load = "加载完";
+	public static String PSS = "照片保存成功";
+	public static String PSF = "照片保存失败";
 
 	// DataGetter
 	public static String meaning = "通信中断";
@@ -45,8 +47,8 @@ public class LanguageStr {
 	public static String EndTime = "结束时间";
 	public static String DeviceList = "  设备↓   ";
 	public static String SetTime = "设置日期";
-	public static String PreveDay = "结束时间";
-	public static String NextDay = "开始时间";
+	public static String PreveDay = "后一天";
+	public static String NextDay = "前一天";
 	public static String Receive = "  获取   ";
 	public static String AllDevice = "全部设备";
 	public static String one = "通知", two = "一般告警", three = "严重告警", four = "致命告警", set = "设置";;
@@ -97,6 +99,12 @@ public class LanguageStr {
 
 	// SgYKParameter
 	public static String Chooose = "请选择 ↓";
+	
+	
+	//LanguageStr
+	//public static String text_Su = "切换完成,等待30s重启";
+	public static String title = "提示";
+	public static String content = "切换完成,等待30s重启";
 
 	// 系统语言和配置语言 true为中文 false为英文
 	public static boolean systemLanguage = true;
@@ -135,6 +143,8 @@ public class LanguageStr {
 
 		// MgridActivity
 		Load = "Loaded";
+		PSS="Save success";
+		PSF="Save failure";
 
 		// DataGetter
 		meaning = "Lost";
@@ -233,12 +243,16 @@ public class LanguageStr {
 
 		// SgSignalList
 
-		Name = "Name";
+		Names = "Name";
 		RefreshTime = "RefreshTime";
 		Implication = "Implication";
 
 		// SgYKParameter
 		Chooose = "Choose↓";
+		
+		//LanguageStr
+		title="Title";
+		content = "Please wait for the reboot of the 30s";
 	}
 
 }

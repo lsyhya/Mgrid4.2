@@ -362,7 +362,7 @@ public class SgChangXmlPW extends TextView implements IObject {
 				m_oEditTextNEW.setBackgroundResource(R.drawable.et_select);
 				m_oEditTextOLD.setBackgroundResource(R.drawable.et_select);
 				E_CPassword.setBackgroundResource(R.drawable.et_select);
-				MakeBtn.setBackgroundResource(R.drawable.btn_bg1);
+				MakeBtn.setBackgroundResource(R.drawable.bg_shadow);
 			} else {
 				m_cBackgroundColor = Color.parseColor(strValue);
 			}

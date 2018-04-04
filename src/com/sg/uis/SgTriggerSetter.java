@@ -219,6 +219,7 @@ public class SgTriggerSetter extends TextView implements IObject {
 
 			if ("#FF000000".equals(strValue)) {
 				m_oEditText.setBackgroundResource(R.drawable.et_select);
+				//setBackgroundResource(R.drawable.bg_shadow);
 				setBackgroundResource(R.drawable.bg_shadow);
 			} else {
 				m_cBackgroundColor = Color.parseColor(strValue);
