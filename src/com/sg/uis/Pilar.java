@@ -57,7 +57,11 @@ public class Pilar extends View implements IObject {
 	        canvas.drawRect(m_nBorderWidth, m_nBorderWidth, nWidth-m_nBorderWidth, nHeight-m_nBorderWidth, m_oPaint);   	        
 		}
         
-        m_oPaint.setColor(m_cSingleFillColor); // ½öÌî³äµ¥É«  
+      
+        if(f_data>f_maxValue*WarmPer)
+			 m_oPaint.setColor(Color.parseColor(WarmPerColor));
+		 else
+		 m_oPaint.setColor(m_cSingleFillColor);
         
         m_oPaint.setStyle(Paint.Style.FILL); 
         if("H".equals(m_strDrection)){
@@ -144,6 +148,12 @@ public class Pilar extends View implements IObject {
         else if ("MaxValue".equals(strName)) {
         	if("".equals(strValue)==false)
         		f_maxValue = Float.parseFloat(strValue);
+        }
+        else if ("WarmPer".equals(strName)) {
+        	WarmPer =Float.parseFloat(strValue);
+        }
+        else if ("WarmPerColor".equals(strName)) {
+        	WarmPerColor = strValue;
         }
         else if ("IsDashed".equals(strName)) {
         	m_bIsDashed = Boolean.parseBoolean(strValue);
@@ -293,6 +303,9 @@ public class Pilar extends View implements IObject {
 	
 	float f_maxValue=1;
 	float f_data=1;
+	
+	float WarmPer;
+	String WarmPerColor;
 	
 	public boolean m_bneedupdate = true;
 }

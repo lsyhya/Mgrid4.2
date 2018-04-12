@@ -1153,9 +1153,12 @@ public class MainWindow extends ViewGroup {
 					if (strUiType.equals("Label")) // 只用于 SgLable
 					{
 						if (oMathExpress.mapObjectExpress.size() != 1)
-							break;
-						else
+						{
+							//表达式超过一个时不做操作
+						}
+						else {
 							Label_data.put(strUniqueID, oBindingExpression);
+						}
 						
 					}
 					if (oMathExpress.strBindType.equals("Value")) {
@@ -1173,7 +1176,7 @@ public class MainWindow extends ViewGroup {
 									m_mapUIs.get(strUniqueID));
 						} else if (strUiType.equals("EventList") || strUiType.equals("AlarmLevel")) {
 
-							System.out.println("我注册了" + strUniqueID);
+							
 							DataGetter.setMainAlarmList(m_mapUIs.get(strUniqueID));
 						} else if (strUiType.equals("LocalList")) {
 

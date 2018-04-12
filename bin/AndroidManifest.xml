@@ -4,7 +4,7 @@
   package="com.mgrid.main"
   android:installLocation="preferExternal"
   android:versionCode="12"
-  android:versionName="4.26"
+  android:versionName="4.27"
  >
   
    
@@ -52,7 +52,7 @@
       android:icon="@drawable/ic_jiqiren" 
       android:largeHeap="true"
       android:name="com.mgrid.uncaughtexceptionhandler.MyApplication"
-      android:allowBackup="true">
+      android:allowBackup="true" android:vmSafeMode="false" android:hasCode="true">
       <!-- android:hardwareAccelerated="true" -->     
       <service android:name="SoundService"></service>  
       <activity
@@ -87,5 +87,6 @@
         </intent-filter>
     </receiver>
     <service android:name="com.lsy.Service.TilmePlush.TimePlushService"></service>
+    <activity android:name="MonitorActivity"></activity>
     </application>
 </manifest>

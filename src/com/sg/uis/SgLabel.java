@@ -12,6 +12,7 @@ import com.sg.common.IObject;
 import com.sg.common.SgRealTimeData;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
+import com.sg.common.UtExpressionParser.stExpression;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -30,19 +31,17 @@ import data_model.ipc_control;
 /** 标签 */
 public class SgLabel extends TextView implements IObject {
 
-//	ShimmerTextView shimmerTv;
-//	Shimmer sr;
-	
+	// ShimmerTextView shimmerTv;
+	// Shimmer sr;
+
 	public SgLabel(Context context) {
 		super(context);
-		
+
 		init(this);
-		
+
 	}
-	
-	
-	private void init(View view)
-	{
+
+	private void init(View view) {
 		view.setClickable(true);
 		view.setBackgroundColor(0x00000000);
 		m_rBBox = new Rect();
@@ -53,117 +52,97 @@ public class SgLabel extends TextView implements IObject {
 				if (m_cmdExpression != null && !m_cmdExpression.equals("")) {
 
 					parse_cmd();
-					AlertDialog.Builder builder = new AlertDialog.Builder(
-							getContext());
+					AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 					builder.setTitle("提示");
 					builder.setMessage("请选择开关");
-					builder.setPositiveButton("关",
-							new DialogInterface.OnClickListener() {
+					builder.setPositiveButton("关", new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+
+							if (c_control.size() == 0) {
+								ipc_control ip = new ipc_control();
+								ip.equipid = c_equipid;
+								ip.ctrlid = c_ctrlid;
+								ip.valuetype = c_parameterid;
+								ip.value = c_value;
+								c_control.add(ip);
+								System.out.println(c_equipid + "" + c_ctrlid + "" + c_parameterid + "" + c_value);
+							}
+
+							new Thread(new Runnable() {
 
 								@Override
-								public void onClick(DialogInterface arg0,
-										int arg1) {
-
-									if (c_control.size() == 0) {
-										ipc_control ip = new ipc_control();
-										ip.equipid = c_equipid;
-										ip.ctrlid = c_ctrlid;
-										ip.valuetype = c_parameterid;
-										ip.value = c_value;
-										c_control.add(ip);
-										System.out.println(c_equipid + ""
-												+ c_ctrlid + "" + c_parameterid
-												+ "" + c_value);
+								public void run() {
+									if (0 != service.send_control_cmd(service.IP, service.PORT, c_control)) {
+										String str = new String("控制失败！");
+										Message msg = new Message();
+										msg.what = 2;
+										msg.obj = str;
+										m_rRenderWindow.m_oInvalidateHandler.sendMessage(msg);
+									} else {
+										String str = new String("控制成功.");
+										Message msg = new Message();
+										msg.what = 1;
+										msg.obj = str;
+										m_rRenderWindow.m_oInvalidateHandler.sendMessage(msg);
 									}
 
-									new Thread(new Runnable() {
-
-										@Override
-										public void run() {
-											if (0 != service.send_control_cmd(
-													service.IP, service.PORT,
-													c_control)) {
-												String str = new String("控制失败！");
-												Message msg = new Message();
-												msg.what = 2;
-												msg.obj = str;
-												m_rRenderWindow.m_oInvalidateHandler
-														.sendMessage(msg);
-											} else {
-												String str = new String("控制成功.");
-												Message msg = new Message();
-												msg.what = 1;
-												msg.obj = str;
-												m_rRenderWindow.m_oInvalidateHandler
-														.sendMessage(msg);
-											}
-
-										}
-									}).start();
-
 								}
-							});
-					builder.setNegativeButton("开",
-							new DialogInterface.OnClickListener() {
+							}).start();
+
+						}
+					});
+					builder.setNegativeButton("开", new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+
+							if (o_control.size() == 0) {
+								ipc_control ipcC = new ipc_control();
+								ipcC.equipid = o_equipid;
+								ipcC.ctrlid = o_ctrlid;
+								ipcC.valuetype = o_parameterid;
+								ipcC.value = o_value;
+								o_control.add(ipcC);
+								System.out.println(o_equipid + "" + o_ctrlid + "" + o_parameterid + "" + o_value);
+							}
+							new Thread(new Runnable() {
 
 								@Override
-								public void onClick(DialogInterface arg0,
-										int arg1) {
-
-									if (o_control.size() == 0) {
-										ipc_control ipcC = new ipc_control();
-										ipcC.equipid = o_equipid;
-										ipcC.ctrlid = o_ctrlid;
-										ipcC.valuetype = o_parameterid;
-										ipcC.value = o_value;
-										o_control.add(ipcC);
-										System.out.println(o_equipid + ""
-												+ o_ctrlid + "" + o_parameterid
-												+ "" + o_value);
+								public void run() {
+									if (0 != service.send_control_cmd(service.IP, service.PORT, o_control)) {
+										String str = new String("控制失败！");
+										Message msg = new Message();
+										msg.what = 2;
+										msg.obj = str;
+										m_rRenderWindow.m_oInvalidateHandler.sendMessage(msg);
+									} else {
+										String str = new String("控制成功.");
+										Message msg = new Message();
+										msg.what = 1;
+										msg.obj = str;
+										m_rRenderWindow.m_oInvalidateHandler.sendMessage(msg);
 									}
-									new Thread(new Runnable() {
-
-										@Override
-										public void run() {
-											if (0 != service.send_control_cmd(
-													service.IP, service.PORT,
-													o_control)) {
-												String str = new String("控制失败！");
-												Message msg = new Message();
-												msg.what = 2;
-												msg.obj = str;
-												m_rRenderWindow.m_oInvalidateHandler
-														.sendMessage(msg);
-											} else {
-												String str = new String("控制成功.");
-												Message msg = new Message();
-												msg.what = 1;
-												msg.obj = str;
-												m_rRenderWindow.m_oInvalidateHandler
-														.sendMessage(msg);
-											}
-
-										}
-									}).start();
 
 								}
-							});
+							}).start();
+
+						}
+					});
 					builder.create().show();
 				}
 
 			}
 		});
 	}
-	
 
 	@Override
 	public void doLayout(boolean bool, int l, int t, int r, int b) {
 		if (m_rRenderWindow == null)
 			return;
-		int nX = l
-				+ (int) (((float) m_nPosX / (float) MainWindow.FORM_WIDTH) * (r - l));
-		int nY = t
-				+ (int) (((float) m_nPosY / (float) MainWindow.FORM_HEIGHT) * (b - t));
+		int nX = l + (int) (((float) m_nPosX / (float) MainWindow.FORM_WIDTH) * (r - l));
+		int nY = t + (int) (((float) m_nPosY / (float) MainWindow.FORM_HEIGHT) * (b - t));
 		int nWidth = (int) (((float) m_nWidth / (float) MainWindow.FORM_WIDTH) * (r - l));
 		int nHeight = (int) (((float) m_nHeight / (float) MainWindow.FORM_HEIGHT) * (b - t));
 
@@ -173,8 +152,8 @@ public class SgLabel extends TextView implements IObject {
 		m_rBBox.bottom = nY + nHeight;
 		if (m_rRenderWindow.isLayoutVisible(m_rBBox)) {
 			layout(nX, nY, nX + nWidth, nY + nHeight);
-//			shimmerTv.layout(nX, nY, nX + nWidth, nY + nHeight);
-//			shimmerTv.setPadding(0, nHeight/8, 0, 0);
+			// shimmerTv.layout(nX, nY, nX + nWidth, nY + nHeight);
+			// shimmerTv.setPadding(0, nHeight/8, 0, 0);
 		}
 	}
 
@@ -200,7 +179,7 @@ public class SgLabel extends TextView implements IObject {
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
 		rWin.addView(this);
-		//rWin.addView(shimmerTv);
+		// rWin.addView(shimmerTv);
 	}
 
 	@Override
@@ -208,8 +187,7 @@ public class SgLabel extends TextView implements IObject {
 		rWin.removeView(this);
 	}
 
-	public void parseProperties(String strName, String strValue,
-			String strResFolder) {
+	public void parseProperties(String strName, String strValue, String strResFolder) {
 
 		if ("ZIndex".equals(strName)) {
 			m_nZIndex = Integer.parseInt(strValue);
@@ -231,23 +209,22 @@ public class SgLabel extends TextView implements IObject {
 			m_strContent = strValue;
 			c_Content = strValue;
 			this.setText(m_strContent);
-			//shimmerTv.setText(m_strContent);
+			// shimmerTv.setText(m_strContent);
 		} else if ("FontFamily".equals(strName)) {
-			m_strFontFamily = strValue;		
-			//this.setTypeface(MyApplication.typeface);
+			m_strFontFamily = strValue;
+			// this.setTypeface(MyApplication.typeface);
 		} else if ("FontSize".equals(strName)) {
-			float fWinScale = (float) MainWindow.SCREEN_WIDTH
-					/ (float) MainWindow.FORM_WIDTH;
+			float fWinScale = (float) MainWindow.SCREEN_WIDTH / (float) MainWindow.FORM_WIDTH;
 			m_fFontSize = Float.parseFloat(strValue) * fWinScale;
 			this.setTextSize(m_fFontSize);
-			//shimmerTv.setTextSize(m_fFontSize);
+			// shimmerTv.setTextSize(m_fFontSize);
 		} else if ("IsBold".equals(strName))
 			m_bIsBold = Boolean.parseBoolean(strValue);
 		else if ("FontColor".equals(strName)) {
 			m_cFontColor = Color.parseColor(strValue);
 			m_cStartFillColor = m_cFontColor;
 			this.setTextColor(m_cFontColor);
-			//shimmerTv.setTextColor(m_cFontColor);
+			// shimmerTv.setTextColor(m_cFontColor);
 		} else if ("HorizontalContentAlignment".equals(strName))
 			m_strHorizontalContentAlignment = strValue;
 		else if ("VerticalContentAlignment".equals(strName))
@@ -268,7 +245,8 @@ public class SgLabel extends TextView implements IObject {
 
 			} catch (Exception e) {
 				System.out.println(e);
-				Toast.makeText(getContext(),MGridActivity.XmlFile+":"+getUniqueID()+"出错", Toast.LENGTH_LONG).show();
+				Toast.makeText(getContext(), MGridActivity.XmlFile + ":" + getUniqueID() + "出错", Toast.LENGTH_LONG)
+						.show();
 			}
 
 	}
@@ -287,18 +265,16 @@ public class SgLabel extends TextView implements IObject {
 			nFlag |= Gravity.TOP;
 		else if ("Bottom".equals(m_strVerticalContentAlignment)) {
 			nFlag |= Gravity.BOTTOM;
-			double padSize = CFGTLS.getPadHeight(m_nHeight,
-					MainWindow.FORM_HEIGHT, getTextSize());
+			double padSize = CFGTLS.getPadHeight(m_nHeight, MainWindow.FORM_HEIGHT, getTextSize());
 			setPadding(0, (int) padSize, 0, 0);
 		} else if ("Center".equals(m_strVerticalContentAlignment)) {
 			nFlag |= Gravity.CENTER_VERTICAL;
-			double padSize = CFGTLS.getPadHeight(m_nHeight,
-					MainWindow.FORM_HEIGHT, getTextSize()) / 2;
+			double padSize = CFGTLS.getPadHeight(m_nHeight, MainWindow.FORM_HEIGHT, getTextSize()) / 2;
 			setPadding(0, (int) padSize, 0, (int) padSize);
 		}
 
 		setGravity(nFlag);
-		//shimmerTv.setGravity(nFlag);
+		// shimmerTv.setGravity(nFlag);
 	}
 
 	public String getBindingExpression() {
@@ -311,9 +287,9 @@ public class SgLabel extends TextView implements IObject {
 		this.setText(m_strContent);
 		this.invalidate();
 
-//		shimmerTv.setTextColor(m_cFontColor);
-//		shimmerTv.setText(m_strContent);
-//		shimmerTv.invalidate();
+		// shimmerTv.setTextColor(m_cFontColor);
+		// shimmerTv.setText(m_strContent);
+		// shimmerTv.invalidate();
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -322,23 +298,28 @@ public class SgLabel extends TextView implements IObject {
 
 		m_bneedupdate = false;
 
-		SgRealTimeData oRealTimeData = m_rRenderWindow.m_oShareObject.m_mapRealTimeDatas
-				.get(this.getUniqueID());
-		stBindingExpression oBindingExpression = m_rRenderWindow.Label_data
-				.get(m_strID);
-		if (oRealTimeData == null || oBindingExpression == null)
+		SgRealTimeData oRealTimeData = m_rRenderWindow.m_oShareObject.m_mapRealTimeDatas.get(this.getUniqueID());
+
+		stExpression oMathExpress = m_rRenderWindow.m_oCaculateThread.m_mapExpression.get(m_strID);
+
+		stBindingExpression oBindingExpression = null;
+		if (oMathExpress.mapObjectExpress.size() <= 1) {
+			oBindingExpression = m_rRenderWindow.Label_data.get(m_strID);
+			if (oBindingExpression == null)
+				return false;
+		}
+
+		if (oRealTimeData == null)
 			return false;
 
 		String strValue = oRealTimeData.strValue;
 
 		if (strValue == null || "".equals(strValue) == true)
 			return false;
-		
-		
-		if (MGridActivity.LabelList.size() != 0) {
 
-			if (MGridActivity.LabelList.contains(oBindingExpression.nEquipId
-					+ "")) {
+		if (MGridActivity.LabelList.size() != 0&&oBindingExpression!=null) {
+
+			if (MGridActivity.LabelList.contains(oBindingExpression.nEquipId + "")) {
 
 				m_strContent = "--";
 				m_cFontColor = Color.GRAY;
@@ -347,19 +328,17 @@ public class SgLabel extends TextView implements IObject {
 			}
 		}
 
-		if (MGridActivity.EventClose.size() > 0) {
+		if (MGridActivity.EventClose.size() > 0&&oBindingExpression!=null) {
 			Iterator iter = MGridActivity.EventClose.entrySet().iterator();
 			while (iter.hasNext()) {
 				Map.Entry entry = (Map.Entry) iter.next();
-				Map<String, String> map = (Map<String, String>) entry
-						.getValue();
+				Map<String, String> map = (Map<String, String>) entry.getValue();
 				Iterator iter1 = map.entrySet().iterator();
 				while (iter1.hasNext()) {
 					Map.Entry entry1 = (Map.Entry) iter1.next();
 					String eid = (String) entry1.getKey();
 					String sid = (String) entry1.getValue();
-					if (eid.equals(oBindingExpression.nEquipId + "")
-							&& sid.equals(oBindingExpression.nSignalId + "")) {
+					if (eid.equals(oBindingExpression.nEquipId + "") && sid.equals(oBindingExpression.nSignalId + "")) {
 						m_strContent = "--";
 						m_cFontColor = Color.GRAY;
 						m_bneedupdate = false;
@@ -373,6 +352,7 @@ public class SgLabel extends TextView implements IObject {
 
 		// 内容变化才刷新页面
 		if (m_strSignalValue.equals(strValue) == false) {
+
 			m_strSignalValue = strValue; // 保存数值留作下次比较
 
 			m_strContent = strValue; // 界面数值赋予
@@ -386,40 +366,35 @@ public class SgLabel extends TextView implements IObject {
 				if (max != -999) {
 					switch (mark) {
 					case ">":
-						if(ff>max)
-						{
-							m_strContent=c_Content;
+						if (ff > max) {
+							m_strContent = c_Content;
 						}
 						break;
 					case "<":
-						if(ff<max)
-						{
-							m_strContent=c_Content;
+						if (ff < max) {
+							m_strContent = c_Content;
 						}
 						break;
 					case ">=":
-						if(ff>=max)
-						{
-							m_strContent=c_Content;
+						if (ff >= max) {
+							m_strContent = c_Content;
 						}
 						break;
 					case "<=":
-						if(ff<=max)
-						{
-							m_strContent=c_Content;
+						if (ff <= max) {
+							m_strContent = c_Content;
 						}
 						break;
 					case "==":
-						if(ff==max)
-						{
-							m_strContent=c_Content;
+						if (ff == max) {
+							m_strContent = c_Content;
 						}
 						break;
 					}
 				}
 
 			} catch (Exception e) {
-				
+
 			}
 
 			return true;
@@ -458,11 +433,9 @@ public class SgLabel extends TextView implements IObject {
 	}
 
 	public boolean parse_cmd() {
-		if (c_equipid == -100 && c_ctrlid == -100 && c_parameterid == -100
-				&& c_value.equals("") && o_equipid == -100 && o_ctrlid == -100
-				&& o_parameterid == -100 && o_value.equals("")) {
-			String cmd = UtExpressionParser
-					.removeBindingString(m_cmdExpression);
+		if (c_equipid == -100 && c_ctrlid == -100 && c_parameterid == -100 && c_value.equals("") && o_equipid == -100
+				&& o_ctrlid == -100 && o_parameterid == -100 && o_value.equals("")) {
+			String cmd = UtExpressionParser.removeBindingString(m_cmdExpression);
 
 			String[] args = cmd.split("\\|");
 
@@ -547,8 +520,8 @@ public class SgLabel extends TextView implements IObject {
 	public boolean m_bValueupdate = true;
 	public boolean First = true;
 
-	private int c_equipid = -100, c_ctrlid = -100, c_parameterid = -100,
-			o_equipid = -100, o_ctrlid = -100, o_parameterid = -100;
+	private int c_equipid = -100, c_ctrlid = -100, c_parameterid = -100, o_equipid = -100, o_ctrlid = -100,
+			o_parameterid = -100;
 	private String c_value = "", o_value = "";
 	List<ipc_control> c_control = new ArrayList<ipc_control>();
 	List<ipc_control> o_control = new ArrayList<ipc_control>();

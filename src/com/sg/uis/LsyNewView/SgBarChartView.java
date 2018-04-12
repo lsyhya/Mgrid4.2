@@ -14,11 +14,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.TreeMap;
 
 import org.xclcharts.chart.BarChart;
 import org.xclcharts.chart.BarData;
+
+import com.demo.xclcharts.view.BarChart01View;
+import com.mgrid.data.DataGetter;
+import com.mgrid.main.MainWindow;
+import com.mgrid.util.ExpressionUtils;
+import com.mgrid.util.TimeUtils;
+import com.sg.common.CFGTLS;
+import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -35,14 +43,6 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.demo.xclcharts.view.BarChart01View;
-import com.mgrid.data.DataGetter;
-import com.mgrid.main.MainWindow;
-import com.mgrid.util.ExpressionUtils;
-import com.mgrid.util.TimeUtils;
-import com.sg.common.CFGTLS;
-import com.sg.common.IObject;
-
 /** 柱状图 */
 @SuppressLint({ "ShowToast", "InflateParams", "RtlHardcoded",
 		"ClickableViewAccessibility" })
@@ -54,6 +54,11 @@ public class SgBarChartView extends TextView implements IObject {
 	private Map<Integer, List<Map<Double, Double>>> linePointListData = new HashMap<Integer, List<Map<Double, Double>>>();
 	private List<RadioButton> rButton = new ArrayList<RadioButton>();
 	private int mode = 1;
+	
+	
+	private String d=LanguageStr.d;
+	private String m=LanguageStr.m;
+	private String y=LanguageStr.y;
 
 	public SgBarChartView(Context context) {
 		super(context);
@@ -68,17 +73,18 @@ public class SgBarChartView extends TextView implements IObject {
 	private void addRadio() {
 
 		RadioButton ridobuttons1 = new RadioButton(getContext());
-		ridobuttons1.setText("日");
+		ridobuttons1.setText(d);
 		rButton.add(ridobuttons1);
 		ridobuttons1.setChecked(true);
+		
 
 		RadioButton ridobuttons2 = new RadioButton(getContext());
-		ridobuttons2.setText("月");
+		ridobuttons2.setText(m);
 		rButton.add(ridobuttons2);
 		ridobuttons2.setChecked(false);
 
 		RadioButton ridobuttons3 = new RadioButton(getContext());
-		ridobuttons3.setText("年");
+		ridobuttons3.setText(y);
 		rButton.add(ridobuttons3);
 		ridobuttons3.setChecked(false);
 
@@ -236,6 +242,11 @@ public class SgBarChartView extends TextView implements IObject {
 				// y轴刻度文字画笔
 				Bchart.getDataAxis().getTickLabelPaint()
 						.setColor(Color.parseColor(strValue));
+				for (int i = 0; i < rButton.size(); i++) {
+					rButton.get(i).setTextColor(Color.parseColor(strValue));
+				
+				}
+				
 			}
 		} else if ("ClickEvent".equals(strName))
 			m_strClickEvent = strValue;

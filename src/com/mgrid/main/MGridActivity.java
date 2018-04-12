@@ -997,10 +997,19 @@ public class MGridActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		System.out.println("onresume");
+		
 		if (m_oSgSgRenderManager == null)
 			return;
 		showTaskUI(false);
 
+	}
+	
+	@Override
+	protected void onRestart() {
+		// TODO Auto-generated method stub
+		super.onRestart();
+		System.out.println("onRestart");
 	}
 
 	/** 消息提示显示 **/
@@ -1028,7 +1037,7 @@ public class MGridActivity extends Activity {
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-
+		System.out.println("onStop");
 		if (!isAppOnForeground()) {
 
 			showTaskUI(true);
@@ -1040,6 +1049,7 @@ public class MGridActivity extends Activity {
 	protected void onPause() {
 		super.onPause();
 
+		System.out.println("onpause");
 		// mWakeLock.acquire();
 
 	}

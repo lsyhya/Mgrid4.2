@@ -9,6 +9,7 @@ import java.util.List;
 import com.mgrid.data.DataGetter;
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
+//import com.mgrid.main.MonitorActivity;
 import com.mgrid.main.R;
 import com.mgrid.main.SoundService;
 import com.mgrid.util.ShellUtils;
@@ -353,35 +354,7 @@ public class SgButton extends TextView implements IObject {
 				if (m_rRenderWindow != null)
 					m_rRenderWindow.showTaskUI(true);
 
-				// 只知道包名，不知道类名
-				// PackageManager packageManager =
-				// getContext().getPackageManager();
-				// PackageInfo pi = null;
-				// try {
-				// pi = packageManager.getPackageInfo("com.mcu.iVMSHD", 0);
-				// } catch (NameNotFoundException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// }
-				// Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
-				// resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-				// resolveIntent.setPackage(pi.packageName);
-				// List<ResolveInfo> apps =
-				// packageManager.queryIntentActivities(resolveIntent, 0);
-				// ResolveInfo ri = apps.iterator().next();
-				// if(ri!=null)
-				// {
-				// String className = ri.activityInfo.name;
-				// System.out.println(className);
-				// Intent intent = new Intent(Intent.ACTION_MAIN);
-				// intent.addCategory(Intent.CATEGORY_LAUNCHER);
-				// ComponentName cn = new ComponentName("com.mcu.iVMSHD",
-				// className);
-				// intent.setComponent(cn);
-				// getContext().startActivity(intent);
-				// if (m_rRenderWindow != null)
-				// m_rRenderWindow.showTaskUI(true);
-				// }
+			
 
 			} else if (m_strClickEvent.equals("关闭告警")) {
  
@@ -394,7 +367,13 @@ public class SgButton extends TextView implements IObject {
 
 				isSwitch = true;
 
-			} else {
+			} else if (m_strClickEvent.equals("视频")) {
+                
+//				Intent intent=new Intent(getContext(),MonitorActivity.class);
+//				//intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//				getContext().startActivity(intent);
+
+			}else {
 				String[] arrStr = m_strClickEvent.split("\\(");
 				boolean isMask = true;// 用来判断是否为权限页面
 				boolean isNeedPW = true; // 用来判断权限页面是否需要密码

@@ -29,6 +29,7 @@ import com.mgrid.util.ExpressionUtils;
 import com.mgrid.util.TimeUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 import com.sg.common.MyAdapter;
 import com.sg.common.SgRealTimeData;
 
@@ -65,6 +66,12 @@ public class SgSplineChart extends TextView implements IObject {
 	private ArrayList<String> nameList = new ArrayList<String>();
 	private MyAdapter myAdapter = null;
 
+	private String h=LanguageStr.h;
+	private String d=LanguageStr.d;
+	private String m=LanguageStr.m;
+	private String y=LanguageStr.y;
+	
+	
 	public SgSplineChart(Context context) {
 		super(context);
 		m_oPaint = new Paint();
@@ -79,28 +86,28 @@ public class SgSplineChart extends TextView implements IObject {
 	}
 
 	private void setData() {
-		nameList.add((Integer.parseInt(TimeUtils.getYear()) - 1) + " 年");
-		nameList.add(TimeUtils.getYear() + " 年");
+		nameList.add((Integer.parseInt(TimeUtils.getYear()) - 1) + " "+y);
+		nameList.add(TimeUtils.getYear() + " "+y);
 	}
 
 	private void addRadio() {
 		RadioButton ridobuttons1 = new RadioButton(getContext());
-		ridobuttons1.setText("时");
+		ridobuttons1.setText(h);
 		rButton.add(ridobuttons1);
 		ridobuttons1.setChecked(true);
 
 		RadioButton ridobuttons2 = new RadioButton(getContext());
-		ridobuttons2.setText("日");
+		ridobuttons2.setText(d);
 		rButton.add(ridobuttons2);
 		ridobuttons2.setChecked(false);
 
 		RadioButton ridobuttons3 = new RadioButton(getContext());
-		ridobuttons3.setText("月");
+		ridobuttons3.setText(m);
 		rButton.add(ridobuttons3);
 		ridobuttons3.setChecked(false);
 
 		RadioButton ridobuttons4 = new RadioButton(getContext());
-		ridobuttons4.setText("年");
+		ridobuttons4.setText(y);
 		rButton.add(ridobuttons4);
 		ridobuttons4.setChecked(false);
 
@@ -166,14 +173,14 @@ public class SgSplineChart extends TextView implements IObject {
 			addLabels(mode);
 			if (mode == 4 && selectYear.equals("")) {
 				selectYear = TimeUtils.getYear();
-				rButton.get(mode - 1).setText(selectYear + " 年");
+				rButton.get(mode - 1).setText(selectYear + " "+y);
 			} else if (mode == 4 && !selectYear.equals("")) {
 
 				showPopUpWin(rButton.get(mode - 1));
 
 			} else {
 				selectYear = "";
-				rButton.get(3).setText("年");
+				rButton.get(3).setText(y);
 			}
 			m_bneedupdate = true;
 		}

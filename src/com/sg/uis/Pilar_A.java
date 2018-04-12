@@ -69,6 +69,9 @@ public class Pilar_A extends View implements IObject {
 		 canvas.drawRoundRect(rectf, o1_r*(float)0.26, o1_r*(float)0.26, m_oPaint);
 		
 		 //画出底板填充 圆
+		 if(f_data>f_maxValue*WarmPer)
+			 m_oPaint.setColor(Color.parseColor(WarmPerColor));
+		 else
 		 m_oPaint.setColor(m_cSingleFillColor);
 		 m_oPaint.setStyle(Paint.Style.FILL);
 		 canvas.drawCircle(o_x1, o_y1, o1_r-line_w/2, m_oPaint);
@@ -85,6 +88,9 @@ public class Pilar_A extends View implements IObject {
 		float f_Height= rect1.bottom - rect1.top;
 		float f_num = f_Height/f_maxValue * f_data;
 		 rect1.top = rect1.bottom - (int)f_num;
+		 if(f_data>f_maxValue*WarmPer)
+			 m_oPaint.setColor(Color.parseColor(WarmPerColor));
+		 else
 		 m_oPaint.setColor(m_cSingleFillColor);
 		 canvas.drawRect(rect1,  m_oPaint);
 //		 Log.e("Pilar_A->onDraw:刻度最大值",String.valueOf(f_maxValue));
@@ -209,6 +215,12 @@ public class Pilar_A extends View implements IObject {
         		f_maxValue = Float.parseFloat(strValue);
         	}
         		
+        }
+        else if ("WarmPer".equals(strName)) {
+        	WarmPer =Float.parseFloat(strValue);
+        }
+        else if ("WarmPerColor".equals(strName)) {
+        	WarmPerColor = strValue;
         }
         else if ("IsDashed".equals(strName)) {
         	m_bIsDashed = Boolean.parseBoolean(strValue);
@@ -359,6 +371,9 @@ public class Pilar_A extends View implements IObject {
 	
 	float f_maxValue=55;
 	float f_data=20;
+	
+	float WarmPer;
+	String WarmPerColor;
 	
 	public boolean m_bneedupdate = true;
 }

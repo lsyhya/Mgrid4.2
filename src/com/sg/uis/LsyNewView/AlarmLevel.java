@@ -33,6 +33,7 @@ import com.mgrid.main.R;
 import com.mgrid.main.SoundService;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 import com.sg.common.MySimpleAdapter;
 import com.sg.common.TotalVariable;
 import com.sg.common.UtTable;
@@ -43,6 +44,14 @@ import com.sg.common.UtTable;
 public class AlarmLevel extends TextView implements IObject {
 
 	// TabHost tablehost;
+	
+	private String one=LanguageStr.one;
+	private String two=LanguageStr.two;
+	private String three=LanguageStr.three;
+	private String four=LanguageStr.four;
+	private String level=LanguageStr.level;
+	
+	
 
 	public AlarmLevel(Context context) {
 		super(context);
@@ -357,21 +366,21 @@ public class AlarmLevel extends TextView implements IObject {
 				String gradeLevel = "";
 				switch (event.grade) {
 				case 1:
-					gradeLevel = "通知";
+					gradeLevel = one;
 					break;
 
 				case 2:
-					gradeLevel = "一般告警";
+					gradeLevel = two;
 					break;
 				case 3:
-					gradeLevel = "严重告警";
+					gradeLevel = three;
 					break;
 				case 4:
-					gradeLevel = "紧急告警";
+					gradeLevel = four;
 					break;
 				}
 				String value = equipname + "——" + event.name + ":"
-						+ event.meaning + "    等级：" + gradeLevel;
+						+ event.meaning + "    "+level+": "+  gradeLevel;
 				Map<String, Object> map_Value = new HashMap<String, Object>();
 				map_Value.put("time", event.starttime * 1000);
 				map_Value.put("value", value);

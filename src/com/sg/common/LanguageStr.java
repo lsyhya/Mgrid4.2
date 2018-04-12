@@ -51,7 +51,7 @@ public class LanguageStr {
 	public static String NextDay = "前一天";
 	public static String Receive = "  获取   ";
 	public static String AllDevice = "全部设备";
-	public static String one = "通知", two = "一般告警", three = "严重告警", four = "致命告警", set = "设置";;
+	public static String one = "通知", two = "一般告警", three = "严重告警", four = "致命告警", set = "设置",level="等级";
 	public static String SignalName = "信号名称";
 	public static String Value = "数值";
 	public static String Unit = "单位";
@@ -105,6 +105,15 @@ public class LanguageStr {
 	//public static String text_Su = "切换完成,等待30s重启";
 	public static String title = "提示";
 	public static String content = "切换完成,等待30s重启";
+	
+	//SgSplineChart
+	//public static String text_Su = "切换完成,等待30s重启";
+	public static String h = "时";
+	public static String d = "日";
+	public static String m = "月";
+	public static String y = "年";
+	
+	
 
 	// 系统语言和配置语言 true为中文 false为英文
 	public static boolean systemLanguage = true;
@@ -189,10 +198,11 @@ public class LanguageStr {
 		three = "CriticalAlarm";
 		four = "FatalAlarm";
 		set = "Set";
+		level="Level";
 
 		SignalName = "Signal Name";
 		Value = "Value";
-		Unit = "Numerical Signal";
+		Unit = "Unit";
 		ValueType = "Value Type";
 		AcquisitionTime = "Acquisition Time";
 
@@ -245,7 +255,7 @@ public class LanguageStr {
 
 		Names = "Name";
 		RefreshTime = "RefreshTime";
-		Implication = "Implication";
+		Implication = "Meaning";
 
 		// SgYKParameter
 		Chooose = "Choose↓";
@@ -253,6 +263,13 @@ public class LanguageStr {
 		//LanguageStr
 		title="Title";
 		content = "Please wait for the reboot of the 30s";
+		
+		//SgSplineChart
+		h="hr";
+		d="day";
+		m="mon";
+		y="year";
+		
 	}
 
 }

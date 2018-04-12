@@ -72,9 +72,9 @@ public class AutoSigList extends View implements IObject {
 			String strText = (String) ((RadioButton) arg0).getText();
 			for (int i = 0; i < 4; i++)
 				ridobuttons[i].setChecked(false);
-			if ("1 h".equals(strText)) {
+			if ("1 hr".equals(strText)) {
 				mode = 0;
-			} else if ("24 h".equals(strText)) {
+			} else if ("24 hr".equals(strText)) {
 				mode = 1;
 			} else if ("1 mon".equals(strText)) {
 				mode = 2;

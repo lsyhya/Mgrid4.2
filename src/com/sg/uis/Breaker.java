@@ -137,9 +137,9 @@ public class Breaker extends View implements IObject {
          }
          else if ("State".equals(strName)) {
          	if ("True".equals(strValue) == true)
-         		m_bState = true;
+         		m_bStatess = true;
          	else
-         		m_bState = false;
+         		m_bStatess = false;
          }
          else if ("ClickEvent".equals(strName)) {
           	m_strClickEvent = strValue;
@@ -184,15 +184,22 @@ public class Breaker extends View implements IObject {
 			}catch(Exception e) {
 				
 			}
-			if (nValue == 0) {
-				
-				bState = false;
-				m_cPaintColor = m_cBackground;
-			}
-			else {
-				
-				bState = true;
-				m_cPaintColor = m_cForeground;
+			if (m_bStatess) {
+				if (nValue == 0) {
+					bState = false;
+					m_cPaintColor = m_cBackground;
+				} else {
+					bState = true;
+					m_cPaintColor = m_cForeground;
+				}
+			} else {
+				if (nValue == 1) {
+					bState = false;
+					m_cPaintColor = m_cBackground;
+				} else {
+					bState = true;
+					m_cPaintColor = m_cForeground;
+				}
 			}
 		}
 		if (bState != m_bState) {
@@ -257,6 +264,7 @@ public class Breaker extends View implements IObject {
 	int m_cPaintColor = 0xff000000;
 	int m_nThickness = 2;
 	boolean m_bState = false;
+	boolean m_bStatess= false;
 	String m_strClickEvent = "";
 	String m_strExpression = "";
 	
