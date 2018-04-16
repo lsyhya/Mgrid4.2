@@ -66,15 +66,14 @@ public class LanguageChange extends TextView implements IObject {
 
 	private static final String tempPath = "tmp/reboot.txt";
 
-	
-	private String set=LanguageStr.set;
-	
-	private String title=LanguageStr.title;
-	
-	private String content=LanguageStr.content;
-	
-	private String fail=LanguageStr.Fail;
-	
+	private String set = LanguageStr.set;
+
+	private String title = LanguageStr.title;
+
+	private String content = LanguageStr.content;
+
+	private String fail = LanguageStr.Fail;
+
 	public LanguageChange(Context context) {
 		super(context);
 
@@ -130,7 +129,7 @@ public class LanguageChange extends TextView implements IObject {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						tvSelectLan.setText(list.get(position));
-						index = position;					
+						index = position;
 						popupWindow.dismiss();
 					}
 				});
@@ -143,8 +142,8 @@ public class LanguageChange extends TextView implements IObject {
 			@Override
 			public void onClick(View v) {
 
-				if(index!=-1)
-				btnSetUp.setEnabled(false);
+				if (index != -1)
+					btnSetUp.setEnabled(false);
 				copyFile();
 
 			}
@@ -157,40 +156,51 @@ public class LanguageChange extends TextView implements IObject {
 			@Override
 			public void run() {
 
-				if (index == 0) {
+				File file_china = new File(mainPath + "/" + chinaFile);
+				File file_english = new File(mainPath + "/" + engFile);
 
-					System.out.println("Ìæ»»ÖÐÎÄ");
+				if (file_china.exists() && file_english.exists()) {
 
-					util.deleteDir(new File(mainPath + "/" + ini_File));
-					util.deleteDir(new File(mainPath + "/" + vtu_Dir));
-					util.deleteDir(new File(soPath + "/" + so_Dir));
-					util.deleteDir(new File(soPath + "/" + xml_Dir));
+					if (index == 0) {
 
-					util.copyFileno(mainPath + "/" + chinaFile + "/" + ini_File, mainPath + "/" + ini_File);
-					util.copyFolder(mainPath + "/" + chinaFile + "/" + vtu_Dir, mainPath + "/" + vtu_Dir);
-					util.copyFolder(mainPath + "/" + chinaFile + "/" + sam_Dir + "/" + so_Dir, soPath + "/" + so_Dir);
-					util.copyFolder(mainPath + "/" + chinaFile + "/" + sam_Dir + "/" + xml_Dir, soPath + "/" + xml_Dir);
+						System.out.println("Ìæ»»ÖÐÎÄ");
 
-				} else if(index==1){
-					System.out.println("Ìæ»»Ó¢ÎÄ");
+						util.deleteDir(new File(mainPath + "/" + ini_File));
+						util.deleteDir(new File(mainPath + "/" + vtu_Dir));
+						util.deleteDir(new File(soPath + "/" + so_Dir));
+						util.deleteDir(new File(soPath + "/" + xml_Dir));
 
-					util.deleteDir(new File(mainPath + "/" + ini_File));
-					util.deleteDir(new File(mainPath + "/" + vtu_Dir));
-					util.deleteDir(new File(soPath + "/" + so_Dir));
-					util.deleteDir(new File(soPath + "/" + xml_Dir));
+						util.copyFileno(mainPath + "/" + chinaFile + "/" + ini_File, mainPath + "/" + ini_File);
+						util.copyFolder(mainPath + "/" + chinaFile + "/" + vtu_Dir, mainPath + "/" + vtu_Dir);
+						util.copyFolder(mainPath + "/" + chinaFile + "/" + sam_Dir + "/" + so_Dir,
+								soPath + "/" + so_Dir);
+						util.copyFolder(mainPath + "/" + chinaFile + "/" + sam_Dir + "/" + xml_Dir,
+								soPath + "/" + xml_Dir);
 
-					util.copyFileno(mainPath + "/" + engFile + "/" + ini_File, mainPath + "/" + ini_File);
-					util.copyFolder(mainPath + "/" + engFile + "/" + vtu_Dir, mainPath + "/" + vtu_Dir);
-					util.copyFolder(mainPath + "/" + engFile + "/" + sam_Dir + "/" + so_Dir, soPath + "/" + so_Dir);
-					util.copyFolder(mainPath + "/" + engFile + "/" + sam_Dir + "/" + xml_Dir, soPath + "/" + xml_Dir);
+					} else if (index == 1) {
+						System.out.println("Ìæ»»Ó¢ÎÄ");
 
+						util.deleteDir(new File(mainPath + "/" + ini_File));
+						util.deleteDir(new File(mainPath + "/" + vtu_Dir));
+						util.deleteDir(new File(soPath + "/" + so_Dir));
+						util.deleteDir(new File(soPath + "/" + xml_Dir));
+
+						util.copyFileno(mainPath + "/" + engFile + "/" + ini_File, mainPath + "/" + ini_File);
+						util.copyFolder(mainPath + "/" + engFile + "/" + vtu_Dir, mainPath + "/" + vtu_Dir);
+						util.copyFolder(mainPath + "/" + engFile + "/" + sam_Dir + "/" + so_Dir, soPath + "/" + so_Dir);
+						util.copyFolder(mainPath + "/" + engFile + "/" + sam_Dir + "/" + xml_Dir,
+								soPath + "/" + xml_Dir);
+
+					} else {
+						hand.sendEmptyMessage(1);
+						return;
+					}
+					util.deleteDir(new File(mainPath + "/" + tempPath));
+					hand.sendEmptyMessage(0);
 				}else
 				{
-					hand.sendEmptyMessage(1);
-					return;
+					
 				}
-				util.deleteDir(new File(mainPath + "/" + tempPath));
-			    hand.sendEmptyMessage(0);
 			}
 		});
 	}
@@ -279,7 +289,7 @@ public class LanguageChange extends TextView implements IObject {
 
 		} else if ("Content".equals(strName)) {
 			m_strContent = strValue;
-		//	btnSetUp.setText(m_strContent);
+			// btnSetUp.setText(m_strContent);
 
 		} else if ("FontFamily".equals(strName))
 			m_strFontFamily = strValue;

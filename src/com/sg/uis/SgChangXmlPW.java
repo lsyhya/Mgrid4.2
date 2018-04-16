@@ -44,30 +44,7 @@ public class SgChangXmlPW extends TextView implements IObject {
 		this.setFocusableInTouchMode(true);
 		m_fFontSize = this.getTextSize();
 
-//		if (MGridActivity.whatLanguage) {
-//			oldPw = "旧密码:";
-//			newPw = "新密码:";
-//			confirm = "确    认:";
-//			text11 = "你的配置出现错误";
-//			text12 = "你根本没有权限页面";
-//			text13 = "两次密码输入不一样";
-//			text14 = "孩子， 你组态配置的标签大于权限页面的个数";
-//			text15 = "密码修改成功";
-//			text16 = "旧密码输入错误，请重新输入";
-//			text17 = "密码输入不完整";
-//
-//		} else {
-//			oldPw = "OldPassword";
-//			newPw = "NewPassword";
-//			confirm = "Confirm";
-//			text11 = "There is an error in your configuration";
-//			text12 = "You have no permissions page at all";
-//			text13 = "The two password input is not the same";
-//			text14 = "The label of your configuration configuration is greater than the number of permissions pages ";
-//			text15 = "Password changes succeeded";
-//			text16 = "Old password entered error, please re-enter";
-//			text17 = "The password input is incomplete";
-//		}
+
 
 		setBackgroundResource(android.R.drawable.btn_default);
 		setPadding(0, 0, 0, 0);
@@ -297,6 +274,7 @@ public class SgChangXmlPW extends TextView implements IObject {
 					nY + (int) (nHeight * 0.72f));
 			MakeBtn.layout(nX + (int) (nWidth * 0.42f), nY + (int) (nHeight * 0.82f), nX + (int) (nWidth * 0.65f),
 					nY + (int) (nHeight * 1f));
+			MakeBtn.setPadding(0, (int)(nHeight * 0.18f/5), 0, 0);
 
 		}
 		Rect rect = new Rect();
@@ -384,6 +362,14 @@ public class SgChangXmlPW extends TextView implements IObject {
 			m_fButtonWidthRate = Float.parseFloat(strValue);
 		} else if ("Label".equals(strName)) {
 			label = Integer.parseInt(strValue);
+		}else if ("FontSize".equals(strName)) {
+		    int size = Integer.parseInt(strValue);
+			tvNew.setTextSize(size);
+			T_CPassword.setTextSize(size);
+			tvOld.setTextSize(size);
+			m_oEditTextNEW.setTextSize(size);
+			m_oEditTextOLD.setTextSize(size);
+			E_CPassword.setTextSize(size);
 		}
 	}
 

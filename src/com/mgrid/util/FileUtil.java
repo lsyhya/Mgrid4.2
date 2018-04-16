@@ -176,6 +176,7 @@ public class FileUtil {
 	 *         "false".
 	 */
 	public  boolean deleteDir(File dir) {
+		
 		if (dir.isDirectory()) {
 			String[] children = dir.list();
 			// 递归删除目录中的子目录下

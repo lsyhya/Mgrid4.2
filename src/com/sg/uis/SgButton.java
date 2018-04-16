@@ -48,13 +48,12 @@ import data_model.ipc_control;
 /** 按钮 */
 public class SgButton extends TextView implements IObject {
 
-	
-	private String Prompt =LanguageStr.Prompt;
+	private String Prompt = LanguageStr.Prompt;
 	private String problem = LanguageStr.problem;
 	private String OK = LanguageStr.OK;
 	private String ON = LanguageStr.ON;
 	private String text = LanguageStr.text;
-	
+
 	public SgButton(Context context) {
 		super(context);
 		this.setClickable(true);
@@ -92,27 +91,7 @@ public class SgButton extends TextView implements IObject {
 
 		m_oPaint = new Paint();
 		m_rBBox = new Rect();
-//		
-//		if (MGridActivity.whatLanguage) {
-//
-//			Prompt = "提示";
-//			problem = "是否确定?";
-//			OK = "确认:";
-//			ON = "取消";
-//			text="删除成功,请自行重启机器";
-//		} else {
-//
-//			Prompt = "Hint";
-//			problem = "Are you sure? ";
-//			OK = "yes";
-//			ON = "cancel";
-//			text="Delete Success, Please Restart";
-//		}
 
-		// setBackgroundResource(com.mgrid.main.R.drawable.sg_button_up);
-		// setBackgroundDrawable(new
-		// BitmapDrawable(Environment.getExternalStorageDirectory().getPath() +
-		// "/MGridRes/button.png"));
 		setBackgroundResource(android.R.drawable.btn_default);
 		setPadding(0, 0, 0, 0);
 	}
@@ -125,8 +104,10 @@ public class SgButton extends TextView implements IObject {
 			return;
 
 		if (m_bPressed) {
-			int nWidth = (int) (((float) (m_nWidth) / (float) MainWindow.FORM_WIDTH) * (m_rRenderWindow.VIEW_RIGHT - m_rRenderWindow.VIEW_LEFT));
-			int nHeight = (int) (((float) (m_nHeight) / (float) MainWindow.FORM_HEIGHT) * (m_rRenderWindow.VIEW_BOTTOM - m_rRenderWindow.VIEW_TOP));
+			int nWidth = (int) (((float) (m_nWidth) / (float) MainWindow.FORM_WIDTH)
+					* (m_rRenderWindow.VIEW_RIGHT - m_rRenderWindow.VIEW_LEFT));
+			int nHeight = (int) (((float) (m_nHeight) / (float) MainWindow.FORM_HEIGHT)
+					* (m_rRenderWindow.VIEW_BOTTOM - m_rRenderWindow.VIEW_TOP));
 
 			m_oPaint.setColor(0x500000F0);
 			m_oPaint.setStyle(Paint.Style.FILL);
@@ -139,10 +120,8 @@ public class SgButton extends TextView implements IObject {
 	public void doLayout(boolean bool, int l, int t, int r, int b) {
 		if (m_rRenderWindow == null)
 			return;
-		int nX = l
-				+ (int) (((float) m_nPosX / (float) MainWindow.FORM_WIDTH) * (r - l));
-		int nY = t
-				+ (int) (((float) m_nPosY / (float) MainWindow.FORM_HEIGHT) * (b - t));
+		int nX = l + (int) (((float) m_nPosX / (float) MainWindow.FORM_WIDTH) * (r - l));
+		int nY = t + (int) (((float) m_nPosY / (float) MainWindow.FORM_HEIGHT) * (b - t));
 		int nWidth = (int) (((float) (m_nWidth) / (float) MainWindow.FORM_WIDTH) * (r - l));
 		int nHeight = (int) (((float) (m_nHeight) / (float) MainWindow.FORM_HEIGHT) * (b - t));
 
@@ -166,8 +145,7 @@ public class SgButton extends TextView implements IObject {
 		rWin.removeView(this);
 	}
 
-	public void parseProperties(String strName, String strValue,
-			String strResFolder) {
+	public void parseProperties(String strName, String strValue, String strResFolder) {
 		if ("ZIndex".equals(strName)) {
 			m_nZIndex = Integer.parseInt(strValue);
 			if (MainWindow.MAXZINDEX < m_nZIndex)
@@ -185,21 +163,18 @@ public class SgButton extends TextView implements IObject {
 		} else if ("BackgroundColor".equals(strName)) {
 			if (strValue.isEmpty())
 				return;
-			  if("#FF000000".equals(strValue))
-			    {
-				  this.setBackgroundResource(R.drawable.bg_shadow);
-			    }else
-			    {
-			    	m_cBackgroundColor = Color.parseColor(strValue);
-			    }
+			if ("#FF000000".equals(strValue)) {
+				this.setBackgroundResource(R.drawable.bg_shadow);
+			} else {
+				m_cBackgroundColor = Color.parseColor(strValue);
+			}
 		} else if ("Content".equals(strName)) {
 			m_strContent = strValue;
 			this.setText(m_strContent);
 		} else if ("FontFamily".equals(strName))
 			m_strFontFamily = strValue;
 		else if ("FontSize".equals(strName)) {
-			float fWinScale = (float) MainWindow.SCREEN_WIDTH
-					/ (float) MainWindow.FORM_WIDTH;
+			float fWinScale = (float) MainWindow.SCREEN_WIDTH / (float) MainWindow.FORM_WIDTH;
 			m_fFontSize = Float.parseFloat(strValue) * fWinScale;
 			this.setTextSize(Float.parseFloat(strValue));
 		} else if ("IsBold".equals(strName))
@@ -237,13 +212,11 @@ public class SgButton extends TextView implements IObject {
 			nFlag |= Gravity.TOP;
 		else if ("Bottom".equals(m_strVerticalContentAlignment)) {
 			nFlag |= Gravity.BOTTOM;
-			double padSize = CFGTLS.getPadHeight(m_nHeight,
-					MainWindow.FORM_HEIGHT, getTextSize());
+			double padSize = CFGTLS.getPadHeight(m_nHeight, MainWindow.FORM_HEIGHT, getTextSize());
 			setPadding(0, (int) padSize, 0, 0);
 		} else if ("Center".equals(m_strVerticalContentAlignment)) {
 			nFlag |= Gravity.CENTER_VERTICAL;
-			double padSize = CFGTLS.getPadHeight(m_nHeight,
-					MainWindow.FORM_HEIGHT, getTextSize()) / 2f;
+			double padSize = CFGTLS.getPadHeight(m_nHeight, MainWindow.FORM_HEIGHT, getTextSize()) / 2f;
 			setPadding(0, (int) padSize, 0, (int) padSize);
 		}
 
@@ -285,62 +258,55 @@ public class SgButton extends TextView implements IObject {
 				if (m_rRenderWindow != null)
 					m_rRenderWindow.showTaskUI(true);
 			} else if ("显示IP".equals(m_strClickEvent)) {
-				Toast.makeText(m_rRenderWindow.getContext(),
-						MGridActivity.getLocalIP(), Toast.LENGTH_SHORT).show();
+				Toast.makeText(m_rRenderWindow.getContext(), MGridActivity.getLocalIP(), Toast.LENGTH_SHORT).show();
 			} else if ("删除历史".equals(m_strClickEvent)) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						getContext());
+				AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 				builder.setTitle(Prompt);
 				builder.setMessage(problem);
-				builder.setPositiveButton(OK,
-						new DialogInterface.OnClickListener() {
+				builder.setPositiveButton(OK, new DialogInterface.OnClickListener() {
 
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
 
-								deleteDir(new File("/mgrid/log"));
+						deleteDir(new File("/mgrid/log"));
 
-								showHint();
-							}
-						});
-				builder.setNegativeButton(ON,
-						new DialogInterface.OnClickListener() {
+						showHint();
+					}
+				});
+				builder.setNegativeButton(ON, new DialogInterface.OnClickListener() {
 
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
 
-//								Toast.makeText(getContext(), "You have cancelled ", 1000)
-//										.show();
-							}
-						});
+						// Toast.makeText(getContext(), "You have cancelled ", 1000)
+						// .show();
+					}
+				});
 				builder.create().show();
 
 				// restartApplication();
 
 			} else if ("导出数据".equals(m_strClickEvent)) {
-//
-//				dialog = ProgressDialog.show(getContext(), "提示",
-//						"正在导出,请不要进行其他操作");
+				//
+				// dialog = ProgressDialog.show(getContext(), "提示",
+				// "正在导出,请不要进行其他操作");
 				new Thread(new Runnable() {
 
 					@Override
 					public void run() {
-						
-						String[] commands = new String[] {"cp  -a /mgrid/log/.   /storage/usbhost/"};
-						//String[] commands = new String[] {"cp  -a /mgrid/log/event/hisevent-1.dat   /log/hisevent-1.dat"};
-						CommandResult result = ShellUtils.execCommand(commands,
-								true);
-						System.out.println("执行了");
-						System.out.println(result.errorMsg);
-//						FileUtil fileUtil=new FileUtil();
-//						fileUtil.copyFile("/mgrid/log/his_equip_sig/1#2000-01-01.dat", MGridActivity.usbName+"/1.dat");							
+
+						String[] commands = new String[] { "cp  -a /mgrid/log/.   /storage/usbhost/" };
+						// String[] commands = new String[] {"cp -a /mgrid/log/event/hisevent-1.dat
+						// /log/hisevent-1.dat"};
+						CommandResult result = ShellUtils.execCommand(commands, true);
+
 					}
 				}).start();
 
-			} else if ("跳转应用".equals(m_strClickEvent)) {                                                                            
-				// 包名 类名都知道 
+			} else if ("跳转应用".equals(m_strClickEvent)) {
+				// 包名 类名都知道
 				ComponentName componetName = new ComponentName(
-				// 这个是另外一个应用程序的包名
+						// 这个是另外一个应用程序的包名
 						"com.mcu.iVMSHD",
 						// 这个参数是要启动的Activity
 						"com.mcu.iVMSHD.activity.LoadingActivity");
@@ -354,12 +320,9 @@ public class SgButton extends TextView implements IObject {
 				if (m_rRenderWindow != null)
 					m_rRenderWindow.showTaskUI(true);
 
-			
-
 			} else if (m_strClickEvent.equals("关闭告警")) {
- 
-				Intent intent = new Intent(m_rRenderWindow.m_oMgridActivity,
-						SoundService.class);
+
+				Intent intent = new Intent(m_rRenderWindow.m_oMgridActivity, SoundService.class);
 				intent.putExtra("playing", false);
 				m_rRenderWindow.m_oMgridActivity.startService(intent);
 
@@ -368,12 +331,12 @@ public class SgButton extends TextView implements IObject {
 				isSwitch = true;
 
 			} else if (m_strClickEvent.equals("视频")) {
-                
-//				Intent intent=new Intent(getContext(),MonitorActivity.class);
-//				//intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//				getContext().startActivity(intent);
 
-			}else {
+				// Intent intent=new Intent(getContext(),MonitorActivity.class);
+				// //intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+				// getContext().startActivity(intent);
+
+			} else {
 				String[] arrStr = m_strClickEvent.split("\\(");
 				boolean isMask = true;// 用来判断是否为权限页面
 				boolean isNeedPW = true; // 用来判断权限页面是否需要密码
@@ -409,8 +372,7 @@ public class SgButton extends TextView implements IObject {
 							for (int i = 0; i < MGridActivity.m_MaskPage.length; i++) {
 								for (String s : MGridActivity.m_MaskPage[i]) {
 									if (!s.equals("1")) {
-										if ((s.substring(0, s.length() - 4))
-												.equals(str[0])) {
+										if ((s.substring(0, s.length() - 4)).equals(str[0])) {
 											MaskCount = i;
 											showPassDialog();
 											isMask = false;
@@ -445,132 +407,117 @@ public class SgButton extends TextView implements IObject {
 
 			if (isSwitch) {
 				parse_cmd();
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						getContext());
+				AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 				builder.setTitle("提示");
 				builder.setMessage("请选择开关");
-				builder.setPositiveButton("关",
-						new DialogInterface.OnClickListener() {
+				builder.setPositiveButton("关", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+
+						if (c_control.size() == 0) {
+							ipc_control ip = new ipc_control();
+							ip.equipid = c_equipid;
+							ip.ctrlid = c_ctrlid;
+							ip.valuetype = c_parameterid;
+							ip.value = c_value;
+							c_control.add(ip);
+							System.out.println(c_equipid + "" + c_ctrlid + "" + c_parameterid + "" + c_value);
+						}
+
+						new Thread(new Runnable() {
 
 							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-
-								if (c_control.size() == 0) {
-									ipc_control ip = new ipc_control();
-									ip.equipid = c_equipid;
-									ip.ctrlid = c_ctrlid;
-									ip.valuetype = c_parameterid;
-									ip.value = c_value;
-									c_control.add(ip);
-									System.out.println(c_equipid+""+c_ctrlid+""+c_parameterid+""+c_value);
+							public void run() {
+								if (0 != service.send_control_cmd(service.IP, service.PORT, c_control)) {
+									String str = new String("控制失败！");
+									Message msg = new Message();
+									msg.what = 2;
+									msg.obj = str;
+									m_rRenderWindow.m_oInvalidateHandler.sendMessage(msg);
+								} else {
+									String str = new String("控制成功.");
+									Message msg = new Message();
+									msg.what = 1;
+									msg.obj = str;
+									m_rRenderWindow.m_oInvalidateHandler.sendMessage(msg);
 								}
-								
-								new Thread(new Runnable() {
-
-									@Override
-									public void run() {
-										if (0 != service.send_control_cmd(
-												service.IP, service.PORT,
-												c_control)) {
-											String str = new String("控制失败！");
-											Message msg = new Message();
-											msg.what = 2;
-											msg.obj = str;
-											m_rRenderWindow.m_oInvalidateHandler
-													.sendMessage(msg);
-										} else {
-											String str = new String("控制成功.");
-											Message msg = new Message();
-											msg.what = 1;
-											msg.obj = str;
-											m_rRenderWindow.m_oInvalidateHandler
-													.sendMessage(msg);
-										}
-
-									}
-								}).start();
 
 							}
-						});
-				builder.setNegativeButton("开",
-						new DialogInterface.OnClickListener() {
+						}).start();
+
+					}
+				});
+				builder.setNegativeButton("开", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+
+						if (o_control.size() == 0) {
+							ipc_control ipcC = new ipc_control();
+							ipcC.equipid = o_equipid;
+							ipcC.ctrlid = o_ctrlid;
+							ipcC.valuetype = o_parameterid;
+							ipcC.value = o_value;
+							o_control.add(ipcC);
+							System.out.println(o_equipid + "" + o_ctrlid + "" + o_parameterid + "" + o_value);
+						}
+						new Thread(new Runnable() {
 
 							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-
-								if (o_control.size() == 0) {
-									ipc_control ipcC = new ipc_control();
-									ipcC.equipid = o_equipid;
-									ipcC.ctrlid = o_ctrlid;
-									ipcC.valuetype = o_parameterid;
-									ipcC.value = o_value;
-									o_control.add(ipcC);
-									System.out.println(o_equipid+""+o_ctrlid+""+o_parameterid+""+o_value);
+							public void run() {
+								if (0 != service.send_control_cmd(service.IP, service.PORT, o_control)) {
+									String str = new String("控制失败！");
+									Message msg = new Message();
+									msg.what = 2;
+									msg.obj = str;
+									m_rRenderWindow.m_oInvalidateHandler.sendMessage(msg);
+								} else {
+									String str = new String("控制成功.");
+									Message msg = new Message();
+									msg.what = 1;
+									msg.obj = str;
+									m_rRenderWindow.m_oInvalidateHandler.sendMessage(msg);
 								}
-								new Thread(new Runnable() {
-
-									@Override
-									public void run() {
-										if (0 != service.send_control_cmd(
-												service.IP, service.PORT,
-												o_control)) {
-											String str = new String("控制失败！");
-											Message msg = new Message();
-											msg.what = 2;
-											msg.obj = str;
-											m_rRenderWindow.m_oInvalidateHandler
-													.sendMessage(msg);
-										} else {
-											String str = new String("控制成功.");
-											Message msg = new Message();
-											msg.what = 1;
-											msg.obj = str;
-											m_rRenderWindow.m_oInvalidateHandler
-													.sendMessage(msg);
-										}
-
-									}
-								}).start();
 
 							}
-						});
+						}).start();
+
+					}
+				});
 				builder.create().show();
 
 			} else {
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						getContext());
+				AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 				builder.setTitle(Prompt);
 				builder.setMessage(problem);
-				builder.setPositiveButton(OK,
-						new DialogInterface.OnClickListener() {
+				builder.setPositiveButton(OK, new DialogInterface.OnClickListener() {
 
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-								synchronized (m_rRenderWindow.m_oShareObject) {
-									deal_cmd();
-									if ("".equals(cmd_value) == false) {
-										// Log.e("button_onclick->cmd_value:",
-										// cmd_value);
-										// 添加广播信息
-										// 将控制命令的内容添加到控制命令链表上 fjw add
-										m_rRenderWindow.m_oShareObject.m_mapCmdCommand
-												.put(getUniqueID(), cmd_value);
-
-									}
-								}
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						synchronized (m_rRenderWindow.m_oShareObject) {
+							deal_cmd();
+							if ("".equals(cmd_value) == false) {
+								// Log.e("button_onclick->cmd_value:",
+								// cmd_value);
+								// 添加广播信息
+								// 将控制命令的内容添加到控制命令链表上 fjw add
+								m_rRenderWindow.m_oShareObject.m_mapCmdCommand.put(getUniqueID(), cmd_value);
 
 							}
-						});
-				builder.setNegativeButton(ON,
-						new DialogInterface.OnClickListener() {
+						}
 
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
+					}
+				});
+				builder.setNegativeButton(ON, new DialogInterface.OnClickListener() {
 
-//								Toast.makeText(getContext(),
-//										"You have cancelled", 1000).show();
-							}
-						});
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+
+						// Toast.makeText(getContext(),
+						// "You have cancelled", 1000).show();
+					}
+				});
 				builder.create().show();
 			}
 
@@ -581,16 +528,13 @@ public class SgButton extends TextView implements IObject {
 	// 显示用户权限进入对话框
 	public void showPassDialog() {
 		// LayoutInflater是用来找layout文件夹下的xml布局文件，并且实例化
-		LayoutInflater factory = LayoutInflater.from(m_rRenderWindow
-				.getContext());
+		LayoutInflater factory = LayoutInflater.from(m_rRenderWindow.getContext());
 		// 把activity_login中的控件定义在View中
 		final View textEntryView = factory.inflate(R.layout.page_xml, null);
-		
-		
-		
+
 		// 将LoginActivity中的控件显示在对话框中
 		new AlertDialog.Builder(m_rRenderWindow.getContext())
-		// 对话框的标题
+				// 对话框的标题
 				.setTitle("用户权限登录")
 				// 设定显示的View
 				.setView(textEntryView)
@@ -604,25 +548,20 @@ public class SgButton extends TextView implements IObject {
 						// null)将页面布局赋值给了textEntryView了
 						// final EditText etUserName =
 						// (EditText)textEntryView.findViewById(R.id.etuserName);
-						final EditText etPassword = (EditText) textEntryView
-								.findViewById(R.id.pageet);
+						final EditText etPassword = (EditText) textEntryView.findViewById(R.id.pageet);
 
 						// 将页面输入框中获得的“用户名”，“密码”转为字符串
 						// String userName =
 						// etUserName.getText().toString().trim();
-						String password = etPassword.getText().toString()
-								.trim();
-						if (password
-								.equals(MGridActivity.m_pagePassWord[MaskCount])) {
+						String password = etPassword.getText().toString().trim();
+						if (password.equals(MGridActivity.m_pagePassWord[MaskCount])) {
 							String[] arrStr = m_strClickEvent.split("\\(");
-							if (m_rRenderWindow != null
-									&& "Show".equals(arrStr[0])) {
+							if (m_rRenderWindow != null && "Show".equals(arrStr[0])) {
 								String[] arrSplit = arrStr[1].split("\\)");
 								m_rRenderWindow.changePage(arrSplit[0]);
 							}
 						} else {
-							Toast.makeText(m_rRenderWindow.getContext(),
-									"密码错误", Toast.LENGTH_SHORT).show();
+							Toast.makeText(m_rRenderWindow.getContext(), "密码错误", Toast.LENGTH_SHORT).show();
 							// Toast.makeText(m_rRenderWindow.getContext(),
 							// "Incorrect username or password!",
 							// Toast.LENGTH_SHORT).show();
@@ -657,16 +596,15 @@ public class SgButton extends TextView implements IObject {
 
 	//
 	private void showHint() {
-			new AlertDialog.Builder(getContext())
-		.setTitle(text)
-		.setPositiveButton(OK, new DialogInterface.OnClickListener() {
+		new AlertDialog.Builder(getContext()).setTitle(text)
+				.setPositiveButton(OK, new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface arg0, int arg1) {
-				// TODO Auto-generated method stub
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						// TODO Auto-generated method stub
 
-			}
-		}).create().show();	
+					}
+				}).create().show();
 	}
 
 	// 重启应用
@@ -680,12 +618,11 @@ public class SgButton extends TextView implements IObject {
 	public boolean deal_cmd() {
 		// if("".equals(m_strCmdExpression)) return false;
 		// if(m_strCmdExpression==null) return false;
-		stExpression oMathExpress = UtExpressionParser.getInstance()
-				.parseExpression(m_strCmdExpression);
+		stExpression oMathExpress = UtExpressionParser.getInstance().parseExpression(m_strCmdExpression);
 		if (oMathExpress != null) {
 			// 遍历控件表达式各个数据单元表达式类
-			Iterator<HashMap.Entry<String, stBindingExpression>> it = oMathExpress.mapObjectExpress
-					.entrySet().iterator();
+			Iterator<HashMap.Entry<String, stBindingExpression>> it = oMathExpress.mapObjectExpress.entrySet()
+					.iterator();
 			while (it.hasNext()) {
 				stBindingExpression oBindingExpression = it.next().getValue();
 				cmd_value = oBindingExpression.strValue;
@@ -696,11 +633,9 @@ public class SgButton extends TextView implements IObject {
 
 	// Binding{[Cmd[Equip:139-Temp:178-Command:1-Parameter:1-Value:-256]]|[Cmd[Equip:140-Temp:178-Command:1-Parameter:1-Value:-256]]}
 	public boolean parse_cmd() {
-		if (c_equipid == -100 && c_ctrlid == -100 && c_parameterid == -100
-				&& c_value.equals("") && o_equipid == -100 && o_ctrlid == -100
-				&& o_parameterid == -100 && o_value.equals("")) {
-			String cmd = UtExpressionParser
-					.removeBindingString(m_strCmdExpression);
+		if (c_equipid == -100 && c_ctrlid == -100 && c_parameterid == -100 && c_value.equals("") && o_equipid == -100
+				&& o_ctrlid == -100 && o_parameterid == -100 && o_value.equals("")) {
+			String cmd = UtExpressionParser.removeBindingString(m_strCmdExpression);
 
 			String[] args = cmd.split("\\|");
 
@@ -757,8 +692,8 @@ public class SgButton extends TextView implements IObject {
 			// handler接收到消息后就会执行此方法
 			switch (msg.what) {
 			case 1:
-				if(dialog!=null)
-				dialog.dismiss();
+				if (dialog != null)
+					dialog.dismiss();
 				// 关闭ProgressDialog
 
 				break;
@@ -807,8 +742,8 @@ public class SgButton extends TextView implements IObject {
 
 	String isDelete = "失败";
 	private boolean isSwitch = false;
-	private int c_equipid = -100, c_ctrlid = -100, c_parameterid = -100,
-			o_equipid = -100, o_ctrlid = -100, o_parameterid = -100;
+	private int c_equipid = -100, c_ctrlid = -100, c_parameterid = -100, o_equipid = -100, o_ctrlid = -100,
+			o_parameterid = -100;
 	private String c_value = "", o_value = "";
 	List<ipc_control> c_control = new ArrayList<ipc_control>();
 	List<ipc_control> o_control = new ArrayList<ipc_control>();
