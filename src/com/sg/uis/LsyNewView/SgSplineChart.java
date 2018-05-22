@@ -79,6 +79,9 @@ public class SgSplineChart extends TextView implements IObject {
 		chart = new SplineChart03View(context);
 		chart.setTouch(false);
 		Schart = chart.getChart();
+		
+		//Schart.getPlotLegend().getLegendLabelPaint().setTextSize(10);
+		
 		Schart.getDataAxis().setAxisMax(max_value);
 		Schart.getDataAxis().setAxisSteps(AxisSteps);
 		addRadio();
@@ -282,7 +285,6 @@ public class SgSplineChart extends TextView implements IObject {
 						.setColor(Color.parseColor(strValue));
 				for (int i = 0; i < rButton.size(); i++) {
 					rButton.get(i).setTextColor(Color.parseColor(strValue));
-
 				}
 			}
 		} else if ("ScaleColor".equals(strName)) {
@@ -887,6 +889,8 @@ public class SgSplineChart extends TextView implements IObject {
 			dataSeries.setDotStyle(XEnum.DotStyle.HIDE);
 			dataSeries.getDotLabelPaint().setColor(Color.RED);
 			dataSeries.getLinePaint().setStrokeWidth(2);
+		
+			
 			chartData.add(dataSeries);
 
 			if (isSave) {

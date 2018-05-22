@@ -76,7 +76,7 @@ public class UtExpressionParser {
 	 *
 	 * */
 	public static String removeBindingString(String strExpression) {
-		if ("".equals(strExpression) == true)
+		if ("".equals(strExpression) == true||strExpression==null)
 			return "";
 		
 		String[] arrStr = strExpression.split("\\{");

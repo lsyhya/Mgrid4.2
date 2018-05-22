@@ -365,6 +365,8 @@ public class SgEventList extends UtTable implements IObject {
 	@Override
 	public boolean updateValue() {
 
+		
+		System.out.println("告警更新");
 		m_bneedupdate = false;
 		if (m_rRenderWindow == null)
 			return false;
@@ -393,6 +395,8 @@ public class SgEventList extends UtTable implements IObject {
 			// return false;
 		}
 
+		System.out.println("告警大小："+listEvents.size());
+		
 		if (MGridActivity.alarmWay != null
 				&& !MGridActivity.alarmWay.equals("")) {
 			MGridActivity.xianChengChi.execute(new Runnable() {

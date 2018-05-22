@@ -73,6 +73,8 @@ public class LanguageChange extends TextView implements IObject {
 	private String content = LanguageStr.content;
 
 	private String fail = LanguageStr.Fail;
+	
+	private String text = LanguageStr.text20;
 
 	public LanguageChange(Context context) {
 		super(context);
@@ -112,7 +114,7 @@ public class LanguageChange extends TextView implements IObject {
 			public void onClick(View v) {
 
 				View view = m_rRenderWindow.m_oMgridActivity.getLayoutInflater().inflate(R.layout.pop, null);
-				popupWindow = new PopupWindow(view, tvSelectLan.getWidth(), 200);
+				popupWindow = new PopupWindow(view, tvSelectLan.getWidth(), 100);
 				// 设置一个透明的背景，不然无法实现点击弹框外，弹框消失
 				popupWindow.setBackgroundDrawable(new BitmapDrawable());
 
@@ -199,7 +201,8 @@ public class LanguageChange extends TextView implements IObject {
 					hand.sendEmptyMessage(0);
 				}else
 				{
-					
+					hand.sendEmptyMessage(2);
+					//btnSetUp.setEnabled(true);
 				}
 			}
 		});
@@ -219,6 +222,13 @@ public class LanguageChange extends TextView implements IObject {
 				Toast.makeText(getContext(), fail, 1000).show();
 
 				break;
+			case 2:
+
+				btnSetUp.setEnabled(true);
+				Toast.makeText(getContext(), text, 1000).show();
+
+				break;
+				
 			}
 		};
 

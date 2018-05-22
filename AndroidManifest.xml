@@ -4,7 +4,7 @@
   package="com.mgrid.main"
   android:installLocation="preferExternal"
   android:versionCode="12"
-  android:versionName="4.27"
+  android:versionName="4.28"
  >
   
    
@@ -57,7 +57,9 @@
       <service android:name="SoundService"></service>  
       <activity
       android:name="com.mgrid.main.MGridActivity"
-      android:label="@string/app_name">
+      android:label="@string/app_name"
+      android:configChanges="orientation|keyboardHidden|screenSize"
+      >
       <!-- android:screenOrientation="portrait">-->
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />     

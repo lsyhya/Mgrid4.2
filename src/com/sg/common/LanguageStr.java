@@ -114,8 +114,11 @@ public class LanguageStr {
 	public static String y = "年";
 	
 	
+	public static String text20 = "文件不完整";
+	
+	
 
-	// 系统语言和配置语言 true为中文 false为英文
+	// 系统语言和配置语言 true为中文 false为英
 	public static boolean systemLanguage = true;
 	public static String iniLanguage = "";
 
@@ -269,6 +272,10 @@ public class LanguageStr {
 		d="day";
 		m="mon";
 		y="year";
+		
+		
+		text20="fail";
+		
 		
 	}
 

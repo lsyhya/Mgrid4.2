@@ -121,6 +121,7 @@ import com.sg.uis.LsyNewView.EventLevelAlter;
 import com.sg.uis.LsyNewView.HistoryCurveChart;
 import com.sg.uis.LsyNewView.LanguageChange;
 import com.sg.uis.LsyNewView.OnClickBtn;
+import com.sg.uis.LsyNewView.SelfCheck;
 import com.sg.uis.LsyNewView.SgBARS;
 import com.sg.uis.LsyNewView.SgBarChartView;
 import com.sg.uis.LsyNewView.SgBrokenLine;
@@ -946,6 +947,9 @@ public class MainWindow extends ViewGroup {
 						} else if ("LanguageChange".equals(strType)) {
 							LanguageChange LC = new LanguageChange(this.getContext());
 							m_mapUIs.put(strID, LC);
+						} else if ("SelfCheck".equals(strType)) {
+							SelfCheck SC = new SelfCheck(this.getContext());
+							m_mapUIs.put(strID, SC);
 						}
 
 						else {
@@ -1023,7 +1027,8 @@ public class MainWindow extends ViewGroup {
 								|| "EventLevelAlter".equals(strElementType)
 								|| "HistoryCurveChart".equals(strElementType) || "OnClickBtn".equals(strElementType)
 								|| "CoolButton".equals(strElementType) || "SgPieChart3D".equals(strElementType)
-								|| "LanguageChange".equals(strElementType)) {
+								|| "LanguageChange".equals(strElementType)
+								|| "SelfCheck".equals(strElementType)) {
 							try {
 								iCurrentObj.parseProperties(strName, strValue, m_strResFolder);
 							} catch (Throwable e) {

@@ -95,15 +95,15 @@ public class MGridActivity extends Activity {
 	public static String logeFilePath = Environment.getExternalStorageDirectory().getPath() + "/login" + ".login";
 	public WakeLock mWakeLock;// 锁屏类
 	public SgVideoView svv = null; // 播放视频
-	public Handler mTimeHandler = new Handler();
+	public Handler mTimeHandler = new Handler(); 
 
 	/**
-	 * 喇叭告警声音的路径 因为原路径会导致文件删除不干净 所以生成一个新的路径
+	 * 喇叭告警声音的路径 因为原路径会导致文件删除不干净 所以生成一个新的路径 
 	 */
 	public static String oldWavPath = Environment.getExternalStorageDirectory().getPath() + "/vtu_pagelist/Alarm.wav";
 	public static String NewWavPath = Environment.getExternalStorageDirectory().getPath() + "/Alarm.wav";
-
-	public static boolean isPlaymv = false;
+ 
+	public static boolean isPlaymv = false; 
 	public static boolean isPlaygif = false;
 	public static boolean isSleep = false;
 	public static boolean isLogin = false;
@@ -139,7 +139,7 @@ public class MGridActivity extends Activity {
 	public static String myEmailPassword = "sgipglsayogvcaih"; // 授权码
 	public static String receiveMailAccount = "leisiyang521@163.com"; // 接收邮箱账号
 	public static String Subject = "标题"; // 邮箱标题
-	public static String fromName = "发件人名称"; // 发件人名称
+	public static String fromName = "发件人名称"; // 发件人名称d
 
 	public static boolean whatLanguage = true;// 系统语言
 	public static Map<String, Map<String, String>> EventClose = new HashMap<String, Map<String, String>>();
@@ -230,22 +230,6 @@ public class MGridActivity extends Activity {
 
 	}
 
-//	private void selectLanguage() {
-//		LanguageStr.whatLanguageSystem(context);
-//		if (Language == null) {
-//			if (whatLanguage) {
-//				Load = "加载完";
-//			} else {
-//				Load = "Loaded";
-//			}
-//		} else {
-//			if (Language.equals("Chinese")) {
-//				Load = "加载完";
-//			} else {
-//				Load = "Loaded";
-//			}
-//		}
-//	}
 
 	private void setProgressDialog() {
 		dialog = new SelfDialog(this);
