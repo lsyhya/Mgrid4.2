@@ -49,68 +49,34 @@ public class service {
 
 			try {
 			socket.connect(new InetSocketAddress(ip_addr, port), 1000);  //
-			//System.out.println("通讯时间AAAAAAAAAAAAAAA：QQQ"+(System.currentTimeMillis()-l));
 			socket.setSoTimeout(5000);  // 
 			
 			out = socket.getOutputStream();
 			in = socket.getInputStream();
 			out.write(send_buf, 0, send_buf.length);
-			//long l1=System.currentTimeMillis();
-			//System.out.println("通讯时间BBBBBBBBBBBBBBBBbb：QQQ"+(l1-l));
+		
 			socket.setSoTimeout(5000);  // 
 			out.flush();
 			int index = 0;
 			byte[] soh = new byte[1];
 			int try_times = 0;
 			while (true) {
-				//long l10=System.currentTimeMillis();
-				
+			
 				if (in.read(soh, index, 1) == 1) {
-				//	System.out.println("通讯时间GGGGGGGGGGGGGGGG：QQQ"+(System.currentTimeMillis()-l10));
+			
 					break;					
-				}
-				
-				/*try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					;
-				}*/
-				
+				}									
 				try_times ++;
 				if (try_times > 100) {
 					socket.close();
 					receivetemp = null; //fjw add 释放内存
 					return null;
-				}
-				
-				
-//				try_times ++;
-//				try {
-//					Thread.sleep(10);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				if (try_times > 10) {
-//					System.out.println("Socket断开了 QQQ");
-//					socket.close();
-//					receivetemp = null; //fjw add 释放内存
-//					return null;
-//				}				
-				
-				
-				
-				
-				
-				
+				}		
 			}
-			//long l2=System.currentTimeMillis();
-			//System.out.println("通讯时间CCCCCCCCCCCCCCCc：QQQ"+(l2-l1));
-			
+	
 			receivetemp[0] = soh[0];
 			if (receivetemp[0] != 0x01) {
-				//.out.println("Socket soh not rightQQQ");
+			
 				socket.close();
 				receivetemp = null; //fjw add 释放内存
 				return null;
@@ -120,7 +86,7 @@ public class service {
 
 			if (in.read(receivetemp, index, protocol.MSG_HEAD_LEN-1) 
   	    	    	!= protocol.MSG_HEAD_LEN-1) {
-				//System.out.println("Socket length error QQQ");
+	
 				socket.close();
 				receivetemp = null; //fjw add 释放内存
 				return null;
@@ -136,7 +102,7 @@ public class service {
 			int body_left = head.length;
 			try_times = 0;
 			long l3=System.currentTimeMillis();
-			//System.out.println("通讯时间DDDDDDDDDDDDDDD：QQQ"+(l3-l2));
+			
 			if (head.length > receivetemp.length) {
 				socket.close();  // need to close socket
 				receivetemp = null; //fjw add 释放内存
@@ -146,7 +112,7 @@ public class service {
 			recv = new byte[protocol.MSG_HEAD_LEN+head.length];
 			System.arraycopy(receivetemp, 0, recv, 0, protocol.MSG_HEAD_LEN);
 			long l4=System.currentTimeMillis();
-			//System.out.println("通讯时EEEEEEEEEEEEEEE：QQQ"+(l4-l3));
+			
 			
 			long l5=System.currentTimeMillis();
 			
@@ -167,8 +133,7 @@ public class service {
 				body_left -= body_recved;
 				if (0 == body_left) break;
 				
-				if (try_times > 5) {
-				//	System.out.println("try times >5 QQQ");
+				if (try_times > 5) {			
 					socket.close();
 					receivetemp = null; //fjw add 释放内存
 					recv = null;  //fjw add 释放内存
@@ -177,7 +142,7 @@ public class service {
 				
 	            try_times ++; 
 			}
-			//System.out.println("通讯时间FFFFFFFFFFFFFFF：QQQ"+(System.currentTimeMillis()-l5));
+		
 			
 			receivetemp = null; //fjw add 释放内存
 			
@@ -215,8 +180,6 @@ public class service {
 			
 				receivetemp = null; //fjw add 释放内存
 			}
-			//long i=System.currentTimeMillis()-l;
-//			System.out.println("网络请求时间："+i);
 		}
 		receivetemp = null; //fjw add 释放内存
 		recv = null;  //fjw add 释放内存

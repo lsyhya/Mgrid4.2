@@ -1425,6 +1425,8 @@ public class DataGetter extends Thread {
 
 		String body = new String(body_buf);
 
+		System.out.println("Êý¾Ý£º"+body);
+		
 		Signal signal = null;
 		String[] blocks = body.split("\\|");
 

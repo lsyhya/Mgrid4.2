@@ -1341,27 +1341,6 @@ public class MainWindow extends ViewGroup {
 					m_oShareObject.m_mapRealTimeDatas.put(strUniqueId, oRealTimeData_multi);
 					return;
 				}
-				// fjw add end
-				// lsy add 2016_11_02
-				// if("RC_RealTime".equals(oMathExpression.strUiType))
-				// {
-				// SgRealTimeData oRealTimeData_multi = new SgRealTimeData();
-				// oRealTimeData_multi.nDataType = oFirstBindingExp.nValueType;
-				// oRealTimeData_multi.sigalName=DataGetter.getSignalName(oFirstBindingExp.nEquipId,
-				// oFirstBindingExp.nSignalId);
-				// oRealTimeData_multi.strValue = getRealTimeValueFromTcp(oFirstBindingExp);
-				// if(oRealTimeData_multi.strValue.equals("-999999"))
-				// {
-				// oRealTimeData_multi.strValue="-1";
-				// }
-				// oRealTimeData_multi.strData=DataGetter.getSignalValue(oFirstBindingExp.nEquipId,
-				// oFirstBindingExp.nSignalId);
-				// m_oShareObject.m_mapRealTimeDatas.put(strUniqueId,
-				// oRealTimeData_multi);
-				//
-				// }
-				// lsy end 2016_11_02
-
 				if ("".equals(strMathExpression) == false && nSize > 1) {
 					try {
 						strRetValue = m_oCalculator.calculate(strMathExpression) + "";
