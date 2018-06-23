@@ -37,7 +37,7 @@ public class HisEventAdapter extends BaseAdapter{
 	    }
 	    
 	    public View getView(int position, View convertView, ViewGroup parent) {
-			if (null == convertView)
+			if (null == convertView||titleIsChang)
 			{
 				TableRow tableRow = table.get(position);
 				return new TableRowView(this.context, tableRow);
@@ -103,8 +103,8 @@ public class HisEventAdapter extends BaseAdapter{
 				for (int i = 0; i < count; i++)
 				{
 					TableCell tableCell = tableRow.getCellValue(i);
-					if(i>=mlstCellView.size())
-					return;
+					if(tableCell==null)
+					continue;
 					AlwaysMarqueeTextView cellview = mlstCellView.get(i);
 					cellview.setBackgroundColor(tableCell.cRowColor);
 					cellview.setText(String.valueOf(tableCell.value));
@@ -165,7 +165,7 @@ public class HisEventAdapter extends BaseAdapter{
 	    private Context context;
 	    public int m_cTexColor = Color.GREEN;
 	    
-	   
+	    public boolean titleIsChang=false;
 	    private List<TableRow> table;
 
 

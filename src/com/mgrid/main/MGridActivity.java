@@ -27,6 +27,8 @@ import org.w3c.dom.NodeList;
 import com.lsy.Service.TilmePlush.TimePlushService;
 import com.mgrid.MyDialog.SelfDialog;
 import com.mgrid.data.DataGetter;
+import com.mgrid.main.user.User;
+import com.mgrid.main.user.UserManager;
 import com.mgrid.util.FileUtil;
 import com.mgrid.util.XmlUtils;
 import com.sg.common.CFGTLS;
@@ -85,7 +87,7 @@ public class MGridActivity extends Activity {
 	private String Load = "";
 	private static String PSS = "";
 	private static String PSF = "";
-	
+
 	private long starttime = 0;
 	private DataGetter mDataGetter;
 	private ContainerView mContainer;
@@ -95,15 +97,15 @@ public class MGridActivity extends Activity {
 	public static String logeFilePath = Environment.getExternalStorageDirectory().getPath() + "/login" + ".login";
 	public WakeLock mWakeLock;// 锁屏类
 	public SgVideoView svv = null; // 播放视频
-	public Handler mTimeHandler = new Handler(); 
+	public Handler mTimeHandler = new Handler();
 
 	/**
-	 * 喇叭告警声音的路径 因为原路径会导致文件删除不干净 所以生成一个新的路径 
+	 * 喇叭告警声音的路径 因为原路径会导致文件删除不干净 所以生成一个新的路径
 	 */
 	public static String oldWavPath = Environment.getExternalStorageDirectory().getPath() + "/vtu_pagelist/Alarm.wav";
 	public static String NewWavPath = Environment.getExternalStorageDirectory().getPath() + "/Alarm.wav";
- 
-	public static boolean isPlaymv = false; 
+
+	public static boolean isPlaymv = false;
 	public static boolean isPlaygif = false;
 	public static boolean isSleep = false;
 	public static boolean isLogin = false;
@@ -153,11 +155,17 @@ public class MGridActivity extends Activity {
 	public static String m_PassWord;
 
 	// 页面权限用户名和密码
-	public static String m_pageUserName;
+	// public static String m_pageUserName; //未使用过 移除
 	public static String[] m_pagePassWord;
 
+	// lsy 18/6/20新增 user管理功能
+	public static int m_UserAway = 0;// 0代表老版本，1代表每个权限页面需要密码登录，可记录。 2代表用户名 密码登录后进行操作。
+    
+	
 	public static String[][] m_MaskPage;// 权限页面内的子页面
 	public static int m_MaskCount;// 总权限页面的个数
+	public static UserManager userManager;
+	
 
 	public static HashMap<String, IObject> AlarmAll = new HashMap<String, IObject>();
 	public static File all_Event_file = new File("/mgrid/data/Command/0.log");
@@ -207,6 +215,9 @@ public class MGridActivity extends Activity {
 		context = this;
 		m_oViewGroups = new HashMap<String, MainWindow>();
 		m_oPageList = new ArrayList<String>();
+		userManager=new UserManager();
+		
+		
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 强制为横屏
 		mImm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);// 输入法窗口
@@ -229,7 +240,6 @@ public class MGridActivity extends Activity {
 		}
 
 	}
-
 
 	private void setProgressDialog() {
 		dialog = new SelfDialog(this);
@@ -292,8 +302,6 @@ public class MGridActivity extends Activity {
 		getApplicationContext().registerReceiver(BroastcastScreenOn, filter);
 	}
 
-
-
 	private boolean parseMgridIni() {
 
 		// 解析Mgrid.ini
@@ -312,11 +320,12 @@ public class MGridActivity extends Activity {
 		}
 
 		LanguageStr.iniLanguage = iniReader.getValue("SysConf", "Language");
-		LanguageStr.whatLanguageSystem(context);;
+		LanguageStr.whatLanguageSystem(context);
+		;
 		LanguageStr.setLanguage();
-		Load=LanguageStr.Load;
-		PSS=LanguageStr.PSS;
-		PSF=LanguageStr.PSF;
+		Load = LanguageStr.Load;
+		PSS = LanguageStr.PSS;
+		PSF = LanguageStr.PSF;
 
 		m_sRootFolder = iniReader.getValue("SysConf", "FolderRoot");
 		m_sMainPage = iniReader.getValue("SysConf", "MainPage");
@@ -433,23 +442,52 @@ public class MGridActivity extends Activity {
 			}
 		}
 
-		m_pageUserName = iniReader.getValue("SysConf", "MaskPageUser", "admin");
+		// m_pageUserName = iniReader.getValue("SysConf", "MaskPageUser", "admin");
+        //获取用户管理方式
+		m_UserAway = Integer.parseInt(iniReader.getValue("SysConf", "UserAway", "0"));
+		//获取用户页面个数
 		m_MaskCount = Integer.parseInt(iniReader.getValue("SysConf", "MaskCount", "0"));
+		System.out.println("个数："+m_MaskCount);
+		
 		if (m_MaskCount == 0) {
-			// Toast.makeText(MGridActivity.this, "当前没有权限页面", 500).show();
-			m_MaskPage = new String[1][1];
+			m_MaskPage = new String[1][1]; 
 			m_pagePassWord = new String[1];
 			m_MaskPage[0][0] = iniReader.getDefPageValue("SysConf", "MaskPage");
 			m_pagePassWord[0] = iniReader.getValue("SysConf", "MaskPagePassword", "admin");
-
+			m_UserAway = 0;
 		} else {
 			m_MaskPage = new String[m_MaskCount][];
-			m_pagePassWord = new String[m_MaskCount];
+			if (m_UserAway == 0) {
+				m_pagePassWord = new String[m_MaskCount];
+			}
 		}
 
 		for (int i = 0; i < m_MaskCount; i++) {
 			m_MaskPage[i] = iniReader.getPageValue("SysConf", "MaskPage" + (i + 1));
-			m_pagePassWord[i] = iniReader.getValue("SysConf", "MaskPagePassword" + (i + 1), "admin");
+			if (m_UserAway == 0) {
+				m_pagePassWord[i] = iniReader.getValue("SysConf", "MaskPagePassword" + (i + 1), "admin");
+			}
+		}
+		
+		if (m_UserAway > 0) {
+
+			for (int i = 0; i < 10; i++) {
+
+				String id = iniReader.getValue("SysConf", "User" + i);  
+				String pw = iniReader.getValue("SysConf", "PassWord" + i);
+				if(id==null||pw==null)
+				{
+					continue; 
+				}				
+				if (i == 0) {
+					User user=new User(id, pw, 0);
+                    userManager.addUser(i, user);
+				} else {
+					User user=new User(id, pw, 1);
+                    userManager.addUser(i, user);
+				}
+
+			}
 		}
 
 		m_bHasRandomData = Boolean.parseBoolean(iniReader.getValue("SysConf", "HasRandomData"));
@@ -982,13 +1020,13 @@ public class MGridActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		System.out.println("onresume");
-		
+
 		if (m_oSgSgRenderManager == null)
 			return;
 		showTaskUI(false);
 
 	}
-	
+
 	@Override
 	protected void onRestart() {
 		// TODO Auto-generated method stub
@@ -1066,12 +1104,12 @@ public class MGridActivity extends Activity {
 				// Toast.makeText(context, "没有前置摄像头", Toast.LENGTH_LONG).show();
 				break;
 			case 4:
-				
-					Toast.makeText(context, PSS, Toast.LENGTH_LONG).show();
+
+				Toast.makeText(context, PSS, Toast.LENGTH_LONG).show();
 				break;
 			case 5:
-			
-					Toast.makeText(context, PSF, Toast.LENGTH_LONG).show();
+
+				Toast.makeText(context, PSF, Toast.LENGTH_LONG).show();
 				break;
 			}
 			super.handleMessage(msg);

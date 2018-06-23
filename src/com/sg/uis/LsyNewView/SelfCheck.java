@@ -255,7 +255,7 @@ public class SelfCheck extends TextView implements IObject {
 		}
 	}
 
-	public void onDraw(Canvas canvas) {
+	public void onDraw(Canvas canvas) {   
 
 		if (m_rRenderWindow == null)
 			return;

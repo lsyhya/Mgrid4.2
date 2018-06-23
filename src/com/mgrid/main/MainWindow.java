@@ -115,7 +115,9 @@ import com.sg.uis.LsyNewView.AlarmRectangle;
 import com.sg.uis.LsyNewView.AlarmShieldTime;
 import com.sg.uis.LsyNewView.ChangeLabel;
 import com.sg.uis.LsyNewView.ChangeLabelBtn;
+import com.sg.uis.LsyNewView.ChangeUserInfo;
 import com.sg.uis.LsyNewView.CoolButton;
+import com.sg.uis.LsyNewView.DoorInvented;
 import com.sg.uis.LsyNewView.EquipHistoryAlarm;
 import com.sg.uis.LsyNewView.EventLevelAlter;
 import com.sg.uis.LsyNewView.HistoryCurveChart;
@@ -950,9 +952,13 @@ public class MainWindow extends ViewGroup {
 						} else if ("SelfCheck".equals(strType)) {
 							SelfCheck SC = new SelfCheck(this.getContext());
 							m_mapUIs.put(strID, SC);
-						}
-
-						else {
+						}else if ("DoorInvented".equals(strType)) {
+							DoorInvented DI = new DoorInvented(this.getContext());
+							m_mapUIs.put(strID, DI);
+						}else if ("ChangeUserInfo".equals(strType)) {
+							ChangeUserInfo CUI = new ChangeUserInfo(this.getContext());
+							m_mapUIs.put(strID, CUI);
+						}else {
 							showMsgDlg("警告", "不支持的控件类型： " + strType);
 							bExit = false;
 						}
@@ -1028,7 +1034,9 @@ public class MainWindow extends ViewGroup {
 								|| "HistoryCurveChart".equals(strElementType) || "OnClickBtn".equals(strElementType)
 								|| "CoolButton".equals(strElementType) || "SgPieChart3D".equals(strElementType)
 								|| "LanguageChange".equals(strElementType)
-								|| "SelfCheck".equals(strElementType)) {
+								|| "SelfCheck".equals(strElementType)
+								|| "DoorInvented".equals(strElementType)
+								|| "ChangeUserInfo".equals(strElementType)) {
 							try {
 								iCurrentObj.parseProperties(strName, strValue, m_strResFolder);
 							} catch (Throwable e) {

@@ -70,7 +70,9 @@ public class LanguageStr {
 
 	// SgChangNamePhoneTypeState
 	public static String Name = "姓名";
+	public static String UserID = "用户ID";
 	public static String Phone = "号码";
+	public static String PassWord = "用户密码";
 	public static String Level = "等级";
 	public static String Show = "显示";
 	public static String Add = "添加";
@@ -210,6 +212,9 @@ public class LanguageStr {
 		AcquisitionTime = "Acquisition Time";
 
 		// SgChangePassWord+SgChangXmlPW
+		UserID="UserID";
+		PassWord="PassWord";
+		
 		oldPw = "Old Password";
 		newPw = "New Password";
 		text1 = "Password changes succeeded";

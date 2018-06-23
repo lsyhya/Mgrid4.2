@@ -14,9 +14,12 @@ public class HisEventTable extends ListView {
 
 	public HisEventTable(Context context) {
 		super(context);
+		table= new ArrayList<TableRow>();
 		m_tableAdapter = new HisEventAdapter(context, table);
 		this.setAdapter(m_tableAdapter);
 	}
+	
+	
 
 	public void notifyTableLayoutChange(int l, int t, int r, int b) {
 		m_nLeft = l;
@@ -40,21 +43,30 @@ public class HisEventTable extends ListView {
 		if (listTitles == null || listContends == null) // 如果标题或者内容为空 return；
 			return;
 		int column = listTitles.size(); // 得到标题的个数
+        if(oldTitleSize!=column)
+        {
+        	m_tableAdapter.titleIsChang=true;
+        	oldTitleSize=column;
+        }else
+        {
+        	m_tableAdapter.titleIsChang=false;
+        }
+
 		int width = (m_nRight - m_nLeft) / column; // 得到每个标题的宽度
 	
 		int lstcontendsize = listContends.size();
 		m_tableAdapter.m_cTexColor = m_cFontColor;
 
-		System.out.println(lstcontendsize);
 		for (int i = 0; i < lstcontendsize; i++) {
 			List<String> lst = listContends.get(i);
 
-			TableCell[] cells = new TableCell[listTitles.size()];
+			TableCell[] cells = new TableCell[listTitles.size()];//一行的某一个元素
 			int cColor = i % 2 == 0 ? m_cEvenRowBackground
 					: m_cOddRowBackground;
 			for (int j = 0; j < lst.size(); ++j) {
 				cells[j] = new TableCell(lst.get(j), width,
-						LayoutParams.MATCH_PARENT, TableCell.STRING, cColor);
+						LayoutParams.MATCH_PARENT, TableCell.STRING, cColor);   //为每个元素赋值
+				System.out.println(width+":::width");
 			}	
 			table.add(new TableRow(cells));
 		}		
@@ -81,6 +93,9 @@ public class HisEventTable extends ListView {
 	public boolean m_bUseTitle = true;
 	int m_nLayoutBottomOffset = 1; // 动态调节layout大小
 
-	public ArrayList<TableRow> table = new ArrayList<TableRow>();
+	public ArrayList<TableRow> table =null;
+	private int oldTitleSize=0;
     int i=0; 
+    
+    
 }

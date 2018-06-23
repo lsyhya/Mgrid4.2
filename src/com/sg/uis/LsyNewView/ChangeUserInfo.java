@@ -1,19 +1,26 @@
-package com.sg.uis;
+package com.sg.uis.LsyNewView;
+
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import com.mgrid.main.MGridActivity;
+import com.mgrid.main.MainWindow;
+import com.mgrid.main.R;
+import com.mgrid.main.user.User;
+import com.mgrid.util.FileUtil;
+import com.sg.common.CFGTLS;
+import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,6 +28,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Environment;
+import android.os.Handler;
 import android.text.InputFilter;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -32,44 +41,41 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mgrid.main.MGridActivity;
-import com.mgrid.main.MainWindow;
-import com.mgrid.main.R;
-import com.sg.common.CFGTLS;
-import com.sg.common.IObject;
-import com.sg.common.LanguageStr;
-
 /**
  * 改号码
  * 
  * @author Administrator
  * 
  */
-public class SgChangNamePhoneTypeState extends TextView implements IObject {
+public class ChangeUserInfo extends TextView implements IObject {
 
-	private String Name=LanguageStr.Name;
-	private String Phone=LanguageStr.Phone;
+	private String UserID=LanguageStr.UserID;
+	private String PassWord=LanguageStr.PassWord;
 
-	private String Level=LanguageStr.Level;
+	
 	private String Show=LanguageStr.Show;
 	private String Add=LanguageStr.Add;
 	private String Alter=LanguageStr.Alter;
-	private String State=LanguageStr.State;
+	
 
 	private String delete=LanguageStr.delete;
 
-	private String text4=LanguageStr.text4, text5=LanguageStr.text5, text6=LanguageStr.text6, text7=LanguageStr.text7, text8=LanguageStr.text8, text9=LanguageStr.text9, text10=LanguageStr.text10;
 
-	private String NO=LanguageStr.NO;
 	boolean isdelete = true;
-	SgChangNamePhoneTypeState scnp;
+	private ChangeUserInfo scnp;
+	private FileUtil fileUtil=null;
+	private String oldUserId="";
+	private String oldPassWord="";
+	private int index;
 
-	public SgChangNamePhoneTypeState(Context context) {
+
+	public ChangeUserInfo(Context context) {
 		super(context);
 		this.setClickable(true);
 		this.setGravity(Gravity.CENTER);
 		this.setFocusableInTouchMode(true);
 		scnp = this;
+		fileUtil=new FileUtil();
 		m_fFontSize = this.getTextSize();
 		this.setTextSize(20);
 		this.setOnTouchListener(new OnTouchListener() {
@@ -107,13 +113,11 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 
 		etName = new EditText(context);
 		etPhone = new EditText(context);
-		etType = new EditText(context);
-		etState = new EditText(context);
+		
 
 		tvName = new TextView(context);
 		tvPhone = new TextView(context);
-		tvType = new TextView(context);
-		tvState = new TextView(context);
+		
 		tvTagorder = new TextView(context);
 
 		
@@ -122,23 +126,20 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 	
 		etName.setBackgroundResource(R.drawable.et_select);
 		etPhone.setBackgroundResource(R.drawable.et_select);
-		etState.setBackgroundResource(R.drawable.et_select);
-		etType.setBackgroundResource(R.drawable.et_select);
+		
 		btDelete.setBackgroundResource(R.drawable.bg_shadow);
 		setBackgroundResource(R.drawable.bg_shadow);
 
 		tvName.setPadding(0, 0, 0, 0);
 		tvPhone.setPadding(0, 0, 0, 0);
-		tvState.setPadding(0, 0, 0, 0);
-		tvType.setPadding(0, 0, 0, 0);
+		
 		tvTagorder.setPadding(0, 0, 0, 0);
 
 		// btState.setPadding(0, 0, 0, 0);
 
 		tvName.setTextSize(15);
 		tvPhone.setTextSize(15);
-		tvState.setTextSize(15);
-		tvType.setTextSize(15);
+	
 		tvTagorder.setTextSize(15);
 
 		
@@ -146,13 +147,11 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 
 		etName.setTextSize(15);
 		etPhone.setTextSize(15);
-		etState.setTextSize(15);
-		etType.setTextSize(15);
+		
 
-		tvName.setText(Name);
-		tvPhone.setText(Phone);
-		tvState.setText(State);
-		tvType.setText(Level);
+		tvName.setText(UserID);
+		tvPhone.setText(PassWord);
+		
 		this.setText(Show);
 
 		
@@ -164,24 +163,20 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 
 		tvName.setTextColor(Color.BLACK);
 		tvPhone.setTextColor(Color.BLACK);
-		tvState.setTextColor(Color.BLACK);
-		tvType.setTextColor(Color.BLACK);
+	
 		tvTagorder.setTextColor(Color.BLACK);
 
 		etName.setFilters(new InputFilter[] { new InputFilter.LengthFilter(12) });
 		etPhone.setFilters(new InputFilter[] { new InputFilter.LengthFilter(11) });
-		etState.setFilters(new InputFilter[] { new InputFilter.LengthFilter(4) });
-		etType.setFilters(new InputFilter[] { new InputFilter.LengthFilter(1) });
+		
 
 		etName.setSingleLine();
 		etPhone.setSingleLine();
-		etState.setSingleLine();
-		etType.setSingleLine();
+		
 
 		etName.setGravity(Gravity.CENTER);
 		etPhone.setGravity(Gravity.CENTER);
-		etState.setGravity(Gravity.CENTER);
-		etType.setGravity(Gravity.CENTER);
+	
 		tvTagorder.setGravity(Gravity.CENTER);
 		btDelete.setGravity(Gravity.CENTER);
 
@@ -191,58 +186,7 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 			public void onClick(View arg0) {
 				// 删除xml内容
 
-				String name = etName.getText().toString();
-				String phone = etPhone.getText().toString();
-				String type = "";
-
-				try {
-					db = dbf.newDocumentBuilder();
-					doc = db.parse(new File("/data/mgrid/sampler/XmlCfg/sms_notification.xml"));
-					list1 = doc.getElementsByTagName("user");
-					list2 = doc.getElementsByTagName("rule");
-
-				} catch (Exception e) {
-
-					e.printStackTrace();
-				}
-
-				Element users = (Element) doc.getElementsByTagName("users").item(0);
-				Element rules = (Element) doc.getElementsByTagName("rules").item(0);
-
-				for (int i = 0; i < list1.getLength(); i++) {
-
-					Element element1 = (Element) list1.item(i);
-					String pn = element1.getAttribute("name");
-					String np = element1.getAttribute("tel_number");
-					if (pn.equals(name) && np.equals(phone)) {
-						users.removeChild(element1);
-						saveXmlData();
-						Toast.makeText(getContext(), text10, 500).show();
-						btDelete.setEnabled(false);
-						etName.setText("");
-						etPhone.setText("");
-						etType.setText("");
-						scnp.setText(Add);
-						isdelete = false;
-					}
-
-				}
-				list1 = doc.getElementsByTagName("user");
-				for (int i = 0; i < list1.getLength(); i++) {
-
-					Element element1 = (Element) list1.item(i);
-					type = type + "," + element1.getAttribute("rule_type");
-				}
-
-				for (int i = 0; i < list2.getLength(); i++) {
-					Element element1 = (Element) list2.item(i);
-					String s = element1.getAttribute("type");
-					if (!type.contains(s)) {
-						rules.removeChild(element1);
-						saveXmlData();
-					}
-
-				}
+				Delete();
 
 			}
 		});
@@ -267,42 +211,21 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 			}
 		});
 
-		etState.setOnClickListener(new View.OnClickListener() {
+	
 
-			@Override
-			public void onClick(View arg0) {
-				imm.showSoftInput(etState, InputMethodManager.SHOW_FORCED);// 获取到这个类。
-				etState.setFocusableInTouchMode(true);// 获取焦点
-
-			}
-		});
-
-		etType.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				imm.showSoftInput(etType, InputMethodManager.SHOW_FORCED);// 获取到这个类。
-				etType.setFocusableInTouchMode(true);// 获取焦点
-
-			}
-		});
-
-		// m_oEditTextNEW.setHint("请输入新密码"); 设置提示文字
+		
 
 		etName.setTextColor(Color.BLACK);
 		etPhone.setTextColor(Color.BLACK);
-		etState.setTextColor(Color.BLACK);
-		etType.setTextColor(Color.BLACK);
+	
 
 		etName.setCursorVisible(true);// 让edittext出现光标
 		etPhone.setCursorVisible(true);
-		etState.setCursorVisible(true);
-		etType.setCursorVisible(true);
+		
 
-		// etName.setInputType(EditorInfo.TYPE_CLASS_PHONE); //设置文本格式
+		
 		etPhone.setInputType(EditorInfo.TYPE_CLASS_PHONE);
-		// etState.setInputType(EditorInfo.TYPE_CLASS_PHONE);
-		etType.setInputType(EditorInfo.TYPE_CLASS_PHONE);
+	
 
 		imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);// 显示输入法窗口
 
@@ -319,161 +242,175 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 		super.onDraw(canvas);
 	}
 
-	// 通过点击修改xml中的内容
+	// 通过点击修改ini中的内容
 	protected void onClicked() {
 
-		dbf = DocumentBuilderFactory.newInstance();
-		String name = etName.getText().toString();
-		String phone = etPhone.getText().toString();
-		String level = etType.getText().toString();
-		// String state =etState.getText().toString();
-		// String state=btState.getText().toString();
+		String str=this.getText().toString();
+		
+	        if(str.equals(Show))
+	        {
+	        	
+	        	Show();
+	        	
+	        }else if(str.equals(Add))
+	        {
+	        	Add();
+	        }else if(str.equals(Alter))
+	        {
+	        	Alter();
+	        }
+                		
+		
+	}
+	
+	
 
-		boolean isSave = false;
-		xmlPhoneNumber = Integer.parseInt(tvTagorder.getText().toString());
-		if (xmlPhoneNumber == -1)
-			return;
-		try {
-			db = dbf.newDocumentBuilder();
-			doc = db.parse(new File("/data/mgrid/sampler/XmlCfg/sms_notification.xml"));
-			list1 = doc.getElementsByTagName("user");
-			list2 = doc.getElementsByTagName("rule");
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-
-		if (list1 == null || list2 == null) {
-			Toast.makeText(getContext(), text4, 200).show();
-			return;
-		}
-		if (this.getText().equals(Show)) {
-			boolean isAdd = true;
-			for (int i = 0; i < list1.getLength(); i++) {
-				Element element1 = (Element) list1.item(i);
-				String rule_type = element1.getAttribute("rule_type");
-				if (rule_type.equals(xmlPhoneNumber + "")) {
-					etName.setText(element1.getAttribute("name"));
-					etPhone.setText(element1.getAttribute("tel_number"));
-					for (int j = 0; j < list2.getLength(); j++) {
-						Element element2 = (Element) list2.item(j);
-						if (rule_type.equals(element2.getAttribute("type"))) {
-							etType.setText(element2.getAttribute("alarm_level"));
-						}
-					}
-					this.setText(Alter);
-					btDelete.setEnabled(true);
-					isAdd = false;
-					break;
-				}
-			}
-			if (isAdd) {
-
-				Toast.makeText(getContext(), text5, 200).show();
-				this.setText(Add);
-			}
-		}
-
-		else if (this.getText().equals(Alter)) {
-
-			for (int i = 0; i < list1.getLength(); i++) {
-
-				Element ele = (Element) list1.item(i);
-				String rule_type = ele.getAttribute("rule_type");
-				if (!(xmlPhoneNumber + "").equals(rule_type)) {
-					continue;
-				}
-
-				if ((name.equals("") || level.equals("") || phone.equals("")) != true) {
-					if (phone.length() == 11) {
-						ele.setAttribute("name", name);
-						ele.setAttribute("tel_number", phone);
-						ele.setAttribute("enable", "ture");
-
-						for (int j = 0; j < list2.getLength(); j++) {
-
-							Element ele2 = (Element) list2.item(j);
-							if (rule_type.equals(ele2.getAttribute("type"))) {
-								ele2.setAttribute("alarm_level", level);
-
-								break;
-							}
-						}
-
-						isSave = true;
-
-						Toast.makeText(getContext(), text6, Toast.LENGTH_SHORT).show();
-
-					} else {
-
-						Toast.makeText(getContext(), text7, Toast.LENGTH_SHORT).show();
-					}
-
-				} else {
-
-					Toast.makeText(getContext(), text8, Toast.LENGTH_SHORT).show();
-				}
-			}
-		} else if (this.getText().equals(Add)) {
-
-			if ((name.equals("") || level.equals("") || phone.equals("")) != true) {
-				if (phone.length() == 11) {
-					Element user = doc.createElement("user");
-					user.setAttribute("name", name);
-					user.setAttribute("tel_number", phone);
-					user.setAttribute("enable", "true");
-					Element users = (Element) doc.getElementsByTagName("users").item(0);
-
-					user.setAttribute("rule_type", "" + xmlPhoneNumber);
-					Element rule = doc.createElement("rule");
-					rule.setAttribute("type", "" + xmlPhoneNumber);
-					rule.setAttribute("alarm_level", level);
-					Element rules = (Element) doc.getElementsByTagName("rules").item(0);
-					rules.appendChild(rule);
-
-					users.appendChild(user);
-					isSave = true;
-					
-						Toast.makeText(getContext(), text9, Toast.LENGTH_SHORT).show();
-					this.setText(Alter);
-					btDelete.setEnabled(true);
-				} else {
-				
-						Toast.makeText(getContext(), text7, Toast.LENGTH_SHORT).show();
-				}
-			} else {
-				
-					Toast.makeText(getContext(), text8, Toast.LENGTH_SHORT).show();
-			}
-		} else {
+	//修改
+	private void Alter() {
+		 
+	MGridActivity.xianChengChi.execute(new Runnable() {
 			
-				Toast.makeText(getContext(), text8, Toast.LENGTH_SHORT).show();
-		}
-
-		if (isSave) {
-			saveXmlData();
-		}
+			@Override
+			public void run() {
+				
+				String id=etName.getText().toString();
+				String pw=etPhone.getText().toString();
+				
+				if(id.equals("")||pw.equals(""))
+				{
+					handler.sendEmptyMessage(3);
+				}else
+				{
+					Map<String,String> map=new HashMap<String,String>();
+					map.put("User" +index+"="+oldUserId, "User" +index+"="+id);
+					map.put("PassWord" +index+"="+oldPassWord, "PassWord" +index+"="+pw);
+					fileUtil.replaceUser(new File(Environment.getExternalStorageDirectory().getPath() + "/MGrid.ini"), map);
+				    
+		 			MGridActivity.userManager.setUser(index, id, pw,oldUserId,oldPassWord);
+					handler.sendEmptyMessage(1);
+					
+				}
+				
+				
+						
+				
+			}
+		});	
 	}
 
-	// 保存xml数据
-	private void saveXmlData() {
-		// 保存数据
-		TransformerFactory tf = TransformerFactory.newInstance();
-		Transformer tran;
-		try {
-			tran = tf.newTransformer();
-			DOMSource dom = new DOMSource(doc);
-			// 设置编码类
-			tran.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-			StreamResult result = new StreamResult(
-					new FileOutputStream(new File("/data/mgrid/sampler/XmlCfg/sms_notification.xml")));
-			tran.transform(dom, result);
-			// Toast.makeText(getContext(), "修改成功", Toast.LENGTH_SHORT).show();
-		} catch (Exception e) {
-
-		}
+	//添加
+	private void Add() {
+		
+       MGridActivity.xianChengChi.execute(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				String id=etName.getText().toString();
+				String pw=etPhone.getText().toString();
+				
+				if(id.equals("")||pw.equals(""))
+				{
+					handler.sendEmptyMessage(3);
+				}else
+				{
+					Map<String,String> map=new HashMap<String,String>();
+					map.put("User" +index+"="+id,"PassWord" +index+"="+pw);
+					fileUtil.AddUser(new File(Environment.getExternalStorageDirectory().getPath() + "/MGrid.ini"), map);
+					User user;
+					if(index!=0)
+					{
+					    user=new User(id, pw, 1);
+					}else
+					{ 
+					    user=new User(id, pw, 0);
+					}
+					
+					MGridActivity.userManager.addUser(index, user);
+					handler.sendEmptyMessage(2);
+					 
+				}
+			}
+		});		
 	}
+	
+	//删除
+	private void Delete()
+	{
+		MGridActivity.xianChengChi.execute(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				List<String> list=new ArrayList<String>();
+				list.add("User" +index+"="+etName.getText().toString());
+				list.add("PassWord" +index+"="+etPhone.getText().toString());		
+				fileUtil.deleteUser(new File(Environment.getExternalStorageDirectory().getPath() + "/MGrid.ini"), list);
+			    
+				MGridActivity.userManager.deleteUser(index);
+				handler.sendEmptyMessage(0);
+			}
+		});		
+	}
+
+	//显示 
+	private void Show() {
+		
+		Map<Integer,User> map=MGridActivity.userManager.getUserManaget();
+		User user=map.get(Integer.parseInt(tvTagorder.getText().toString()));
+		if(user!=null)
+		{
+			oldUserId=user.getUserID();
+			etName.setText(oldUserId);
+			oldPassWord=user.getPassWord();
+			etPhone.setText(oldPassWord);
+			this.setText(Alter);
+			btDelete.setEnabled(true);
+		}else
+		{
+			this.setText(Add);
+		}
+		
+	}
+
+	Handler handler =new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			
+			switch (msg.what) {
+			case 0:
+				
+				setText(Add);
+				etName.setText("");
+				etPhone.setText("");
+				btDelete.setEnabled(false);
+				Toast.makeText(getContext(), "刪除成功", Toast.LENGTH_SHORT).show();
+				
+				
+				break;
+
+			case 1:
+				
+				oldUserId=etName.getText().toString();
+				oldPassWord=etPhone.getText().toString();
+				Toast.makeText(getContext(), "修改成功", Toast.LENGTH_SHORT).show();
+				
+				break;
+            case 2:
+				
+				oldUserId=etName.getText().toString();
+				oldPassWord=etPhone.getText().toString();
+				setText(Alter);
+				btDelete.setEnabled(true);
+				Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
+				
+				break;
+			}
+			
+			
+		}; 
+	};
+	
+
 
 	@Override
 	public void doLayout(boolean bool, int l, int t, int r, int b) {
@@ -489,31 +426,35 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 		m_rBBox.right = nX + nWidth;
 		m_rBBox.bottom = nY + nHeight;
 
+		Rect rect=new Rect();
+		getPaint().getTextBounds("用户密码", 0, "用户密码".length(), rect);
+		int height=rect.height();
+		int width=rect.height();
+		
 		if (m_rRenderWindow.isLayoutVisible(m_rBBox)) {
 
-			tvTagorder.layout(nX, (int) (nY + 0.15 * nHeight), nX + (int) (nWidth * 0.05f), nY + nHeight);
-			tvName.layout(nX + (int) (nWidth * 0.051f), (int) (nY + 0.15 * nHeight), nX + (int) (nWidth * 0.111f),
+			tvTagorder.layout(nX, (int) (nY), nX + (int) (nWidth * 0.029f), nY + nHeight);
+			tvName.layout(nX + (int) (nWidth * 0.058f), (int) (nY ), nX + (int) (nWidth * 0.158f),
 					nY + nHeight);
-			etName.layout(nX + (int) (nWidth * 0.112f), nY + nHeight / 10, nX + (int) (nWidth * 0.262f),
+			etName.layout(nX + (int) (nWidth * 0.187f), nY , nX + (int) (nWidth * 0.387f),
 					nY + nHeight - nHeight / 10);
-			tvPhone.layout(nX + (int) (nWidth * 0.263f), (int) (nY + 0.15 * nHeight), nX + (int) (nWidth * 0.323f),
+			tvPhone.layout(nX + (int) (nWidth * 0.416f), (int) (nY ), nX + (int) (nWidth * 0.516f),
 					nY + nHeight);
-			etPhone.layout(nX + (int) (nWidth * 0.324f), nY + nHeight / 10, nX + (int) (nWidth * 0.474f),
+			etPhone.layout(nX + (int) (nWidth * 0.545f), nY , nX + (int) (nWidth * 0.745f),
 					nY + nHeight - nHeight / 10);
-			tvType.layout(nX + (int) (nWidth * 0.475f), (int) (nY + 0.15 * nHeight), nX + (int) (nWidth * 0.535f),
-					nY + nHeight);
-			etType.layout(nX + (int) (nWidth * 0.536f), nY + nHeight / 10, nX + (int) (nWidth * 0.686f),
-					nY + nHeight - nHeight / 10);
-			this.layout(nX + (int) (nWidth * 0.687f), nY, nX + (int) (nWidth * 0.788f), nY + nHeight);
-			btDelete.layout(nX + (int) (nWidth * 0.789f), nY, nX + (int) (nWidth * 0.890f), nY + nHeight);
+			
+			this.layout(nX + (int) (nWidth * 0.774f), nY, nX + (int) (nWidth * 0.874f), nY + nHeight);
+			btDelete.layout(nX + (int) (nWidth * 0.903f), nY, nX + (int) (nWidth * 1), nY + nHeight);
 		}
 
-		btDelete.setPadding(0, nHeight / 5, 0, 0);
-		etName.setPadding(0, nHeight / 5, 0, 0);
-		etPhone.setPadding(0, nHeight / 5, 0, 0);
-		etState.setPadding(0, nHeight / 5, 0, 0);
-		etType.setPadding(0, nHeight / 5, 0, 0);
-		this.setPadding(0, nHeight / 5, 0, 0);
+		tvTagorder.setPadding(0, (int)((0.85 * nHeight-height)/2), 0, 0);
+		tvName.setPadding((int)((0.1 * nWidth-width)/3), (int)((0.85 * nHeight-height)/2), 0, 0);
+		tvPhone.setPadding((int)((0.1 * nWidth-width)/3), (int)((0.85 * nHeight-height)/2), 0, 0);
+		btDelete.setPadding(0, (int)((0.85*nHeight-height)/2), 0, 0);
+		etName.setPadding(0,(int)((0.8*nHeight-height)/2), 0, 0);
+		etPhone.setPadding(0, (int)((0.8*nHeight-height)/2), 0, 0);
+	
+		//this.setPadding(0, (int)((nHeight-height)/2), 0, 0);
 
 	}
 
@@ -578,8 +519,7 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 			btDelete.setTextColor(m_cFontColor);
 			tvName.setTextColor(m_cFontColor);
 			tvPhone.setTextColor(m_cFontColor);
-			tvState.setTextColor(m_cFontColor);
-			tvType.setTextColor(m_cFontColor);
+		
 			tvTagorder.setTextColor(m_cFontColor);
 
 		} else if ("CmdExpression".equals(strName)) {
@@ -593,21 +533,19 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 			m_fButtonWidthRate = Float.parseFloat(strValue);
 		} else if ("Labelorder".equals(strName)) {
 			tvTagorder.setText(strValue);
+			index=Integer.parseInt(tvTagorder.getText().toString());
 		} else if ("FontSize".equals(strName)) {
 			fontSize = Integer.parseInt(strValue);
 			tvName.setTextSize(fontSize);
 			tvPhone.setTextSize(fontSize);
-			tvState.setTextSize(fontSize);
-			tvType.setTextSize(fontSize);
+			
 			tvTagorder.setTextSize(fontSize);
 
-			// btState.setTextSize(20);
 			btDelete.setTextSize(fontSize);
 
 			etName.setTextSize(fontSize);
 			etPhone.setTextSize(fontSize);
-			etState.setTextSize(fontSize);
-			etType.setTextSize(fontSize);
+			
 			this.setTextSize(fontSize);
 
 		}
@@ -627,12 +565,13 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 		m_rRenderWindow = rWin;
 
 		rWin.addView(tvTagorder);
+		
 		rWin.addView(etName);
 		rWin.addView(tvName);
+		
 		rWin.addView(etPhone);
 		rWin.addView(tvPhone);
-		rWin.addView(etType);
-		rWin.addView(tvType);
+		
 		rWin.addView(btDelete);
 		rWin.addView(this);
 
@@ -715,15 +654,12 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 	Paint m_oPaint = null;
 	Rect m_rBBox = null;
 	InputMethodManager imm = null;
+	
 	EditText etName = null;
 	TextView tvName = null;
 	EditText etPhone = null;
 	TextView tvPhone = null;
-	EditText etType = null;
-	TextView tvType = null;
-	EditText etState = null;
-	TextView tvState = null;
-
+	
 	TextView tvTagorder = null;
 	Button btDelete = null;
 
@@ -746,3 +682,4 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 	public float m_yscal = 0;
 
 }
+

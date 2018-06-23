@@ -195,7 +195,7 @@ public class SaveEquipt extends UtTable implements IObject {
 		// // TODO Auto-generated method stub
 		// num = 0;
 		//
-		// }
+		// } 
 		// }, year, month, day);
 
 		dialog = new DatePickerDialog(context, null, year, month, day);

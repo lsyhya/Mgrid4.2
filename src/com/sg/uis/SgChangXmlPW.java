@@ -281,7 +281,7 @@ public class SgChangXmlPW extends TextView implements IObject {
 		getPaint().getTextBounds("修改", 0, 2, rect);
 		int h = rect.height();
 
-		System.out.println(nHeight * 0.18 + ":高度：" + h);
+		//System.out.println(nHeight * 0.18 + ":高度：" + h);
 		// MakeBtn.setPadding(0,(int)(nHeight * 0.18-h)/2, 0, 0);
 
 	}

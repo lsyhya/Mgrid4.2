@@ -3,7 +3,9 @@ package com.sg.uis;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -40,6 +42,7 @@ import com.mgrid.data.DataGetter;
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
+import com.mgrid.util.FileUtil;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
 import com.sg.common.MyAdapter;
@@ -49,6 +52,7 @@ import comm_service.local_file;
 
 import data_model.local_his_Alarm;
 import data_model.local_his_event;
+import data_model.locat_his_DoorEvent;
 
 /** 历史告警 */
 // 信号告警数据 HisEvent
@@ -57,31 +61,34 @@ import data_model.local_his_event;
 public class HisEvent extends HisEventTable implements IObject {
 
 	// 方便中英文切换
-	private String DeviceName=LanguageStr.DeviceName;
-	private String AlarmName=LanguageStr.AlarmName;
-	private String AlarmMeaning=LanguageStr.AlarmMeaning;
-	private String Numericalsignal=LanguageStr.Numericalsignal;
-	private String AlarmSeverity=LanguageStr.AlarmSeverity;
-	private String StartTime=LanguageStr.StartTime;
-	private String EndTime=LanguageStr.EndTime;
+	private String DeviceName = LanguageStr.DeviceName;
+	private String AlarmName = LanguageStr.AlarmName;
+	private String AlarmMeaning = LanguageStr.AlarmMeaning;
+	private String Numericalsignal = LanguageStr.Numericalsignal;
+	private String AlarmSeverity = LanguageStr.AlarmSeverity;
+	private String StartTime = LanguageStr.StartTime;
+	private String EndTime = LanguageStr.EndTime;
 
-	private String DeviceList=LanguageStr.DeviceList;
-	private String SetTime=LanguageStr.SetTime;
-	private String PreveDay=LanguageStr.PreveDay;
-	private String NextDay=LanguageStr.NextDay;
-	private String Receive=LanguageStr.Receive;
-	private String AllDevice=LanguageStr.AllDevice;
+	private String DeviceList = LanguageStr.DeviceList;
+	private String SetTime = LanguageStr.SetTime;
+	private String PreveDay = LanguageStr.PreveDay;
+	private String NextDay = LanguageStr.NextDay;
+	private String Receive = LanguageStr.Receive;
+	private String AllDevice = LanguageStr.AllDevice;
 
-	private String ON=LanguageStr.ON;
-	
-	private String textColor="#FF000000";
-	private String btnColor="#FFC0C0C0";
-	private String titleColor="#FF242424";
+	private String ON = LanguageStr.ON;
+
+	private String textColor = "#FF000000";
+	private String btnColor = "#FFC0C0C0";
+	private String titleColor = "#FF242424";
 	private MyAdapter myAdapter = null;
 
 	private String logPath = "/mgrid/data/Command/0.log";
+	private String doorEventPath = "/mgrid/log/DoorEvent/DoorEven.dat";
+	private File doorFile = new File(doorEventPath);
 	private File logFile = new File(logPath);
-
+	
+    private FileUtil fileUtil;
 	private PopupWindow popupWindow;
 
 	public HisEvent(Context context) {
@@ -105,6 +112,10 @@ public class HisEvent extends HisEventTable implements IObject {
 					} else if (lsyLs2.size() != 0) {
 
 						rePlush(position, lsyLs2);
+					}else if (lsyLs3.size() != 0) {
+
+						System.out.println("一直刷新");
+						rePlush(position, lsyLs3);
 					}
 
 					break;
@@ -125,11 +136,14 @@ public class HisEvent extends HisEventTable implements IObject {
 			}
 		});
 
-
-
+		
+		fileUtil=new FileUtil();
+		
 		// 标头标题
 		lstTitles = new ArrayList<String>();
 		AlarmTitles = new ArrayList<String>();
+		DoorEventTitles = new ArrayList<String>();
+
 		lstTitles.add(DeviceName);
 		// lstTitles.add("信号名称");
 		lstTitles.add(AlarmName);
@@ -146,13 +160,12 @@ public class HisEvent extends HisEventTable implements IObject {
 		view_text.setTextSize(15);
 		view_text.setGravity(Gravity.CENTER);
 		view_text.setPadding(2, 2, 2, 2);
-	    view_text.setBackgroundColor(Color.argb(100, 100, 100, 100));
-
+		view_text.setBackgroundColor(Color.argb(100, 100, 100, 100));
 
 		// 日期选择button
 		view_timeButton = new Button(context);
 		view_timeButton.setText(SetTime); // Set Time
-	    view_timeButton.setTextColor(Color.BLACK);
+		view_timeButton.setTextColor(Color.BLACK);
 		view_timeButton.setTextSize(15);
 		view_timeButton.setPadding(2, 2, 2, 2);
 		view_timeButton.setOnClickListener(l);// 设置该控件的监听
@@ -160,11 +173,10 @@ public class HisEvent extends HisEventTable implements IObject {
 		// 结束时间button
 		view_PerveDay = new Button(context);
 		view_PerveDay.setText(EndTime); // PreveDay
-		 view_PerveDay.setTextColor(Color.BLACK);
+		view_PerveDay.setTextColor(Color.BLACK);
 		view_PerveDay.setTextSize(15);
 		view_PerveDay.setPadding(2, 2, 2, 2);
 		view_PerveDay.setOnClickListener(l);// 设置该控件的监听
-
 
 		view_Text = new TextView(context);
 		view_Text.setText("——");
@@ -175,39 +187,36 @@ public class HisEvent extends HisEventTable implements IObject {
 		// 开始时间button
 		view_NextDay = new Button(context);
 		view_NextDay.setText(StartTime); // NextDay
-		 view_NextDay.setTextColor(Color.BLACK);
+		view_NextDay.setTextColor(Color.BLACK);
 		view_NextDay.setTextSize(15);
 		view_NextDay.setPadding(2, 2, 2, 2);
 		view_NextDay.setOnClickListener(l);// 设置该控件的监听
 
-
 		// 接收receive
 		view_Receive = new Button(context);
 		view_Receive.setText(Receive);
-	    view_Receive.setTextColor(Color.BLACK);
+		view_Receive.setTextColor(Color.BLACK);
 		view_Receive.setTextSize(15);
 		view_Receive.setPadding(2, 2, 2, 2);
 		view_Receive.setOnClickListener(l);
-
 
 		calendar = Calendar.getInstance();
 		year = calendar.get(Calendar.YEAR);
 		month = calendar.get(Calendar.MONTH);
 		day = calendar.get(Calendar.DAY_OF_MONTH);
-//		dialog = new DatePickerDialog(context, new OnDateSetListener() {
-//			@Override
-//			public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-//
-//			}
-//		}, year, month, day);
-		
-		dialog = new DatePickerDialog(context,null, year, month, day);
-		dialog.setButton(DialogInterface.BUTTON_POSITIVE, ON,new DialogInterface.OnClickListener() {
-			
+		// dialog = new DatePickerDialog(context, new OnDateSetListener() {
+		// @Override
+		// public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
+		//
+		// }
+		// }, year, month, day);
+
+		dialog = new DatePickerDialog(context, null, year, month, day);
+		dialog.setButton(DialogInterface.BUTTON_POSITIVE, ON, new DialogInterface.OnClickListener() {
+
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				
-				
+
 			}
 		});
 		dialog.setTitle("");
@@ -227,6 +236,14 @@ public class HisEvent extends HisEventTable implements IObject {
 			AlarmTitles.add("控制结果");
 		}
 
+		if (doorFile.exists()) {
+			nameList.add("开门事件");
+			DoorEventTitles.add("用户ID");
+			DoorEventTitles.add("操作事件");
+			DoorEventTitles.add("操作时间");
+			DoorEventTitles.add("操作结果");
+		}
+
 		myAdapter = new MyAdapter(getContext(), nameList);
 		view_text.setOnClickListener(new OnClickListener() {
 
@@ -238,10 +255,8 @@ public class HisEvent extends HisEventTable implements IObject {
 					isFirst = false;
 				}
 
-				View view = m_rRenderWindow.m_oMgridActivity
-						.getLayoutInflater().inflate(R.layout.pop, null);
-				popupWindow = new PopupWindow(view, view_text.getWidth(), 200,
-						true);
+				View view = m_rRenderWindow.m_oMgridActivity.getLayoutInflater().inflate(R.layout.pop, null);
+				popupWindow = new PopupWindow(view, view_text.getWidth(), 200, true);
 				// 设置一个透明的背景，不然无法实现点击弹框外，弹框消失
 				popupWindow.setBackgroundDrawable(new BitmapDrawable());
 
@@ -258,8 +273,7 @@ public class HisEvent extends HisEventTable implements IObject {
 				lv.setOnItemClickListener(new OnItemClickListener() {
 
 					@Override
-					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						view_text.setText(nameList.get(position));
 						popupWindow.dismiss();
 					}
@@ -272,6 +286,7 @@ public class HisEvent extends HisEventTable implements IObject {
 		// lsyLs = new ArrayList<List<String>>();
 		lsyLs1 = new ArrayList<List<String>>();
 		lsyLs2 = new ArrayList<List<String>>();
+		lsyLs3 = new ArrayList<List<String>>();
 		map_EquiptNameList = new HashMap<String, String>();
 
 	}
@@ -288,94 +303,72 @@ public class HisEvent extends HisEventTable implements IObject {
 
 			if (arg0 == view_timeButton) {
 
-				dialog.setButton(DialogInterface.BUTTON_NEGATIVE, set,
-						new DialogInterface.OnClickListener() {
+				dialog.setButton(DialogInterface.BUTTON_NEGATIVE, set, new DialogInterface.OnClickListener() {
 
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
 
-								set_year = dialog.getDatePicker().getYear();
-								set_month = dialog.getDatePicker().getMonth() + 1;
-								set_day = dialog.getDatePicker()
-										.getDayOfMonth();
+						set_year = dialog.getDatePicker().getYear();
+						set_month = dialog.getDatePicker().getMonth() + 1;
+						set_day = dialog.getDatePicker().getDayOfMonth();
 
-								String set_months, set_days;
-								if (set_day < 10) {
-									set_days = "0" + String.valueOf(set_day);
-								} else {
-									set_days = String.valueOf(set_day);
-								}
-								if (set_month < 10) {
-									set_months = "0"
-											+ String.valueOf(set_month);
-								} else {
-									set_months = String.valueOf(set_month);
-								}
-								view_timeButton.setText(String
-										.valueOf(set_year)
-										+ "-"
-										+ set_months
-										+ "-" + set_days);
-								view_NextDay.setText(String.valueOf(set_year)
-										+ "-" + set_months + "-" + set_days);
-								view_PerveDay.setText(String.valueOf(set_year)
-										+ "-" + set_months + "-" + set_days);
-							}
-						});
+						String set_months, set_days;
+						if (set_day < 10) {
+							set_days = "0" + String.valueOf(set_day);
+						} else {
+							set_days = String.valueOf(set_day);
+						}
+						if (set_month < 10) {
+							set_months = "0" + String.valueOf(set_month);
+						} else {
+							set_months = String.valueOf(set_month);
+						}
+						view_timeButton.setText(String.valueOf(set_year) + "-" + set_months + "-" + set_days);
+						view_NextDay.setText(String.valueOf(set_year) + "-" + set_months + "-" + set_days);
+						view_PerveDay.setText(String.valueOf(set_year) + "-" + set_months + "-" + set_days);
+					}
+				});
 
 				dialog.show();
 				return;
 			}
 			if (arg0 == view_NextDay) {
 				calendar = Calendar.getInstance();
-				dialog_before = new DatePickerDialog(getContext(),
-						null, calendar.get(Calendar.YEAR),
-						calendar.get(Calendar.MONTH),
-						calendar.get(Calendar.DAY_OF_MONTH));
+				dialog_before = new DatePickerDialog(getContext(), null, calendar.get(Calendar.YEAR),
+						calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
 				dialog_before.setTitle("");
 				dialog_before.getDatePicker().setCalendarViewShown(false);
-				dialog_before.setButton(DialogInterface.BUTTON_POSITIVE, ON,new DialogInterface.OnClickListener() {
-					
+				dialog_before.setButton(DialogInterface.BUTTON_POSITIVE, ON, new DialogInterface.OnClickListener() {
+
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						
-						
+
 					}
 				});
-				dialog_before.setButton(DialogInterface.BUTTON_NEGATIVE, set,
-						new DialogInterface.OnClickListener() {
+				dialog_before.setButton(DialogInterface.BUTTON_NEGATIVE, set, new DialogInterface.OnClickListener() {
 
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
 
-								before_year = dialog_before.getDatePicker()
-										.getYear();
-								before_month = dialog_before.getDatePicker()
-										.getMonth() + 1;
-								before_day = dialog_before.getDatePicker()
-										.getDayOfMonth();
+						before_year = dialog_before.getDatePicker().getYear();
+						before_month = dialog_before.getDatePicker().getMonth() + 1;
+						before_day = dialog_before.getDatePicker().getDayOfMonth();
 
-								String before_months, before_days;
-								if (before_day < 10) {
-									before_days = "0"
-											+ String.valueOf(before_day);
-								} else {
-									before_days = String.valueOf(before_day);
-								}
-								if (before_month < 10) {
-									before_months = "0"
-											+ String.valueOf(before_month);
-								} else {
-									before_months = String
-											.valueOf(before_month);
-								}
-								view_NextDay.setText(String
-										.valueOf(before_year)
-										+ "-"
-										+ before_months + "-" + before_days);
-							}
-						});
+						String before_months, before_days;
+						if (before_day < 10) {
+							before_days = "0" + String.valueOf(before_day);
+						} else {
+							before_days = String.valueOf(before_day);
+						}
+						if (before_month < 10) {
+							before_months = "0" + String.valueOf(before_month);
+						} else {
+							before_months = String.valueOf(before_month);
+						}
+						view_NextDay.setText(String.valueOf(before_year) + "-" + before_months + "-" + before_days);
+					}
+				});
 
 				dialog_before.show();
 				return;
@@ -383,53 +376,41 @@ public class HisEvent extends HisEventTable implements IObject {
 
 			if (arg0 == view_PerveDay) {
 				calendar = Calendar.getInstance();
-				dialog_after = new DatePickerDialog(getContext(),
-					null, calendar.get(Calendar.YEAR),
-						calendar.get(Calendar.MONTH),
-						calendar.get(Calendar.DAY_OF_MONTH));
+				dialog_after = new DatePickerDialog(getContext(), null, calendar.get(Calendar.YEAR),
+						calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 				dialog_after.setTitle("");
 				dialog_after.getDatePicker().setCalendarViewShown(false);
-				dialog_after.setButton(DialogInterface.BUTTON_POSITIVE, ON,new DialogInterface.OnClickListener() {
-					
+				dialog_after.setButton(DialogInterface.BUTTON_POSITIVE, ON, new DialogInterface.OnClickListener() {
+
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						
-						
+
 					}
 				});
 
-				dialog_after.setButton(DialogInterface.BUTTON_NEGATIVE, set,
-						new DialogInterface.OnClickListener() {
+				dialog_after.setButton(DialogInterface.BUTTON_NEGATIVE, set, new DialogInterface.OnClickListener() {
 
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
 
-								after_year = dialog_after.getDatePicker()
-										.getYear();
-								after_month = dialog_after.getDatePicker()
-										.getMonth() + 1;
-								after_day = dialog_after.getDatePicker()
-										.getDayOfMonth();
+						after_year = dialog_after.getDatePicker().getYear();
+						after_month = dialog_after.getDatePicker().getMonth() + 1;
+						after_day = dialog_after.getDatePicker().getDayOfMonth();
 
-								String after_months, after_days;
-								if (after_day < 10) {
-									after_days = "0"
-											+ String.valueOf(after_day);
-								} else {
-									after_days = String.valueOf(after_day);
-								}
-								if (after_month < 10) {
-									after_months = "0"
-											+ String.valueOf(after_month);
-								} else {
-									after_months = String.valueOf(after_month);
-								}
-								view_PerveDay.setText(String
-										.valueOf(after_year)
-										+ "-"
-										+ after_months + "-" + after_days);
-							}
-						});
+						String after_months, after_days;
+						if (after_day < 10) {
+							after_days = "0" + String.valueOf(after_day);
+						} else {
+							after_days = String.valueOf(after_day);
+						}
+						if (after_month < 10) {
+							after_months = "0" + String.valueOf(after_month);
+						} else {
+							after_months = String.valueOf(after_month);
+						}
+						view_PerveDay.setText(String.valueOf(after_year) + "-" + after_months + "-" + after_days);
+					}
+				});
 				dialog_after.show();
 				return;
 			}
@@ -443,6 +424,7 @@ public class HisEvent extends HisEventTable implements IObject {
 			lsyLs1.clear();
 			lstContends.clear();
 			lsyLs2.clear();
+			lsyLs3.clear();
 			index = 1;
 
 			str_EquiptId = map_EquiptNameList.get(closeEquiptName);
@@ -502,10 +484,8 @@ public class HisEvent extends HisEventTable implements IObject {
 	public void doLayout(boolean bool, int l, int t, int r, int b) {
 		if (m_rRenderWindow == null)
 			return;
-		int nX = l
-				+ (int) (((float) m_nPosX / (float) MainWindow.FORM_WIDTH) * (r - l));
-		int nY = t
-				+ (int) (((float) m_nPosY / (float) MainWindow.FORM_HEIGHT) * (b - t));
+		int nX = l + (int) (((float) m_nPosX / (float) MainWindow.FORM_WIDTH) * (r - l));
+		int nY = t + (int) (((float) m_nPosY / (float) MainWindow.FORM_HEIGHT) * (b - t));
 		int nWidth = (int) (((float) (m_nWidth) / (float) MainWindow.FORM_WIDTH) * (r - l));
 		int nHeight = (int) (((float) (m_nHeight) / (float) MainWindow.FORM_HEIGHT) * (b - t));
 
@@ -518,16 +498,20 @@ public class HisEvent extends HisEventTable implements IObject {
 
 			for (int i = 0; i < m_title.length; ++i) {
 				m_title[i].layout(nX + i * nWidth / m_title.length, nY - 18,
-						nX + i * nWidth / m_title.length + nWidth
-								/ m_title.length, nY);
+						nX + i * nWidth / m_title.length + nWidth / m_title.length, nY);
 
 			}
 			for (int i = 0; i < s_title.length; ++i) {
 				s_title[i].layout(nX + i * nWidth / s_title.length, nY - 18,
-						nX + i * nWidth / s_title.length + nWidth
-								/ s_title.length, nY);
+						nX + i * nWidth / s_title.length + nWidth / s_title.length, nY);
 
 			}
+			for (int i = 0; i < d_title.length; ++i) {
+				d_title[i].layout(nX + i * nWidth / d_title.length, nY - 18,
+						nX + i * nWidth / d_title.length + nWidth / d_title.length, nY);
+
+			}
+
 			X = nX;
 			Y = nY;
 
@@ -543,17 +527,13 @@ public class HisEvent extends HisEventTable implements IObject {
 
 			view_timeButton.layout(nX + pv + 20, nY - 40, nX + 2 * pv, nY - 16);
 
-			view_NextDay
-					.layout(nX + 2 * pv + 20, nY - 40, nX + 3 * pv, nY - 16);
+			view_NextDay.layout(nX + 2 * pv + 20, nY - 40, nX + 3 * pv, nY - 16);
 
-			view_Text.layout(nX + 3 * pv + 5, nY - 40, nX + 3 * pv + 15,
-					nY - 16);
+			view_Text.layout(nX + 3 * pv + 5, nY - 40, nX + 3 * pv + 15, nY - 16);
 
-			view_PerveDay.layout(nX + 3 * pv + 20, nY - 40, nX + 4 * pv,
-					nY - 16);
+			view_PerveDay.layout(nX + 3 * pv + 20, nY - 40, nX + 4 * pv, nY - 16);
 
-			view_Receive
-					.layout(nX + 4 * pv + 20, nY - 40, nX + 5 * pv, nY - 16);
+			view_Receive.layout(nX + 4 * pv + 20, nY - 40, nX + 5 * pv, nY - 16);
 		}
 	}
 
@@ -561,17 +541,14 @@ public class HisEvent extends HisEventTable implements IObject {
 	private void rePlush(int position, List<List<String>> listData) {
 		System.out.println(position);
 		if (position == (listData.size() - 1)) {
-			//Toast.makeText(getContext(), "已经刷新完了", 200).show();
+			// Toast.makeText(getContext(), "已经刷新完了", 200).show();
 
-		} else if (position != (listData.size() - 1)
-				&& position == (index * 30 - 1)) {
+		} else if (position != (listData.size() - 1) && position == (index * 30 - 1)) {
 
 			if (listData.size() <= (index + 1) * 30) {
-				updateList(lstTitles,
-						listData.subList(index * 30, listData.size()));
+				updateList(lstTitles, listData.subList(index * 30, listData.size()));
 			} else {
-				updateList(lstTitles,
-						listData.subList(index * 30, (index + 1) * 30));
+				updateList(lstTitles, listData.subList(index * 30, (index + 1) * 30));
 				index++;
 			}
 			update();
@@ -602,8 +579,12 @@ public class HisEvent extends HisEventTable implements IObject {
 			case 0:
 				for (int i = 0; i < m_title.length; i++)
 					m_title[i].setVisibility(View.VISIBLE);
+
 				for (int i = 0; i < s_title.length; i++)
 					s_title[i].setVisibility(View.GONE);
+
+				for (int i = 0; i < d_title.length; i++)
+					d_title[i].setVisibility(View.GONE);
 
 				break;
 			case 1:
@@ -612,6 +593,9 @@ public class HisEvent extends HisEventTable implements IObject {
 				for (int i = 0; i < s_title.length; i++)
 					s_title[i].setVisibility(View.VISIBLE);
 
+				for (int i = 0; i < d_title.length; i++)
+					d_title[i].setVisibility(View.GONE);
+
 				break;
 			case 2:
 				// view_Receive.setClickable(true);
@@ -619,9 +603,18 @@ public class HisEvent extends HisEventTable implements IObject {
 
 				break;
 			case 3:
-
-				System.out.println(lsyLs1.size());
+				
 				update();
+				break;
+
+			case 4:
+				for (int i = 0; i < m_title.length; i++)
+					m_title[i].setVisibility(View.GONE);
+				for (int i = 0; i < s_title.length; i++)
+					s_title[i].setVisibility(View.GONE);
+				for (int i = 0; i < d_title.length; i++)
+					d_title[i].setVisibility(View.VISIBLE);
+
 				break;
 			}
 
@@ -659,6 +652,15 @@ public class HisEvent extends HisEventTable implements IObject {
 			s_title[i].setTextColor(Color.parseColor(titleColor));
 			rWin.addView(s_title[i]);
 		}
+		d_title = new TextView[DoorEventTitles.size()];
+		for (int i = 0; i < d_title.length; i++) {
+			d_title[i] = new TextView(getContext());
+			d_title[i].setGravity(Gravity.CENTER);
+			d_title[i].setText(DoorEventTitles.get(i));
+			d_title[i].setVisibility(View.INVISIBLE);
+			d_title[i].setTextColor(Color.parseColor(titleColor));
+			rWin.addView(d_title[i]);
+		}
 
 		m_rRenderWindow = rWin;
 
@@ -688,8 +690,7 @@ public class HisEvent extends HisEventTable implements IObject {
 		rWin.removeView(view_Text);
 	}
 
-	public void parseProperties(String strName, String strValue,
-			String strResFolder) {
+	public void parseProperties(String strName, String strValue, String strResFolder) {
 		if ("ZIndex".equals(strName)) {
 			m_nZIndex = Integer.parseInt(strValue);
 			if (MainWindow.MAXZINDEX < m_nZIndex)
@@ -747,10 +748,8 @@ public class HisEvent extends HisEventTable implements IObject {
 				} else {
 					btnColor = strValue;
 					view_text.setBackgroundColor(Color.parseColor(btnColor));
-					view_timeButton.setBackgroundColor(Color
-							.parseColor(btnColor));
-					view_PerveDay
-							.setBackgroundColor(Color.parseColor(btnColor));
+					view_timeButton.setBackgroundColor(Color.parseColor(btnColor));
+					view_PerveDay.setBackgroundColor(Color.parseColor(btnColor));
 					view_NextDay.setBackgroundColor(Color.parseColor(btnColor));
 					view_Receive.setBackgroundColor(Color.parseColor(btnColor));
 					myAdapter.setBtnColor(btnColor);
@@ -761,10 +760,8 @@ public class HisEvent extends HisEventTable implements IObject {
 			if (!strValue.isEmpty()) {
 				textColor = strValue;
 				view_text.setTextColor(Color.parseColor(textColor));
-				view_timeButton.setTextColor(Color
-						.parseColor(textColor));
-				view_PerveDay
-						.setTextColor(Color.parseColor(textColor));
+				view_timeButton.setTextColor(Color.parseColor(textColor));
+				view_PerveDay.setTextColor(Color.parseColor(textColor));
 				view_NextDay.setTextColor(Color.parseColor(textColor));
 				view_Receive.setTextColor(Color.parseColor(textColor));
 				myAdapter.setTextColor(textColor);
@@ -824,17 +821,14 @@ public class HisEvent extends HisEventTable implements IObject {
 			after_num = set_year * 1000 + set_month * 32 + set_day;
 			before_num = set_year * 1000 + set_month * 32 + set_day;
 		} else {
-			after_num = Integer.parseInt(after.substring(0, 4)) * 1000
-					+ Integer.parseInt(after.substring(5, 7)) * 32
+			after_num = Integer.parseInt(after.substring(0, 4)) * 1000 + Integer.parseInt(after.substring(5, 7)) * 32
 					+ Integer.parseInt(after.substring(8, 10));
-			before_num = Integer.parseInt(before.substring(0, 4)) * 1000
-					+ Integer.parseInt(before.substring(5, 7)) * 32
+			before_num = Integer.parseInt(before.substring(0, 4)) * 1000 + Integer.parseInt(before.substring(5, 7)) * 32
 					+ Integer.parseInt(before.substring(8, 10));
 			System.out.println(after_num + ":::;" + before_num);
 		}
 
-		if (!AllDevice.equals(closeEquiptName)
-				&& !"二次下电".equals(closeEquiptName)) {
+		if (!AllDevice.equals(closeEquiptName) && !"二次下电".equals(closeEquiptName)&&!"开门事件".equals(closeEquiptName)) {
 			handler.sendEmptyMessage(0);
 			lstContends.clear(); // 清楚页面的以前数据 行信号
 			m_bneedupdate = false; // 如果为真，表示数据不根据数据更新时时刷界面
@@ -844,8 +838,7 @@ public class HisEvent extends HisEventTable implements IObject {
 
 				return false;
 			}
-			his_event_list = m_rRenderWindow.m_oShareObject.m_mapLocalEvent
-					.get(this.getUniqueID());
+			his_event_list = m_rRenderWindow.m_oShareObject.m_mapLocalEvent.get(this.getUniqueID());
 
 			if (his_event_list == null) {
 				// List<String> lstRow_his = new ArrayList<String>();
@@ -863,16 +856,13 @@ public class HisEvent extends HisEventTable implements IObject {
 					continue;
 				boolean flag = true;
 
-				if (hast_his.containsKey(his_event.start_time + "#"
-						+ his_event.event_id)) {
+				if (hast_his.containsKey(his_event.start_time + "#" + his_event.event_id)) {
 					flag = false;
 
-					if ("1970-01-01".equals(his_event.finish_time.substring(0,
-							10)))
+					if ("1970-01-01".equals(his_event.finish_time.substring(0, 10)))
 						continue;
 				}
-				hast_his.put(his_event.start_time + "#" + his_event.event_id,
-						his_event);
+				hast_his.put(his_event.start_time + "#" + his_event.event_id, his_event);
 
 				if (flag) {
 					key.add(his_event.start_time + "#" + his_event.event_id);
@@ -915,9 +905,9 @@ public class HisEvent extends HisEventTable implements IObject {
 				}
 				//
 				String startTime = his_event.start_time.substring(0, 10);// 截取年月日
-				int time_num = Integer.parseInt(startTime.substring(0, 4))
-						* 1000 + Integer.parseInt(startTime.substring(5, 7))
-						* 32 + Integer.parseInt(startTime.substring(8, 10));
+				int time_num = Integer.parseInt(startTime.substring(0, 4)) * 1000
+						+ Integer.parseInt(startTime.substring(5, 7)) * 32
+						+ Integer.parseInt(startTime.substring(8, 10));
 				if (!(time_num <= after_num && time_num >= before_num)) {
 
 					continue;
@@ -934,8 +924,7 @@ public class HisEvent extends HisEventTable implements IObject {
 					}
 				}
 
-				String eventName = DataGetter.getEventName(str_EquiptId,
-						his_event.event_id);
+				String eventName = DataGetter.getEventName(str_EquiptId, his_event.event_id);
 				lstRow_his.add(closeEquiptName);
 				lstRow_his.add(eventName);// 告警名称
 				lstRow_his.add(his_event.event_mean);
@@ -980,6 +969,7 @@ public class HisEvent extends HisEventTable implements IObject {
 			key2.clear();
 		} else if (AllDevice.equals(closeEquiptName)) {
 
+			m_bneedupdate = false;
 			handler.sendEmptyMessage(0);
 			for (int i = 0; i < ALLDeviceList.size(); i++) {
 				String name = ALLDeviceList.get(i);
@@ -1017,10 +1007,8 @@ public class HisEvent extends HisEventTable implements IObject {
 					}
 					// //
 					String startTime = his_event.start_time.substring(0, 10);// 截取年月日
-					String eventName = DataGetter.getEventName(str_Equiptidlsy,
-							his_event.event_id);
-					int time_num = Integer.parseInt(startTime.substring(0, 4))
-							* 1000
+					String eventName = DataGetter.getEventName(str_Equiptidlsy, his_event.event_id);
+					int time_num = Integer.parseInt(startTime.substring(0, 4)) * 1000
 							+ Integer.parseInt(startTime.substring(5, 7)) * 32
 							+ Integer.parseInt(startTime.substring(8, 10));
 					if (!(time_num <= after_num && time_num >= before_num)) {
@@ -1034,8 +1022,7 @@ public class HisEvent extends HisEventTable implements IObject {
 							String t_name = ls.get(0); // 设备名称
 							String e_name = ls.get(1); // 告警名称
 							String s_time = ls.get(5);
-							if (t_name.equals(name)
-									&& s_time.equals(his_event.start_time)
+							if (t_name.equals(name) && s_time.equals(his_event.start_time)
 									&& e_name.equals(eventName)) {
 								lsyLs1.remove(m);
 							}
@@ -1043,8 +1030,7 @@ public class HisEvent extends HisEventTable implements IObject {
 					}
 
 					lstRow_his1.clear();
-					String eventName1 = DataGetter.getEventName(
-							str_Equiptidlsy, his_event.event_id);
+					String eventName1 = DataGetter.getEventName(str_Equiptidlsy, his_event.event_id);
 					lstRow_his1.add(name);
 					lstRow_his1.add(eventName1);// 告警名称
 					lstRow_his1.add(his_event.event_mean);
@@ -1087,11 +1073,9 @@ public class HisEvent extends HisEventTable implements IObject {
 		} else if ("二次下电".equals(closeEquiptName)) {
 			handler.sendEmptyMessage(1);
 			m_bneedupdate = false;
-			long l1 = System.currentTimeMillis();
+	
 			try {
-				BufferedReader br = new BufferedReader(new InputStreamReader(
-						new FileInputStream(logFile), "GBK"));
-
+				BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(logFile), "GBK"));
 				String s = null;
 				while ((s = br.readLine()) != null) {
 					List<String> list_alarm = new ArrayList<String>();
@@ -1108,17 +1092,39 @@ public class HisEvent extends HisEventTable implements IObject {
 
 					lsyLs2.add(list_alarm);
 				}
-				long l2 = System.currentTimeMillis();
+				
 				if (lsyLs2.size() <= 30) {
 					updateList(AlarmTitles, lsyLs2);
 				} else {
 					updateList(AlarmTitles, lsyLs2.subList(0, 30));
 				}
-				long l3 = System.currentTimeMillis();
+			
 			} catch (Exception e) {
 
 				e.printStackTrace();
 			}
+		} else if("开门事件".equals(closeEquiptName))
+		{
+			
+			m_bneedupdate = false;
+			handler.sendEmptyMessage(4);
+			List<locat_his_DoorEvent> doorList= fileUtil.getDoorEvent(doorFile);
+			for (locat_his_DoorEvent locat_his_DoorEvent : doorList) {
+				List<String> list_DoorEvent = new ArrayList<String>();
+				list_DoorEvent.add(locat_his_DoorEvent.UserID);
+				list_DoorEvent.add(locat_his_DoorEvent.Event);
+				list_DoorEvent.add(locat_his_DoorEvent.Time);
+				list_DoorEvent.add(locat_his_DoorEvent.Result);
+			
+				lsyLs3.add(list_DoorEvent);
+			}
+			
+			
+			if (lsyLs3.size() <= 30) {
+				updateList(DoorEventTitles, lsyLs3);
+			} else {
+				updateList(DoorEventTitles, lsyLs3.subList(0, 30));
+			} 
 		}
 
 		return true;
@@ -1174,8 +1180,7 @@ public class HisEvent extends HisEventTable implements IObject {
 
 		} else if (!"Binding{[Equip[Equip:0]]}".equals(m_strExpression)) {
 
-			String s = UtExpressionParser.getInstance().getMathExpression(
-					m_strExpression);
+			String s = UtExpressionParser.getInstance().getMathExpression(m_strExpression);
 			ArrayList<Integer> list = new ArrayList<Integer>();
 			String[] strCExp = s.split("\\|");
 			for (String str : strCExp) {
@@ -1185,7 +1190,7 @@ public class HisEvent extends HisEventTable implements IObject {
 			}
 			for (int id : list) {
 				String str_equiptName = DataGetter.getEquipmentName(id);
-				map_EquiptNameList.put(str_equiptName, String.valueOf(id));
+				map_EquiptNameList.put(str_equiptName, String.valueOf(id)); 
 				// adapter.add(str_equiptName);
 				nameList.add(str_equiptName);
 				ALLDeviceList.add(str_equiptName);
@@ -1259,6 +1264,8 @@ public class HisEvent extends HisEventTable implements IObject {
 	// 固定标题栏
 	TextView[] m_title;
 	TextView[] s_title;
+	TextView[] d_title;
+
 	TextView view_text; // 信号名显示text
 	// Spinner view_EquiptSpinner = null; // 设备名选择spinner
 	Button view_timeButton; // 日期选择button
@@ -1281,8 +1288,7 @@ public class HisEvent extends HisEventTable implements IObject {
 	private String closeEquiptName = "";
 	public static String str_EquiptId = ""; // 所需要的设备-信号id字符串
 	public String str_Equiptidlsy = "";
-	public int after_year, after_month, after_day, before_year, before_month,
-			before_day;// dialog数据
+	public int after_year, after_month, after_day, before_year, before_month, before_day;// dialog数据
 	int set_year;
 	int set_month;
 	int set_day;
@@ -1305,10 +1311,13 @@ public class HisEvent extends HisEventTable implements IObject {
 	// ArrayList<String> m_sortedarray = null;
 	List<String> lstTitles = null;
 	List<String> AlarmTitles = null;
+	List<String> DoorEventTitles = null;
 	List<List<String>> lstContends = null;
 	// List<List<String>> lsyLs = null;
 	List<List<String>> lsyLs1 = null;
 	List<List<String>> lsyLs2 = null;
+	List<List<String>> lsyLs3 = null;
+	List<List<String>> lsyLs0 = new ArrayList<List<String>>();
 	@SuppressWarnings("unused")
 	private Paint mPaint = new Paint(); // 注意以后变量的定义一定要赋予空间
 	// List<String> fjw_signal = null;
@@ -1317,6 +1326,6 @@ public class HisEvent extends HisEventTable implements IObject {
 
 	private int X, Y, mY;
 	private int index = 1;
-	String one=LanguageStr.one,two=LanguageStr.two,three=LanguageStr.three,four=LanguageStr.four;
-    String set=LanguageStr.set;
+	String one = LanguageStr.one, two = LanguageStr.two, three = LanguageStr.three, four = LanguageStr.four;
+	String set = LanguageStr.set;
 }

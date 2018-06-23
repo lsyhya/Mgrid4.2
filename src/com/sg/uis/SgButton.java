@@ -498,10 +498,7 @@ public class SgButton extends TextView implements IObject {
 						synchronized (m_rRenderWindow.m_oShareObject) {
 							deal_cmd();
 							if ("".equals(cmd_value) == false) {
-								// Log.e("button_onclick->cmd_value:",
-								// cmd_value);
-								// 添加广播信息
-								// 将控制命令的内容添加到控制命令链表上 fjw add
+						
 								m_rRenderWindow.m_oShareObject.m_mapCmdCommand.put(getUniqueID(), cmd_value);
 
 							}
