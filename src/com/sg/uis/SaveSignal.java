@@ -60,7 +60,7 @@ public class SaveSignal extends UtTable implements IObject {
 		lstTitles.add("信号名称");
 		lstTitles.add("数值");
 		lstTitles.add("单位");		  
-		lstTitles.add("数值类型");
+		lstTitles.add("数值类型");   
 		lstTitles.add("告警等级");
 		lstTitles.add("采集时间");
 		//信号名显示text	

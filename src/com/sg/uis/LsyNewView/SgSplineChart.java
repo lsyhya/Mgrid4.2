@@ -647,10 +647,13 @@ public class SgSplineChart extends TextView implements IObject {
 				Double D = Double.parseDouble(Daytime);
 				linePointMapData.get(2).get(i)
 						.put(time, Double.parseDouble(value));
-				if (D != currentDay) {
-					currentDay = D;
+				if (D != currentDay||isFirstIN) {
+					
+					if(D != currentDay)
 					cleanData(2);
-					cleanFile(2);
+					
+					cleanFile(2);		
+					currentDay = D;
 				}
 			}
 			if (isMon) {
@@ -661,10 +664,13 @@ public class SgSplineChart extends TextView implements IObject {
 				Double M = Double.parseDouble(Monthtime);
 				linePointMapData.get(3).get(i)
 						.put(time-1, Double.parseDouble(value));
-				if (M != currentMonth) {
-					currentMonth = M;
+				if (M != currentMonth||isFirstIN) {
+					
+					if(M != currentMonth)
 					cleanData(3);
-					cleanFile(3);
+					
+					cleanFile(3);				
+					currentMonth = M;
 				}
 			}
 			if (isYear) {

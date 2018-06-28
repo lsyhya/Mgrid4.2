@@ -395,7 +395,7 @@ public class FileUtil {
 	public void cleanFile(String path, int index) {
 		
 		
-		System.out.println("数据进来了");
+		
 		File file = new File(path);
 		if (file.isDirectory()) {
 			File[] fileList = file.listFiles();
