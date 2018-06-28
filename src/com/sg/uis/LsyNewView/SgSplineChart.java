@@ -26,6 +26,7 @@ import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
 import com.mgrid.util.CustomPopWindow;
 import com.mgrid.util.ExpressionUtils;
+import com.mgrid.util.FileUtil;
 import com.mgrid.util.TimeUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
@@ -579,7 +580,7 @@ public class SgSplineChart extends TextView implements IObject {
 	@Override
 	public boolean updateValue() {
 
-		// linePoint1.clear();
+		
 		// chartData.clear();
 		if (isMath) {
 			if (sizeMath <= 0 || mode == 0 || linePointMapData.size() <= 0)
@@ -649,6 +650,7 @@ public class SgSplineChart extends TextView implements IObject {
 				if (D != currentDay) {
 					currentDay = D;
 					cleanData(2);
+					cleanFile(2);
 				}
 			}
 			if (isMon) {
@@ -662,6 +664,7 @@ public class SgSplineChart extends TextView implements IObject {
 				if (M != currentMonth) {
 					currentMonth = M;
 					cleanData(3);
+					cleanFile(3);
 				}
 			}
 			if (isYear) {
@@ -681,19 +684,7 @@ public class SgSplineChart extends TextView implements IObject {
 
 			// String name = DataGetter.getSignalName(equail, signal);
 			SplineData dataSeries = null;
-//
-//			if (label_data.size() <= 0) {
-//				
-//			} else {
-//				if (colorData.size() - 1 >= i)
-//					dataSeries = new SplineData(label_data.get(i),
-//							linePointMapData.get(mode).get(i),
-//							Color.parseColor(colorData.get(i)));
-//				else
-//					dataSeries = new SplineData(label_data.get(i),
-//							linePointMapData.get(mode).get(i),
-//							(int) Color.parseColor("#FF76A1EC"));
-//			}
+
 			
 			String year = rButton.get(mode - 1).getText().toString().replace("年", "").trim();
 			String currentYear=Integer.parseInt(Yeartime)-1+"";
@@ -746,6 +737,9 @@ public class SgSplineChart extends TextView implements IObject {
 	}
 
 	private boolean updateData() {
+		
+		
+		
 		chartData = new LinkedList<SplineData>();
 		int i = 0;
 		for (String list : cmdList) {
@@ -796,9 +790,14 @@ public class SgSplineChart extends TextView implements IObject {
 				Double D = Double.parseDouble(Daytime);
 				linePointMapData.get(2).get(i)
 						.put(time, Double.parseDouble(value));
-				if (D != currentDay) {
+				if (D != currentDay||isFirstIN) {
+					
+					if(D != currentDay)
+					cleanData(2);  //清空内存
+					
+					
+					cleanFile(2);	//清空文件				 
 					currentDay = D;
-					cleanData(2);
 				}
 			}
 			if (isMon) {
@@ -809,9 +808,14 @@ public class SgSplineChart extends TextView implements IObject {
 				Double M = Double.parseDouble(Monthtime);
 				linePointMapData.get(3).get(i)
 						.put(time-1, Double.parseDouble(value));
-				if (M != currentMonth) {
+				if (M != currentMonth||isFirstIN) {
+					
+					
+					if(M != currentDay)
+					cleanData(3);  
+					
+					cleanFile(3);
 					currentMonth = M;
-					cleanData(3);
 				}
 			}
 			if (isYear) {
@@ -1046,6 +1050,13 @@ public class SgSplineChart extends TextView implements IObject {
 			linePointData.get(j).clear();
 		}
 	}
+	
+	private void cleanFile(int index)
+	{
+		FileUtil fu=new FileUtil();
+		fu.cleanFile(RC_signal,index);
+	}
+	
 
 	@Override
 	public boolean needupdate() {

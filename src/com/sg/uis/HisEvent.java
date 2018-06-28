@@ -204,12 +204,7 @@ public class HisEvent extends HisEventTable implements IObject {
 		year = calendar.get(Calendar.YEAR);
 		month = calendar.get(Calendar.MONTH);
 		day = calendar.get(Calendar.DAY_OF_MONTH);
-		// dialog = new DatePickerDialog(context, new OnDateSetListener() {
-		// @Override
-		// public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-		//
-		// }
-		// }, year, month, day);
+
 
 		dialog = new DatePickerDialog(context, null, year, month, day);
 		dialog.setButton(DialogInterface.BUTTON_POSITIVE, ON, new DialogInterface.OnClickListener() {

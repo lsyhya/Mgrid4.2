@@ -19,7 +19,7 @@ import data_model.save_multipoint_signal;
 public class EquipmentDataModel {
 
 	public class Signal {
-		
+
 		public Signal() {
 			registedObj = new ArrayList<IObject>();
 			registedNameObj = new ArrayList<IObject>();
@@ -196,123 +196,128 @@ public class EquipmentDataModel {
 			// TODO Auto-generated method stub
 			while (true) {
 
-				synchronized (equipID_eventNum_lst) {
-					equipID_eventNum_lst.clear();
+				synchronized (eventLst) {
 
-					synchronized (htEventData) {
-						if (htEventData != null) {
-							// 将告警信息 添加到数组----
+					synchronized (equipID_eventNum_lst) {
+						equipID_eventNum_lst.clear();
 
-							Iterator<String> iter = htEventData.keySet().iterator();
-							while (iter.hasNext()) {
-								String str_equipID = iter.next();
+						synchronized (htEventData) {
 
-								int num = 0;
-								if (htEventData.get(str_equipID) == null) {
-									continue;
-								} else {
-									num = htEventData.get(str_equipID).size();
-								}
-								equipID_eventNum_lst.put(str_equipID, String.valueOf(num));
+							if (htEventData != null) {
+								// 将告警信息 添加到数组----
 
-								Iterator<String> it = htEventData.get(str_equipID).keySet().iterator();
+								Iterator<String> iter = htEventData.keySet().iterator();
+								while (iter.hasNext()) {
+									String str_equipID = iter.next();
 
-								while (it.hasNext()) {
-									String str_eventID = it.next();
-									if (htEventData == null)
-										break;
-									if (htEventData.get(str_equipID) == null)
+									int num = 0;
+									if (htEventData.get(str_equipID) == null) {
 										continue;
-									Event event = htEventData.get(str_equipID).get(str_eventID);
-									if (event == null)
-										continue;
-
-									SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 时间格式转换
-									Date date = new Date(event.starttime * 1000);
-									String sampletime = formatter.format(date);
-
-									// 处理告警等级
-									String grade = "一般告警";
-									switch (event.grade) {
-									case 1:
-										grade = "通知";
-										break;
-									case 2:
-										grade = "一般告警";
-										break;
-									case 3:
-										grade = "严重告警";
-										break;
-									case 4:
-										grade = "致命告警";
-										break;
-									default:
-										break;
+									} else {
+										num = htEventData.get(str_equipID).size();
 									}
-									String str = "设备：" + DataGetter.getEquipmentName(str_equipID).trim() + " \n"
-											+ "告警名称：" + event.name.trim() + " \n" + "告警等级：" + grade + " \n"
-									// +event.value+" "
-											+ "告警含义：" + event.meaning.trim() + " \n" + "开始时间：" + sampletime + " \n ";
-									// +String.valueOf(event.stoptime);
-									eventLst.add(str);
+									equipID_eventNum_lst.put(str_equipID, String.valueOf(num));
+
+									Iterator<String> it = htEventData.get(str_equipID).keySet().iterator();
+
+									while (it.hasNext()) {
+										String str_eventID = it.next();
+										if (htEventData == null)
+											break;
+										if (htEventData.get(str_equipID) == null)
+											continue;
+										Event event = htEventData.get(str_equipID).get(str_eventID);
+										if (event == null)
+											continue;
+
+										SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 时间格式转换
+										Date date = new Date(event.starttime * 1000);
+										String sampletime = formatter.format(date);
+
+										// 处理告警等级
+										String grade = "一般告警";
+										switch (event.grade) {
+										case 1:
+											grade = "通知";
+											break;
+										case 2:
+											grade = "一般告警";
+											break;
+										case 3:
+											grade = "严重告警";
+											break;
+										case 4:
+											grade = "致命告警";
+											break;
+										default:
+											break;
+										}
+										String str = "设备：" + DataGetter.getEquipmentName(str_equipID).trim() + " \n"
+												+ "告警名称：" + event.name.trim() + " \n" + "告警等级：" + grade + " \n"
+										// +event.value+" "
+												+ "告警含义：" + event.meaning.trim() + " \n" + "开始时间：" + sampletime
+												+ " \n ";
+										// +String.valueOf(event.stoptime);
+										eventLst.add(str);
+									}
 								}
+
+							} else {
+								equipID_eventNum_lst.put("0", "0");
+								eventLst.clear();
 							}
+							equipID_eventNum_lst.put("0", String.valueOf(eventLst.size()));
+
+						}
+
+					}
+
+					// --------------------
+
+					for (int i = 0; i < eventLst.size(); i++) {
+						if (old_eventLst.contains(eventLst.get(i))) {// 告警之前已产生
 
 						} else {
-							equipID_eventNum_lst.put("0", "0");
-							eventLst.clear();
-						}
-						equipID_eventNum_lst.put("0", String.valueOf(eventLst.size()));
-
-					}
-
-				}
-
-				// --------------------
-
-				for (int i = 0; i < eventLst.size(); i++) {
-					if (old_eventLst.contains(eventLst.get(i))) {// 告警之前已产生
-
-					} else {
-
-						if (MGridActivity.m_bTakeEMail) {
-							mythread_mail mail = new mythread_mail();
-							mail.content = eventLst.get(i);
-							mail.start();
-						}
-					}
-				}
-
-				if (old_eventLst.size() > eventLst.size()) {
-					for (int i = 0; i < old_eventLst.size(); i++) {
-						if (eventLst.contains(old_eventLst.get(i)) == false) {
-							long time = java.lang.System.currentTimeMillis();
-							SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-							Date date = new Date(time);
-							String sampletime = formatter.format(date);
-							String str = old_eventLst.get(i).substring(0, old_eventLst.get(i).length() - 1) + "结束时间："
-									+ sampletime;
 
 							if (MGridActivity.m_bTakeEMail) {
 								mythread_mail mail = new mythread_mail();
-								mail.content = str;
+								mail.content = eventLst.get(i);
 								mail.start();
 							}
-
 						}
 					}
-				}
 
-				old_eventLst.clear();
-				for (int i = 0; i < eventLst.size(); i++) {
-					old_eventLst.add(eventLst.get(i));
-				}
-				eventLst.clear();
+					if (old_eventLst.size() > eventLst.size()) {
+						for (int i = 0; i < old_eventLst.size(); i++) {
+							if (eventLst.contains(old_eventLst.get(i)) == false) {
+								long time = java.lang.System.currentTimeMillis();
+								SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+								Date date = new Date(time);
+								String sampletime = formatter.format(date);
+								String str = old_eventLst.get(i).substring(0, old_eventLst.get(i).length() - 1)
+										+ "结束时间：" + sampletime;
 
-				try {
-					Thread.sleep(1000); // 1s的周期线程
-				} catch (Exception e) {
+								if (MGridActivity.m_bTakeEMail) {
+									mythread_mail mail = new mythread_mail();
+									mail.content = str;
+									mail.start();
+								}
 
+							}
+						}
+					}
+
+					old_eventLst.clear();
+					for (int i = 0; i < eventLst.size(); i++) {
+						old_eventLst.add(eventLst.get(i));
+					}
+					eventLst.clear();
+
+					try {
+						Thread.sleep(1000); // 1s的周期线程
+					} catch (Exception e) {
+
+					}
 				}
 			}
 		}
@@ -322,117 +327,122 @@ public class EquipmentDataModel {
 	 * 18/2/6添加 lsy
 	 */
 	public void addEventList() {
-		synchronized (equipID_eventNum_lst) {
-			equipID_eventNum_lst.clear();
 
-			if (htEventData != null) {
-				synchronized (htEventData) {
+		synchronized (eventLst) {
 
-					// 将告警信息 添加到数组----
+			synchronized (equipID_eventNum_lst) {
+				equipID_eventNum_lst.clear();
 
-					Iterator<String> iter = htEventData.keySet().iterator();
-					while (iter.hasNext()) {
-						String str_equipID = iter.next();
+				if (htEventData != null) {
+					synchronized (htEventData) {
 
-						int num = 0;
-						if (htEventData.get(str_equipID) == null) {
-							continue;
-						} else {
-							num = htEventData.get(str_equipID).size();
-						}
-						equipID_eventNum_lst.put(str_equipID, String.valueOf(num));
+						// 将告警信息 添加到数组----
 
-						Iterator<String> it = htEventData.get(str_equipID).keySet().iterator();
+						Iterator<String> iter = htEventData.keySet().iterator();
+						while (iter.hasNext()) {
+							String str_equipID = iter.next();
 
-						while (it.hasNext()) {
-							String str_eventID = it.next();
-							if (htEventData == null)
-								break;
-							if (htEventData.get(str_equipID) == null)
+							int num = 0;
+							if (htEventData.get(str_equipID) == null) {
 								continue;
-							Event event = htEventData.get(str_equipID).get(str_eventID);
-							if (event == null)
-								continue;
-
-							SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 时间格式转换
-							Date date = new Date(event.starttime * 1000);
-							String sampletime = formatter.format(date);
-
-							// 处理告警等级
-							String grade = "一般告警";
-							switch (event.grade) {
-							case 1:
-								grade = "通知";
-								break;
-							case 2:
-								grade = "一般告警";
-								break;
-							case 3:
-								grade = "严重告警";
-								break;
-							case 4:
-								grade = "致命告警";
-								break;
-							default:
-								break;
+							} else {
+								num = htEventData.get(str_equipID).size();
 							}
-							String str = "设备：" + DataGetter.getEquipmentName(str_equipID).trim() + " \n" + "告警名称："
-									+ event.name.trim() + " \n" + "告警等级：" + grade + " \n"
-									// +event.value+" "
-									+ "告警含义：" + event.meaning.trim() + " \n" + "开始时间：" + sampletime + " \n ";
-							// +String.valueOf(event.stoptime);
-							eventLst.add(str);
+							equipID_eventNum_lst.put(str_equipID, String.valueOf(num));
+
+							Iterator<String> it = htEventData.get(str_equipID).keySet().iterator();
+
+							while (it.hasNext()) {
+								String str_eventID = it.next();
+								if (htEventData == null)
+									break;
+								if (htEventData.get(str_equipID) == null)
+									continue;
+								Event event = htEventData.get(str_equipID).get(str_eventID);
+								if (event == null)
+									continue;
+
+								SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 时间格式转换
+								Date date = new Date(event.starttime * 1000);
+								String sampletime = formatter.format(date);
+
+								// 处理告警等级
+								String grade = "一般告警";
+								switch (event.grade) {
+								case 1:
+									grade = "通知";
+									break;
+								case 2:
+									grade = "一般告警";
+									break;
+								case 3:
+									grade = "严重告警";
+									break;
+								case 4:
+									grade = "致命告警";
+									break;
+								default:
+									break;
+								}
+								String str = "设备：" + DataGetter.getEquipmentName(str_equipID).trim() + " \n" + "告警名称："
+										+ event.name.trim() + " \n" + "告警等级：" + grade + " \n"
+										// +event.value+" "
+										+ "告警含义：" + event.meaning.trim() + " \n" + "开始时间：" + sampletime + " \n ";
+								// +String.valueOf(event.stoptime);
+								eventLst.add(str);
+							}
 						}
+
 					}
-
+				} else {
+					equipID_eventNum_lst.put("0", "0");
+					eventLst.clear();
 				}
-			} else {
-				equipID_eventNum_lst.put("0", "0");
-				eventLst.clear();
+				equipID_eventNum_lst.put("0", String.valueOf(eventLst.size()));
 			}
-			equipID_eventNum_lst.put("0", String.valueOf(eventLst.size()));
-		}
 
-		// --------------------
+			// --------------------
 
-		for (int i = 0; i < eventLst.size(); i++) {
-			if (old_eventLst.contains(eventLst.get(i))) {// 告警之前已产生
+			for (int i = 0; i < eventLst.size(); i++) {
+				if (old_eventLst.contains(eventLst.get(i))) {// 告警之前已产生
 
-			} else {
-
-				if (MGridActivity.m_bTakeEMail) {
-					mythread_mail mail = new mythread_mail();
-					mail.content = eventLst.get(i);
-					mail.start();
-				}
-			}
-		}
-
-		if (old_eventLst.size() > eventLst.size()) {
-			for (int i = 0; i < old_eventLst.size(); i++) {
-				if (eventLst.contains(old_eventLst.get(i)) == false) {
-					long time = java.lang.System.currentTimeMillis();
-					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					Date date = new Date(time);
-					String sampletime = formatter.format(date);
-					String str = old_eventLst.get(i).substring(0, old_eventLst.get(i).length() - 1) + "结束时间："
-							+ sampletime;
+				} else {
 
 					if (MGridActivity.m_bTakeEMail) {
 						mythread_mail mail = new mythread_mail();
-						mail.content = str;
+						mail.content = eventLst.get(i);
 						mail.start();
 					}
-
 				}
 			}
+
+			if (old_eventLst.size() > eventLst.size()) {
+				for (int i = 0; i < old_eventLst.size(); i++) {
+					if (eventLst.contains(old_eventLst.get(i)) == false) {
+						long time = java.lang.System.currentTimeMillis();
+						SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						Date date = new Date(time);
+						String sampletime = formatter.format(date);
+						String str = old_eventLst.get(i).substring(0, old_eventLst.get(i).length() - 1) + "结束时间："
+								+ sampletime;
+
+						if (MGridActivity.m_bTakeEMail) {
+							mythread_mail mail = new mythread_mail();
+							mail.content = str;
+							mail.start();
+						}
+
+					}
+				}
+			}
+
+			old_eventLst.clear();
+			for (int i = 0; i < eventLst.size(); i++) {
+				old_eventLst.add(eventLst.get(i));
+			}
+			eventLst.clear();
 		}
 
-		old_eventLst.clear();
-		for (int i = 0; i < eventLst.size(); i++) {
-			old_eventLst.add(eventLst.get(i));
-		}
-		eventLst.clear();
 	}
 
 	private class mythread_mail extends Thread {

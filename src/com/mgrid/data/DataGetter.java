@@ -242,7 +242,7 @@ public class DataGetter extends Thread {
 			proc_rtsignal(currEquipObj);
 		}
 
-		new Thread(new Runnable() {
+		MGridActivity.xianChengChi.execute(new Runnable() {
 
 			@Override
 			public void run() {
@@ -251,6 +251,7 @@ public class DataGetter extends Thread {
 				Equipment pageEquipObj = null;// 当前页面设备
 
 				while (true) {
+
 					HashSet<String> equipSet = equipment.htPageEquipSet.get(currentPage);
 					if (null == equipSet)
 						continue;
@@ -287,24 +288,35 @@ public class DataGetter extends Thread {
 					equipSet = null;
 					equipNamePage = null;
 					pageEquipObj = null;
+
 				}
 			}
-		}).start();
+		});
 
-		// int flag_times = 0;
+		MGridActivity.xianChengChi.execute(new Runnable() {
+
+			@Override
+			public void run() {
+
+				while (true) {
+					
+					
+					try {
+						sleep(100); // 保护sleep
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}					
+					// 这是所有告警刷新函数
+					proc_allrtalarm();
+					equipment.addEventList();
+				}
+			}
+		});
+
 		while (true) {
 
 			try {
 				sleep(5); // 保护sleep
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-
-			proc_allrtalarm();
-			equipment.addEventList();
-
-			try {
-				sleep(100); // sleep(100);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
@@ -1335,7 +1347,6 @@ public class DataGetter extends Thread {
 					else
 						oldEList.add(str);
 
-					
 					Iterator<IObject> regobj_it = signal.registedObj.iterator();
 					while (regobj_it.hasNext()) {
 
@@ -1424,7 +1435,7 @@ public class DataGetter extends Thread {
 		}
 
 		String body = new String(body_buf);
-		
+
 		Signal signal = null;
 		String[] blocks = body.split("\\|");
 
@@ -1750,6 +1761,7 @@ public class DataGetter extends Thread {
 		equipment.htEventData = eventData;
 		alarm_flag = true;
 
+		System.out.println("更新小东东");
 		Iterator<IObject> reglstobj_it = equipment.lstRegistedMainAlarmList.iterator();
 		while (reglstobj_it.hasNext()) {
 			reglstobj_it.next().needupdate(true);

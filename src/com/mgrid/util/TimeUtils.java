@@ -13,6 +13,17 @@ public class TimeUtils {
 		return dateString;
 	}
 	
+	
+	public static String getYM()
+	{
+		return  getNowTime().substring(0,7);
+	}
+	
+	public static String getYMD()
+	{
+		return  getNowTime().substring(0,10);
+	}
+	
 	public static String getYear()
 	{
 			

@@ -54,29 +54,7 @@ public class SgEventList extends UtTable implements IObject {
 		m_rBBox = new Rect();	
 		m_listTempEvents = new Hashtable<String, Hashtable<String, Event>>();
 
-		// System.out.println(MGridActivity.whatLanguage);
-//		if (MGridActivity.whatLanguage) {
-//			DeviceName = "设备名称";
-//			AlarmName = "告警名称";
-//			AlarmMeaning = "告警含义";
-//			AlarmSeverity = "告警等级";
-//			StartTime = "开始时间";
-//			one="通知";
-//			two="一般告警";
-//			three="严重告警";
-//			four="致命告警";
-//
-//		} else {
-//			DeviceName = "DeviceName";
-//			AlarmName = "AlarmName";
-//			AlarmMeaning = "AlarmMeaning";
-//			AlarmSeverity = "AlarmSeverity";
-//			StartTime = "StartTime";
-//			one="Notice";
-//			two="GeneralAlarm";
-//			three="CriticalAlarm";
-//			four="FatalAlarm";
-//		}
+
 
 		// 表头
 		lstTitles = new ArrayList<String>();
@@ -97,6 +75,7 @@ public class SgEventList extends UtTable implements IObject {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case 1:
+				
 				updateContends(lstTitles, lstContends); // 表格行显示
 				update();
 				break;
@@ -147,6 +126,9 @@ public class SgEventList extends UtTable implements IObject {
 
 			while (true) {
 				try {
+					
+					
+					
 					Thread.sleep(500);
 					handler.sendEmptyMessage(1);
 				} catch (Exception e) {
@@ -358,6 +340,8 @@ public class SgEventList extends UtTable implements IObject {
 
 	@Override
 	public void updateWidget() {
+		
+	
 		update();
 	}
 
@@ -366,7 +350,7 @@ public class SgEventList extends UtTable implements IObject {
 	public boolean updateValue() {
 
 		
-		System.out.println("告警更新");
+		
 		m_bneedupdate = false;
 		if (m_rRenderWindow == null)
 			return false;
@@ -384,18 +368,12 @@ public class SgEventList extends UtTable implements IObject {
 			lstContends.clear();
 			oldEvenLists=null;
 			handler.sendEmptyMessage(5);
-			/*
-			 * List<String> fjwRow = new ArrayList<String>();
-			 * fjwRow.add("暂无告警信息"); fjwRow.add("暂无告警信息"); fjwRow.add("暂无告警信息");
-			 * fjwRow.add("暂无告警信息"); fjwRow.add("暂无告警信息");
-			 * lstContends.add(fjwRow); updateContends(lstTitles, lstContends);
-			 * //
-			 */
+			
 			return true; //
-			// return false;
+			
 		}
 
-		System.out.println("告警大小："+listEvents.size());
+		
 		
 		if (MGridActivity.alarmWay != null
 				&& !MGridActivity.alarmWay.equals("")) {
@@ -508,7 +486,9 @@ public class SgEventList extends UtTable implements IObject {
 		}
 
 		// updateContends(lstTitles, lstContends_two); //表格行显示
-
+		
+		
+     
 		return true;
 	}
 
@@ -569,7 +549,7 @@ public class SgEventList extends UtTable implements IObject {
 	@Override
 	public void needupdate(boolean bNeedUpdate) {
 
-		// System.out.println("123Evenlit ，"+bNeedUpdate);
+		
 		m_bneedupdate = bNeedUpdate;
 		if(TotalVariable.ALARMPIEMAP.size()>0)
 		{
@@ -625,6 +605,7 @@ public class SgEventList extends UtTable implements IObject {
 				old_eventss = new_eventss;
 			}
 		}
+		
 
 	}
 

@@ -11,7 +11,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -150,7 +153,7 @@ public class FileUtil {
 		}
 		return true;
 	}
-	
+
 	// 判断目录是否存在 不存在就创建
 	public boolean isMuExit(File file) {
 		if (!file.exists()) {
@@ -217,186 +220,211 @@ public class FileUtil {
 	}
 
 	/**
-	 * 生成开门事件记录文件
-	 * DoorInvented控件
+	 * 生成开门事件记录文件 DoorInvented控件
 	 */
-	public void saveDoorEvent(String path,String name,String text) {
+	public void saveDoorEvent(String path, String name, String text) {
 
 		try {
 			File mu = new File(path);
 			isMuExit(mu);
-			File file=new File(path+"/"+name);
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file,true),"gb2312"));
+			File file = new File(path + "/" + name);
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "gb2312"));
 			bw.write(text);
 			bw.newLine();
 			bw.flush();
-			bw.close();		
-		} catch (Exception e) {			
+			bw.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 获取开门事件集合
+	 * 
 	 * @param file
 	 */
-	public List getDoorEvent(File file)
-	{
-		List<locat_his_DoorEvent> list=new ArrayList<>();
-		
+	public List getDoorEvent(File file) {
+		List<locat_his_DoorEvent> list = new ArrayList<>();
+
 		try {
-			BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(file),"gb2312"));
-		    String line=null;
-		    while((line=br.readLine())!=null)
-		    {
-		    	locat_his_DoorEvent locat=new locat_his_DoorEvent();
-		    	if(locat.read_string(line));
-		    	list.add(locat);
-		    }
-		    br.close();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return list;
-		
-	}
-	
-	//删除USer
-	public void deleteUser(File file,List<String> textList)
-	{
-		try {
-			BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(file),"gb2312"));
-		    String line="";
-		    StringBuffer sb=new StringBuffer();
-		    while((line=br.readLine())!=null)
-		    {
-		    	sb.append(line).append("&&&");
-		    }		    
-		    String result=sb.toString();
-		    for(String replaceText: textList)
-		    {
-		    	result=result.replace(replaceText, "");
-		    }
-		    BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"gb2312"));
-		    String[] str=result.split("&&&");
-		    for(int i=0;i<str.length;i++)
-		    {
-		    	bw.write(str[i]);
-		    	bw.newLine();
-		    }
-		    bw.flush();
-		    bw.close();
-		    br.close();
-		    
-		} catch (UnsupportedEncodingException e) {
-			
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			
-			e.printStackTrace();
-		} catch (IOException e) {
-			
-			e.printStackTrace();
-		}
-	}
-	
-	//修改User
-	public void replaceUser(File file,Map<String,String> textMap)
-	{
-		try {
-			BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(file),"gb2312"));
-		    String line="";
-		    StringBuffer sb=new StringBuffer();
-		    while((line=br.readLine())!=null)
-		    {
-		    	sb.append(line).append("&&&");
-		    }		    
-		    String result=sb.toString();
-		    
-		    Iterator<Map.Entry<String, String>> it=textMap.entrySet().iterator();
-		    while(it.hasNext())
-		    {
-		    	Entry<String, String> entry=it.next();
-		    	System.out.println(entry.getKey()+"::::"+entry.getValue());
-		    	result=result.replace(entry.getKey(), entry.getValue());
-		    }		   
-		    BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"gb2312"));
-		    String[] str=result.split("&&&");
-		    for(int i=0;i<str.length;i++)
-		    {
-		    	bw.write(str[i]);
-		    	bw.newLine();
-		    }
-		    bw.flush();
-		    bw.close();
-		    br.close();
-		    
-		} catch (UnsupportedEncodingException e) {
-			
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			
-			e.printStackTrace();
-		} catch (IOException e) {
-			
-			e.printStackTrace();
-		}
-	}
-	//添加User
-		public void AddUser(File file,Map<String,String> textMap)
-		{
-			try {
-				BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(file),"gb2312"));
-			    String line="";
-			    StringBuffer sb=new StringBuffer();
-			    while((line=br.readLine())!=null)
-			    {
-			    	sb.append(line).append("&&&");
-			    }		    
-			    String result=sb.toString();
-			    
-			    
-			    BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"gb2312"));
-			    String[] str=result.split("&&&");
-			    for(int i=0;i<str.length;i++)
-			    {
-			    	if(i==9)
-			    	{
-			    		   Iterator<Map.Entry<String, String>> it=textMap.entrySet().iterator();
-						    while(it.hasNext())
-						    {
-						    	Entry<String, String> entry=it.next();
-						    	bw.write(entry.getKey());
-						    	bw.newLine();
-						    	bw.write(entry.getValue());
-						    	bw.newLine();
-						    }		
-			    	}
-			    	bw.write(str[i]);
-			    	bw.newLine();
-			    }
-			    bw.flush();
-			    bw.close();
-			    br.close();
-			    
-			} catch (UnsupportedEncodingException e) {
-				
-				e.printStackTrace();
-			} catch (FileNotFoundException e) {
-				
-				e.printStackTrace();
-			} catch (IOException e) {
-				
-				e.printStackTrace();
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "gb2312"));
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				locat_his_DoorEvent locat = new locat_his_DoorEvent();
+				if (locat.read_string(line))
+					;
+				list.add(locat);
 			}
+			br.close();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+
+		return list;
+
+	}
+
+	// 删除USer
+	public void deleteUser(File file, List<String> textList) {
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "gb2312"));
+			String line = "";
+			StringBuffer sb = new StringBuffer();
+			while ((line = br.readLine()) != null) {
+				sb.append(line).append("&&&");
+			}
+			String result = sb.toString();
+			for (String replaceText : textList) {
+				result = result.replace(replaceText, "");
+			}
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "gb2312"));
+			String[] str = result.split("&&&");
+			for (int i = 0; i < str.length; i++) {
+				bw.write(str[i]);
+				bw.newLine();
+			}
+			bw.flush();
+			bw.close();
+			br.close();
+
+		} catch (UnsupportedEncodingException e) {
+
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+
+			e.printStackTrace();
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+	}
+
+	// 修改User
+	public void replaceUser(File file, Map<String, String> textMap) {
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "gb2312"));
+			String line = "";
+			StringBuffer sb = new StringBuffer();
+			while ((line = br.readLine()) != null) {
+				sb.append(line).append("&&&");
+			}
+			String result = sb.toString();
+
+			Iterator<Map.Entry<String, String>> it = textMap.entrySet().iterator();
+			while (it.hasNext()) {
+				Entry<String, String> entry = it.next();
+				System.out.println(entry.getKey() + "::::" + entry.getValue());
+				result = result.replace(entry.getKey(), entry.getValue());
+			}
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "gb2312"));
+			String[] str = result.split("&&&");
+			for (int i = 0; i < str.length; i++) {
+				bw.write(str[i]);
+				bw.newLine();
+			}
+			bw.flush();
+			bw.close();
+			br.close();
+
+		} catch (UnsupportedEncodingException e) {
+
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+
+			e.printStackTrace();
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+	}
+
+	// 添加User
+	public void AddUser(File file, Map<String, String> textMap) {
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "gb2312"));
+			String line = "";
+			StringBuffer sb = new StringBuffer();
+			while ((line = br.readLine()) != null) {
+				sb.append(line).append("&&&");
+			}
+			String result = sb.toString();
+
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "gb2312"));
+			String[] str = result.split("&&&");
+			for (int i = 0; i < str.length; i++) {
+				if (i == 9) {
+					Iterator<Map.Entry<String, String>> it = textMap.entrySet().iterator();
+					while (it.hasNext()) {
+						Entry<String, String> entry = it.next();
+						bw.write(entry.getKey());
+						bw.newLine();
+						bw.write(entry.getValue());
+						bw.newLine();
+					}
+				}
+				bw.write(str[i]);
+				bw.newLine();
+			}
+			bw.flush();
+			bw.close();
+			br.close();
+
+		} catch (UnsupportedEncodingException e) {
+
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+
+			e.printStackTrace();
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 删除曲线不必要的数据文件
+	 */
+
+	public void cleanFile(String path, int index) {
+		
+		
+		System.out.println("数据进来了");
+		File file = new File(path);
+		if (file.isDirectory()) {
+			File[] fileList = file.listFiles();
+			for (File f : fileList) {
+
+				Date date = null;
+				try {
+					if (index == 2) {
+
+						date = new SimpleDateFormat("yyyy-MM-dd").parse(TimeUtils.getYMD());
+						if (f.getName().split("-").length >= 5&&f.lastModified()<date.getTime()) {
+							f.delete();
+						}
+
+					} else if (index == 3) {
+
+						date = new SimpleDateFormat("yyyy-MM").parse(TimeUtils.getYM());
+						if (f.getName().split("-").length == 4&&f.lastModified()<date.getTime()) {
+							f.delete();
+						}
+					}
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+
+			}
+
+		}
+
+	}
 
 }
