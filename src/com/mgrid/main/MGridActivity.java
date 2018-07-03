@@ -160,12 +160,10 @@ public class MGridActivity extends Activity {
 
 	// lsy 18/6/20新增 user管理功能
 	public static int m_UserAway = 0;// 0代表老版本，1代表每个权限页面需要密码登录，可记录。 2代表用户名 密码登录后进行操作。
-    
-	
+
 	public static String[][] m_MaskPage;// 权限页面内的子页面
 	public static int m_MaskCount;// 总权限页面的个数
 	public static UserManager userManager;
-	
 
 	public static HashMap<String, IObject> AlarmAll = new HashMap<String, IObject>();
 	public static File all_Event_file = new File("/mgrid/data/Command/0.log");
@@ -215,9 +213,7 @@ public class MGridActivity extends Activity {
 		context = this;
 		m_oViewGroups = new HashMap<String, MainWindow>();
 		m_oPageList = new ArrayList<String>();
-		userManager=new UserManager();
-		
-		
+		userManager = new UserManager();
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 强制为横屏
 		mImm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);// 输入法窗口
@@ -281,9 +277,7 @@ public class MGridActivity extends Activity {
 							SgImage.isChangColor = false;
 							acquireWakeLock();
 						}
-					}
-
-					if (!isLoading && isPlaymv) {// 判断是否加载完成并且开启屏保mv功能
+					} else if (!isLoading && isPlaymv) {// 判断是否加载完成并且开启屏保mv功能
 						if (isChangGif) {
 							if (isSleep) {
 								SgImage.isChangColor = true;
@@ -295,6 +289,9 @@ public class MGridActivity extends Activity {
 								mTimeHandler.postDelayed(runTime, sleepTime * 1000);
 							}
 						}
+					}else if(!isLoading)
+					{
+						onPageChange(m_sMainPage);
 					}
 				}
 			}
@@ -443,14 +440,14 @@ public class MGridActivity extends Activity {
 		}
 
 		// m_pageUserName = iniReader.getValue("SysConf", "MaskPageUser", "admin");
-        //获取用户管理方式
+		// 获取用户管理方式
 		m_UserAway = Integer.parseInt(iniReader.getValue("SysConf", "UserAway", "0"));
-		//获取用户页面个数
+		// 获取用户页面个数
 		m_MaskCount = Integer.parseInt(iniReader.getValue("SysConf", "MaskCount", "0"));
-		System.out.println("个数："+m_MaskCount);
-		
+		System.out.println("个数：" + m_MaskCount);
+
 		if (m_MaskCount == 0) {
-			m_MaskPage = new String[1][1]; 
+			m_MaskPage = new String[1][1];
 			m_pagePassWord = new String[1];
 			m_MaskPage[0][0] = iniReader.getDefPageValue("SysConf", "MaskPage");
 			m_pagePassWord[0] = iniReader.getValue("SysConf", "MaskPagePassword", "admin");
@@ -468,23 +465,22 @@ public class MGridActivity extends Activity {
 				m_pagePassWord[i] = iniReader.getValue("SysConf", "MaskPagePassword" + (i + 1), "admin");
 			}
 		}
-		
+
 		if (m_UserAway > 0) {
 
 			for (int i = 0; i < 10; i++) {
 
-				String id = iniReader.getValue("SysConf", "User" + i);  
+				String id = iniReader.getValue("SysConf", "User" + i);
 				String pw = iniReader.getValue("SysConf", "PassWord" + i);
-				if(id==null||pw==null)
-				{
-					continue; 
-				}				
+				if (id == null || pw == null) {
+					continue;
+				}
 				if (i == 0) {
-					User user=new User(id, pw, 0);
-                    userManager.addUser(i, user);
+					User user = new User(id, pw, 0);
+					userManager.addUser(i, user);
 				} else {
-					User user=new User(id, pw, i);
-                    userManager.addUser(i, user);
+					User user = new User(id, pw, i);
+					userManager.addUser(i, user);
 				}
 
 			}
