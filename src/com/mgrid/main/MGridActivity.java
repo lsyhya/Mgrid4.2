@@ -483,7 +483,7 @@ public class MGridActivity extends Activity {
 					User user=new User(id, pw, 0);
                     userManager.addUser(i, user);
 				} else {
-					User user=new User(id, pw, 1);
+					User user=new User(id, pw, i);
                     userManager.addUser(i, user);
 				}
 

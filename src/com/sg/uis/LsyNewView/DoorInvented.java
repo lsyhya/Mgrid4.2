@@ -167,17 +167,22 @@ public class DoorInvented extends TextView implements IObject {
 			sendCmd();
 		} else {
 			saveResult(0);
+			
 			Toast.makeText(getContext(), text19, Toast.LENGTH_SHORT).show();
 		}
+		Clear();
 	}
 
 	// 密码是否正确
 	private boolean isSure() {
 
 		String str = tv.getText().toString();
-		if (MGridActivity.userManager.getPassWordList().contains(str)) {
-			saveResult(1);
-			return true;
+		if (MGridActivity.userManager.getNowUser() != null) {
+			if (MGridActivity.userManager.getNowUser().getPassWord().equals(str)) {
+				saveResult(1);
+				
+				return true;
+			}
 		}
 
 		return false;
@@ -190,10 +195,10 @@ public class DoorInvented extends TextView implements IObject {
 
 			@Override
 			public void run() {
-				
+
 				String nowTime = TimeUtils.getNowTime();
 				String event = "开门";
-				getNowUser(tv.getText().toString());
+				getNowUser();
 
 				switch (i) {
 				case 0:
@@ -219,17 +224,11 @@ public class DoorInvented extends TextView implements IObject {
 	 * 
 	 * @param string
 	 */
-	private void getNowUser(String string) {
-
-		Iterator<Map.Entry<Integer, User>> it = MGridActivity.userManager.getUserManaget().entrySet().iterator();
-		while (it.hasNext()) {
-			User user = it.next().getValue();
-			if (user.getPassWord().equals(string)) {
-				nowUser = user.getUserID();
-				return;
-			}
+	private void getNowUser() {
+		if( MGridActivity.userManager.getNowUser()!=null)
+		{
+		    nowUser = MGridActivity.userManager.getNowUser().getUserID();
 		}
-		nowUser=string;
 	}
 
 	// 设置文字

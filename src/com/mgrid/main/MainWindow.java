@@ -34,6 +34,7 @@ import com.mgrid.data.DataGetter;
 import com.mgrid.data.EquipmentDataModel.Event;
 import com.mgrid.data.EquipmentDataModel.Signal;
 import com.mgrid.util.ExpressionUtils;
+import com.mgrid.util.UISManager;
 import com.sg.common.Calculator;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
@@ -958,6 +959,7 @@ public class MainWindow extends ViewGroup {
 						}else if ("ChangeUserInfo".equals(strType)) {
 							ChangeUserInfo CUI = new ChangeUserInfo(this.getContext());
 							m_mapUIs.put(strID, CUI);
+							UISManager.ChangeUserInfoList.add(CUI);
 						}else {
 							showMsgDlg("警告", "不支持的控件类型： " + strType);
 							bExit = false;

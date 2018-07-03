@@ -9,7 +9,7 @@ public class User {
 
 	private String UserID;
 	private String passWord;
-	private int flag=-1;//0代表管理员，1代表普通用户
+	private int flag=-1;//0代表管理员，其它代表普通用户
 	
 	public User(String UserID,String passWord,int flag)
 	{

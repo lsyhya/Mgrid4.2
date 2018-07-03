@@ -1,6 +1,5 @@
 package com.sg.uis.LsyNewView;
 
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,25 +48,18 @@ import android.widget.Toast;
  */
 public class ChangeUserInfo extends TextView implements IObject {
 
-	private String UserID=LanguageStr.UserID;
-	private String PassWord=LanguageStr.PassWord;
-
-	
-	private String Show=LanguageStr.Show;
-	private String Add=LanguageStr.Add;
-	private String Alter=LanguageStr.Alter;
-	
-
-	private String delete=LanguageStr.delete;
-
-
-	boolean isdelete = true;
+	private String UserID = LanguageStr.UserID;
+	private String PassWord = LanguageStr.PassWord;
+	private String Show = LanguageStr.Show;
+	private String Add = LanguageStr.Add;
+	private String Alter = LanguageStr.Alter;
+	private String delete = LanguageStr.delete;
+	private boolean isdelete = true;
 	private ChangeUserInfo scnp;
-	private FileUtil fileUtil=null;
-	private String oldUserId="";
-	private String oldPassWord="";
-	private int index;
-
+	private FileUtil fileUtil = null;
+	private String oldUserId = "";
+	private String oldPassWord = "";
+	public int index;
 
 	public ChangeUserInfo(Context context) {
 		super(context);
@@ -75,7 +67,7 @@ public class ChangeUserInfo extends TextView implements IObject {
 		this.setGravity(Gravity.CENTER);
 		this.setFocusableInTouchMode(true);
 		scnp = this;
-		fileUtil=new FileUtil();
+		fileUtil = new FileUtil();
 		m_fFontSize = this.getTextSize();
 		this.setTextSize(20);
 		this.setOnTouchListener(new OnTouchListener() {
@@ -104,8 +96,6 @@ public class ChangeUserInfo extends TextView implements IObject {
 			}
 		});
 
-
-
 		setPadding(0, 0, 0, 0);
 
 		m_oPaint = new Paint();
@@ -113,70 +103,61 @@ public class ChangeUserInfo extends TextView implements IObject {
 
 		etName = new EditText(context);
 		etPhone = new EditText(context);
-		
 
 		tvName = new TextView(context);
 		tvPhone = new TextView(context);
-		
+
 		tvTagorder = new TextView(context);
 
-		
 		btDelete = new Button(context);
 
-	
 		etName.setBackgroundResource(R.drawable.et_select);
 		etPhone.setBackgroundResource(R.drawable.et_select);
-		
+
 		btDelete.setBackgroundResource(R.drawable.bg_shadow);
 		setBackgroundResource(R.drawable.bg_shadow);
 
 		tvName.setPadding(0, 0, 0, 0);
 		tvPhone.setPadding(0, 0, 0, 0);
-		
+
 		tvTagorder.setPadding(0, 0, 0, 0);
 
 		// btState.setPadding(0, 0, 0, 0);
 
 		tvName.setTextSize(15);
 		tvPhone.setTextSize(15);
-	
+
 		tvTagorder.setTextSize(15);
 
-		
 		btDelete.setTextSize(15);
 
 		etName.setTextSize(15);
 		etPhone.setTextSize(15);
-		
 
 		tvName.setText(UserID);
 		tvPhone.setText(PassWord);
-		
+
 		this.setText(Show);
 
-		
 		btDelete.setText(delete);
 		btDelete.setEnabled(false);
 
-		
 		btDelete.setTextColor(Color.BLACK);
 
 		tvName.setTextColor(Color.BLACK);
 		tvPhone.setTextColor(Color.BLACK);
-	
+
 		tvTagorder.setTextColor(Color.BLACK);
 
 		etName.setFilters(new InputFilter[] { new InputFilter.LengthFilter(12) });
 		etPhone.setFilters(new InputFilter[] { new InputFilter.LengthFilter(11) });
-		
 
 		etName.setSingleLine();
 		etPhone.setSingleLine();
-		
 
 		etName.setGravity(Gravity.CENTER);
 		etPhone.setGravity(Gravity.CENTER);
-	
+
 		tvTagorder.setGravity(Gravity.CENTER);
 		btDelete.setGravity(Gravity.CENTER);
 
@@ -211,21 +192,13 @@ public class ChangeUserInfo extends TextView implements IObject {
 			}
 		});
 
-	
-
-		
-
 		etName.setTextColor(Color.BLACK);
 		etPhone.setTextColor(Color.BLACK);
-	
 
 		etName.setCursorVisible(true);// 让edittext出现光标
 		etPhone.setCursorVisible(true);
-		
 
-		
 		etPhone.setInputType(EditorInfo.TYPE_CLASS_PHONE);
-	
 
 		imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);// 显示输入法窗口
 
@@ -238,179 +211,187 @@ public class ChangeUserInfo extends TextView implements IObject {
 		if (m_rRenderWindow.isLayoutVisible(getBBox()) == false)
 			return;
 
-		
 		super.onDraw(canvas);
 	}
 
 	// 通过点击修改ini中的内容
 	protected void onClicked() {
 
-		String str=this.getText().toString();
+		String str = this.getText().toString();
+
+		if (str.equals(Show)) {
+
+			Show();
+
+		} else if (str.equals(Add)) {
+			Add();
+		} else if (str.equals(Alter)) {
+			Alter();
+		}
+
+	}
+
+	/**
+	 * 隐藏所有View
+	 */
+	public void hideAllView() {
 		
-	        if(str.equals(Show))
-	        {
-	        	
-	        	Show();
-	        	
-	        }else if(str.equals(Add))
-	        {
-	        	Add();
-	        }else if(str.equals(Alter))
-	        {
-	        	Alter();
-	        }
-                		
+		tvTagorder.setVisibility(View.GONE);
+		etName.setVisibility(View.GONE);
+		tvName.setVisibility(View.GONE);
+		etPhone.setVisibility(View.GONE);
+		tvPhone.setVisibility(View.GONE);
+		btDelete.setVisibility(View.GONE);
+		this.setVisibility(View.GONE);
 		
 	}
-	
-	
+    
+	/**
+	 * 显示所有View
+	 */
+	public void showAllView() {
+		
+		tvTagorder.setVisibility(View.VISIBLE);
+		etName.setVisibility(View.VISIBLE);
+		tvName.setVisibility(View.VISIBLE);
+		etPhone.setVisibility(View.VISIBLE);
+		tvPhone.setVisibility(View.VISIBLE);
+		btDelete.setVisibility(View.VISIBLE);
+		this.setVisibility(View.VISIBLE);
+		
+	}
 
-	//修改
+	// 修改
 	private void Alter() {
-		 
-	MGridActivity.xianChengChi.execute(new Runnable() {
-			
+
+		MGridActivity.xianChengChi.execute(new Runnable() {
+
 			@Override
 			public void run() {
-				
-				String id=etName.getText().toString();
-				String pw=etPhone.getText().toString();
-				
-				if(id.equals("")||pw.equals(""))
-				{
+
+				String id = etName.getText().toString();
+				String pw = etPhone.getText().toString();
+
+				if (id.equals("") || pw.equals("")) {
 					handler.sendEmptyMessage(3);
-				}else
-				{
-					Map<String,String> map=new HashMap<String,String>();
-					map.put("User" +index+"="+oldUserId, "User" +index+"="+id);
-					map.put("PassWord" +index+"="+oldPassWord, "PassWord" +index+"="+pw);
-					fileUtil.replaceUser(new File(Environment.getExternalStorageDirectory().getPath() + "/MGrid.ini"), map);
-				    
-		 			MGridActivity.userManager.setUser(index, id, pw,oldUserId,oldPassWord);
+				} else {
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("User" + index + "=" + oldUserId, "User" + index + "=" + id);
+					map.put("PassWord" + index + "=" + oldPassWord, "PassWord" + index + "=" + pw);
+					fileUtil.replaceUser(new File(Environment.getExternalStorageDirectory().getPath() + "/MGrid.ini"),
+							map);
+
+					MGridActivity.userManager.setUser(index, id, pw, oldUserId, oldPassWord);
 					handler.sendEmptyMessage(1);
-					
+
 				}
-				
-				
-						
-				
+
 			}
-		});	
+		});
 	}
 
-	//添加
+	// 添加
 	private void Add() {
-		
-       MGridActivity.xianChengChi.execute(new Runnable() {
-			
+
+		MGridActivity.xianChengChi.execute(new Runnable() {
+
 			@Override
 			public void run() {
-				
-				String id=etName.getText().toString();
-				String pw=etPhone.getText().toString();
-				
-				if(id.equals("")||pw.equals(""))
-				{
+
+				String id = etName.getText().toString();
+				String pw = etPhone.getText().toString();
+
+				if (id.equals("") || pw.equals("")) {
 					handler.sendEmptyMessage(3);
-				}else
-				{
-					Map<String,String> map=new HashMap<String,String>();
-					map.put("User" +index+"="+id,"PassWord" +index+"="+pw);
+				} else {
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("User" + index + "=" + id, "PassWord" + index + "=" + pw);
 					fileUtil.AddUser(new File(Environment.getExternalStorageDirectory().getPath() + "/MGrid.ini"), map);
 					User user;
-					if(index!=0)
-					{
-					    user=new User(id, pw, 1);
-					}else
-					{ 
-					    user=new User(id, pw, 0);
+					if (index != 0) {
+						user = new User(id, pw, 1);
+					} else {
+						user = new User(id, pw, 0);
 					}
-					
+
 					MGridActivity.userManager.addUser(index, user);
 					handler.sendEmptyMessage(2);
-					 
+
 				}
 			}
-		});		
+		});
 	}
-	
-	//删除
-	private void Delete()
-	{
+
+	// 删除
+	private void Delete() {
 		MGridActivity.xianChengChi.execute(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				
-				List<String> list=new ArrayList<String>();
-				list.add("User" +index+"="+etName.getText().toString());
-				list.add("PassWord" +index+"="+etPhone.getText().toString());		
+
+				List<String> list = new ArrayList<String>();
+				list.add("User" + index + "=" + etName.getText().toString());
+				list.add("PassWord" + index + "=" + etPhone.getText().toString());
 				fileUtil.deleteUser(new File(Environment.getExternalStorageDirectory().getPath() + "/MGrid.ini"), list);
-			    
+
 				MGridActivity.userManager.deleteUser(index);
 				handler.sendEmptyMessage(0);
 			}
-		});		
+		});
 	}
 
-	//显示 
+	// 显示
 	private void Show() {
-		
-		Map<Integer,User> map=MGridActivity.userManager.getUserManaget();
-		User user=map.get(Integer.parseInt(tvTagorder.getText().toString()));
-		if(user!=null)
-		{
-			oldUserId=user.getUserID();
+
+		Map<Integer, User> map = MGridActivity.userManager.getUserManaget();
+		User user = map.get(Integer.parseInt(tvTagorder.getText().toString()));
+		if (user != null) {
+			oldUserId = user.getUserID();
 			etName.setText(oldUserId);
-			oldPassWord=user.getPassWord();
+			oldPassWord = user.getPassWord();
 			etPhone.setText(oldPassWord);
 			this.setText(Alter);
 			btDelete.setEnabled(true);
-		}else
-		{
+		} else {
 			this.setText(Add);
 		}
-		
+
 	}
 
-	Handler handler =new Handler() {
+	Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
-			
+
 			switch (msg.what) {
 			case 0:
-				
+
 				setText(Add);
 				etName.setText("");
 				etPhone.setText("");
 				btDelete.setEnabled(false);
 				Toast.makeText(getContext(), "刪除成功", Toast.LENGTH_SHORT).show();
-				
-				
+
 				break;
 
 			case 1:
-				
-				oldUserId=etName.getText().toString();
-				oldPassWord=etPhone.getText().toString();
+
+				oldUserId = etName.getText().toString();
+				oldPassWord = etPhone.getText().toString();
 				Toast.makeText(getContext(), "修改成功", Toast.LENGTH_SHORT).show();
-				
+
 				break;
-            case 2:
-				
-				oldUserId=etName.getText().toString();
-				oldPassWord=etPhone.getText().toString();
+			case 2:
+
+				oldUserId = etName.getText().toString();
+				oldPassWord = etPhone.getText().toString();
 				setText(Alter);
 				btDelete.setEnabled(true);
 				Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
-				
+
 				break;
 			}
-			
-			
-		}; 
-	};
-	
 
+		};
+	};
 
 	@Override
 	public void doLayout(boolean bool, int l, int t, int r, int b) {
@@ -426,35 +407,31 @@ public class ChangeUserInfo extends TextView implements IObject {
 		m_rBBox.right = nX + nWidth;
 		m_rBBox.bottom = nY + nHeight;
 
-		Rect rect=new Rect();
+		Rect rect = new Rect();
 		getPaint().getTextBounds("用户密码", 0, "用户密码".length(), rect);
-		int height=rect.height();
-		int width=rect.height();
-		
+		int height = rect.height();
+		int width = rect.height();
+
 		if (m_rRenderWindow.isLayoutVisible(m_rBBox)) {
 
 			tvTagorder.layout(nX, (int) (nY), nX + (int) (nWidth * 0.029f), nY + nHeight);
-			tvName.layout(nX + (int) (nWidth * 0.058f), (int) (nY ), nX + (int) (nWidth * 0.158f),
-					nY + nHeight);
-			etName.layout(nX + (int) (nWidth * 0.187f), nY , nX + (int) (nWidth * 0.387f),
-					nY + nHeight - nHeight / 10);
-			tvPhone.layout(nX + (int) (nWidth * 0.416f), (int) (nY ), nX + (int) (nWidth * 0.516f),
-					nY + nHeight);
-			etPhone.layout(nX + (int) (nWidth * 0.545f), nY , nX + (int) (nWidth * 0.745f),
-					nY + nHeight - nHeight / 10);
-			
+			tvName.layout(nX + (int) (nWidth * 0.058f), (int) (nY), nX + (int) (nWidth * 0.158f), nY + nHeight);
+			etName.layout(nX + (int) (nWidth * 0.187f), nY, nX + (int) (nWidth * 0.387f), nY + nHeight - nHeight / 10);
+			tvPhone.layout(nX + (int) (nWidth * 0.416f), (int) (nY), nX + (int) (nWidth * 0.516f), nY + nHeight);
+			etPhone.layout(nX + (int) (nWidth * 0.545f), nY, nX + (int) (nWidth * 0.745f), nY + nHeight - nHeight / 10);
+
 			this.layout(nX + (int) (nWidth * 0.774f), nY, nX + (int) (nWidth * 0.874f), nY + nHeight);
 			btDelete.layout(nX + (int) (nWidth * 0.903f), nY, nX + (int) (nWidth * 1), nY + nHeight);
 		}
 
-		tvTagorder.setPadding(0, (int)((0.85 * nHeight-height)/2), 0, 0);
-		tvName.setPadding((int)((0.1 * nWidth-width)/3), (int)((0.85 * nHeight-height)/2), 0, 0);
-		tvPhone.setPadding((int)((0.1 * nWidth-width)/3), (int)((0.85 * nHeight-height)/2), 0, 0);
-		btDelete.setPadding(0, (int)((0.85*nHeight-height)/2), 0, 0);
-		etName.setPadding(0,(int)((0.8*nHeight-height)/2), 0, 0);
-		etPhone.setPadding(0, (int)((0.8*nHeight-height)/2), 0, 0);
-	
-		//this.setPadding(0, (int)((nHeight-height)/2), 0, 0);
+		tvTagorder.setPadding(0, (int) ((0.85 * nHeight - height) / 2), 0, 0);
+		tvName.setPadding((int) ((0.1 * nWidth - width) / 3), (int) ((0.85 * nHeight - height) / 2), 0, 0);
+		tvPhone.setPadding((int) ((0.1 * nWidth - width) / 3), (int) ((0.85 * nHeight - height) / 2), 0, 0);
+		btDelete.setPadding(0, (int) ((0.85 * nHeight - height) / 2), 0, 0);
+		etName.setPadding(0, (int) ((0.8 * nHeight - height) / 2), 0, 0);
+		etPhone.setPadding(0, (int) ((0.8 * nHeight - height) / 2), 0, 0);
+
+		// this.setPadding(0, (int)((nHeight-height)/2), 0, 0);
 
 	}
 
@@ -519,7 +496,7 @@ public class ChangeUserInfo extends TextView implements IObject {
 			btDelete.setTextColor(m_cFontColor);
 			tvName.setTextColor(m_cFontColor);
 			tvPhone.setTextColor(m_cFontColor);
-		
+
 			tvTagorder.setTextColor(m_cFontColor);
 
 		} else if ("CmdExpression".equals(strName)) {
@@ -533,19 +510,19 @@ public class ChangeUserInfo extends TextView implements IObject {
 			m_fButtonWidthRate = Float.parseFloat(strValue);
 		} else if ("Labelorder".equals(strName)) {
 			tvTagorder.setText(strValue);
-			index=Integer.parseInt(tvTagorder.getText().toString());
+			index = Integer.parseInt(tvTagorder.getText().toString());
 		} else if ("FontSize".equals(strName)) {
 			fontSize = Integer.parseInt(strValue);
 			tvName.setTextSize(fontSize);
 			tvPhone.setTextSize(fontSize);
-			
+
 			tvTagorder.setTextSize(fontSize);
 
 			btDelete.setTextSize(fontSize);
 
 			etName.setTextSize(fontSize);
 			etPhone.setTextSize(fontSize);
-			
+
 			this.setTextSize(fontSize);
 
 		}
@@ -565,13 +542,13 @@ public class ChangeUserInfo extends TextView implements IObject {
 		m_rRenderWindow = rWin;
 
 		rWin.addView(tvTagorder);
-		
+
 		rWin.addView(etName);
 		rWin.addView(tvName);
-		
+
 		rWin.addView(etPhone);
 		rWin.addView(tvPhone);
-		
+
 		rWin.addView(btDelete);
 		rWin.addView(this);
 
@@ -654,12 +631,12 @@ public class ChangeUserInfo extends TextView implements IObject {
 	Paint m_oPaint = null;
 	Rect m_rBBox = null;
 	InputMethodManager imm = null;
-	
+
 	EditText etName = null;
 	TextView tvName = null;
 	EditText etPhone = null;
 	TextView tvPhone = null;
-	
+
 	TextView tvTagorder = null;
 	Button btDelete = null;
 
@@ -682,4 +659,3 @@ public class ChangeUserInfo extends TextView implements IObject {
 	public float m_yscal = 0;
 
 }
-

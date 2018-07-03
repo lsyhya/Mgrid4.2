@@ -87,8 +87,8 @@ public class HisEvent extends HisEventTable implements IObject {
 	private String doorEventPath = "/mgrid/log/DoorEvent/DoorEven.dat";
 	private File doorFile = new File(doorEventPath);
 	private File logFile = new File(logPath);
-	
-    private FileUtil fileUtil;
+
+	private FileUtil fileUtil;
 	private PopupWindow popupWindow;
 
 	public HisEvent(Context context) {
@@ -105,17 +105,17 @@ public class HisEvent extends HisEventTable implements IObject {
 
 					int position = getLastVisiblePosition();
 					if (lsyLs1.size() != 0) {
-						rePlush(position, lsyLs1);
+						rePlush(position, lsyLs1,lstTitles);
 
 					} else if (lstContends.size() != 0) {
-						rePlush(position, lstContends);
+						rePlush(position, lstContends,lstTitles);
 					} else if (lsyLs2.size() != 0) {
 
-						rePlush(position, lsyLs2);
-					}else if (lsyLs3.size() != 0) {
+						rePlush(position, lsyLs2,AlarmTitles);
+					} else if (lsyLs3.size() != 0) {
 
-						System.out.println("一直刷新");
-						rePlush(position, lsyLs3);
+						
+						rePlush(position, lsyLs3,DoorEventTitles);
 					}
 
 					break;
@@ -136,9 +136,8 @@ public class HisEvent extends HisEventTable implements IObject {
 			}
 		});
 
-		
-		fileUtil=new FileUtil();
-		
+		fileUtil = new FileUtil();
+
 		// 标头标题
 		lstTitles = new ArrayList<String>();
 		AlarmTitles = new ArrayList<String>();
@@ -205,7 +204,6 @@ public class HisEvent extends HisEventTable implements IObject {
 		month = calendar.get(Calendar.MONTH);
 		day = calendar.get(Calendar.DAY_OF_MONTH);
 
-
 		dialog = new DatePickerDialog(context, null, year, month, day);
 		dialog.setButton(DialogInterface.BUTTON_POSITIVE, ON, new DialogInterface.OnClickListener() {
 
@@ -248,6 +246,19 @@ public class HisEvent extends HisEventTable implements IObject {
 				if (isFirst) {
 					get_equiptList();
 					isFirst = false;
+				}
+
+				if (doorFile.exists()) {
+
+					if (!nameList.contains("开门事件")) {
+						nameList.add("开门事件");
+					}
+					if (DoorEventTitles.size() == 0) {
+						DoorEventTitles.add("用户ID");
+						DoorEventTitles.add("操作事件");
+						DoorEventTitles.add("操作时间");
+						DoorEventTitles.add("操作结果");
+					}
 				}
 
 				View view = m_rRenderWindow.m_oMgridActivity.getLayoutInflater().inflate(R.layout.pop, null);
@@ -533,7 +544,7 @@ public class HisEvent extends HisEventTable implements IObject {
 	}
 
 	// 分页刷新
-	private void rePlush(int position, List<List<String>> listData) {
+	private void rePlush(int position, List<List<String>> listData,List<String> title) {
 		System.out.println(position);
 		if (position == (listData.size() - 1)) {
 			// Toast.makeText(getContext(), "已经刷新完了", 200).show();
@@ -541,9 +552,9 @@ public class HisEvent extends HisEventTable implements IObject {
 		} else if (position != (listData.size() - 1) && position == (index * 30 - 1)) {
 
 			if (listData.size() <= (index + 1) * 30) {
-				updateList(lstTitles, listData.subList(index * 30, listData.size()));
+				updateList(title, listData.subList(index * 30, listData.size()));
 			} else {
-				updateList(lstTitles, listData.subList(index * 30, (index + 1) * 30));
+				updateList(title, listData.subList(index * 30, (index + 1) * 30));
 				index++;
 			}
 			update();
@@ -598,7 +609,7 @@ public class HisEvent extends HisEventTable implements IObject {
 
 				break;
 			case 3:
-				
+
 				update();
 				break;
 
@@ -823,7 +834,7 @@ public class HisEvent extends HisEventTable implements IObject {
 			System.out.println(after_num + ":::;" + before_num);
 		}
 
-		if (!AllDevice.equals(closeEquiptName) && !"二次下电".equals(closeEquiptName)&&!"开门事件".equals(closeEquiptName)) {
+		if (!AllDevice.equals(closeEquiptName) && !"二次下电".equals(closeEquiptName) && !"开门事件".equals(closeEquiptName)) {
 			handler.sendEmptyMessage(0);
 			lstContends.clear(); // 清楚页面的以前数据 行信号
 			m_bneedupdate = false; // 如果为真，表示数据不根据数据更新时时刷界面
@@ -1068,7 +1079,7 @@ public class HisEvent extends HisEventTable implements IObject {
 		} else if ("二次下电".equals(closeEquiptName)) {
 			handler.sendEmptyMessage(1);
 			m_bneedupdate = false;
-	
+
 			try {
 				BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(logFile), "GBK"));
 				String s = null;
@@ -1087,39 +1098,37 @@ public class HisEvent extends HisEventTable implements IObject {
 
 					lsyLs2.add(list_alarm);
 				}
-				
+
 				if (lsyLs2.size() <= 30) {
 					updateList(AlarmTitles, lsyLs2);
 				} else {
 					updateList(AlarmTitles, lsyLs2.subList(0, 30));
 				}
-			
+
 			} catch (Exception e) {
 
 				e.printStackTrace();
 			}
-		} else if("开门事件".equals(closeEquiptName))
-		{
-			
+		} else if ("开门事件".equals(closeEquiptName)) {
+
 			m_bneedupdate = false;
 			handler.sendEmptyMessage(4);
-			List<locat_his_DoorEvent> doorList= fileUtil.getDoorEvent(doorFile);
+			List<locat_his_DoorEvent> doorList = fileUtil.getDoorEvent(doorFile);
 			for (locat_his_DoorEvent locat_his_DoorEvent : doorList) {
 				List<String> list_DoorEvent = new ArrayList<String>();
 				list_DoorEvent.add(locat_his_DoorEvent.UserID);
 				list_DoorEvent.add(locat_his_DoorEvent.Event);
 				list_DoorEvent.add(locat_his_DoorEvent.Time);
 				list_DoorEvent.add(locat_his_DoorEvent.Result);
-			
+
 				lsyLs3.add(list_DoorEvent);
 			}
-			
-			
+
 			if (lsyLs3.size() <= 30) {
 				updateList(DoorEventTitles, lsyLs3);
 			} else {
 				updateList(DoorEventTitles, lsyLs3.subList(0, 30));
-			} 
+			}
 		}
 
 		return true;
@@ -1185,7 +1194,7 @@ public class HisEvent extends HisEventTable implements IObject {
 			}
 			for (int id : list) {
 				String str_equiptName = DataGetter.getEquipmentName(id);
-				map_EquiptNameList.put(str_equiptName, String.valueOf(id)); 
+				map_EquiptNameList.put(str_equiptName, String.valueOf(id));
 				// adapter.add(str_equiptName);
 				nameList.add(str_equiptName);
 				ALLDeviceList.add(str_equiptName);

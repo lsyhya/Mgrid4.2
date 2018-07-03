@@ -66,7 +66,7 @@ public class HisEventTable extends ListView {
 			for (int j = 0; j < lst.size(); ++j) {
 				cells[j] = new TableCell(lst.get(j), width,
 						LayoutParams.MATCH_PARENT, TableCell.STRING, cColor);   //为每个元素赋值
-				System.out.println(width+":::width");
+				
 			}	
 			table.add(new TableRow(cells));
 		}		
