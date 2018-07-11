@@ -3,8 +3,8 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.mgrid.main"
   android:installLocation="preferExternal"
-  android:versionCode="12"
-  android:versionName="4.32"
+  android:versionCode="13"
+  android:versionName="4.33"
  >
   
    

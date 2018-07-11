@@ -41,6 +41,7 @@ public class DoorInvented extends TextView implements IObject {
 	private String text19 = LanguageStr.text19;
 	private FileUtil util;
 	private String savePath = "/mgrid/log/DoorEvent/";
+	private String passWord="";//当前输入的密码
 
 	private List<Button> btnData = new ArrayList<Button>();
 
@@ -167,7 +168,7 @@ public class DoorInvented extends TextView implements IObject {
 			sendCmd();
 		} else {
 			saveResult(0);
-			
+
 			Toast.makeText(getContext(), text19, Toast.LENGTH_SHORT).show();
 		}
 		Clear();
@@ -176,13 +177,29 @@ public class DoorInvented extends TextView implements IObject {
 	// 密码是否正确
 	private boolean isSure() {
 
-		String str = tv.getText().toString();
-		if (MGridActivity.userManager.getNowUser() != null) {
-			if (MGridActivity.userManager.getNowUser().getPassWord().equals(str)) {
-				saveResult(1);
-				
-				return true;
+		passWord = tv.getText().toString();
+
+		if (MGridActivity.m_ControlAway == 1) {
+
+			if (MGridActivity.userManager.getNowUser() != null) {
+
+				if (MGridActivity.userManager.getNowUser().getPassWord().equals(passWord)) {
+
+					saveResult(1);
+					return true;
+
+				}
 			}
+
+		} else if (MGridActivity.m_ControlAway == 0) {
+
+			if (MGridActivity.userManager.getPassWordList().contains(passWord)) {
+
+				saveResult(1);
+				return true;
+
+			}
+
 		}
 
 		return false;
@@ -225,9 +242,26 @@ public class DoorInvented extends TextView implements IObject {
 	 * @param string
 	 */
 	private void getNowUser() {
-		if( MGridActivity.userManager.getNowUser()!=null)
-		{
-		    nowUser = MGridActivity.userManager.getNowUser().getUserID();
+
+		if (MGridActivity.m_ControlAway == 1) {
+			if (MGridActivity.userManager.getNowUser() != null) {
+				nowUser = MGridActivity.userManager.getNowUser().getUserID();
+			}
+		} else if (MGridActivity.m_ControlAway == 0) {
+
+			
+			Map<Integer, User> userManaget = MGridActivity.userManager.getUserManaget();
+			Iterator<Map.Entry<Integer, User>> it = userManaget.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry<Integer, User> entry = it.next();
+				if (entry.getValue().getPassWord().equals(passWord)) {
+					nowUser = entry.getValue().getUserID();
+					return;
+				}
+
+				nowUser = passWord;
+			} 
+
 		}
 	}
 

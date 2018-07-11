@@ -163,6 +163,8 @@ public class MGridActivity extends Activity {
 
 	public static String[][] m_MaskPage;// 权限页面内的子页面
 	public static int m_MaskCount;// 总权限页面的个数
+	public static int m_ControlAway;// 控制模式 0默认不输入密码  1输入密码。
+	
 	public static UserManager userManager;
 
 	public static HashMap<String, IObject> AlarmAll = new HashMap<String, IObject>();
@@ -444,7 +446,8 @@ public class MGridActivity extends Activity {
 		m_UserAway = Integer.parseInt(iniReader.getValue("SysConf", "UserAway", "0"));
 		// 获取用户页面个数
 		m_MaskCount = Integer.parseInt(iniReader.getValue("SysConf", "MaskCount", "0"));
-		System.out.println("个数：" + m_MaskCount);
+	    // 获取控制模式
+		m_ControlAway=Integer.parseInt(iniReader.getValue("SysConf", "ControlAway", "0"));
 
 		if (m_MaskCount == 0) {
 			m_MaskPage = new String[1][1];
