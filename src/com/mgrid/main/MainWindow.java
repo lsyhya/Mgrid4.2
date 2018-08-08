@@ -123,6 +123,7 @@ import com.sg.uis.LsyNewView.EquipHistoryAlarm;
 import com.sg.uis.LsyNewView.EventLevelAlter;
 import com.sg.uis.LsyNewView.HistoryCurveChart;
 import com.sg.uis.LsyNewView.LanguageChange;
+import com.sg.uis.LsyNewView.NBerDoorView;
 import com.sg.uis.LsyNewView.OnClickBtn;
 import com.sg.uis.LsyNewView.SelfCheck;
 import com.sg.uis.LsyNewView.SgBARS;
@@ -513,7 +514,7 @@ public class MainWindow extends ViewGroup {
 	private float distance(MotionEvent e) {
 		float eX = e.getX(1) - e.getX(0); // 后面的点坐标 - 前面点的坐标
 		float eY = e.getY(1) - e.getY(0);
-		return FloatMath.sqrt(eX * eX + eY * eY);
+		return (float) Math.sqrt(eX * eX + eY * eY);
 	}
 
 	/* @throws FileNotFoundException */
@@ -953,14 +954,18 @@ public class MainWindow extends ViewGroup {
 						} else if ("SelfCheck".equals(strType)) {
 							SelfCheck SC = new SelfCheck(this.getContext());
 							m_mapUIs.put(strID, SC);
-						}else if ("DoorInvented".equals(strType)) {
+						} else if ("DoorInvented".equals(strType)) {
 							DoorInvented DI = new DoorInvented(this.getContext());
 							m_mapUIs.put(strID, DI);
-						}else if ("ChangeUserInfo".equals(strType)) {
+						} else if ("ChangeUserInfo".equals(strType)) {
 							ChangeUserInfo CUI = new ChangeUserInfo(this.getContext());
 							m_mapUIs.put(strID, CUI);
 							UISManager.ChangeUserInfoList.add(CUI);
-						}else {
+						} else if ("NBerDoorView".equals(strType)) {
+							NBerDoorView NBDV = new NBerDoorView(this.getContext());
+							m_mapUIs.put(strID, NBDV);
+
+						} else {
 							showMsgDlg("警告", "不支持的控件类型： " + strType);
 							bExit = false;
 						}
@@ -1035,10 +1040,9 @@ public class MainWindow extends ViewGroup {
 								|| "EventLevelAlter".equals(strElementType)
 								|| "HistoryCurveChart".equals(strElementType) || "OnClickBtn".equals(strElementType)
 								|| "CoolButton".equals(strElementType) || "SgPieChart3D".equals(strElementType)
-								|| "LanguageChange".equals(strElementType)
-								|| "SelfCheck".equals(strElementType)
-								|| "DoorInvented".equals(strElementType)
-								|| "ChangeUserInfo".equals(strElementType)) {
+								|| "LanguageChange".equals(strElementType) || "SelfCheck".equals(strElementType)
+								|| "DoorInvented".equals(strElementType) || "ChangeUserInfo".equals(strElementType)
+								|| "NBerDoorView".equals(strElementType)) {
 							try {
 								iCurrentObj.parseProperties(strName, strValue, m_strResFolder);
 							} catch (Throwable e) {
@@ -1167,14 +1171,12 @@ public class MainWindow extends ViewGroup {
 
 					if (strUiType.equals("Label")) // 只用于 SgLable
 					{
-						if (oMathExpress.mapObjectExpress.size() != 1)
-						{
-							//表达式超过一个时不做操作
-						}
-						else {
+						if (oMathExpress.mapObjectExpress.size() != 1) {
+							// 表达式超过一个时不做操作
+						} else {
 							Label_data.put(strUniqueID, oBindingExpression);
 						}
-						
+
 					}
 					if (oMathExpress.strBindType.equals("Value")) {
 
@@ -1191,7 +1193,6 @@ public class MainWindow extends ViewGroup {
 									m_mapUIs.get(strUniqueID));
 						} else if (strUiType.equals("EventList") || strUiType.equals("AlarmLevel")) {
 
-							
 							DataGetter.setMainAlarmList(m_mapUIs.get(strUniqueID));
 						} else if (strUiType.equals("LocalList")) {
 
@@ -1318,8 +1319,17 @@ public class MainWindow extends ViewGroup {
 							strStr = DataGetter.getSignalValue(oExpress.nEquipId, oExpress.nSignalId);
 						} else {
 							strStr = getRealTimeValueFromTcp(oExpress);
-							strData = DataGetter.getSignalValue(oExpress.nEquipId, oExpress.nSignalId);
 
+							if ("State".equals(oExpress.strBindType)) {
+								
+								
+								strData= DataGetter.getSignalValue(oExpress.nEquipId, 10001);
+
+							} else {
+
+								strData = DataGetter.getSignalValue(oExpress.nEquipId, oExpress.nSignalId);
+
+							}
 							// fjw add mark there is SignalCure into!
 
 						}

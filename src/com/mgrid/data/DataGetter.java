@@ -1761,7 +1761,7 @@ public class DataGetter extends Thread {
 		equipment.htEventData = eventData;
 		alarm_flag = true;
 
-		System.out.println("更新小东东");
+		//System.out.println("更新小东东");
 		Iterator<IObject> reglstobj_it = equipment.lstRegistedMainAlarmList.iterator();
 		while (reglstobj_it.hasNext()) {
 			reglstobj_it.next().needupdate(true);
@@ -1774,7 +1774,7 @@ public class DataGetter extends Thread {
 		}
 
 		// fjw add
-		if (flag_state == 1) {
+		if (flag_state == 1||true) {
 			flag_state = 0;
 			Iterator<IObject> reglstobj_it2 = equipment.registedStateObj.iterator();
 			while (reglstobj_it2.hasNext()) {

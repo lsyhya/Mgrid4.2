@@ -2,10 +2,7 @@ package com.mgrid.util;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,15 +11,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import android.content.Context;
-import android.widget.Toast;
-
-import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.sg.common.IObject;
-import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.uis.SgIsolationEventSetter;
-import com.sg.uis.SgLabel;
+
+import android.content.Context;
 
 public class LabelUtils {
 

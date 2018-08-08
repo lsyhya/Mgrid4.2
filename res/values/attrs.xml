@@ -15,7 +15,7 @@
 
         <attr name="radius" format="dimension"/>
         
-        <attr name="borderWidth" format="dimension"/>
+        
 
     </declare-styleable>
     <declare-styleable name="FancyButtonsAttrs">

@@ -278,8 +278,6 @@ public class AlarmCount extends TextView implements IObject {
 			while (it.hasNext()) {
 				Hashtable.Entry<String, Event> event_entry = it.next();
 				String eventid=event_entry.getKey();
-//				HashMap<Long, String> hash=MGridActivity.AlarmShieldTimer.get(equitid+"_"+eventid);
-//				if(hash!=null) continue;
 				Event event = event_entry.getValue();
 				if (grade.equals("0")) {
 					count++; 

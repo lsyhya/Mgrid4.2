@@ -42,7 +42,6 @@ import com.sg.uis.SgAlarmChangTime;
 import com.sg.uis.SgImage;
 import com.sg.uis.LsyNewView.AlarmShieldTime;
 import com.sg.uis.LsyNewView.ChangeLabelBtn;
-import com.sg.uis.LsyNewView.FlikerProgressBar;
 import com.sg.uis.LsyNewView.SgVideoView;
 
 import android.annotation.SuppressLint;
@@ -63,6 +62,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -91,7 +91,7 @@ public class MGridActivity extends Activity {
 	private long starttime = 0;
 	private DataGetter mDataGetter;
 	private ContainerView mContainer;
-	private FlikerProgressBar bar;
+	//private FlikerProgressBar bar;
 	private SelfDialog dialog = null;
 
 	public static String logeFilePath = Environment.getExternalStorageDirectory().getPath() + "/login" + ".login";

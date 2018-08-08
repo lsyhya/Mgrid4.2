@@ -15,64 +15,64 @@ import cn.limc.androidcharts.entity.OHLCEntity;
 
 public class CandleStickChart extends GridChart {
 	
-	////////////默认值///////////////
-	/** 显示纬线数 */
+	////////////榛樿鍊�///////////////
+	/** 鏄剧ず绾嚎鏁� */
 	public static final int DEFAULT_LATITUDE_NUM = 4;
 	
-	/** 显示纬线数 */
+	/** 鏄剧ず绾嚎鏁� */
 	public static final int DEFAULT_LONGTITUDE_NUM = 3;
 	
-	/** 阳线边�?��色 */
+	/** 闃崇嚎杈癸拷?锟斤拷鑹� */
 	public static final int DEFAULT_POSITIVE_STICK_BORDER_COLOR = Color.RED;
 	
-	/** 阳线填�?��色 */
+	/** 闃崇嚎濉拷?锟斤拷鑹� */
 	public static final int DEFAULT_POSITIVE_STICK_FILL_COLOR = Color.RED;
 	
-	/** 阴线边�?��色 */
+	/** 闃寸嚎杈癸拷?锟斤拷鑹� */
 	public static final int DEFAULT_NEGATIVE_STICK_BORDER_COLOR = Color.GREEN;
 	
-	/** 阴线填�?��色 */
+	/** 闃寸嚎濉拷?锟斤拷鑹� */
 	public static final int DEFAULT_NEGATIVE_STICK_FILL_COLOR = Color.GREEN;
 	
-	/** 十字线颜色 */
+	/** 鍗佸瓧绾块鑹� */
 	public static final int DEFAULT_CROSS_STICK_COLOR = DEFAULT_POSITIVE_STICK_BORDER_COLOR;
 
-	////////////属�?列表/////////////////
+	////////////灞烇拷?鍒楄〃/////////////////
 
-	/** 阳线颜色 */
+	/** 闃崇嚎棰滆壊 */
 	private int positiveStickBorderColor = DEFAULT_POSITIVE_STICK_BORDER_COLOR ;
 
-	/** 阳线填�?��色 */
+	/** 闃崇嚎濉拷?锟斤拷鑹� */
 	private int positiveStickFillColor = DEFAULT_POSITIVE_STICK_FILL_COLOR;
 
-	/** 阴线颜色 */
+	/** 闃寸嚎棰滆壊 */
 	private int negativeStickBorderColor = DEFAULT_NEGATIVE_STICK_BORDER_COLOR;
 
-	/** 阴线填�?��色 */
+	/** 闃寸嚎濉拷?锟斤拷鑹� */
 	private int negativeStickFillColor = DEFAULT_NEGATIVE_STICK_FILL_COLOR;
 
-	/** 十字线颜色 */
+	/** 鍗佸瓧绾块鑹� */
 	private int crossStickColor = DEFAULT_CROSS_STICK_COLOR;
 	
-	/** 显示纬线数 */
+	/** 鏄剧ず绾嚎鏁� */
 	private int latitudeNum = DEFAULT_LATITUDE_NUM;
 	
-	/** 显示经线数 */
+	/** 鏄剧ず缁忕嚎鏁� */
 	private int longtitudeNum = DEFAULT_LONGTITUDE_NUM;
 	
-	/** K线数据 */
+	/** K绾挎暟鎹� */
 	private List<OHLCEntity> OHLCData;
 	
-	/** 图表中�?��蜡烛线 */
+	/** 鍥捐〃涓拷?锟斤拷铚＄儧绾� */
 	private int maxCandleSticksNum;
 
-	/** K线显示�?��价格 */
+	/** K绾挎樉绀猴拷?锟斤拷浠锋牸 */
 	private float maxPrice = 0;
 
-	/** K线显示�?��价格 */
+	/** K绾挎樉绀猴拷?锟斤拷浠锋牸 */
 	private float minPrice = 0;	
 	
-	/////////////////�??函数///////////////
+	/////////////////锟�??鍑芥暟///////////////
 
 	public CandleStickChart(Context context) {
 		super(context);
@@ -87,7 +87,7 @@ public class CandleStickChart extends GridChart {
 	}
 	
 	
-	///////////////函数方�?////////////////
+	///////////////鍑芥暟鏂癸拷?////////////////
 
 	@Override
 	public void draw(Canvas canvas) {
@@ -104,7 +104,7 @@ public class CandleStickChart extends GridChart {
 	}
 
 	/**
-	 * 获取X轴刻度位置,�?�??�最大1
+	 * 鑾峰彇X杞村埢搴︿綅缃�,锟�?锟�??锟芥渶澶�1
 	 * @param value
 	 * @return
 	 */
@@ -119,7 +119,7 @@ public class CandleStickChart extends GridChart {
 			index = 0;
 		}
 		
-		//返回X轴值
+		//杩斿洖X杞村��
 		return String.valueOf(OHLCData.get(index).getDate());
 	}
 	
@@ -140,7 +140,7 @@ public class CandleStickChart extends GridChart {
 	}
 	
 	/**
-	 * 获取Y轴刻度位置,�?�??�最大1
+	 * 鑾峰彇Y杞村埢搴︿綅缃�,锟�?锟�??锟芥渶澶�1
 	 * @param value
 	 * @return
 	 */
@@ -151,25 +151,25 @@ public class CandleStickChart extends GridChart {
 	}
 	
 	/**
-	 * 多点触控事件
+	 * 澶氱偣瑙︽帶浜嬩欢
 	 */
 	protected void drawWithFingerMove() {
 	}
 	
 	/**
-	 * 初始化X轴
+	 * 鍒濆鍖朮杞�
 	 */
 	protected void initAxisX() {
 		List<String> TitleX = new ArrayList<String>();
 		if(null != OHLCData){
 			float average = maxCandleSticksNum / longtitudeNum;
-			//�?��刻度
+			//锟�?锟斤拷鍒诲害
 			for (int i = 0; i < longtitudeNum; i++) {
 				int index = (int) Math.floor(i * average);
 				if(index > maxCandleSticksNum-1){
 					index = maxCandleSticksNum-1;
 				}
-				//追�??�?
+				//杩斤拷??锟�?
 				TitleX.add(String.valueOf(OHLCData.get(index).getDate()).substring(4));
 			}
 			TitleX.add(String.valueOf(OHLCData.get(maxCandleSticksNum-1).getDate()).substring(4));
@@ -178,12 +178,12 @@ public class CandleStickChart extends GridChart {
 	}
 	
 	/**
-	 * 初始化Y轴
+	 * 鍒濆鍖朰杞�
 	 */
 	protected void initAxisY() {
 		List<String> TitleY = new ArrayList<String>();
 		float average = (int)((maxPrice - minPrice) / latitudeNum)/10 * 10;
-		//�?��刻度
+		//锟�?锟斤拷鍒诲害
 		for (int i = 0; i < latitudeNum; i++) {
 			String value = String.valueOf((int)Math.floor(minPrice + i * average));
 			if(value.length() < super.getAxisYMaxTitleLength()){
@@ -193,7 +193,7 @@ public class CandleStickChart extends GridChart {
 			}
 			TitleY.add(value);
 		}
-		//�?���?��值
+		//锟�?锟斤拷锟�?锟斤拷鍊�
 		String value = String.valueOf((int)Math.floor(((int)maxPrice) / 10 * 10));
 		if(value.length() < super.getAxisYMaxTitleLength()){
 			while(value.length() < super.getAxisYMaxTitleLength()){
@@ -206,13 +206,13 @@ public class CandleStickChart extends GridChart {
 	}
 
 	/**
-	 * 绘制蜡烛线
+	 * 缁樺埗铚＄儧绾�
 	 * @param canvas
 	 */
 	protected void drawCandleSticks(Canvas canvas) {
-		// 蜡烛棒宽度
+		// 铚＄儧妫掑搴�
 		float stickWidth = ((super.getWidth() - super.getAxisMarginLeft()-super.getAxisMarginRight()) / maxCandleSticksNum) - 1;
-		// 蜡烛棒起始绘制位置
+		// 铚＄儧妫掕捣濮嬬粯鍒朵綅缃�
 		float stickX = super.getAxisMarginLeft() + 1;
 
 		Paint mPaintPositive = new Paint();
@@ -240,10 +240,10 @@ public class CandleStickChart extends GridChart {
 						/ (maxPrice - minPrice)) * (super.getHeight() - super
 						.getAxisMarginBottom()) - super.getAxisMarginTop());
 	
-				// �?��和生产K线中�?��线和阳线
+				// 锟�?锟斤拷鍜岀敓浜绾夸腑锟�?锟斤拷绾垮拰闃崇嚎
 				if (ohlc.getOpen() < ohlc.getClose()) {
-				//阳线
-					//根据宽度判断是否绘制立柱
+				//闃崇嚎
+					//鏍规嵁瀹藉害鍒ゆ柇鏄惁缁樺埗绔嬫煴
 					if(stickWidth >= 2f){
 						canvas.drawRect(stickX, closeY, stickX + stickWidth, openY,
 								mPaintPositive);
@@ -251,8 +251,8 @@ public class CandleStickChart extends GridChart {
 					canvas.drawLine(stickX + stickWidth / 2f, highY, stickX
 							+ stickWidth / 2f, lowY, mPaintPositive);
 				} else if (ohlc.getOpen() > ohlc.getClose()) {
-				//阴线
-					//根据宽度判断是否绘制立柱
+				//闃寸嚎
+					//鏍规嵁瀹藉害鍒ゆ柇鏄惁缁樺埗绔嬫煴
 					if(stickWidth >= 2f){
 						canvas.drawRect(stickX, openY, stickX + stickWidth, closeY,
 								mPaintNegative);
@@ -260,8 +260,8 @@ public class CandleStickChart extends GridChart {
 					canvas.drawLine(stickX + stickWidth / 2f, highY, stickX
 							+ stickWidth / 2f, lowY, mPaintNegative);
 				} else {
-				//十字线
-					//根据宽度判断是否绘制横线
+				//鍗佸瓧绾�
+					//鏍规嵁瀹藉害鍒ゆ柇鏄惁缁樺埗妯嚎
 					if(stickWidth >= 2f){
 						canvas.drawLine(stickX, closeY, stickX + stickWidth, openY,
 								mPaintCross);
@@ -270,25 +270,25 @@ public class CandleStickChart extends GridChart {
 							+ stickWidth / 2f, lowY, mPaintCross);
 				}
 	
-				//X位移
+				//X浣嶇Щ
 				stickX = stickX + 1 + stickWidth;
 			}
 		}
 	}
 	
-	//Push数据绘制K线图
+	//Push鏁版嵁缁樺埗K绾垮浘
 	public void pushData(OHLCEntity entity){
 		if(null != entity){
-			//追�?��据到数据列表
+			//杩斤拷?锟斤拷鎹埌鏁版嵁鍒楄〃
 			addData(entity);
-			//强制重�?
+			//寮哄埗閲嶏拷?
 			super.postInvalidate();
 		}
 	}
 	
 	public void addData(OHLCEntity entity){
 		if(null != entity){
-			//追�?��据
+			//杩斤拷?锟斤拷鎹�
 			if(null == OHLCData || 0==OHLCData.size()){
 				OHLCData = new ArrayList<OHLCEntity>();
 				this.minPrice = ((int)entity.getLow()) / 10 * 10;
@@ -313,14 +313,14 @@ public class CandleStickChart extends GridChart {
 	
 	
 	
-	//////////////属�?GetterSetter/////////////////
+	//////////////灞烇拷?GetterSetter/////////////////
 	
 	public List<OHLCEntity> getOHLCData() {
 		return OHLCData;
 	}
 
 	public void setOHLCData(List<OHLCEntity> data) {
-		//�?��已有数据
+		//锟�?锟斤拷宸叉湁鏁版嵁
 		if(null != OHLCData){
 			OHLCData.clear();
 		}
@@ -425,7 +425,7 @@ public class CandleStickChart extends GridChart {
 		final float MIN_LENGTH = (super.getWidth()/40)<5?5:(super.getWidth()/50);
 		
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
-		// 设置拖拉模�?
+		// 璁剧疆鎷栨媺妯★拷?
 		case MotionEvent.ACTION_DOWN:
 			TOUCH_MODE = DOWN;
 			break;
@@ -433,7 +433,7 @@ public class CandleStickChart extends GridChart {
 		case MotionEvent.ACTION_POINTER_UP:
 			TOUCH_MODE = NONE;
 			return super.onTouchEvent(event);
-		// 设置多点触摸模�?
+		// 璁剧疆澶氱偣瑙︽懜妯★拷?
 		case MotionEvent.ACTION_POINTER_DOWN:
 			olddistance = spacing(event);
 			if (olddistance > MIN_LENGTH) {
@@ -450,7 +450,7 @@ public class CandleStickChart extends GridChart {
 					}else{
 						zoomOut();
 					}
-					//重置距离
+					//閲嶇疆璺濈
 					olddistance = newdistance;
 										
 					super.postInvalidate();
@@ -474,11 +474,11 @@ public class CandleStickChart extends GridChart {
 		}
 	}
 
-	// 计算移动距离
+	// 璁＄畻绉诲姩璺濈
 	private float spacing(MotionEvent event) {
 		float x = event.getX(0) - event.getX(1);
 		float y = event.getY(0) - event.getY(1);
-		return FloatMath.sqrt(x * x + y * y);
+		return (float)Math.sqrt(x * x + y * y);
 	} 
 	
 }

@@ -116,7 +116,7 @@ public class PhotoImage extends ImageView{
 	private float distance(MotionEvent event){
 		float eX = event.getX(1) - event.getX(0);
 		float eY = event.getY(1) - event.getY(0);
-		return FloatMath.sqrt(eX * eX + eY * eY);
+		return (float)Math.sqrt(eX * eX + eY * eY);
 	}
 
 }

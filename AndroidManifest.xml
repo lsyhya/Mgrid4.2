@@ -4,7 +4,7 @@
   package="com.mgrid.main"
   android:installLocation="preferExternal"
   android:versionCode="13"
-  android:versionName="4.33"
+  android:versionName="4.34"
  >
   
    
@@ -51,6 +51,7 @@
       android:label="@string/app_name" 
       android:icon="@drawable/ic_jiqiren" 
       android:largeHeap="true"
+    
       android:name="com.mgrid.uncaughtexceptionhandler.MyApplication"
       android:allowBackup="true" android:vmSafeMode="false" android:hasCode="true">
       <!-- android:hardwareAccelerated="true" -->     
@@ -77,6 +78,10 @@
     </activity>    
     <activity
       android:name="com.mgrid.main.ImageviewActivity"
+      android:label="@string/app_name">
+    </activity>  
+      <activity
+      android:name="com.mgrid.main.DoorActivity"
       android:label="@string/app_name">
     </activity>     
     

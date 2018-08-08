@@ -158,7 +158,7 @@ public class SgStatePanel extends View implements IObject {
 
 	public String getBindingExpression() {
 		return m_strStateExpression;
-	}
+	} 
 	
 	public void setUniqueID(String strID) {
 		m_strID = strID;
@@ -189,10 +189,11 @@ public class SgStatePanel extends View implements IObject {
 		if (oRealTimeData == null)
 			return false;
 		String strValue = oRealTimeData.strValue;
+		String strdata = oRealTimeData.strData;
 		if (strValue == null || "".equals(strValue) == true)
 			return false;
 
-		//Log.e("Statepanel-updateValue","线程池获取的数据str:"+strValue);
+		Log.e(getUniqueID(),"strValue:"+strValue+"  strData:"+strdata);
 		int nValue = 0;
 		try {
 			nValue = Integer.parseInt(strValue);

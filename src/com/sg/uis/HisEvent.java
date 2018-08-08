@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -42,12 +43,15 @@ import com.mgrid.data.DataGetter;
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
+import com.mgrid.mysqlbase.SqliteUtil;
 import com.mgrid.util.FileUtil;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
 import com.sg.common.MyAdapter;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.lsyBase.HisEventTable;
+import com.sg.common.lsyBase.MyDoorEvent;
+
 import comm_service.local_file;
 
 import data_model.local_his_Alarm;
@@ -85,11 +89,15 @@ public class HisEvent extends HisEventTable implements IObject {
 
 	private String logPath = "/mgrid/data/Command/0.log";
 	private String doorEventPath = "/mgrid/log/DoorEvent/DoorEven.dat";
+	private String NiuberEventPath = Environment.getExternalStorageDirectory() + File.separator + "SQL" + File.separator+"Mgrid.db";
 	private File doorFile = new File(doorEventPath);
 	private File logFile = new File(logPath);
+	private File NiuberFile = new File(NiuberEventPath);
 
 	private FileUtil fileUtil;
 	private PopupWindow popupWindow;
+
+	private SqliteUtil sql;
 
 	public HisEvent(Context context) {
 		super(context);
@@ -105,17 +113,19 @@ public class HisEvent extends HisEventTable implements IObject {
 
 					int position = getLastVisiblePosition();
 					if (lsyLs1.size() != 0) {
-						rePlush(position, lsyLs1,lstTitles);
+						rePlush(position, lsyLs1, lstTitles);
 
 					} else if (lstContends.size() != 0) {
-						rePlush(position, lstContends,lstTitles);
+						rePlush(position, lstContends, lstTitles);
 					} else if (lsyLs2.size() != 0) {
 
-						rePlush(position, lsyLs2,AlarmTitles);
+						rePlush(position, lsyLs2, AlarmTitles);
 					} else if (lsyLs3.size() != 0) {
 
-						
-						rePlush(position, lsyLs3,DoorEventTitles);
+						rePlush(position, lsyLs3, DoorEventTitles);
+					}else if (lsyLs4.size() != 0) {
+
+						rePlush(position, lsyLs4, NiuBerEventTitles);
 					}
 
 					break;
@@ -142,6 +152,7 @@ public class HisEvent extends HisEventTable implements IObject {
 		lstTitles = new ArrayList<String>();
 		AlarmTitles = new ArrayList<String>();
 		DoorEventTitles = new ArrayList<String>();
+		NiuBerEventTitles = new ArrayList<String>();
 
 		lstTitles.add(DeviceName);
 		// lstTitles.add("信号名称");
@@ -237,6 +248,13 @@ public class HisEvent extends HisEventTable implements IObject {
 			DoorEventTitles.add("操作结果");
 		}
 
+		if (NiuberFile.exists()) {
+			nameList.add("门禁事件");
+			NiuBerEventTitles.add("事件ID");
+			NiuBerEventTitles.add("事件结果");
+			NiuBerEventTitles.add("发生时间");
+		}
+
 		myAdapter = new MyAdapter(getContext(), nameList);
 		view_text.setOnClickListener(new OnClickListener() {
 
@@ -253,11 +271,26 @@ public class HisEvent extends HisEventTable implements IObject {
 					if (!nameList.contains("开门事件")) {
 						nameList.add("开门事件");
 					}
+
 					if (DoorEventTitles.size() == 0) {
 						DoorEventTitles.add("用户ID");
 						DoorEventTitles.add("操作事件");
 						DoorEventTitles.add("操作时间");
 						DoorEventTitles.add("操作结果");
+					}
+				}
+				
+				if (NiuberFile.exists()) {
+
+					if (!nameList.contains("门禁事件")) {
+						nameList.add("门禁事件");
+					}
+
+					if (NiuBerEventTitles.size() == 0) {
+						
+						NiuBerEventTitles.add("事件ID");
+						NiuBerEventTitles.add("事件结果");
+						NiuBerEventTitles.add("发生时间");
 					}
 				}
 
@@ -293,6 +326,7 @@ public class HisEvent extends HisEventTable implements IObject {
 		lsyLs1 = new ArrayList<List<String>>();
 		lsyLs2 = new ArrayList<List<String>>();
 		lsyLs3 = new ArrayList<List<String>>();
+		lsyLs4 = new ArrayList<List<String>>();
 		map_EquiptNameList = new HashMap<String, String>();
 
 	}
@@ -431,9 +465,11 @@ public class HisEvent extends HisEventTable implements IObject {
 			lstContends.clear();
 			lsyLs2.clear();
 			lsyLs3.clear();
+			lsyLs4.clear();
 			index = 1;
 
 			str_EquiptId = map_EquiptNameList.get(closeEquiptName);
+
 			mythread thread = new mythread();
 			thread.start();
 			view_Receive.setEnabled(false);
@@ -518,6 +554,12 @@ public class HisEvent extends HisEventTable implements IObject {
 
 			}
 
+			for (int i = 0; i < n_title.length; ++i) {
+				n_title[i].layout(nX + i * nWidth / n_title.length, nY - 18,
+						nX + i * nWidth / n_title.length + nWidth / n_title.length, nY);
+
+			}
+
 			X = nX;
 			Y = nY;
 
@@ -544,7 +586,7 @@ public class HisEvent extends HisEventTable implements IObject {
 	}
 
 	// 分页刷新
-	private void rePlush(int position, List<List<String>> listData,List<String> title) {
+	private void rePlush(int position, List<List<String>> listData, List<String> title) {
 		System.out.println(position);
 		if (position == (listData.size() - 1)) {
 			// Toast.makeText(getContext(), "已经刷新完了", 200).show();
@@ -592,6 +634,9 @@ public class HisEvent extends HisEventTable implements IObject {
 				for (int i = 0; i < d_title.length; i++)
 					d_title[i].setVisibility(View.GONE);
 
+				for (int i = 0; i < n_title.length; i++)
+					n_title[i].setVisibility(View.GONE);
+
 				break;
 			case 1:
 				for (int i = 0; i < m_title.length; i++)
@@ -601,6 +646,8 @@ public class HisEvent extends HisEventTable implements IObject {
 
 				for (int i = 0; i < d_title.length; i++)
 					d_title[i].setVisibility(View.GONE);
+				for (int i = 0; i < n_title.length; i++)
+					n_title[i].setVisibility(View.GONE);
 
 				break;
 			case 2:
@@ -620,6 +667,20 @@ public class HisEvent extends HisEventTable implements IObject {
 					s_title[i].setVisibility(View.GONE);
 				for (int i = 0; i < d_title.length; i++)
 					d_title[i].setVisibility(View.VISIBLE);
+				for (int i = 0; i < n_title.length; i++)
+					n_title[i].setVisibility(View.GONE);
+
+				break;
+
+			case 5:
+				for (int i = 0; i < m_title.length; i++)
+					m_title[i].setVisibility(View.GONE);
+				for (int i = 0; i < s_title.length; i++)
+					s_title[i].setVisibility(View.GONE);
+				for (int i = 0; i < d_title.length; i++)
+					d_title[i].setVisibility(View.GONE);
+				for (int i = 0; i < n_title.length; i++)
+					n_title[i].setVisibility(View.VISIBLE);
 
 				break;
 			}
@@ -630,6 +691,7 @@ public class HisEvent extends HisEventTable implements IObject {
 
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
+
 		this.setClickable(true);
 		this.setBackgroundColor(m_cBackgroundColor);
 
@@ -666,6 +728,16 @@ public class HisEvent extends HisEventTable implements IObject {
 			d_title[i].setVisibility(View.INVISIBLE);
 			d_title[i].setTextColor(Color.parseColor(titleColor));
 			rWin.addView(d_title[i]);
+		}
+
+		n_title = new TextView[NiuBerEventTitles.size()];
+		for (int i = 0; i < n_title.length; i++) {
+			n_title[i] = new TextView(getContext());
+			n_title[i].setGravity(Gravity.CENTER);
+			n_title[i].setText(NiuBerEventTitles.get(i));
+			n_title[i].setVisibility(View.INVISIBLE);
+			n_title[i].setTextColor(Color.parseColor(titleColor));
+			rWin.addView(n_title[i]);
 		}
 
 		m_rRenderWindow = rWin;
@@ -834,146 +906,7 @@ public class HisEvent extends HisEventTable implements IObject {
 			System.out.println(after_num + ":::;" + before_num);
 		}
 
-		if (!AllDevice.equals(closeEquiptName) && !"二次下电".equals(closeEquiptName) && !"开门事件".equals(closeEquiptName)) {
-			handler.sendEmptyMessage(0);
-			lstContends.clear(); // 清楚页面的以前数据 行信号
-			m_bneedupdate = false; // 如果为真，表示数据不根据数据更新时时刷界面
-
-			his_event_list = new ArrayList<local_his_event>();
-			if (m_rRenderWindow.m_oShareObject.m_mapLocalEvent == null) {
-
-				return false;
-			}
-			his_event_list = m_rRenderWindow.m_oShareObject.m_mapLocalEvent.get(this.getUniqueID());
-
-			if (his_event_list == null) {
-				// List<String> lstRow_his = new ArrayList<String>();
-				return true;
-			}
-
-			// System.out.println("sssss:"+his_event_list.size());
-			// 遍历做容错处理 去除重复采集的告警
-			key = new ArrayList<String>();
-			hast_his = new Hashtable<String, local_his_event>();
-			Iterator<local_his_event> iter = his_event_list.iterator();
-			while (iter.hasNext()) {
-				local_his_event his_event = iter.next();
-				if (his_event == null)
-					continue;
-				boolean flag = true;
-
-				if (hast_his.containsKey(his_event.start_time + "#" + his_event.event_id)) {
-					flag = false;
-
-					if ("1970-01-01".equals(his_event.finish_time.substring(0, 10)))
-						continue;
-				}
-				hast_his.put(his_event.start_time + "#" + his_event.event_id, his_event);
-
-				if (flag) {
-					key.add(his_event.start_time + "#" + his_event.event_id);
-				}
-			}
-
-			if (key == null || hast_his == null)
-				return false;
-
-			key2 = null;
-			key2 = new ArrayList<String>();
-			key2.clear();
-			for (int i = key.size() - 1; i >= 0; i--) {
-				key2.add(key.get(i));
-			}
-
-			lstContends.clear(); // 清楚页面的以前数据 行信号
-			if (key2 == null)
-				return false;
-			Iterator<String> iterator_key = key2.iterator();
-			while (iterator_key.hasNext()) {
-
-				String his_event_key = iterator_key.next();
-				if (his_event_key == null || "".equals(his_event_key))
-					continue;
-				local_his_event his_event = hast_his.get(his_event_key);
-				if (his_event == null)
-					continue;
-				List<String> lstRow_his = new ArrayList<String>();
-				lstRow_his.clear();
-				// //对通信中断告警结束时间做判断
-				String finishTime = his_event.finish_time;
-				//
-				if (finishTime.length() < 10)
-					continue;
-				//
-				if ("1970-01-01".equals(finishTime.substring(0, 10))) {
-					finishTime = "null";
-
-				}
-				//
-				String startTime = his_event.start_time.substring(0, 10);// 截取年月日
-				int time_num = Integer.parseInt(startTime.substring(0, 4)) * 1000
-						+ Integer.parseInt(startTime.substring(5, 7)) * 32
-						+ Integer.parseInt(startTime.substring(8, 10));
-				if (!(time_num <= after_num && time_num >= before_num)) {
-
-					continue;
-				}
-
-				//
-				// 重复的强制处理
-				if ((lstContends != null) || (lstContends.size() != 0)) {
-					for (int m = 0; m < lstContends.size(); m++) {
-						List<String> ls = lstContends.get(0);
-						String t_name = ls.get(0);
-						if (t_name.equals(closeEquiptName) == false)
-							lstContends.remove(m);
-					}
-				}
-
-				String eventName = DataGetter.getEventName(str_EquiptId, his_event.event_id);
-				lstRow_his.add(closeEquiptName);
-				lstRow_his.add(eventName);// 告警名称
-				lstRow_his.add(his_event.event_mean);
-				lstRow_his.add(his_event.value); // 信号数值
-				try {
-					int level = Integer.parseInt(his_event.severity);
-					switch (level) {
-					case 1:
-						lstRow_his.add(one);
-						break;
-					case 2:
-						lstRow_his.add(two);
-						break;
-					case 3:
-						lstRow_his.add(three);
-						break;
-					case 4:
-						lstRow_his.add(four);
-						break;
-
-					}
-				} catch (Exception e) {
-
-				}
-
-				lstRow_his.add(his_event.start_time); // 开始时间
-				lstRow_his.add(finishTime);// 结束时间
-				// System.out.println(closeEquiptName+":"+eventName+":"+his_event.event_mean+":"+his_event.value+":"+his_event.severity+":"+his_event.start_time+":"+finishTime);
-				lstContends.add(lstRow_his);
-				// updateContends(lstTitles, lstContends);
-			}
-
-			if (lstContends.size() <= 30) {
-				updateList(lstTitles, lstContends);
-			} else {
-				updateList(lstTitles, lstContends.subList(0, 30));
-			}
-			// lstContends.clear();
-			hast_his.clear();
-			his_event_list.clear();
-			key.clear();
-			key2.clear();
-		} else if (AllDevice.equals(closeEquiptName)) {
+		 if (AllDevice.equals(closeEquiptName)) {
 
 			m_bneedupdate = false;
 			handler.sendEmptyMessage(0);
@@ -1129,6 +1062,172 @@ public class HisEvent extends HisEventTable implements IObject {
 			} else {
 				updateList(DoorEventTitles, lsyLs3.subList(0, 30));
 			}
+		} else if ("门禁事件".equals(closeEquiptName)) {
+
+			m_bneedupdate = false;
+			handler.sendEmptyMessage(5);
+
+			if (sql == null) {
+				sql = new SqliteUtil(m_rRenderWindow.m_oMgridActivity.getApplication());
+				sql.openorgetSql();
+			}
+
+			List<MyDoorEvent> doorList =sql.getListValues();
+			for (MyDoorEvent my : doorList) {
+				List<String> list_DoorEvent = new ArrayList<String>();
+				list_DoorEvent.add(my.getCardID());
+				list_DoorEvent.add(my.getEvent());
+				list_DoorEvent.add(my.getTime());
+				
+
+				lsyLs4.add(list_DoorEvent);
+			}
+
+			if (lsyLs4.size() <= 30) {
+				updateList(NiuBerEventTitles, lsyLs4);
+			} else {
+				updateList(NiuBerEventTitles, lsyLs4.subList(0, 30));
+			}
+		}else
+		{
+			handler.sendEmptyMessage(0);
+			lstContends.clear(); // 清楚页面的以前数据 行信号
+			m_bneedupdate = false; // 如果为真，表示数据不根据数据更新时时刷界面
+
+			his_event_list = new ArrayList<local_his_event>();
+			if (m_rRenderWindow.m_oShareObject.m_mapLocalEvent == null) {
+
+				return false;
+			}
+			his_event_list = m_rRenderWindow.m_oShareObject.m_mapLocalEvent.get(this.getUniqueID());
+
+			if (his_event_list == null) {
+				// List<String> lstRow_his = new ArrayList<String>();
+				return true;
+			}
+
+			// System.out.println("sssss:"+his_event_list.size());
+			// 遍历做容错处理 去除重复采集的告警
+			key = new ArrayList<String>();
+			hast_his = new Hashtable<String, local_his_event>();
+			Iterator<local_his_event> iter = his_event_list.iterator();
+			while (iter.hasNext()) {
+				local_his_event his_event = iter.next();
+				if (his_event == null)
+					continue;
+				boolean flag = true;
+
+				if (hast_his.containsKey(his_event.start_time + "#" + his_event.event_id)) {
+					flag = false;
+
+					if ("1970-01-01".equals(his_event.finish_time.substring(0, 10)))
+						continue;
+				}
+				hast_his.put(his_event.start_time + "#" + his_event.event_id, his_event);
+
+				if (flag) {
+					key.add(his_event.start_time + "#" + his_event.event_id);
+				}
+			}
+
+			if (key == null || hast_his == null)
+				return false;
+
+			key2 = null;
+			key2 = new ArrayList<String>();
+			key2.clear();
+			for (int i = key.size() - 1; i >= 0; i--) {
+				key2.add(key.get(i));
+			}
+
+			lstContends.clear(); // 清楚页面的以前数据 行信号
+			if (key2 == null)
+				return false;
+			Iterator<String> iterator_key = key2.iterator();
+			while (iterator_key.hasNext()) {
+
+				String his_event_key = iterator_key.next();
+				if (his_event_key == null || "".equals(his_event_key))
+					continue;
+				local_his_event his_event = hast_his.get(his_event_key);
+				if (his_event == null)
+					continue;
+				List<String> lstRow_his = new ArrayList<String>();
+				lstRow_his.clear();
+				// //对通信中断告警结束时间做判断
+				String finishTime = his_event.finish_time;
+				//
+				if (finishTime.length() < 10)
+					continue;
+				//
+				if ("1970-01-01".equals(finishTime.substring(0, 10))) {
+					finishTime = "null";
+
+				}
+				//
+				String startTime = his_event.start_time.substring(0, 10);// 截取年月日
+				int time_num = Integer.parseInt(startTime.substring(0, 4)) * 1000
+						+ Integer.parseInt(startTime.substring(5, 7)) * 32
+						+ Integer.parseInt(startTime.substring(8, 10));
+				if (!(time_num <= after_num && time_num >= before_num)) {
+
+					continue;
+				}
+
+				//
+				// 重复的强制处理
+				if ((lstContends != null) || (lstContends.size() != 0)) {
+					for (int m = 0; m < lstContends.size(); m++) {
+						List<String> ls = lstContends.get(0);
+						String t_name = ls.get(0);
+						if (t_name.equals(closeEquiptName) == false)
+							lstContends.remove(m);
+					}
+				}
+
+				String eventName = DataGetter.getEventName(str_EquiptId, his_event.event_id);
+				lstRow_his.add(closeEquiptName);
+				lstRow_his.add(eventName);// 告警名称
+				lstRow_his.add(his_event.event_mean);
+				lstRow_his.add(his_event.value); // 信号数值
+				try {
+					int level = Integer.parseInt(his_event.severity);
+					switch (level) {
+					case 1:
+						lstRow_his.add(one);
+						break;
+					case 2:
+						lstRow_his.add(two);
+						break;
+					case 3:
+						lstRow_his.add(three);
+						break;
+					case 4:
+						lstRow_his.add(four);
+						break;
+
+					}
+				} catch (Exception e) {
+
+				}
+
+				lstRow_his.add(his_event.start_time); // 开始时间
+				lstRow_his.add(finishTime);// 结束时间
+				// System.out.println(closeEquiptName+":"+eventName+":"+his_event.event_mean+":"+his_event.value+":"+his_event.severity+":"+his_event.start_time+":"+finishTime);
+				lstContends.add(lstRow_his);
+				// updateContends(lstTitles, lstContends);
+			}
+
+			if (lstContends.size() <= 30) {
+				updateList(lstTitles, lstContends);
+			} else {
+				updateList(lstTitles, lstContends.subList(0, 30));
+			}
+			// lstContends.clear();
+			hast_his.clear();
+			his_event_list.clear();
+			key.clear();
+			key2.clear();
 		}
 
 		return true;
@@ -1269,6 +1368,7 @@ public class HisEvent extends HisEventTable implements IObject {
 	TextView[] m_title;
 	TextView[] s_title;
 	TextView[] d_title;
+	TextView[] n_title;
 
 	TextView view_text; // 信号名显示text
 	// Spinner view_EquiptSpinner = null; // 设备名选择spinner
@@ -1316,11 +1416,13 @@ public class HisEvent extends HisEventTable implements IObject {
 	List<String> lstTitles = null;
 	List<String> AlarmTitles = null;
 	List<String> DoorEventTitles = null;
+	List<String> NiuBerEventTitles = null;
 	List<List<String>> lstContends = null;
 	// List<List<String>> lsyLs = null;
 	List<List<String>> lsyLs1 = null;
 	List<List<String>> lsyLs2 = null;
 	List<List<String>> lsyLs3 = null;
+	List<List<String>> lsyLs4 = null;
 	List<List<String>> lsyLs0 = new ArrayList<List<String>>();
 	@SuppressWarnings("unused")
 	private Paint mPaint = new Paint(); // 注意以后变量的定义一定要赋予空间
