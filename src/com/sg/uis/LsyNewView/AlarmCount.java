@@ -1,9 +1,15 @@
 package com.sg.uis.LsyNewView;
 
 
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+
+import com.mgrid.data.DataGetter;
+import com.mgrid.data.EquipmentDataModel.Event;
+import com.mgrid.main.MGridActivity;
+import com.mgrid.main.MainWindow;
+import com.sg.common.CFGTLS;
+import com.sg.common.IObject;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -18,13 +24,6 @@ import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
-
-import com.mgrid.data.DataGetter;
-import com.mgrid.data.EquipmentDataModel.Event;
-import com.mgrid.main.MGridActivity;
-import com.mgrid.main.MainWindow;
-import com.sg.common.CFGTLS;
-import com.sg.common.IObject;
 
 /** 分类告警数量统计 */
 @SuppressLint({ "ShowToast", "InflateParams", "RtlHardcoded",
@@ -48,12 +47,11 @@ public class AlarmCount extends TextView implements IObject {
 		if (m_rRenderWindow.isLayoutVisible(getBBox()) == false)
 			return;
 		Paint p=new Paint();
-	//	p.setColor(Color.parseColor("#64A9DB"));
+	
 		p.setAntiAlias(true);//抗锯齿
 		p.setTextSize(10);
 		p.setStyle(Paint.Style.FILL);
-//		float i=x/2;
-//		float m=y/2;
+
 		
 		if(grade.equals("1"))
 		{
@@ -65,7 +63,7 @@ public class AlarmCount extends TextView implements IObject {
 		}else{
 			p.setColor(Color.RED);
 		}   
-		//canvas.drawCircle(i, m, m, p);
+		
 		canvas.drawRect(x/6, y/6, x*5/6, y*5/6, p);
 		p.setTextSize(15);
 		p.setColor(Color.WHITE);
@@ -166,10 +164,12 @@ public class AlarmCount extends TextView implements IObject {
 			
 		} else if ("Grade".equals(strName)) {
 			grade = strValue;
-			new Thread(new Runnable() {
+			
+			MGridActivity.xianChengChi.execute(new Runnable() {
 				
 				@Override
 				public void run() {
+
 					while(true)
 					{
 						updateValue();
@@ -182,8 +182,7 @@ public class AlarmCount extends TextView implements IObject {
 					}
 					
 				}
-			}).start();
-			
+			});		
 		}
 	}
 
@@ -269,15 +268,15 @@ public class AlarmCount extends TextView implements IObject {
 		int count=0;
 		Iterator<Hashtable.Entry<String, Hashtable<String, Event>>> equaip_it = listEvents
 				.entrySet().iterator();
+		
 		while (equaip_it.hasNext()) {
+			
 			Hashtable.Entry<String, Hashtable<String, Event>> entry = equaip_it
-					.next();
-			String equitid=entry.getKey();
+					.next();			
 			Iterator<Hashtable.Entry<String, Event>> it = entry.getValue()
 					.entrySet().iterator();
 			while (it.hasNext()) {
-				Hashtable.Entry<String, Event> event_entry = it.next();
-				String eventid=event_entry.getKey();
+				Hashtable.Entry<String, Event> event_entry = it.next();				
 				Event event = event_entry.getValue();
 				if (grade.equals("0")) {
 					count++; 
@@ -296,6 +295,7 @@ public class AlarmCount extends TextView implements IObject {
 					continue;
 				}
 			}
+			
 		}
 		
 		

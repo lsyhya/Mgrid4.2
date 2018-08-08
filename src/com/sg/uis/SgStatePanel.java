@@ -193,7 +193,7 @@ public class SgStatePanel extends View implements IObject {
 		if (strValue == null || "".equals(strValue) == true)
 			return false;
 
-		Log.e(getUniqueID(),"strValue:"+strValue+"  strData:"+strdata);
+	//	Log.e(getUniqueID(),"strValue:"+strValue+"  strData:"+strdata);
 		int nValue = 0;
 		try {
 			nValue = Integer.parseInt(strValue);
@@ -211,7 +211,7 @@ public class SgStatePanel extends View implements IObject {
 			break;
 		case 2:
 			m_bitImage = s_bitWarrningImage;
-			break;
+			break; 
 		}
 		if (m_bitImage != m_bitCurrentImage) {
 			m_bitCurrentImage = m_bitImage;

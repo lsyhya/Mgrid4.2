@@ -25,7 +25,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.lsy.Service.TilmePlush.TimePlushService;
-import com.mgrid.MyDialog.SelfDialog;
 import com.mgrid.data.DataGetter;
 import com.mgrid.main.user.User;
 import com.mgrid.main.user.UserManager;
@@ -62,7 +61,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -92,7 +90,7 @@ public class MGridActivity extends Activity {
 	private DataGetter mDataGetter;
 	private ContainerView mContainer;
 	//private FlikerProgressBar bar;
-	private SelfDialog dialog = null;
+	//private SelfDialog dialog = null;
 
 	public static String logeFilePath = Environment.getExternalStorageDirectory().getPath() + "/login" + ".login";
 	public WakeLock mWakeLock;// 锁屏类
@@ -239,11 +237,7 @@ public class MGridActivity extends Activity {
 
 	}
 
-	private void setProgressDialog() {
-		dialog = new SelfDialog(this);
-		dialog.show();
-		dialog.settext("");
-	}
+	
 
 	// 广播注册
 	private void setBroadcastReceiver() {
@@ -779,11 +773,9 @@ public class MGridActivity extends Activity {
 						Toast.makeText(MGridActivity.this, Load, Toast.LENGTH_LONG).show();
 						isNOChangPage = true;
 						isLoading = false;
-						if (dialog != null)
-							dialog.dismiss();
+						
 						System.out.println("所用时间：" + (System.currentTimeMillis() - starttime));
-						// bar.finishLoad();
-						// dialog.dismiss();
+						
 						return;
 					}
 					handler.postDelayed(this, tmp_load_int_time);
@@ -827,10 +819,7 @@ public class MGridActivity extends Activity {
 						Toast.makeText(MGridActivity.this, Load, Toast.LENGTH_LONG).show();
 						isLoading = false;
 						isNOChangPage = true;
-						if (dialog != null)
-							dialog.dismiss();
-						// bar.finishLoad();
-						// dialog.dismiss();
+						
 
 						System.out.println("所用时间：" + (System.currentTimeMillis() - starttime));
 					}

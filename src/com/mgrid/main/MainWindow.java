@@ -1321,9 +1321,19 @@ public class MainWindow extends ViewGroup {
 							strStr = getRealTimeValueFromTcp(oExpress);
 
 							if ("State".equals(oExpress.strBindType)) {
-								
-								
-								strData= DataGetter.getSignalValue(oExpress.nEquipId, 10001);
+
+								strData = DataGetter.getSignalValue(oExpress.nEquipId, 10001);
+
+								Iterator<IObject> reglstobj_it2 = DataGetter.equipment.registedStateObj.iterator();
+								while (reglstobj_it2.hasNext()) {
+									reglstobj_it2.next().needupdate(true);
+									try {
+										sleep(50);
+									} catch (Exception e) {
+										;
+									}
+
+								}
 
 							} else {
 

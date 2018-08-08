@@ -1644,6 +1644,7 @@ public class DataGetter extends Thread {
 
 	private static boolean proc_allrtalarm() {
 
+		
 		if (equipment.rtalarm_req == null)
 			return false;
 		byte[] recv_buf = service.send_and_receive(equipment.rtalarm_req, service.IP, service.PORT);
@@ -1694,10 +1695,13 @@ public class DataGetter extends Thread {
 				return false; // 没有告警内容返回false
 			}
 		}
-
+		
+		
 		String body = new String(body_buf);
 		if (equipment.rtalarm_rspbody.equals(body))
 			return true;
+		
+		
 		equipment.rtalarm_rspbody = body;
 		body = null; //
 		body_buf = null; //
@@ -1761,31 +1765,30 @@ public class DataGetter extends Thread {
 		equipment.htEventData = eventData;
 		alarm_flag = true;
 
-		//System.out.println("更新小东东");
+		
 		Iterator<IObject> reglstobj_it = equipment.lstRegistedMainAlarmList.iterator();
 		while (reglstobj_it.hasNext()) {
 			reglstobj_it.next().needupdate(true);
 			try {
-
 				sleep(50);
 			} catch (Exception e) {
 				;
 			}
 		}
-
-		// fjw add
-		if (flag_state == 1||true) {
-			flag_state = 0;
-			Iterator<IObject> reglstobj_it2 = equipment.registedStateObj.iterator();
-			while (reglstobj_it2.hasNext()) {
-				reglstobj_it2.next().needupdate(true);
-				try {
-					sleep(50);
-				} catch (Exception e) {
-					;
-				}
-			}
-		}
+		
+//		if (flag_state == 1||true) {
+//			flag_state = 0;
+//			Iterator<IObject> reglstobj_it2 = equipment.registedStateObj.iterator();
+//			while (reglstobj_it2.hasNext()) {
+//				reglstobj_it2.next().needupdate(true);
+//				try {
+//					sleep(50);
+//				} catch (Exception e) {
+//					;
+//				}
+//			}
+//		}
+		
 
 		return true;
 	} // end of proc_allrtalarm
