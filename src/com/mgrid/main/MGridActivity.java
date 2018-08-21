@@ -41,6 +41,7 @@ import com.sg.uis.SgAlarmChangTime;
 import com.sg.uis.SgImage;
 import com.sg.uis.LsyNewView.AlarmShieldTime;
 import com.sg.uis.LsyNewView.ChangeLabelBtn;
+import com.sg.uis.LsyNewView.NBerDoorView;
 import com.sg.uis.LsyNewView.SgVideoView;
 
 import android.annotation.SuppressLint;
@@ -53,6 +54,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
@@ -78,118 +80,7 @@ import data_model.ipc_control;
 @SuppressWarnings("deprecation")
 public class MGridActivity extends Activity {
 
-	private int sleepTime = 2 * 60 * 60;// 屏保视频休眠时间
-	private Intent m_oTaskIntent = null;
-	private MainWindow m_oSgSgRenderManager = null;
-	private HashMap<String, MainWindow> m_oViewGroups = null;
-	private String Load = "";
-	private static String PSS = "";
-	private static String PSF = "";
-
-	private long starttime = 0;
-	private DataGetter mDataGetter;
-	private ContainerView mContainer;
-	//private FlikerProgressBar bar;
-	//private SelfDialog dialog = null;
-
-	public static String logeFilePath = Environment.getExternalStorageDirectory().getPath() + "/login" + ".login";
-	public WakeLock mWakeLock;// 锁屏类
-	public SgVideoView svv = null; // 播放视频
-	public Handler mTimeHandler = new Handler();
-
-	/**
-	 * 喇叭告警声音的路径 因为原路径会导致文件删除不干净 所以生成一个新的路径
-	 */
-	public static String oldWavPath = Environment.getExternalStorageDirectory().getPath() + "/vtu_pagelist/Alarm.wav";
-	public static String NewWavPath = Environment.getExternalStorageDirectory().getPath() + "/Alarm.wav";
-
-	public static boolean isPlaymv = false;
-	public static boolean isPlaygif = false;
-	public static boolean isSleep = false;
-	public static boolean isLogin = false;
-	public static String loginPassWord = "12345678";
-	public static Context context = null;
-	public static String XmlFile = "";
-	public static String SIP = "192.168.1.238";
-	public static String Language = "";
-
-	public InputMethodManager mImm = null;
-	// 加载用
-	public int tmp_load_int_time = 20;
-	public int tmp_load_pageseek = 0;
-	public boolean tmp_flag_loading = true;
-	public MainWindow tmp_load_prevpage = null;
-
-	// Params:
-	public String m_sMainPage = null;
-	public String m_sRootFolder = null;
-	public ArrayList<String> m_oPageList = null;
-
-	public static boolean m_bHasRandomData = false;
-	public static boolean m_bBitmapHIghQuality = false;
-	public static boolean m_bShowLoadProgress = true;
-	public static boolean m_bErrMsgParser = true;
-	public static boolean m_bCanZoom = true;
-	public static boolean m_bTakePhoto = false;
-
-	public static boolean m_bTakeEMail = false; // 是否实时告警邮件发送
-	public static String mailProtocol = "smtp"; // 协议
-	public static String myEmailSMTPHost = "smtp.qq.com";
-	public static String myEmailAccount = "453938089@qq.com"; // 发送邮箱账号
-	public static String myEmailPassword = "sgipglsayogvcaih"; // 授权码
-	public static String receiveMailAccount = "leisiyang521@163.com"; // 接收邮箱账号
-	public static String Subject = "标题"; // 邮箱标题
-	public static String fromName = "发件人名称"; // 发件人名称d
-
-	public static boolean whatLanguage = true;// 系统语言
-	public static Map<String, Map<String, String>> EventClose = new HashMap<String, Map<String, String>>();
-	public static HashMap<String, ArrayList<String>> AlarmShow = new HashMap<String, ArrayList<String>>();
-	public static ExecutorService xianChengChi = Executors.newCachedThreadPool();
-	public static boolean isNOChangPage = false;
-	public static int saveTime; // 信号数据存储时间
-
-	// 用户名和密码
-	public static String m_UserName;
-	public static String m_PassWord;
-
-	// 页面权限用户名和密码
-	// public static String m_pageUserName; //未使用过 移除
-	public static String[] m_pagePassWord;
-
-	// lsy 18/6/20新增 user管理功能
-	public static int m_UserAway = 0;// 0代表老版本，1代表每个权限页面需要密码登录，可记录。 2代表用户名 密码登录后进行操作。
-
-	public static String[][] m_MaskPage;// 权限页面内的子页面
-	public static int m_MaskCount;// 总权限页面的个数
-	public static int m_ControlAway;// 控制模式 0默认不输入密码  1输入密码。
 	
-	public static UserManager userManager;
-
-	public static HashMap<String, IObject> AlarmAll = new HashMap<String, IObject>();
-	public static File all_Event_file = new File("/mgrid/data/Command/0.log");
-
-	public static boolean isChangPage = false;
-	public static boolean isLoading = true;
-	public static boolean isChangGif = true;
-	public static ArrayList<String> LabelList = new ArrayList<String>();
-	public static HashMap<String, stBindingExpression> m_DoubleButton = null;
-	public static String usbName = "";
-	public static String alarmWay = "";
-	public static List<ipc_control> lstCtrlDo1 = null;
-	public static List<ipc_control> lstCtrlDo2 = null;
-
-	// 告警屏蔽时间保存
-	public static HashMap<String, HashMap<Long, String>> AlarmShieldTimer = new HashMap<String, HashMap<Long, String>>();
-
-	public Runnable runTime = new Runnable() {
-		public void run() {
-			if (svv != null) {
-				svv.pauseMv();
-				releaseWakeLock();
-				isSleep = true;
-			}
-		}
-	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -597,6 +488,17 @@ public class MGridActivity extends Activity {
 		return null;
 
 	}
+	
+
+	public Runnable runTime = new Runnable() {
+		public void run() {
+			if (svv != null) {
+				svv.pauseMv();
+				releaseWakeLock();
+				isSleep = true;
+			}
+		}
+	};
 
 	public void acquireWakeLock() {
 		if (mWakeLock == null) {
@@ -983,7 +885,12 @@ public class MGridActivity extends Activity {
 				if (MGridActivity.AlarmShieldTimer.get(ast.equitId + "_" + ast.eventId) != null) {
 					ast.updateText();
 				}
+			}else if (obj.getType().equals("NBerDoorView")) {
+				NBerDoorView ast = (NBerDoorView) obj;
+				ast.setHindText();
 			}
+			
+			
 			obj.initFinished();
 		}
 	}
@@ -1104,6 +1011,113 @@ public class MGridActivity extends Activity {
 		}
 	};
 
+	
+	private int sleepTime = 2 * 60 * 60;// 屏保视频休眠时间
+	private Intent m_oTaskIntent = null;
+	private MainWindow m_oSgSgRenderManager = null;
+	private HashMap<String, MainWindow> m_oViewGroups = null;
+	private String Load = "";
+	private static String PSS = "";
+	private static String PSF = "";
+
+	private long starttime = 0;
+	private DataGetter mDataGetter;
+	private ContainerView mContainer;
+	//private FlikerProgressBar bar;
+	//private SelfDialog dialog = null;
+
+	public static String logeFilePath = Environment.getExternalStorageDirectory().getPath() + "/login" + ".login";
+	public WakeLock mWakeLock;// 锁屏类
+	public SgVideoView svv = null; // 播放视频
+	public Handler mTimeHandler = new Handler();
+
+	/**
+	 * 喇叭告警声音的路径 因为原路径会导致文件删除不干净 所以生成一个新的路径
+	 */
+	public static String oldWavPath = Environment.getExternalStorageDirectory().getPath() + "/vtu_pagelist/Alarm.wav";
+	public static String NewWavPath = Environment.getExternalStorageDirectory().getPath() + "/Alarm.wav";
+
+	public static boolean isPlaymv = false;
+	public static boolean isPlaygif = false;
+	public static boolean isSleep = false;
+	public static boolean isLogin = false;
+	public static String loginPassWord = "12345678";
+	public static Context context = null;
+	public static String XmlFile = "";
+	public static String SIP = "192.168.1.238";
+	public static String Language = "";
+
+	public InputMethodManager mImm = null;
+	// 加载用
+	public int tmp_load_int_time = 20;
+	public int tmp_load_pageseek = 0;
+	public boolean tmp_flag_loading = true;
+	public MainWindow tmp_load_prevpage = null;
+
+	// Params:
+	public String m_sMainPage = null;
+	public String m_sRootFolder = null;
+	public ArrayList<String> m_oPageList = null;
+
+	public static boolean m_bHasRandomData = false;
+	public static boolean m_bBitmapHIghQuality = false;
+	public static boolean m_bShowLoadProgress = true;
+	public static boolean m_bErrMsgParser = true;
+	public static boolean m_bCanZoom = true;
+	public static boolean m_bTakePhoto = false;
+
+	public static boolean m_bTakeEMail = false; // 是否实时告警邮件发送
+	public static String mailProtocol = "smtp"; // 协议
+	public static String myEmailSMTPHost = "smtp.qq.com";
+	public static String myEmailAccount = "453938089@qq.com"; // 发送邮箱账号
+	public static String myEmailPassword = "sgipglsayogvcaih"; // 授权码
+	public static String receiveMailAccount = "leisiyang521@163.com"; // 接收邮箱账号
+	public static String Subject = "标题"; // 邮箱标题
+	public static String fromName = "发件人名称"; // 发件人名称d
+
+	public static boolean whatLanguage = true;// 系统语言
+	public static Map<String, Map<String, String>> EventClose = new HashMap<String, Map<String, String>>();
+	public static HashMap<String, ArrayList<String>> AlarmShow = new HashMap<String, ArrayList<String>>();
+	public static ExecutorService xianChengChi = Executors.newCachedThreadPool();
+	public static ExecutorService ecOneService =Executors.newSingleThreadExecutor();
+	public static boolean isNOChangPage = false;
+	public static int saveTime; // 信号数据存储时间
+
+	// 用户名和密码
+	public static String m_UserName;
+	public static String m_PassWord;
+
+	// 页面权限用户名和密码
+	// public static String m_pageUserName; //未使用过 移除
+	public static String[] m_pagePassWord;
+
+	// lsy 18/6/20新增 user管理功能
+	public static int m_UserAway = 0;// 0代表老版本，1代表每个权限页面需要密码登录，可记录。 2代表用户名 密码登录后进行操作。
+
+	public static String[][] m_MaskPage;// 权限页面内的子页面
+	public static int m_MaskCount;// 总权限页面的个数
+	public static int m_ControlAway;// 控制模式 0默认不输入密码  1输入密码。
+	
+	public static UserManager userManager;
+
+	public static HashMap<String, IObject> AlarmAll = new HashMap<String, IObject>();
+	public static File all_Event_file = new File("/mgrid/data/Command/0.log");
+
+	public static boolean isChangPage = false;
+	public static boolean isLoading = true;
+	public static boolean isChangGif = true;
+	public static ArrayList<String> LabelList = new ArrayList<String>();
+	public static HashMap<String, stBindingExpression> m_DoubleButton = null;
+	public static String usbName = "";
+	public static String alarmWay = "";
+	public static List<ipc_control> lstCtrlDo1 = null;
+	public static List<ipc_control> lstCtrlDo2 = null;
+
+	// 告警屏蔽时间保存
+	public static HashMap<String, HashMap<Long, String>> AlarmShieldTimer = new HashMap<String, HashMap<Long, String>>();
+
+
+	
 	/**
 	 * 以下代码为内部类 This class listens for the end of the first half of the animation.
 	 * It then posts a new action that effectively swaps the views when the

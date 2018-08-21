@@ -4,7 +4,7 @@
   package="com.mgrid.main"
   android:installLocation="preferExternal"
   android:versionCode="13"
-  android:versionName="4.34"
+  android:versionName="4.38"
  >
   
    
@@ -94,6 +94,7 @@
         </intent-filter>
     </receiver>
     <service android:name="com.lsy.Service.TilmePlush.TimePlushService"></service>
+    <service android:name="com.mgrid.main.NiuberDoorService"></service>
     <activity android:name="MonitorActivity"></activity>
     </application>
 </manifest>

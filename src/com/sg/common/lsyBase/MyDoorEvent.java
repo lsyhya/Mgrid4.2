@@ -5,35 +5,52 @@ public class MyDoorEvent {
 	
 	public MyDoorEvent(String ci,String ti,String ev) {
 		
-		this.CardID=ci;
-		this.Time=ti;
-		this.Event=ev;
+		this.cardid=ci;
+		this.time=ti;
+		this.event=ev;
 	}
 	
-	public String getCardID() {
-		return CardID;
+	public MyDoorEvent() {
+		
+		
 	}
 
-	public void setCardID(String cardID) {
-		CardID = cardID;
+	public String getCardid() {
+		return cardid;
 	}
+
+
+
+	public void setCardid(String cardid) {
+		this.cardid = cardid;
+	}
+
+
 
 	public String getTime() {
-		return Time;
+		return time;
 	}
+
+
 
 	public void setTime(String time) {
-		Time = time;
+		this.time = time;
 	}
+
+
 
 	public String getEvent() {
-		return Event;
+		return event;
 	}
+
+
 
 	public void setEvent(String event) {
-		Event = event;
+		this.event = event;
 	}
 
-	private String CardID, Time, Event;
+
+
+	private String cardid, time, event;
 
 }

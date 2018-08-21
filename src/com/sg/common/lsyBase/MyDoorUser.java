@@ -2,14 +2,19 @@ package com.sg.common.lsyBase;
 
 public class MyDoorUser {
 
-	private String name,CardID,UID,PW,Time; 
+	private String name,cardid,uid,pw,time; 
 	
-	public MyDoorUser(String name,String CardID,String UID,String PW,String Time) {
-		this.name=name;
-		this.CardID=CardID;
-		this.UID=UID;
-		this.PW=PW;
-		this.Time=Time;
+	public MyDoorUser(String Name,String CardID,String UID,String PW,String Time) {
+		this.name=Name;
+		this.cardid=CardID;
+		this.uid=UID;
+		this.pw=PW;
+		this.time=Time;
+		
+	}
+	
+	public MyDoorUser()
+	{
 		
 	}
 
@@ -21,36 +26,37 @@ public class MyDoorUser {
 		this.name = name;
 	}
 
-	public String getCardID() {
-		return CardID;
+	public String getCardid() {
+		return cardid;
 	}
 
-	public void setCardID(String cardID) {
-		CardID = cardID;
+	public void setCardid(String cardid) {
+		this.cardid = cardid;
 	}
 
-	public String getUID() {
-		return UID;
+	public String getUid() {
+		return uid;
 	}
 
-	public void setUID(String uID) {
-		UID = uID;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getPW() {
-		return PW;
+	public String getPw() {
+		return pw;
 	}
 
-	public void setPW(String pW) {
-		PW = pW;
+	public void setPw(String pw) {
+		this.pw = pw;
 	}
 
 	public String getTime() {
-		return Time;
+		return time;
 	}
 
 	public void setTime(String time) {
-		Time = time;
+		this.time = time;
 	}
+
 	
 }

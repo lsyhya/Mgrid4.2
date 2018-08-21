@@ -1,4 +1,4 @@
-package com.sg.uis.LsyNewView;
+package com.sg.common.lsyBase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -416,6 +416,18 @@ public class DoorInvented extends TextView implements IObject {
 		} else if ("CmdExpression".equals(strName)) {
 			m_strCmdExpression = strValue;
 
+		}else if ("Style".equals(strName)) {
+			
+			if(strValue.equals("1"))
+			{
+				
+				for(Button btn:btnData)
+				{
+					
+					btn.setBackgroundResource(R.drawable.door_btn);
+				}
+		
+			}		
 		}
 
 	}

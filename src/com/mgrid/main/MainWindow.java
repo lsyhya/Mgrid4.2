@@ -44,6 +44,7 @@ import com.sg.common.TotalVariable;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtExpressionParser.stExpression;
+import com.sg.common.lsyBase.DoorInvented;
 import com.sg.uis.AutoSig;
 import com.sg.uis.AutoSigList;
 import com.sg.uis.Breaker;
@@ -118,7 +119,6 @@ import com.sg.uis.LsyNewView.ChangeLabel;
 import com.sg.uis.LsyNewView.ChangeLabelBtn;
 import com.sg.uis.LsyNewView.ChangeUserInfo;
 import com.sg.uis.LsyNewView.CoolButton;
-import com.sg.uis.LsyNewView.DoorInvented;
 import com.sg.uis.LsyNewView.EquipHistoryAlarm;
 import com.sg.uis.LsyNewView.EventLevelAlter;
 import com.sg.uis.LsyNewView.HistoryCurveChart;
@@ -1326,7 +1326,9 @@ public class MainWindow extends ViewGroup {
 
 								Iterator<IObject> reglstobj_it2 = DataGetter.equipment.registedStateObj.iterator();
 								while (reglstobj_it2.hasNext()) {
+									
 									reglstobj_it2.next().needupdate(true);
+									
 									try {
 										sleep(50);
 									} catch (Exception e) {

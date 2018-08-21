@@ -8,31 +8,45 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
+import com.mgrid.main.NiuberDoorService;
+import com.mgrid.main.NiuberDoorService.SokectBind;
 import com.mgrid.main.R;
 import com.mgrid.mysqlbase.SqliteUtil;
 import com.mgrid.util.ByteUtil;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.MyAdapter;
+import com.sg.common.lsyBase.DoorCallBack;
 import com.sg.common.lsyBase.DoorConfig;
 import com.sg.common.lsyBase.MyDoorAdapter;
 import com.sg.common.lsyBase.MyDoorEvent;
 import com.sg.common.lsyBase.MyDoorUser;
 import com.sg.common.lsyBase.NiuberManager;
+import com.sg.uis.LsyNewView.Handle.NiuberDoorHandle;
 
+import android.app.AlertDialog.Builder;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
-import android.support.v7.app.AlertDialog.Builder;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -56,21 +70,25 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 	private MGridActivity mActivity;
 	private Button btn, btn2, btn3, btnAdd, btnOpen, btnopenDoor, btnVip, btngetUser, btndeleteUser;
 
-	private TextView tvname, tvCardID, tvUserID, tvPW, tvTime, tvPort, tvBt, tvSp1, tvSp2;
-	private EditText etname, etCardID, etUserID, etPW, etTime;
+	private TextView tvname, tvCardID, tvTime, tvPort, tvBt, tvSp1, tvSp2;// tvUserID, tvPW,
+	private EditText etname, etCardID, etTime;// etUserID, etPW,
 
 	private PopupWindow popupWindow1, popupWindow2;
 	// private Spinner spinner1,spinner2;
 
 	private List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 	private List<Map<String, Object>> list2 = new ArrayList<Map<String, Object>>();
+	private List<TextView> textList = new ArrayList<TextView>();
+	private List<EditText> editList = new ArrayList<EditText>();
+	private List<Button> btnList = new ArrayList<Button>();
+
 	private MyDoorAdapter adapter, adapter2;
 
 	private String[] devices;
 	private String[] ports;
 
 	private String devicesPath = "";
-	private String portsPath = "";
+	private String portsPath = "9600";
 
 	private ArrayList<String> deList = new ArrayList<>();
 	private ArrayList<String> pList = new ArrayList<>();
@@ -91,6 +109,9 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 	private boolean isAdd = true;
 	private boolean isAllDelete = true;
 	private boolean isDelete = true;
+	private boolean isVIP = true;
+	private boolean isOpen = true;
+	private boolean isSetTime = true;
 
 	private int m_nLayoutBottomOffset2 = 1;
 
@@ -102,17 +123,53 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 	private String name, ci, ui, ps, time;
 	private String currCID;
 
+	private ServiceConnection serviceConnection = null;
+	private NiuberDoorService niuberDoorService = null;
+	private DoorButtManager DBManager = null;
+	private DoorCallBack callBack;
+	private NiuberDoorHandle niuHandle = NiuberDoorHandle.getIntance();
+
+	private TimerTask task = null;
+	private Timer timer = null;
+
+	private String titleColor = "#00A7C8", titleonFocus = "#159FBB", titleWigth, titleTextColor = "#FDFDFF",
+			titleTextSize = "20", strokeColor = "#8B8B8B";
+	private String contentBg = "#FFFFFF", tvColor = "#8B8B8B", etColor = "#8B8B8B";
+	private String Btnbg = "", BtnTextColor = "#8B8B8B";
+
+	public static String UID = "1234";
+	public static String PW = "1234";
+	private List<String> deleteUser = new ArrayList<String>();
+
+	private SharedPreferences sp;
+	private Editor ed;
+
 	public NBerDoorView(Context context) {
 		super(context);
 
 		mActivity = (MGridActivity) context;
 
 		init(context);
+
+		startDoor();
+
+	}
+
+	public void setCallBack(DoorCallBack callBack) {
+		this.callBack = callBack;
 	}
 
 	private void getSqlite(Context context) {
 		sql = new SqliteUtil(context);
 		sql.openorgetSql();
+	}
+
+	public List<MyDoorUser> getListUser() {
+		return mydoorU;
+	}
+
+	public SqliteUtil getSqliteUtil() {
+		return sql;
 	}
 
 	private void init(Context context) {
@@ -121,6 +178,23 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 		this.setClickable(true);
 		this.setGravity(Gravity.CENTER);
 		setPadding(0, 0, 0, 0);
+
+		serviceConnection = new ServiceConnection() {
+
+			@Override
+			public void onServiceDisconnected(ComponentName name) {
+
+			}
+
+			@Override
+			public void onServiceConnected(ComponentName name, IBinder service) {
+
+				NiuberDoorService.SokectBind sb = (SokectBind) service;
+				niuberDoorService = sb.getService();
+				niuberDoorService.set(NBerDoorView.this);
+
+			}
+		};
 
 		getData();
 
@@ -136,8 +210,8 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 		tvname = new TextView(context);
 		tvCardID = new TextView(context);
-		tvUserID = new TextView(context);
-		tvPW = new TextView(context);
+		// tvUserID = new TextView(context);
+		// tvPW = new TextView(context);
 		tvTime = new TextView(context);
 		tvPort = new TextView(context);
 		tvBt = new TextView(context);
@@ -146,9 +220,18 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 		etname = new EditText(context);
 		etCardID = new EditText(context);
-		etUserID = new EditText(context);
-		etPW = new EditText(context);
+		// etUserID = new EditText(context);
+		// etPW = new EditText(context);
 		etTime = new EditText(context);
+
+		// etCardID.setInputType(InputType.TYPE_CLASS_NUMBER);
+		etCardID.setFilters(new InputFilter[] { new InputFilter.LengthFilter(10) });
+
+		etCardID.setPadding(0, 3, 0, 0);
+
+		// etTime.setInputType(InputType.TYPE_CLASS_NUMBER);
+		//etTime.setFilters(new InputFilter[] { new InputFilter.LengthFilter(8) });
+		etTime.setPadding(0, 3, 0, 0);
 
 		listview = new ListView(context);
 		listview2 = new ListView(context);
@@ -169,9 +252,9 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 		initText(tvname, "用户名", "#8B8B8B", 16);
 		initText(tvCardID, "卡号", "#8B8B8B", 16);
-		initText(tvUserID, "ID", "#8B8B8B", 16);
-		initText(tvPW, "密码", "#8B8B8B", 16);
-		initText(tvTime, "时间", "#8B8B8B", 16);
+		// initText(tvUserID, "ID", "#8B8B8B", 16);
+		// initText(tvPW, "密码", "#8B8B8B", 16);
+		initText(tvTime, "有效日期", "#8B8B8B", 16);
 		initText(tvPort, "串口", "#8B8B8B", 16);
 		initText(tvBt, "波特率", "#8B8B8B", 16);
 
@@ -185,25 +268,40 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 		initEText(etname, "#8B8B8B", 16);
 		initEText(etCardID, "#8B8B8B", 16);
-		initEText(etUserID, "#8B8B8B", 16);
-		initEText(etPW, "#8B8B8B", 16);
+		// initEText(etUserID, "#8B8B8B", 16);
+		// initEText(etPW, "#8B8B8B", 16);
 		initEText(etTime, "#8B8B8B", 16);
 
 		initBtn(btn, "用户管理", "#159FBB", "#FDFDFF", 20, 1);
-		initBtn(btn2, "记录", "#00A7C8", "#FDFDFF", 20, 2);
+		initBtn(btn2, "最近记录", "#00A7C8", "#FDFDFF", 20, 2);
 		initBtn(btn3, "设置", "#00A7C8", "#FDFDFF", 20, 3);
 		initBtn(btnAdd, "添加", "#8B8B8B", "#8B8B8B", 16, 4);
-		initBtn(btnOpen, "打开", "#8B8B8B", "#8B8B8B", 16, 5);
+		initBtn(btnOpen, "已关闭", "#8B8B8B", "#8B8B8B", 16, 5);
 		initBtn(btnVip, "授权", "#8B8B8B", "#8B8B8B", 16, 6);
 		initBtn(btnopenDoor, "开门", "#8B8B8B", "#8B8B8B", 16, 7);
-		initBtn(btngetUser, "获取用户信息", "#8B8B8B", "#8B8B8B", 16, 8);
-		initBtn(btndeleteUser, "删除所有用户", "#8B8B8B", "#8B8B8B", 16, 9);
+		initBtn(btngetUser, "用户卡读取", "#8B8B8B", "#8B8B8B", 16, 8);
+		initBtn(btndeleteUser, "删除用户", "#8B8B8B", "#8B8B8B", 16, 9);
 
 		hindoneView(false);
 		hindtheView(true);
 		hindtwoView(true);
 
 		setNoOnclickBtn(false);
+		
+		setHindText();
+
+	}
+
+	private void startDoor() {
+		sp = mActivity.getSharedPreferences("", Context.MODE_PRIVATE);
+		ed = sp.edit();
+
+		devicesPath = sp.getString("devicesPath", "");
+		if (devicesPath != null && !devicesPath.equals("")) {
+
+			tvSp1.setText(niuHandle.getStr(devicesPath));
+			open();
+		}
 
 	}
 
@@ -236,6 +334,11 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 		btns.setTextSize(TextSize);
 		btns.setTag(tag);
 		btns.setOnClickListener(this);
+
+		if (tag > 3) {
+			btnList.add(btns);
+		}
+
 	}
 
 	private void initText(TextView tv, String str, String TextColor, int TextSize) {
@@ -243,7 +346,7 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 		tv.setText(str);
 		tv.setTextColor(Color.parseColor(TextColor));
 		tv.setTextSize(TextSize);
-
+		textList.add(tv);
 	}
 
 	private void initEText(EditText et, String TextColor, int TextSize) {
@@ -251,7 +354,8 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 		et.setBackgroundResource(R.drawable.et_select);
 		et.setTextColor(Color.parseColor(TextColor));
 		et.setTextSize(TextSize);
-
+		et.setSingleLine(true);
+		editList.add(et);
 	}
 
 	private void initListview(ListView lv) {
@@ -270,25 +374,12 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 				new int[] { R.id.tv_doorID });
 		lv.setAdapter(adapter2);
 		lv.setBackgroundColor(Color.parseColor("#C7C8CA"));
-		// lv.setOnItemLongClickListener(this);
-		// lv.setOnItemClickListener(this);
-	}
 
-	// private void initSp(Spinner sp, String[] data) {
-	//
-	// ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(mActivity,
-	// R.layout.spring_item, data);
-	//
-	// sp.setAdapter(adapter1);
-	//
-	// sp.setOnItemSelectedListener(this);
-	// sp.setGravity(Gravity.CENTER);
-	//
-	// }
+	}
 
 	private void setPup1() {
 
-		myAdapter1 = new MyAdapter(getContext(), deList);
+		myAdapter1 = new MyAdapter(getContext(), niuHandle.ports);
 		View view = mActivity.getLayoutInflater().inflate(R.layout.pop, null);
 		popupWindow1 = new PopupWindow(view, tvSp1.getWidth(), 200, true);
 		// 设置一个透明的背景，不然无法实现点击弹框外，弹框消失
@@ -301,17 +392,15 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 		ListView lv = (ListView) view.findViewById(R.id.lv_list);
 
-		// myAdapter.setTextColor(textColor);
-		// myAdapter.setBtnColor(btnColor);
-
 		lv.setAdapter(myAdapter1);
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-				devicesPath = deList.get(position);
-				tvSp1.setText(deList.get(position));
+				devicesPath = niuHandle.getPath(niuHandle.ports.get(position));
+				Log.e("TAG", devicesPath);
+				tvSp1.setText(niuHandle.ports.get(position));
 				popupWindow1.dismiss();
 
 			}
@@ -373,35 +462,33 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 			float f = (float) (nHeight * 4 / 5 * 0.077);
 			float x = (float) (nWidth / 2 * 0.1);
 
-			btn.layout(nX, nY, nX + nWidth / 3, nY + nHeight / 6);
-			btn2.layout(nX + nWidth / 3, nY, nX + nWidth * 2 / 3, nY + nHeight / 6);
-			btn3.layout(nX + nWidth * 2 / 3, nY, nX + nWidth, nY + nHeight / 6);
+			btn.layout(nX, nY, nX + nWidth / 3, nY + nHeight / 9);
+			btn2.layout(nX + nWidth / 3, nY, nX + nWidth * 2 / 3, nY + nHeight / 9);
+			btn3.layout(nX + nWidth * 2 / 3, nY, nX + nWidth, nY + nHeight / 9);
 			btnAdd.layout((int) (nX + 5 * x), (int) (nY + nHeight / 5 + f * 11), (int) (nX + x * 7),
 					(int) (nY + nHeight / 5 + f * 12));
-			btnOpen.layout((int) (nX + nWidth * 4 / 10), (int) (nY + nHeight * 2 / 5 + 3 * f),
+			btnopenDoor.layout((int) (nX + nWidth * 4 / 10), (int) (nY + nHeight * 2 / 5 + 3 * f),
 					(int) (nX + nWidth * 7 / 10), (int) (nY + nHeight * 2 / 5 + f * 4));
 			btnVip.layout((int) (nX + nWidth * 4 / 10), (int) (nY + nHeight * 2 / 5 + 5 * f),
 					(int) (nX + nWidth * 7 / 10), (int) (nY + nHeight * 2 / 5 + f * 6));
-			btnopenDoor.layout((int) (nX + nWidth * 4 / 10), (int) (nY + nHeight * 2 / 5 + 7 * f),
-					(int) (nX + nWidth * 7 / 10), (int) (nY + nHeight * 2 / 5 + f * 8));
+			// btnopenDoor.layout((int) (nX + nWidth * 4 / 10), (int) (nY + nHeight * 2 / 5
+			// + 7 * f),
+			// (int) (nX + nWidth * 7 / 10), (int) (nY + nHeight * 2 / 5 + f * 8));
 
 			btngetUser.layout((int) (nX + x * 11), (int) (nY + nHeight / 5 + f * 11), (int) (nX + x * 14),
 					(int) (nY + nHeight / 5 + f * 12));
 			btndeleteUser.layout((int) (nX + 16 * x), (int) (nY + nHeight / 5 + f * 11), (int) (nX + x * 19),
 					(int) (nY + nHeight / 5 + f * 12));
 
-			btn.setPadding(0, (nHeight / 5 - getTextHeight("用户管理", true)) / 2, 0, 0);
-			btn2.setPadding(0, (nHeight / 5 - getTextHeight("控制", true)) / 2, 0, 0);
-			btn3.setPadding(0, (nHeight / 5 - getTextHeight("设置", true)) / 2, 0, 0);
+			btn.setPadding(0, (nHeight / 9 - getTextHeight("用户管理", true)) / 2, 0, 0);
+			btn2.setPadding(0, (nHeight / 9 - getTextHeight("控制", true)) / 2, 0, 0);
+			btn3.setPadding(0, (nHeight / 9 - getTextHeight("设置", true)) / 2, 0, 0);
 
 			tvname.layout((int) (nX + x), (int) (nY + nHeight / 5 + f), (int) (nX + x * 3),
 					(int) (nY + nHeight / 5 + f * 2));
-			tvCardID.layout((int) (nX + x), (int) (nY + nHeight / 5 + f * 3), (int) (nX + x * 3),
-					(int) (nY + nHeight / 5 + f * 4));
-			tvUserID.layout((int) (nX + x), (int) (nY + nHeight / 5 + f * 5), (int) (nX + x * 3),
+			tvCardID.layout((int) (nX + x), (int) (nY + nHeight / 5 + f * 5), (int) (nX + x * 3),
 					(int) (nY + nHeight / 5 + f * 6));
-			tvPW.layout((int) (nX + x), (int) (nY + nHeight / 5 + f * 7), (int) (nX + x * 3),
-					(int) (nY + nHeight / 5 + f * 9));
+
 			tvTime.layout((int) (nX + x), (int) (nY + nHeight / 5 + f * 9), (int) (nX + x * 3),
 					(int) (nY + nHeight / 5 + f * 10));
 
@@ -412,13 +499,12 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 			tvSp1.layout((int) (nX + nWidth * 4 / 10), (int) (nY + nHeight * 2 / 5 - f), (int) (nX + nWidth * 7 / 10),
 					(int) (nY + nHeight * 2 / 5));
-			tvSp2.layout((int) (nX + nWidth * 4 / 10), (int) (nY + nHeight * 2 / 5 + f), (int) (nX + nWidth * 7 / 10),
+			btnOpen.layout((int) (nX + nWidth * 4 / 10), (int) (nY + nHeight * 2 / 5 + f), (int) (nX + nWidth * 7 / 10),
 					(int) (nY + nHeight * 2 / 5 + f * 2));
 
 			tvname.setPadding(0, (int) (f - getTextHeight("用户名", true)) / 2, 0, 0);
 			tvCardID.setPadding(0, (int) (f - getTextHeight("用户名", true)) / 2, 0, 0);
-			tvUserID.setPadding(0, (int) (f - getTextHeight("用户名", true)) / 2, 0, 0);
-			tvPW.setPadding(0, (int) (f - getTextHeight("用户名", true)) / 2, 0, 0);
+
 			tvTime.setPadding(0, (int) (f - getTextHeight("用户名", true)) / 2, 0, 0);
 
 			tvPort.setPadding(0, (int) (f - getTextHeight("串口", true)) / 2, 0, 0);
@@ -428,19 +514,17 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 			etname.layout((int) (nX + x * 3), (int) (nY + nHeight / 5 + f), (int) (nX + x * 9),
 					(int) (nY + nHeight / 5 + f * 2));
-			etCardID.layout((int) (nX + x * 3), (int) (nY + nHeight / 5 + f * 3), (int) (nX + x * 9),
-					(int) (nY + nHeight / 5 + f * 4));
-			etUserID.layout((int) (nX + x * 3), (int) (nY + nHeight / 5 + f * 5), (int) (nX + x * 9),
+
+			etCardID.layout((int) (nX + x * 3), (int) (nY + nHeight / 5 + f * 5), (int) (nX + x * 9),
 					(int) (nY + nHeight / 5 + f * 6));
-			etPW.layout((int) (nX + x * 3), (int) (nY + nHeight / 5 + f * 7), (int) (nX + x * 9),
-					(int) (nY + nHeight / 5 + f * 8));
+
 			etTime.layout((int) (nX + x * 3), (int) (nY + nHeight / 5 + f * 9), (int) (nX + x * 9),
 					(int) (nY + nHeight / 5 + f * 10));
 
 			listview.layout((int) (nX + x * 11), (int) (nY + nHeight / 5 + f), (int) (nX + x * 19),
 					(int) (nY + nHeight / 5 + f * 10));
 
-			listview2.layout((int) (nX), (int) (nY + nHeight / 6), (int) (nX + nWidth), (int) (nY + nHeight));
+			listview2.layout((int) (nX), (int) (nY + nHeight / 9), (int) (nX + nWidth), (int) (nY + nHeight));
 
 			rextR.left = (int) (nX + x * 11);
 			rextR.top = (int) (nY + nHeight / 5 + f);
@@ -481,9 +565,15 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 				* (m_rRenderWindow.VIEW_BOTTOM - m_rRenderWindow.VIEW_TOP));
 
 		Paint m_oPaint = new Paint();
-		m_oPaint.setColor(Color.parseColor("#8B8B8B"));
+		// m_oPaint.setColor(Color.parseColor("#8B8B8B"));
+		m_oPaint.setColor(Color.parseColor(strokeColor));
+		// m_oPaint.setStrokeWidth(2);
 		m_oPaint.setStyle(Paint.Style.STROKE);
 		canvas.drawRect(0, 0, nWidth, nHeight, m_oPaint);
+
+		m_oPaint.setColor(Color.parseColor(contentBg));
+		m_oPaint.setStyle(Paint.Style.FILL);
+		canvas.drawRect(0, 0, nWidth - 1, nHeight, m_oPaint);
 
 		super.onDraw(canvas);
 
@@ -502,6 +592,7 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 	@Override
 	public void setType(String strType) {
+
 		m_strType = strType;
 
 	}
@@ -528,31 +619,93 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 			m_nHeight = Integer.parseInt(arrSize[1]);
 		} else if ("Alpha".equals(strName)) {
 			m_fAlpha = Float.parseFloat(strValue);
-		} else if ("RotateAngle".equals(strName)) {
-			m_fRotateAngle = Float.parseFloat(strValue);
-		} else if ("Content".equals(strName)) {
-			m_strContent = strValue;
-			c_Content = strValue;
+		}else if ("BackgroundColor".equals(strName)) {
+			if (strValue != null && !strValue.equals("")) {
+				
+				listview.setBackgroundColor(Color.parseColor(strValue));
+				listview2.setBackgroundColor(Color.parseColor(strValue));
+				
+			}
+		}else if ("TitleColor".equals(strName)) {
+			if (strValue != null && !strValue.equals("")) {
+				titleColor = strValue;
 
-		} else if ("FontFamily".equals(strName)) {
-			m_strFontFamily = strValue;
+				// btn.setBackgroundColor(Color.parseColor(titleColor));
+				btn2.setBackgroundColor(Color.parseColor(titleColor));
+				btn3.setBackgroundColor(Color.parseColor(titleColor));
 
-		} else if ("FontSize".equals(strName)) {
-			float fWinScale = (float) MainWindow.SCREEN_WIDTH / (float) MainWindow.FORM_WIDTH;
-			m_fFontSize = Float.parseFloat(strValue) * fWinScale;
-
-		} else if ("IsBold".equals(strName))
-			m_bIsBold = Boolean.parseBoolean(strValue);
-		else if ("FontColor".equals(strName)) {
-			m_cFontColor = Color.parseColor(strValue);
-			m_cStartFillColor = m_cFontColor;
-
-		} else if ("HorizontalContentAlignment".equals(strName))
-			m_strHorizontalContentAlignment = strValue;
-		else if ("VerticalContentAlignment".equals(strName)) {
-			m_strVerticalContentAlignment = strValue;
+			}
+		} else if ("TitleOnFocusColor".equals(strName)) {
+			if (strValue != null && !strValue.equals("")) {
+				titleonFocus = strValue;
+				btn.setBackgroundColor(Color.parseColor(titleonFocus));
+			}
+		} else if ("TitleWigth".equals(strName)) {
+			if (strValue != null && !strValue.equals("")) {
+				titleWigth = strValue;
+			}
+		} else if ("TitleTextColor".equals(strName)) {
+			if (strValue != null && !strValue.equals("")) {
+				titleTextColor = strValue;
+				btn.setTextColor(Color.parseColor(titleTextColor));
+				btn2.setTextColor(Color.parseColor(titleTextColor));
+				btn3.setTextColor(Color.parseColor(titleTextColor));
+			}
+		} else if ("TitleTextSize".equals(strName)) {
+			if (strValue != null && !strValue.equals("")) {
+				titleTextSize = strValue;
+				btn.setTextSize(Float.parseFloat(titleTextSize));
+				btn2.setTextSize(Float.parseFloat(titleTextSize));
+				btn3.setTextSize(Float.parseFloat(titleTextSize));
+			}
+		} else if ("StrokeColor".equals(strName)) {
+			if (strValue != null && !strValue.equals("")) {
+				strokeColor = strValue;
+				this.postInvalidate();
+			}
+		} else if ("ContentBg".equals(strName)) {
+			if (strValue != null && !strValue.equals("")) {
+				contentBg = strValue;
+				this.postInvalidate();
+			}
+		} else if ("TvColor".equals(strName)) {
+			if (strValue != null && !strValue.equals("")) {
+				tvColor = strValue;
+				for (TextView tv : textList) {
+					tv.setTextColor(Color.parseColor(tvColor));
+				}
+			}
+		} else if ("EtColor".equals(strName)) {
+			if (strValue != null && !strValue.equals("")) {
+				etColor = strValue;
+				for (EditText et : editList) {
+					et.setTextColor(Color.parseColor(etColor));
+				}
+			}
+		} else if ("Btnbg".equals(strName)) {
+			if (strValue != null && !strValue.equals("")) {
+				Btnbg = strValue;
+			}
+		} else if ("BtnTextColor".equals(strName)) {
+			if (strValue != null && !strValue.equals("")) {
+				BtnTextColor = strValue;
+				for (Button btn : btnList) {
+					btn.setTextColor(Color.parseColor(BtnTextColor));
+				}
+			}
+		}else if ("ListTextColor".equals(strName)) {
+			if (strValue != null && !strValue.equals("")) {
+				adapter.setTitleColor(strValue);
+				adapter2.setTitleColor(strValue);
+			}
+		}else if ("ListBgColor".equals(strName)) {
+			if (strValue != null && !strValue.equals("")) {
+				adapter.setLinColor(strValue);
+				adapter2.setLinColor(strValue);
+			}
 		}
-
+		
+		
 	}
 
 	@Override
@@ -586,7 +739,7 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 		m_rRenderWindow = rWin;
 
 		getSqlite(m_rRenderWindow.m_oMgridActivity.getApplicationContext());
-		sql.setListValues(list,mydoorU);
+		sql.setListValues(list, mydoorU);
 
 		rWin.addView(this);
 
@@ -595,32 +748,40 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 		rWin.addView(btn3);
 		rWin.addView(btnAdd);
 		rWin.addView(btnOpen);
-		rWin.addView(btnVip);
+		// rWin.addView(btnVip);
 		rWin.addView(btnopenDoor);
 		rWin.addView(btngetUser);
 		rWin.addView(btndeleteUser);
 
 		rWin.addView(tvname);
 		rWin.addView(tvCardID);
-		rWin.addView(tvPW);
-		rWin.addView(tvUserID);
+		// rWin.addView(tvPW);
+		// rWin.addView(tvUserID);
 		rWin.addView(tvTime);
 		rWin.addView(tvPort);
-		rWin.addView(tvBt);
+		// rWin.addView(tvBt);
 
 		rWin.addView(etname);
 		rWin.addView(etCardID);
-		rWin.addView(etPW);
-		rWin.addView(etUserID);
+		// rWin.addView(etPW);
+		// rWin.addView(etUserID);
 		rWin.addView(etTime);
 
 		rWin.addView(listview);
 
 		rWin.addView(tvSp1);
-		rWin.addView(tvSp2);
+		// rWin.addView(tvSp2);
 
 		rWin.addView(listview2);
 
+		// etCardID.setText("长度为10的一串数字");
+		// etTime.setText("格式：20180808");
+
+	}
+
+	public void setHindText() {
+		etCardID.setHint("长度为10的一串数字");
+		etTime.setHint("格式：20180808");
 	}
 
 	@Override
@@ -656,7 +817,7 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 	@Override
 	public String getBindingExpression() {
 		// TODO Auto-generated method stub
-		return m_strCmdExpression;
+		return null;
 	}
 
 	@Override
@@ -683,17 +844,9 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 	int m_nWidth = 60;
 	int m_nHeight = 30;
 	float m_fAlpha = 1.0f;
-	float m_fRotateAngle = 0.0f;
-	String m_strContent = "设置内容";
-	String m_strFontFamily = "微软雅黑";
-	String c_Content = "";
-	float m_fFontSize = 12.0f;
-	boolean m_bIsBold = false;
-	int m_cFontColor = 0xFF008000;
-	int m_cStartFillColor = 0x00000000;
+
 	String m_strHorizontalContentAlignment = "Center";
 	String m_strVerticalContentAlignment = "Center";
-	String m_strCmdExpression = "Binding{[Cmd[Equip:1-Temp:173-Command:1-Parameter:1-Value:1]]}";
 
 	MainWindow m_rRenderWindow = null;
 
@@ -733,7 +886,13 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 		case 4:
 
-			add();
+			name = etname.getText().toString().trim();
+			ci = etCardID.getText().toString().trim();
+			// ui = etUserID.getText().toString().trim();
+			// ps = etPW.getText().toString().trim();
+			time = etTime.getText().toString().trim();
+
+			add(name, ci, UID, PW, time);
 
 			break;
 		case 100:
@@ -748,7 +907,12 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 		case 5:
 
-			open();
+			if (btnOpen.getText().toString().equals("已关闭")) {
+				open();
+			} else {
+				close();
+			}
+
 			break;
 
 		case 6:
@@ -769,7 +933,41 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 		case 9:
 
-			deleteAllUser();
+			// deleteAllUser();
+
+			Builder builder = new Builder(mActivity);
+			builder.setTitle("提示");
+			builder.setMessage("删除用户");
+			builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+					if (deleteUser.size() != 0) {
+						for (final String str : deleteUser) {
+
+							deleteUser(str);
+
+						}
+					} else {
+						Toast.makeText(getContext(), "没有选择用户", Toast.LENGTH_SHORT).show();
+					}
+
+				}
+			});
+
+			builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+					// deleteAllUser();
+
+				}
+
+			});
+
+			builder.create().show();
 
 			break;
 
@@ -789,19 +987,26 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 					if ((boolean) b) {
 
 						MyDoorUser my = new MyDoorUser(name, ci, ui, ps, time);
-						//mydoorU.add(my);
-
 						sql.addUserValue(my);
-						sql.setListValues(list,mydoorU);
+						sql.setListValues(list, mydoorU);
+
+						callBackResult(true, my);
 
 						Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
+
+						cleanText();
 
 						updateList(true);
 
 					} else {
+
+						callBackResult(false, null);
+
 						Toast.makeText(getContext(), "添加失败", Toast.LENGTH_SHORT).show();
 					}
 				} else {
+
+					callBackResult(false, null);
 					Toast.makeText(getContext(), "添加失败", Toast.LENGTH_SHORT).show();
 
 				}
@@ -825,15 +1030,23 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 						mydoorU.clear();
 						list.clear();
 
-						Toast.makeText(getContext(), "删除成功", Toast.LENGTH_SHORT).show();
-
 						updateList(true);
 
+						callBackResult(true, null);
+
+						Toast.makeText(getContext(), "删除成功", Toast.LENGTH_SHORT).show();
+
+						deleteUser.clear();
+
 					} else {
+
+						callBackResult(false, null);
 						Toast.makeText(getContext(), "删除失败", Toast.LENGTH_SHORT).show();
+
 					}
 
 				} else {
+					callBackResult(false, null);
 					Toast.makeText(getContext(), "删除失败", Toast.LENGTH_SHORT).show();
 				}
 
@@ -847,18 +1060,24 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 					if ((boolean) b) {
 
 						sql.deleteValue(currCID);
-						sql.setListValues(list,mydoorU);
+						sql.setListValues(list, mydoorU);
 
-					
+						deleteUser.clear();
+
+						callBackResult(true, currCID);
+
 						updateList(true);
 
 						Toast.makeText(getContext(), "删除成功", Toast.LENGTH_SHORT).show();
 
 					} else {
+
+						callBackResult(false, null);
 						Toast.makeText(getContext(), "删除失败", Toast.LENGTH_SHORT).show();
 					}
 
 				} else {
+					callBackResult(false, null);
 
 					Toast.makeText(getContext(), "删除失败", Toast.LENGTH_SHORT).show();
 
@@ -874,10 +1093,113 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 				break;
 
+			case 5:
+
+				// if (b != null) {
+				// if ((boolean) b) {
+				//
+				// callBackResult(true, null);
+				//
+				// Toast.makeText(getContext(), "授权成功", Toast.LENGTH_SHORT).show();
+				//
+				// updateList(true);
+				//
+				// } else {
+				//
+				// callBackResult(false, null);
+				//
+				// Toast.makeText(getContext(), "授权失败", Toast.LENGTH_SHORT).show();
+				// }
+				// } else {
+				//
+				// callBackResult(false, null);
+				// Toast.makeText(getContext(), "授权失败", Toast.LENGTH_SHORT).show();
+				//
+				// }
+
+				isVIP = true;
+
+				break;
+
+			case 6:
+
+				if (b != null) {
+					if ((boolean) b) {
+
+						callBackResult(true, null);
+
+						Toast.makeText(getContext(), "成功", Toast.LENGTH_SHORT).show();
+
+						updateList(true);
+
+					} else {
+
+						callBackResult(false, null);
+
+						Toast.makeText(getContext(), "失败", Toast.LENGTH_SHORT).show();
+					}
+				} else {
+
+					callBackResult(false, null);
+					Toast.makeText(getContext(), "失败", Toast.LENGTH_SHORT).show();
+
+				}
+
+				isOpen = true;
+
+				break;
+
+			case 7:
+
+				if (b != null) {
+					if ((boolean) b) {
+
+						callBackResult(true, null);
+
+						Toast.makeText(getContext(), "时间更新成功", Toast.LENGTH_SHORT).show();
+
+					} else {
+
+						callBackResult(false, null);
+
+						Toast.makeText(getContext(), "时间更新失败", Toast.LENGTH_SHORT).show();
+					}
+				} else {
+
+					callBackResult(false, null);
+					Toast.makeText(getContext(), "时间更新失败", Toast.LENGTH_SHORT).show();
+
+				}
+
+				isSetTime = true;
+
+				break;
+
 			}
 
 		};
 	};
+
+	private void cleanText() {
+
+		for (EditText et : editList) {
+			et.setText("");
+		}
+
+	}
+
+	public void callBackResult(boolean bool, Object obj) {
+		if (callBack != null) {
+			if (bool) {
+
+				callBack.onSetSuc(obj);
+
+			} else {
+
+				callBack.onSetFail();
+			}
+		}
+	}
 
 	private void updateList(boolean b) {
 		if (b) {
@@ -886,90 +1208,192 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 			m_nLayoutBottomOffset = -m_nLayoutBottomOffset;
 		} else {
 			adapter2.notifyDataSetChanged();
-			listview2.layout(rextR2.left, rextR2.top, rextR2.right, rextR2.bottom - m_nLayoutBottomOffset);
-			m_nLayoutBottomOffset2 = -m_nLayoutBottomOffset;
+			listview2.layout(rextR2.left, rextR2.top, rextR2.right, rextR2.bottom - m_nLayoutBottomOffset2);
+			m_nLayoutBottomOffset2 = -m_nLayoutBottomOffset2;
 		}
 	}
 
-	private void add() {
-		name = etname.getText().toString().trim();
-		ci = etCardID.getText().toString().trim();
-		ui = etUserID.getText().toString().trim();
-		ps = etPW.getText().toString().trim();
-		time = etTime.getText().toString().trim();
+	public void add(final String names, final String cis, final String uis, final String pss, final String times) {
 
-		if (name.equals("") || ci.equals("") || ui.equals("") || ps.equals("") || time.equals("")) {
+		if (sql.getUserValue(cis)) {
 
-			Toast.makeText(mActivity, "输入完整", Toast.LENGTH_LONG).show();
-
-		} else {
-
-			if (isAdd) {
-				isAdd = false;
-				String data8 = NiuberManager.addUser(ci, ui, ps, time);
-				sendData(data8);
-
-			}
-		}
-	}
-
-	private void getVip() {
-		sendData(data4);
-		setNoOnclickBtn(true);
-
-		if (!isRun) {
-			isRun = true;
-			MGridActivity.xianChengChi.execute(new Runnable() {
+			MGridActivity.ecOneService.execute(new Runnable() {
 
 				@Override
 				public void run() {
 
-					while (true) {
+					name = names;
+					ci = cis;
+					ui = uis;
+					ps = pss;
+					time = times;
 
-						if (isAlive) {
+					if (names.equals("") || cis.equals("") || uis.equals("") || pss.equals("") || times.equals("")) {
 
-							isAlive = false;
-							String data7 = NiuberManager.getHisInfo();
-							sendData(data7);
+						NBerDoorView.this.post(new Runnable() {
+
+							@Override
+							public void run() {
+								Toast.makeText(mActivity, "输入完整", Toast.LENGTH_LONG).show();
+							}
+						});
+
+					} else {
+
+						getVip();
+
+						if (isAdd) {
+							isAdd = false;
+							String data8 = NiuberManager.addUser(cis, uis, pss, times);
+							sendData(data8);
 
 						}
-
-						try {
-							Thread.sleep(3000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-
 					}
 
 				}
 			});
+
+		} else {
+			NBerDoorView.this.post(new Runnable() {
+
+				@Override
+				public void run() {
+					Toast.makeText(mActivity, "已有该卡号", Toast.LENGTH_LONG).show();
+					handler.sendEmptyMessage(0);
+				}
+			});
+
+		}
+
+	}
+
+	private void getVip() {
+
+		if (isVIP) {
+
+			isVIP = false;
+			sendData(data4);
+
+		}
+
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 
-	private void openDoor() {
-		String data3 = NiuberManager.openDoor("");
-		sendData(data3);
+	private void updateEvent() {
+		if (!isRun) {
+			isRun = true;
+
+			if (timer == null) {
+				timer = new Timer();
+			}
+
+			if (task == null) {
+				task = new TimerTask() {
+
+					@Override
+					public void run() {
+
+						MGridActivity.ecOneService.execute(new Runnable() {
+
+							@Override
+							public void run() {
+
+								if (isAlive) {
+
+									isAlive = false;
+									String data7 = NiuberManager.getHisInfo();
+									sendData(data7);
+
+								}
+
+							}
+						});
+
+					}
+				};
+			}
+
+			timer.schedule(task, 1000, 8000);
+
+		}
 	}
 
-	private void getUserData() {
-		
-		sql.setListValues(list,mydoorU);
+	public void setVip() {
+
+		MGridActivity.ecOneService.execute(new Runnable() {
+
+			@Override
+			public void run() {
+				sendData(data4);
+			}
+		});
+
+	}
+
+	public void openDoor() {
+
+		MGridActivity.ecOneService.execute(new Runnable() {
+
+			@Override
+			public void run() {
+
+				getVip();
+
+				if (isOpen) {
+
+					isOpen = false;
+					String data3 = NiuberManager.openDoor("");
+					sendData(data3);
+
+				}
+
+			}
+		});
+
+	}
+
+	public void getUserData() {
+
+		sql.setListValues(list, mydoorU);
 		handler.sendEmptyMessage(4);
 	}
 
-	private void deleteAllUser() {
+	public void deleteAllUser() {
 
-		if (isAllDelete) {
-			isAllDelete = false;
-			String data7 = NiuberManager.deleteAllUser();
-			sendData(data7);
+		MGridActivity.ecOneService.execute(new Runnable() {
+
+			@Override
+			public void run() {
+
+				getVip();
+
+				if (isAllDelete) {
+					isAllDelete = false;
+					String data7 = NiuberManager.deleteAllUser();
+					sendData(data7);
+				}
+
+			}
+		});
+
+	}
+
+	public void setTime(String year, String month, String day, String week, String hour, String min, String sec) {
+		if (isSetTime) {
+			isSetTime = false;
+			String data = NiuberManager.setTime(year, month, day, week, hour, min, sec);
+
+			sendData(data);
 		}
 	}
 
 	private void open() {
 
-		if (devicesPath.equals("") || portsPath.equals("")) {
+		if (devicesPath.equals("") || devicesPath.equals("串口") || portsPath.equals("")) {
 			Toast.makeText(getContext(), "选择出错", Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -982,8 +1406,20 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 			if (mSerialPort != null) {
 				mOutputStream = mSerialPort.getOutputStream();
 
+				mInputStream = new BufferedInputStream(mSerialPort.getInputStream());
 				btnVip.setEnabled(true);
+				setNoOnclickBtn(true);
+				btnOpen.setText("已打开");
+
+				updateEvent();
+
+				startService();
+
 				Toast.makeText(mActivity, "成功", Toast.LENGTH_LONG).show();
+
+				ed.putString("devicesPath", devicesPath);
+				ed.commit();
+
 			} else {
 				Toast.makeText(mActivity, "失败", Toast.LENGTH_LONG).show();
 			}
@@ -995,9 +1431,65 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 		}
 	}
 
-	private synchronized void sendData(String data) {
+	private void close() {
 
-		Log.e("线程", Thread.currentThread().getName());
+		btnVip.setEnabled(false);
+		btnOpen.setText("已关闭");
+
+		ed.clear();
+		ed.commit();
+
+		stopService();
+		setNoOnclickBtn(false);
+
+		isRun = false;
+		if (task != null) {
+			task.cancel();
+			task = null;
+		}
+		if (timer != null) {
+			timer.purge();
+			timer.cancel();
+			timer = null;
+		}
+
+		try {
+			if (mInputStream != null) {
+				mInputStream.close();
+			}
+
+			if (mOutputStream != null) {
+				mOutputStream.close();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if (mSerialPort != null) {
+			mSerialPort.close();
+		}
+
+	}
+
+	private void startService() {
+
+		Intent intent = new Intent(mActivity, NiuberDoorService.class);
+		mActivity.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+	}
+
+	private void stopService() {
+
+		m_rRenderWindow.m_oMgridActivity.unbindService(serviceConnection);
+
+		Intent intent = new Intent(m_rRenderWindow.m_oMgridActivity, NiuberDoorService.class);
+
+		m_rRenderWindow.m_oMgridActivity.stopService(intent);
+
+	}
+
+	private synchronized void sendData(String data) {
 
 		if (mOutputStream != null) {
 
@@ -1014,15 +1506,16 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 			Thread.sleep(500);
 
-			mInputStream = new BufferedInputStream(mSerialPort.getInputStream());
 			byte[] received = new byte[1024];
 			int size;
 
-			int available = mInputStream.available();
-			if (available > 0) {
-				size = mInputStream.read(received);
-				if (size > 0) {
-					onDataReceive(received, size);
+			if (mInputStream != null) {
+				int available = mInputStream.available();
+				if (available > 0) {
+					size = mInputStream.read(received);
+					if (size > 0) {
+						onDataReceive(received, size);
+					}
 				}
 			}
 		} catch (IOException e) {
@@ -1030,14 +1523,19 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+
 		}
 
 	}
 
 	private void setView(Button btn_1, Button btn_2, Button btn_3) {
-		initBtn(btn_1, btn_1.getText().toString(), "#159FBB", "#FDFDFF", 20, (int) btn_1.getTag());
-		initBtn(btn_2, btn_2.getText().toString(), "#00A7C8", "#FDFDFF", 20, (int) btn_2.getTag());
-		initBtn(btn_3, btn_3.getText().toString(), "#00A7C8", "#FDFDFF", 20, (int) btn_3.getTag());
+		initBtn(btn_1, btn_1.getText().toString(), titleonFocus, titleTextColor, Integer.parseInt(titleTextSize),
+				(int) btn_1.getTag());
+		initBtn(btn_2, btn_2.getText().toString(), titleColor, titleTextColor, Integer.parseInt(titleTextSize),
+				(int) btn_2.getTag());
+		initBtn(btn_3, btn_3.getText().toString(), titleColor, titleTextColor, Integer.parseInt(titleTextSize),
+				(int) btn_3.getTag());
 	}
 
 	private void hindoneView(boolean boo) {
@@ -1045,13 +1543,13 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 			btnAdd.setVisibility(View.GONE);
 			tvname.setVisibility(View.GONE);
 			tvCardID.setVisibility(View.GONE);
-			tvUserID.setVisibility(View.GONE);
-			tvPW.setVisibility(View.GONE);
+			// tvUserID.setVisibility(View.GONE);
+			// tvPW.setVisibility(View.GONE);
 			tvTime.setVisibility(View.GONE);
 			etname.setVisibility(View.GONE);
 			etCardID.setVisibility(View.GONE);
-			etUserID.setVisibility(View.GONE);
-			etPW.setVisibility(View.GONE);
+			// etUserID.setVisibility(View.GONE);
+			// etPW.setVisibility(View.GONE);
 			etTime.setVisibility(View.GONE);
 			listview.setVisibility(View.GONE);
 			btngetUser.setVisibility(View.GONE);
@@ -1062,13 +1560,13 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 			btnAdd.setVisibility(View.VISIBLE);
 			tvname.setVisibility(View.VISIBLE);
 			tvCardID.setVisibility(View.VISIBLE);
-			tvUserID.setVisibility(View.VISIBLE);
-			tvPW.setVisibility(View.VISIBLE);
+			// tvUserID.setVisibility(View.VISIBLE);
+			// tvPW.setVisibility(View.VISIBLE);
 			tvTime.setVisibility(View.VISIBLE);
 			etname.setVisibility(View.VISIBLE);
 			etCardID.setVisibility(View.VISIBLE);
-			etUserID.setVisibility(View.VISIBLE);
-			etPW.setVisibility(View.VISIBLE);
+			// etUserID.setVisibility(View.VISIBLE);
+			// etPW.setVisibility(View.VISIBLE);
 			etTime.setVisibility(View.VISIBLE);
 			listview.setVisibility(View.VISIBLE);
 			btngetUser.setVisibility(View.VISIBLE);
@@ -1117,54 +1615,92 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 		}
 	}
 
-	private void deleteUser(Map<String, Object> map) {
-		if (isDelete) {
+	public void deleteUser(final String str) {
 
-			isDelete = false;
+		MGridActivity.ecOneService.execute(new Runnable() {
 
-			String str = (String) map.get("text");
-			String[] s = str.split(":");
-			currCID = s[s.length - 1];
+			@Override
+			public void run() {
 
-			String data = NiuberManager.deleteUserCardId(currCID);
-			sendData(data);
-		}
+				getVip();
+
+				if (isDelete) {
+					currCID = str;
+					isDelete = false;
+					String data = NiuberManager.deleteUserCardId(str);
+					sendData(data);
+				}
+
+			}
+		});
+
 	}
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
-		Builder builder = new Builder(mActivity);
-		builder.setTitle("提示");
-		builder.setMessage("是否删除该用户");
-		builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-
-				// list.remove(position);
-				deleteUser(list.get(position));
-
-			}
-		});
-
-		builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
-
-			}
-
-		});
-
-		builder.create().show();
-
+		// Builder builder = new Builder(mActivity);
+		// builder.setTitle("提示");
+		// builder.setMessage("删除当前用户");
+		// builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+		//
+		// @Override
+		// public void onClick(DialogInterface dialog, int which) {
+		//
+		// String str = (String) list.get(position).get("text");
+		// String[] s = str.split(":");
+		// currCID = s[s.length - 1];
+		//
+		// MGridActivity.ecOneService.execute(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		//
+		// deleteUser(currCID);
+		//
+		// }
+		// });
+		//
+		// }
+		// });
+		//
+		// builder.setNegativeButton("删除所有用户", new DialogInterface.OnClickListener() {
+		//
+		// @Override
+		// public void onClick(DialogInterface dialog, int which) {
+		//
+		// }
+		//
+		// });
+		//
+		// builder.create().show();
+		//
 		return true;
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+		String str = (String) list.get(position).get("text");
+		String[] s = str.split(":");
+		currCID = s[s.length - 1];
+
+		if (deleteUser.size() > 0 && !deleteUser.contains(currCID)) {
+			Toast.makeText(getContext(), "只能选择一个", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		TextView title = (TextView) view.findViewById(R.id.tv_doorID);
+		if ((int) view.getTag() == 0) {
+			view.setTag(1);
+			title.setTextColor(Color.RED);
+			deleteUser.add(currCID);
+
+		} else if ((int) view.getTag() == 1) {
+			view.setTag(0);
+			title.setTextColor(Color.parseColor("#303030"));
+			deleteUser.remove(currCID);
+		}
 
 	}
 
@@ -1207,7 +1743,8 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 			}
 
 			parseUser(hexStr);
-		} 
+		}
+
 		if (isAllDelete == false) {
 
 			if (hexStr.length() != 20) {
@@ -1218,7 +1755,30 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 			}
 
 			parseDeleteUser(hexStr);
-		} 
+		}
+
+		if (isVIP == false) {
+			if (hexStr.length() != 20) {
+
+				handler.sendEmptyMessage(5);
+
+				return;
+			}
+
+			parseVIP(hexStr);
+		}
+
+		if (isOpen == false) {
+			if (hexStr.length() != 20) {
+
+				handler.sendEmptyMessage(6);
+
+				return;
+			}
+
+			parseOpen(hexStr);
+		}
+
 		if (isDelete == false) {
 
 			if (hexStr.length() != 20) {
@@ -1229,7 +1789,7 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 			}
 
 			parseDelete(hexStr);
-		} 
+		}
 		if (isAlive == false) {
 			hexStr = hexStr.substring(14, hexStr.length() - 6);
 			if (hexStr.length() != 32) {
@@ -1241,8 +1801,61 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 			parse(hexStr);
 		}
 
+		if (isSetTime == false) {
+			if (hexStr.length() != 20) {
+
+				handler.sendEmptyMessage(7);
+
+				return;
+			}
+
+			parseTime(hexStr);
+		}
+
 		// Log.e("text", hexStr);
 
+	}
+
+	private void parseTime(String str) {
+		String RTN = str.substring(8, 10);
+		long l = ByteUtil.hexStr2decimal(RTN);
+		Message msg = new Message();
+		msg.what = 7;
+		if (l == 0) {
+			msg.obj = true;
+		} else {
+			msg.obj = false;
+		}
+
+		handler.sendMessage(msg);
+	}
+
+	private void parseVIP(String str) {
+		String RTN = str.substring(8, 10);
+		long l = ByteUtil.hexStr2decimal(RTN);
+		Message msg = new Message();
+		msg.what = 5;
+		if (l == 0) {
+			msg.obj = true;
+		} else {
+			msg.obj = false;
+		}
+
+		handler.sendMessage(msg);
+	}
+
+	private void parseOpen(String str) {
+		String RTN = str.substring(8, 10);
+		long l = ByteUtil.hexStr2decimal(RTN);
+		Message msg = new Message();
+		msg.what = 6;
+		if (l == 0) {
+			msg.obj = true;
+		} else {
+			msg.obj = false;
+		}
+
+		handler.sendMessage(msg);
 	}
 
 	private void parseDelete(String str) {

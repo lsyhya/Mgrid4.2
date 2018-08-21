@@ -1075,7 +1075,7 @@ public class HisEvent extends HisEventTable implements IObject {
 			List<MyDoorEvent> doorList =sql.getListValues();
 			for (MyDoorEvent my : doorList) {
 				List<String> list_DoorEvent = new ArrayList<String>();
-				list_DoorEvent.add(my.getCardID());
+				list_DoorEvent.add(my.getCardid());
 				list_DoorEvent.add(my.getEvent());
 				list_DoorEvent.add(my.getTime());
 				

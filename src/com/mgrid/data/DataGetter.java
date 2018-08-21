@@ -1675,11 +1675,11 @@ public class DataGetter extends Thread {
 			if (alarm_flag) {
 
 				synchronized (equipment.htEventData) {
-					equipment.htEventData = null;
-
+					
+					equipment.htEventData.clear();
 					Iterator<IObject> reglstobj_it = equipment.lstRegistedMainAlarmList.iterator();
 					while (reglstobj_it.hasNext()) {
-						// System.out.println("我更新了："+reglstobj_it.next().getType());
+						
 						reglstobj_it.next().needupdate(true);
 						try {
 
@@ -1750,9 +1750,11 @@ public class DataGetter extends Thread {
 					int state = service.get_Equipment_State(Integer.valueOf(items[0]));
 					if (state == 1) {
 						flag_state = 1;
+						
 						event.state = "1";
 
 					} else {
+						
 						event.state = "0";
 					}
 				}
@@ -1776,7 +1778,7 @@ public class DataGetter extends Thread {
 			}
 		}
 		
-//		if (flag_state == 1||true) {
+//		if (flag_state == 1) {
 //			flag_state = 0;
 //			Iterator<IObject> reglstobj_it2 = equipment.registedStateObj.iterator();
 //			while (reglstobj_it2.hasNext()) {

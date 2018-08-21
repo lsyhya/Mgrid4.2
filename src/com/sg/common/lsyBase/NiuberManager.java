@@ -2,6 +2,8 @@ package com.sg.common.lsyBase;
 
 import com.mgrid.util.ByteUtil;
 
+import android.util.Log;
+
 public class NiuberManager {
 
 	/*
@@ -39,6 +41,9 @@ public class NiuberManager {
 
 		String info = "F1E0" + year + month + day + week + hour + min + sec;
 
+		
+		Log.e("TAG", info);
+		
 		return getSendData(info, true);
 
 	}

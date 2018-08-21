@@ -6,6 +6,7 @@ import java.util.Map;
 import com.mgrid.main.R;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -47,14 +48,16 @@ public class MyDoorAdapter extends SimpleAdapter {
 		
 		
 		  View view =  super.getView(position, convertView, parent);
+		  view.setTag(0);
+		  
 		  if(view==null) return null;
 		  
 		  Map<String,Object> map=list.get(position);
 		  
 		  LinearLayout linearLayout=(LinearLayout) view.findViewById(R.id.lin_door);
-		 // linearLayout.setBackgroundColor(Color.parseColor(linColor)); 
+		  linearLayout.setBackgroundColor(Color.parseColor(linColor)); 
 		  TextView title=(TextView) view.findViewById(R.id.tv_doorID);
-		  //title.setTextColor(Color.parseColor(titleColor));
+		  title.setTextColor(Color.parseColor(titleColor));
 		 // title.setText((String)map.get("time"));
 		 		  
 		  return view;
