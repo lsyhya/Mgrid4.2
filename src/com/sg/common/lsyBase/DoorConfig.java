@@ -10,14 +10,7 @@ public class DoorConfig {
 
 	public static String get(int REMARK, int STATUS, String CargID, List<MyDoorUser> user) {
 
-		String s = ByteUtil.hexStr2decimal(CargID) + "";
-
-		int i = 10 - s.length();
-
-		while (i > 0) {
-			s = "0" + s;
-			i--;
-		}
+		String s=HexStr2TenStrBW(CargID,10);
 
 		Log.e("msg", s);
 
@@ -30,7 +23,7 @@ public class DoorConfig {
 				}
 			}
 
-			return "开门成功";
+			return "刷卡成功";//"开门成功";
 		case 1:
 
 			return "键入用户ID及个人密码开门的记录（取消)";
@@ -61,7 +54,7 @@ public class DoorConfig {
 
 			case "0000000003":
 
-				return "门被关闭（非正常状态的关门）";
+				return "关门";//"门被关闭（非正常状态的关门）";
 
 			case "0000000004":
 
@@ -90,16 +83,16 @@ public class DoorConfig {
 
 			case "0000000081":
 
-				return "在要求的延时内，正常开门";
+				return "开门";//"在要求的延时内，正常开门";
 			case "0000000082":
 
-				return "超时未开门(在要求的延时内，未开门,但锁是开的)";
+				return "";//"超时未开门(在要求的延时内，未开门,但锁是开的)";
 			case "0000000083":
 
-				return "关门(在要求的延时内关门)";
+				return "关门";//"关门(在要求的延时内关门)";
 			case "0000000084":
 
-				return "超时未关门";
+				return "";//"超时未关门";
 
 			default:
 				return "无效的告警记录";
@@ -161,15 +154,38 @@ public class DoorConfig {
 		case 10:
 
 			return "当前时间该用户卡无进入权限";
-				
-			
+
 		case 48:
 
-			return "外面钥匙开门记录（进门）";
+			return "开门";//"外面钥匙开门记录（进门）";
 
 		default:
-			return "错误信息";
+			return "";
 		}
+	}
+
+	public static MyDoorUser getDoorUser(String CargID, String UID, String PW, String TIME, String VIP) {
+		
+		String CIDNUM=HexStr2TenStrBW(CargID,10);
+		String UIDNUM=HexStr2TenStrBW(UID,8);
+		
+		MyDoorUser my=new MyDoorUser("", CIDNUM, UIDNUM, PW, TIME);
+		
+		return my;
+	}
+	
+	private static String HexStr2TenStrBW(String str,int num)
+	{
+		String s = ByteUtil.hexStr2decimal(str) + "";
+
+		int i = num - s.length();
+
+		while (i > 0) {
+			s = "0" + s;
+			i--;
+		}
+		
+		return s;
 	}
 
 }

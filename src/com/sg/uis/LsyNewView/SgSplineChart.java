@@ -497,7 +497,7 @@ public class SgSplineChart extends TextView implements IObject {
 
 		chart.invalidate();
 		if (isAuth) {
-			handler.postDelayed(runnable, 30 * 1000); // 10√Î
+			handler.postDelayed(runnable, 30 * 1000); // 30√Î
 			isAuth = false;
 			if (isDay) {
 				isDay = false;

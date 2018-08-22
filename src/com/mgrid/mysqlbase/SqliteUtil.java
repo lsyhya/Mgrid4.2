@@ -12,6 +12,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class SqliteUtil {
 
@@ -111,7 +112,7 @@ public class SqliteUtil {
 		 if (sql != null) {
 				
 			 
-		        Cursor cursor = sql.rawQuery("select * from "+MySqlBase.doorTable,null);
+		        Cursor cursor = sql.rawQuery("select * from "+MySqlBase.doorTable,null);	        
 		        while(cursor.moveToNext()){
 		        	
 		        	
@@ -125,7 +126,9 @@ public class SqliteUtil {
 		            listU.add(my);
 		            
 		            Map<String, Object> hh = new HashMap<String, Object>();
-					hh.put("text", "用户:" +name + " 卡号:" + CID);
+					hh.put("text", "用户:" +name );
+					hh.put("text1"," 卡号:" + CID);
+					hh.put("text2"," 有效时间:" + Time);
 					list.add(hh);
 		             
 		        }
@@ -170,6 +173,32 @@ public class SqliteUtil {
 		return list;
 
 	}
+	
+	
+	/**
+	 * 时间段查询
+	 * @return
+	 */
+	
+	public List<MyDoorEvent> getListValues(String start,String end) {
+		List<MyDoorEvent> list = new ArrayList<MyDoorEvent>();
+		Cursor cursor = sql.rawQuery("select * from " + MySqlBase.doorEventTable+" where Time>=? and Time<=?",new String[] {start,end});
+		
+		
+		while (cursor.moveToNext()) {
+
+			String CID = cursor.getString(cursor.getColumnIndex("CardId"));
+			String time = cursor.getString(cursor.getColumnIndex("Time"));
+			String event = cursor.getString(cursor.getColumnIndex("Event"));
+			MyDoorEvent my = new MyDoorEvent(CID, time, event);
+			
+			
+			
+			list.add(my);
+		}
+		return list;
+
+	}
 
 	
 	/*
@@ -183,12 +212,15 @@ public class SqliteUtil {
 	}
 	
 	/*
-	 * 根据得到用户
+	 * 判断CID是否存在
 	 */
 	public boolean getUserValue(String CID) {
 		
 		
 		Cursor CS=sql.query(MySqlBase.doorTable, null, "CardId=?", new String[] { CID }, null, null, null);
+		
+		
+		
 		if(CS.getCount()>0)
 		{
 			return false;
@@ -196,6 +228,32 @@ public class SqliteUtil {
 		{
 			return true;
 		}
+
+	}
+	
+	
+	public MyDoorUser getUser(String cid) {
+		
+		
+		Cursor cursor=sql.query(MySqlBase.doorTable, null, "CardId=?", new String[] { cid }, null, null, null);
+		
+		
+		
+		  while(cursor.moveToNext()){
+	        	
+	        	
+	            String name = cursor.getString(cursor.getColumnIndex("UserName"));
+	            String CID = cursor.getString(cursor.getColumnIndex("CardId"));	  	            
+	            String UserId = cursor.getString(cursor.getColumnIndex("UserId"));
+	            String PassWord = cursor.getString(cursor.getColumnIndex("PassWord"));
+	            String Time = cursor.getString(cursor.getColumnIndex("Time"));	            
+	            MyDoorUser my=new MyDoorUser(name,CID,UserId,PassWord,Time);
+	            
+	            return my;
+
+	       }
+		  
+		  return null;
 
 	}
 	

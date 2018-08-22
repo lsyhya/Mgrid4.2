@@ -80,8 +80,6 @@ import data_model.ipc_control;
 @SuppressWarnings("deprecation")
 public class MGridActivity extends Activity {
 
-	
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -127,8 +125,6 @@ public class MGridActivity extends Activity {
 		}
 
 	}
-
-	
 
 	// 广播注册
 	private void setBroadcastReceiver() {
@@ -176,8 +172,7 @@ public class MGridActivity extends Activity {
 								mTimeHandler.postDelayed(runTime, sleepTime * 1000);
 							}
 						}
-					}else if(!isLoading)
-					{
+					} else if (!isLoading) {
 						onPageChange(m_sMainPage);
 					}
 				}
@@ -188,8 +183,6 @@ public class MGridActivity extends Activity {
 
 	private boolean parseMgridIni() {
 
-		// 解析Mgrid.ini
-		UtIniReader iniReader = null;
 		try {
 			iniReader = new UtIniReader(Environment.getExternalStorageDirectory().getPath() + "/MGrid.ini");
 		} catch (Exception e) {
@@ -331,8 +324,8 @@ public class MGridActivity extends Activity {
 		m_UserAway = Integer.parseInt(iniReader.getValue("SysConf", "UserAway", "0"));
 		// 获取用户页面个数
 		m_MaskCount = Integer.parseInt(iniReader.getValue("SysConf", "MaskCount", "0"));
-	    // 获取控制模式
-		m_ControlAway=Integer.parseInt(iniReader.getValue("SysConf", "ControlAway", "0"));
+		// 获取控制模式
+		m_ControlAway = Integer.parseInt(iniReader.getValue("SysConf", "ControlAway", "0"));
 
 		if (m_MaskCount == 0) {
 			m_MaskPage = new String[1][1];
@@ -488,7 +481,6 @@ public class MGridActivity extends Activity {
 		return null;
 
 	}
-	
 
 	public Runnable runTime = new Runnable() {
 		public void run() {
@@ -675,9 +667,9 @@ public class MGridActivity extends Activity {
 						Toast.makeText(MGridActivity.this, Load, Toast.LENGTH_LONG).show();
 						isNOChangPage = true;
 						isLoading = false;
-						
+
 						System.out.println("所用时间：" + (System.currentTimeMillis() - starttime));
-						
+
 						return;
 					}
 					handler.postDelayed(this, tmp_load_int_time);
@@ -721,7 +713,6 @@ public class MGridActivity extends Activity {
 						Toast.makeText(MGridActivity.this, Load, Toast.LENGTH_LONG).show();
 						isLoading = false;
 						isNOChangPage = true;
-						
 
 						System.out.println("所用时间：" + (System.currentTimeMillis() - starttime));
 					}
@@ -885,12 +876,11 @@ public class MGridActivity extends Activity {
 				if (MGridActivity.AlarmShieldTimer.get(ast.equitId + "_" + ast.eventId) != null) {
 					ast.updateText();
 				}
-			}else if (obj.getType().equals("NBerDoorView")) {
+			} else if (obj.getType().equals("NBerDoorView")) {
 				NBerDoorView ast = (NBerDoorView) obj;
 				ast.setHindText();
 			}
-			
-			
+
 			obj.initFinished();
 		}
 	}
@@ -1011,7 +1001,9 @@ public class MGridActivity extends Activity {
 		}
 	};
 
-	
+	// 解析Mgrid.ini
+	public UtIniReader iniReader = null;
+
 	private int sleepTime = 2 * 60 * 60;// 屏保视频休眠时间
 	private Intent m_oTaskIntent = null;
 	private MainWindow m_oSgSgRenderManager = null;
@@ -1023,8 +1015,8 @@ public class MGridActivity extends Activity {
 	private long starttime = 0;
 	private DataGetter mDataGetter;
 	private ContainerView mContainer;
-	//private FlikerProgressBar bar;
-	//private SelfDialog dialog = null;
+	// private FlikerProgressBar bar;
+	// private SelfDialog dialog = null;
 
 	public static String logeFilePath = Environment.getExternalStorageDirectory().getPath() + "/login" + ".login";
 	public WakeLock mWakeLock;// 锁屏类
@@ -1079,7 +1071,7 @@ public class MGridActivity extends Activity {
 	public static Map<String, Map<String, String>> EventClose = new HashMap<String, Map<String, String>>();
 	public static HashMap<String, ArrayList<String>> AlarmShow = new HashMap<String, ArrayList<String>>();
 	public static ExecutorService xianChengChi = Executors.newCachedThreadPool();
-	public static ExecutorService ecOneService =Executors.newSingleThreadExecutor();
+	public static ExecutorService ecOneService = Executors.newSingleThreadExecutor();
 	public static boolean isNOChangPage = false;
 	public static int saveTime; // 信号数据存储时间
 
@@ -1096,8 +1088,8 @@ public class MGridActivity extends Activity {
 
 	public static String[][] m_MaskPage;// 权限页面内的子页面
 	public static int m_MaskCount;// 总权限页面的个数
-	public static int m_ControlAway;// 控制模式 0默认不输入密码  1输入密码。
-	
+	public static int m_ControlAway;// 控制模式 0默认不输入密码 1输入密码。
+
 	public static UserManager userManager;
 
 	public static HashMap<String, IObject> AlarmAll = new HashMap<String, IObject>();
@@ -1116,8 +1108,6 @@ public class MGridActivity extends Activity {
 	// 告警屏蔽时间保存
 	public static HashMap<String, HashMap<Long, String>> AlarmShieldTimer = new HashMap<String, HashMap<Long, String>>();
 
-
-	
 	/**
 	 * 以下代码为内部类 This class listens for the end of the first half of the animation.
 	 * It then posts a new action that effectively swaps the views when the

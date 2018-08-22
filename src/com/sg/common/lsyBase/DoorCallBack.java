@@ -2,8 +2,12 @@ package com.sg.common.lsyBase;
 
 public interface DoorCallBack {
 
-	public void onSetSuc(Object my);
+	public void onSetSuc(String my);
 	
-	public void onSetFail();
+	public void onSetFail(String my);
+	
+	public void onSetErr();
+	
+	
 	   
 }

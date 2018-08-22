@@ -112,10 +112,10 @@ public class NiuberManager {
 	 * 读取用户数目
 	 * 
 	 */
-	public static void getUserCount() {
+	public static String getUserCount() {
 
 		String info = "F2E500";
-		getSendData(info, false);
+		return getSendData(info, false);
 
 	}
 

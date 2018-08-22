@@ -20,6 +20,7 @@ import com.sg.common.lsyBase.MyDoorTime;
 import com.sg.common.lsyBase.MyDoorUser;
 
 import android.util.Log;
+import android.widget.Switch;
 
 public class DoorButtManager {
 
@@ -27,9 +28,7 @@ public class DoorButtManager {
 	private NBerDoorView nDoorView;
 
 	private String sendData = "";
-
-	public boolean isAdd, isDelete, isOpen, isVip, isSetTime;
-	public boolean isAddResult;
+	private boolean isSend = false;
 
 	public DoorButtManager(final ClientManager manager, NBerDoorView nDoorView) {
 
@@ -39,138 +38,201 @@ public class DoorButtManager {
 		nDoorView.setCallBack(new DoorCallBack() {
 
 			@Override
-			public void onSetSuc(Object my) {
+			public void onSetSuc(String my) {
 
-				if (isAdd) {
+				if (!isSend) {
+					return;
+				}
+
+				isSend = false;
+
+				switch (my) {
+				case "Add":
 
 					sendData = "ADD0";
 					managers.sendMessage(sendData);
-					isAdd = false;
 
-				}
+					break;
 
-				if (isDelete) {
+				case "Delete":
 
 					sendData = "DELETE0";
 					managers.sendMessage(sendData);
-					isDelete = false;
 
-				}
+					break;
 
-				if (isOpen) {
+				case "Open":
+
 					sendData = "OPEN0";
 					managers.sendMessage(sendData);
-					isOpen = false;
-				}
 
-				if (isVip) {
-					sendData = "PROMISE0";
-					managers.sendMessage(sendData);
-					isVip = false;
-				}
+					break;
 
-				if (isSetTime) {
+				case "SetTime":
+
 					sendData = "SETTIME0";
 					managers.sendMessage(sendData);
-					isSetTime = false;
+
+					break;
+
+				default:
+
+					managers.sendMessage("Fail");
+
+					break;
 				}
 
 			}
 
 			@Override
-			public void onSetFail() {
+			public void onSetFail(String my) {
+				
+				
+				if (!isSend) {
+					return;
+				}
 
-				if (isAdd) {
+				isSend = false;
+
+				switch (my) {
+				case "Add":
 
 					sendData = "ADD1";
 					managers.sendMessage(sendData);
-					isAdd = false;
 
-				}
+					break;
 
-				if (isDelete) {
+				case "Delete":
 
 					sendData = "DELETE1";
 					managers.sendMessage(sendData);
-					isDelete = false;
 
-				}
+					break;
 
-				if (isOpen) {
+				case "Open":
+
 					sendData = "OPEN1";
 					managers.sendMessage(sendData);
-					isOpen = false;
-				}
 
-				if (isVip) {
-					sendData = "PROMISE1";
-					managers.sendMessage(sendData);
-					isVip = false;
-				}
+					break;
 
-				if (isSetTime) {
+				case "SetTime":
+
 					sendData = "SETTIME1";
 					managers.sendMessage(sendData);
-					isSetTime = false;
+
+					break;
+
+				default:
+
+					managers.sendMessage("Fail");
+
+					break;
 				}
 
 			}
+
+			@Override
+			public void onSetErr() {
+				
+				
+			
+				
+				if (!isSend) {
+					return;
+				}
+
+				isSend=false;
+
+				sendData = "Fail";
+				managers.sendMessage(sendData);
+
+			}
+
+			
 		});
 
 	}
 
-	public String getSendData(String recive) {
+	public  String getSendData(String recive) {
 
 		Log.e("REC", recive);
 
-		if (recive.equals("test")) {
+		isSend = true;
 
-		} else if (recive.startsWith("ADD")) {
+		try {
 
-			String bean = recive.replace("ADD", "");
+			if (recive.equals("test")) {
 
-			if (!bean.equals("")) {
-				addUsr(bean);
-			} else {
-				nDoorView.callBackResult(false, "");
-			}
+			} else if (recive.startsWith("ADD")) {
 
-		} else if (recive.startsWith("DELETE")) {
-			String bean = recive.replace("DELETE", "");
-			if (!bean.equals("")) {
-				deleteUsr(bean);
-			} else {
-				nDoorView.callBackResult(false, "");
-			}
-
-		} else if (recive.startsWith("OPEN")) {
-
-			openDoor();
-
-		} else if (recive.startsWith("PROMISE")) {
-
-			setVip();
-
-		} else if (recive.startsWith("GETUSER")) {
-
-			getUsers();
-
-		} else if (recive.startsWith("GETEVENT")) {
-
-			getEvent();
-
-		} else if (recive.startsWith("SETTIME")) {
-
-			String time = recive.replace("SETTIME", "");
-			
-			if (!time.equals("")) {
+				String bean = recive.replace("ADD", "");
 				
-				setTime(time);
-			
+				if (!bean.equals("")) {
+
+					addUsr(bean);
+
+				} else {
+
+					nDoorView.callBackResult(false, "Add");
+				}
+
+			} else if (recive.startsWith("DELETE")) {
+
+				String bean = recive.replace("DELETE", "");
+				
+				if (!bean.equals("")) {
+
+					deleteUsr(bean);
+
+				} else {
+
+					nDoorView.callBackResult(false, "Delete");
+				}
+				
+
+			} else if (recive.startsWith("OPEN")) {
+
+				openDoor();
+
+			} else if (recive.startsWith("PROMISE")) {
+
+				setVip();
+
+			} else if (recive.startsWith("GETUSER")) {
+
+				getUsers();
+
+			} else if (recive.startsWith("GETEVENTALL")) {
+
+				getEvent();
+
+			} else if (recive.startsWith("GETEVENTNEW")) {
+
+				getEventNew();
+
+			} else if (recive.startsWith("SETTIME")) {
+
+				String time = recive.replace("SETTIME", "");
+
+				if (!time.equals("")) {
+
+					setTime(time);
+
+				} else {
+
+					nDoorView.callBackResult(false, "SetTime");
+				}
+				
 			} else {
 
-				nDoorView.callBackResult(false, "");
+				nDoorView.callBackResult();
+
 			}
+
+		} catch (Exception e) {
+
+			nDoorView.callBackResult();
 		}
 
 		return "";
@@ -182,7 +244,6 @@ public class DoorButtManager {
 
 		if (my != null) {
 
-			isAdd = true;
 			nDoorView.add(my.getName(), my.getCardid(), NBerDoorView.UID, NBerDoorView.PW, my.getTime());
 
 		}
@@ -194,8 +255,6 @@ public class DoorButtManager {
 		final MyDoorUser my = JSON.parseObject(str, MyDoorUser.class);
 
 		if (my != null) {
-
-			isDelete = true;
 
 			if (my.getCardid().equals("0000000000")) {
 
@@ -213,14 +272,12 @@ public class DoorButtManager {
 
 	private void openDoor() {
 
-		isOpen = true;
 		nDoorView.openDoor();
 
 	}
 
 	private void setVip() {
 
-		isVip = true;
 		nDoorView.setVip();
 
 	}
@@ -253,15 +310,32 @@ public class DoorButtManager {
 			if (list != null) {
 
 				String str = JSON.toJSON(list).toString();
-				sendData = "GETEVENT" + str;
+				sendData = "GETEVENTALL" + str;
 				managers.sendMessage(sendData);
 			} else {
-				sendData = "GETEVENT";
+				sendData = "GETEVENTALL";
 				managers.sendMessage(sendData);
 			}
 		} else {
 
-			sendData = "GETEVENT";
+			sendData = "GETEVENTALL";
+			managers.sendMessage(sendData);
+
+		}
+
+	}
+
+	private void getEventNew() {
+
+		List<MyDoorEvent> list = nDoorView.getListEvent();
+		if (list != null) {
+
+			String str = JSON.toJSON(list).toString();
+			sendData = "GETEVENTNEW" + str;
+			managers.sendMessage(sendData);
+		} else {
+
+			sendData = "GETEVENTNEW";
 			managers.sendMessage(sendData);
 
 		}
@@ -277,8 +351,6 @@ public class DoorButtManager {
 
 				@Override
 				public void run() {
-
-					isSetTime = true;
 
 					Log.e("TIME", time.getYear() + time.getMonth() + time.getDay() + time.getWeek() + time.getHour() +
 

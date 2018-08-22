@@ -1071,8 +1071,21 @@ public class HisEvent extends HisEventTable implements IObject {
 				sql = new SqliteUtil(m_rRenderWindow.m_oMgridActivity.getApplication());
 				sql.openorgetSql();
 			}
+			
+			String eTime = view_PerveDay.getText().toString();
+			String sTime = view_NextDay.getText().toString();
+			
+			List<MyDoorEvent> doorList=null;
+			
+			if(eTime.length()==10&&sTime.length()==10)
+			{
+				doorList =sql.getListValues(sTime,eTime);
+			}else
+			{
+				doorList =sql.getListValues();
+			}
 
-			List<MyDoorEvent> doorList =sql.getListValues();
+			
 			for (MyDoorEvent my : doorList) {
 				List<String> list_DoorEvent = new ArrayList<String>();
 				list_DoorEvent.add(my.getCardid());

@@ -57,7 +57,12 @@ public class MyDoorAdapter extends SimpleAdapter {
 		  LinearLayout linearLayout=(LinearLayout) view.findViewById(R.id.lin_door);
 		  linearLayout.setBackgroundColor(Color.parseColor(linColor)); 
 		  TextView title=(TextView) view.findViewById(R.id.tv_doorID);
+		  TextView title1=(TextView) view.findViewById(R.id.tv_Cid);
+		  TextView title2=(TextView) view.findViewById(R.id.tv_time);
+		  
 		  title.setTextColor(Color.parseColor(titleColor));
+		  title1.setTextColor(Color.parseColor(titleColor));
+		  title2.setTextColor(Color.parseColor(titleColor));
 		 // title.setText((String)map.get("time"));
 		 		  
 		  return view;
