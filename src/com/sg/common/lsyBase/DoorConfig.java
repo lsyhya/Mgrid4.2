@@ -19,7 +19,7 @@ public class DoorConfig {
 
 			for (MyDoorUser my : user) {
 				if (s.equals(my.getCardid())) {
-					return my.getName() + "开门成功";
+					return my.getName() + "刷卡成功";
 				}
 			}
 
@@ -86,7 +86,7 @@ public class DoorConfig {
 				return "开门";//"在要求的延时内，正常开门";
 			case "0000000082":
 
-				return "";//"超时未开门(在要求的延时内，未开门,但锁是开的)";
+				return "超时未开门(在要求的延时内，未开门,但锁是开的)";
 			case "0000000083":
 
 				return "关门";//"关门(在要求的延时内关门)";

@@ -10,15 +10,24 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+import com.mgrid.main.MGridActivity;
+
 public class UtIniReader {
 	protected HashMap<String, Properties> sections = new HashMap<String, Properties>();
 	private transient String currentSecion;
 	private transient Properties current;
 
 	public UtIniReader(String filename) throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "gb2312"));
-		read(reader);
-		reader.close();
+
+		synchronized (MGridActivity.mgridIniPath) {
+
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(new FileInputStream(MGridActivity.mgridIniPath), "gb2312"));
+			read(reader);
+			reader.close();
+
+		}
+
 	}
 
 	protected void read(BufferedReader reader) throws IOException {
@@ -78,20 +87,27 @@ public class UtIniReader {
 
 		return true;
 	}
-	
-	public void setStr(String type,String key,String Value) {
 
-		current=sections.get(type);
-		if(current!=null)
-		{			
+	public void setStr(String type, String key, String Value) {
+
+		current = sections.get(type);
+		if (current != null) {
 			current.setProperty(key, Value);
 		}
-		
+
 	}
-	
-	
-	
-	
+
+	public void removeStr(String type, String key, String Value) {
+
+		current = sections.get(type);
+		if (current != null) {
+			if (current.containsKey(key)) {
+				current.remove(key);
+			}
+
+		}
+
+	}
 
 	public String getValue(String section, String name) {
 		Properties p = (Properties) sections.get(section);

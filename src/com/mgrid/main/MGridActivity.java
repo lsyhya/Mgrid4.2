@@ -42,6 +42,7 @@ import com.sg.uis.SgImage;
 import com.sg.uis.LsyNewView.AlarmShieldTime;
 import com.sg.uis.LsyNewView.ChangeLabelBtn;
 import com.sg.uis.LsyNewView.NBerDoorView;
+import com.sg.uis.LsyNewView.SgSplineChart;
 import com.sg.uis.LsyNewView.SgVideoView;
 
 import android.annotation.SuppressLint;
@@ -63,6 +64,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -356,13 +358,9 @@ public class MGridActivity extends Activity {
 				if (id == null || pw == null) {
 					continue;
 				}
-				if (i == 0) {
-					User user = new User(id, pw, 0);
-					userManager.addUser(i, user);
-				} else {
-					User user = new User(id, pw, i);
-					userManager.addUser(i, user);
-				}
+
+				User user = new User(id, pw, i + "");
+				userManager.addUser(i, user);
 
 			}
 		}
@@ -814,12 +812,6 @@ public class MGridActivity extends Activity {
 	}
 
 	public void onPageChange(String pagename) {
-		/*
-		 * InputMethodManager
-		 * imm=(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE );
-		 * imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
-		 * InputMethodManager.HIDE_NOT_ALWAYS);
-		 */
 
 		if (null == m_oViewGroups.get(pagename)) {
 			if (tmp_flag_loading)
@@ -829,10 +821,6 @@ public class MGridActivity extends Activity {
 			isChangGif = false;
 			return;
 		}
-
-		// if("".equals(m_maskPage) || pagename.equals(m_maskPage)){
-		// return;
-		// }
 
 		m_oSgSgRenderManager.active(false);
 		m_oSgSgRenderManager = m_oViewGroups.get(pagename);
@@ -850,39 +838,61 @@ public class MGridActivity extends Activity {
 
 		isChangGif = true;
 		isSleep = false;
-		Iterator<String> iter = m_oSgSgRenderManager.m_mapUIs.keySet().iterator();
-		while (iter.hasNext()) {
-			String strKey = iter.next();
-			IObject obj = m_oSgSgRenderManager.m_mapUIs.get(strKey);
-			if (obj.getType().equals("AlarmAction")) {
-				SgAlarmAction sg = (SgAlarmAction) obj;
-				sg.updateText();
-			} else if (obj.getType().equals("SgAlarmChangTime")) {
-				SgAlarmChangTime sa = (SgAlarmChangTime) obj;
-				SgAlarmAction sg = (SgAlarmAction) MGridActivity.AlarmAll.get(sa.label);
-				if (sg != null) {
-					sa.updateText(sg.TimeLapse);
-				}
-			} else if (obj.getType().equals("SgVideoView")) {
 
-				svv = (SgVideoView) obj;
-				svv.startMv();
-			} else if (obj.getType().equals("ChangeLabelBtn")) {
+		xianChengChi.execute(new Runnable() {
 
-				ChangeLabelBtn CLB = (ChangeLabelBtn) obj;
-				CLB.setText();
-			} else if (obj.getType().equals("AlarmShieldTime")) {
-				AlarmShieldTime ast = (AlarmShieldTime) obj;
-				if (MGridActivity.AlarmShieldTimer.get(ast.equitId + "_" + ast.eventId) != null) {
-					ast.updateText();
+			@Override
+			public void run() {
+
+				Iterator<String> iter = m_oSgSgRenderManager.m_mapUIs.keySet().iterator();
+				while (iter.hasNext()) {
+					String strKey = iter.next();
+					IObject obj = m_oSgSgRenderManager.m_mapUIs.get(strKey);
+					if (obj.getType().equals("AlarmAction")) {
+						SgAlarmAction sg = (SgAlarmAction) obj;
+						sg.updateText();
+					} else if (obj.getType().equals("SgAlarmChangTime")) {
+						SgAlarmChangTime sa = (SgAlarmChangTime) obj;
+						SgAlarmAction sg = (SgAlarmAction) MGridActivity.AlarmAll.get(sa.label);
+						if (sg != null) {
+							sa.updateText(sg.TimeLapse);
+						}
+					} else if (obj.getType().equals("SgVideoView")) {
+
+						svv = (SgVideoView) obj;
+						svv.startMv();
+					} else if (obj.getType().equals("ChangeLabelBtn")) {
+
+						ChangeLabelBtn CLB = (ChangeLabelBtn) obj;
+						CLB.setText();
+					} else if (obj.getType().equals("AlarmShieldTime")) {
+						AlarmShieldTime ast = (AlarmShieldTime) obj;
+						if (MGridActivity.AlarmShieldTimer.get(ast.equitId + "_" + ast.eventId) != null) {
+							ast.updateText();
+						}
+					} else if (obj.getType().equals("NBerDoorView")) {
+						NBerDoorView ast = (NBerDoorView) obj;
+						ast.setHindText();
+					} else if ("SgSplineChart".equals(obj.getType())) {
+
+						SgSplineChart sc = (SgSplineChart) obj;
+
+						if (sc.m_rRenderWindow != null && sc.m_rRenderWindow.m_bIsActive) {
+
+							Log.e("TAG", "刷新");
+							sc.setUpdata(true);
+						}
+
+					}
+
+					Message msg = new Message();
+					msg.obj = obj;
+					handler.sendMessage(msg);
+
 				}
-			} else if (obj.getType().equals("NBerDoorView")) {
-				NBerDoorView ast = (NBerDoorView) obj;
-				ast.setHindText();
+
 			}
-
-			obj.initFinished();
-		}
+		});
 	}
 
 	/** 显示/隐藏任务菜单 */
@@ -970,6 +980,9 @@ public class MGridActivity extends Activity {
 
 	public static Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
+
+			Object obj = msg.obj;
+
 			// handler接收到消息后就会执行此方法
 			switch (msg.what) {
 			case 1:
@@ -983,10 +996,10 @@ public class MGridActivity extends Activity {
 
 				break;
 			case 3:
-				// if(MGridActivity.whatLanguage)
-				// Toast.makeText(context, "没有前置摄像头", Toast.LENGTH_LONG).show();
-				// else
-				// Toast.makeText(context, "没有前置摄像头", Toast.LENGTH_LONG).show();
+
+				IObject Iobj = (IObject) obj;
+				Iobj.initFinished();
+
 				break;
 			case 4:
 
@@ -1017,7 +1030,7 @@ public class MGridActivity extends Activity {
 	private ContainerView mContainer;
 	// private FlikerProgressBar bar;
 	// private SelfDialog dialog = null;
-
+	public static String mgridIniPath = Environment.getExternalStorageDirectory().getPath() + "/MGrid.ini";
 	public static String logeFilePath = Environment.getExternalStorageDirectory().getPath() + "/login" + ".login";
 	public WakeLock mWakeLock;// 锁屏类
 	public SgVideoView svv = null; // 播放视频

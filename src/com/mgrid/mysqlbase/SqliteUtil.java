@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mgrid.main.user.UserEvent;
 import com.sg.common.lsyBase.MyDoorEvent;
 import com.sg.common.lsyBase.MyDoorUser;
 
@@ -88,6 +89,44 @@ public class SqliteUtil {
 		if (sql != null)
 			sql.insert(MySqlBase.doorEventTable, null, values);
 	}
+	
+	
+	/**
+	 * 添加记录
+	 * @param my
+	 */
+
+	public void addEventValue(MyDoorEvent my,int check) {
+		ContentValues values = new ContentValues();
+
+		values.put("CardId", my.getCardid());
+		values.put("Time", my.getTime());
+		values.put("Event", my.getEvent());
+		values.put("CheckData", check);
+
+		if (sql != null)
+			sql.insert(MySqlBase.doorEventTable, null, values);
+	}
+	
+	
+	/**
+	 * 添加电控锁记录
+	 * @param my
+	 */
+
+	public void addXuNiEventValue(UserEvent my,int check) {
+		ContentValues values = new ContentValues();
+
+		values.put("CardId", my.getUid());
+		values.put("Time", my.getTime());
+		values.put("Event", my.getEvent());
+		values.put("EventResult",my.getEventresult());	
+		values.put("CheckData", check);
+
+		if (sql != null)
+			sql.insert(MySqlBase.doorXuNiEventTable, null, values);
+	}
+	
 
 	/**
 	 * 查询用户
@@ -164,12 +203,48 @@ public class SqliteUtil {
 			String CID = cursor.getString(cursor.getColumnIndex("CardId"));
 			String time = cursor.getString(cursor.getColumnIndex("Time"));
 			String event = cursor.getString(cursor.getColumnIndex("Event"));
+			String id = cursor.getString(cursor.getColumnIndex("id"));
+			String checkData= cursor.getString(cursor.getColumnIndex("CheckData"));			
 			MyDoorEvent my = new MyDoorEvent(CID, time, event);
 			list.add(my);
+			
+			if(checkData.equals("0"));
+			{
+				String exe = "update "+MySqlBase.doorEventTable+" set CheckData = 1 where id = "+id;  
+				//执行SQL  
+				sql.execSQL(exe);
+			}
+			
+		}
+
+		return list;
+
+	}
+	
+	/**
+	 * 得到未查看的记录
+	 * @return
+	 */
+	public List<MyDoorEvent> getNowListValues() {
+		List<MyDoorEvent> list = new ArrayList<MyDoorEvent>();
+		Cursor cursor=sql.query(MySqlBase.doorEventTable, null, "CheckData=?", new String[] { "0" }, null, null, null);
+		while (cursor.moveToNext()) {
+
+			String id = cursor.getString(cursor.getColumnIndex("id"));
+			String CID = cursor.getString(cursor.getColumnIndex("CardId"));
+			String time = cursor.getString(cursor.getColumnIndex("Time"));
+			String event = cursor.getString(cursor.getColumnIndex("Event"));
+			MyDoorEvent my = new MyDoorEvent(CID, time, event);
+			list.add(my);
+			
+			
+			String exe = "update "+MySqlBase.doorEventTable+" set CheckData = 1 where id = "+id;  
+			//执行SQL  
+			sql.execSQL(exe);
+			
+			
 		}
 		
-
-
 		return list;
 
 	}
@@ -191,6 +266,30 @@ public class SqliteUtil {
 			String time = cursor.getString(cursor.getColumnIndex("Time"));
 			String event = cursor.getString(cursor.getColumnIndex("Event"));
 			MyDoorEvent my = new MyDoorEvent(CID, time, event);
+	
+			list.add(my);
+		}
+		return list;
+
+	}
+	
+	/**
+	 * 时间段查询电控锁门禁记录
+	 * @return
+	 */
+	
+	public List<UserEvent> getXuNiListValues(String start,String end) {
+		List<UserEvent> list = new ArrayList<UserEvent>();
+		Cursor cursor = sql.rawQuery("select * from " + MySqlBase.doorXuNiEventTable+" where Time>=? and Time<=?",new String[] {start,end});
+		
+		
+		while (cursor.moveToNext()) {
+
+			String CID = cursor.getString(cursor.getColumnIndex("CardId"));
+			String time = cursor.getString(cursor.getColumnIndex("Time"));
+			String event = cursor.getString(cursor.getColumnIndex("Event"));
+			String eventresult = cursor.getString(cursor.getColumnIndex("EventResult"));
+			UserEvent my = new UserEvent(CID, time, event,eventresult);
 			
 			
 			
@@ -199,6 +298,74 @@ public class SqliteUtil {
 		return list;
 
 	}
+	
+	/**
+	 * 得到所有记录
+	 * @return
+	 */
+	
+	public List<UserEvent> getXuNiListValues() {
+		List<UserEvent> list = new ArrayList<UserEvent>();
+		Cursor cursor = sql.rawQuery("select * from " + MySqlBase.doorXuNiEventTable, null);
+		while (cursor.moveToNext()) {
+
+			String CID = cursor.getString(cursor.getColumnIndex("CardId"));
+			String time = cursor.getString(cursor.getColumnIndex("Time"));
+			String event = cursor.getString(cursor.getColumnIndex("Event"));
+			String id = cursor.getString(cursor.getColumnIndex("id"));
+			String checkData= cursor.getString(cursor.getColumnIndex("CheckData"));	
+			String eventR= cursor.getString(cursor.getColumnIndex("EventResult"));	
+			UserEvent my = new UserEvent(CID, time, event,eventR);
+			
+			list.add(my);			
+			if(checkData.equals("0"));
+			{
+				String exe = "update "+MySqlBase.doorXuNiEventTable+" set CheckData = 1 where id = "+id;  
+				//执行SQL  
+				sql.execSQL(exe);
+			}
+			
+		}
+		
+		return list;
+
+	}
+	
+	
+	
+	
+	
+	/**
+	 * 得到未查看的记录
+	 * @return
+	 */
+	public List<UserEvent> getXuNiNowListValues() {
+		List<UserEvent> list = new ArrayList<UserEvent>();
+		Cursor cursor=sql.query(MySqlBase.doorXuNiEventTable, null, "CheckData=?", new String[] { "0" }, null, null, null);
+		while (cursor.moveToNext()) {
+
+			String CID = cursor.getString(cursor.getColumnIndex("CardId"));
+			String time = cursor.getString(cursor.getColumnIndex("Time"));
+			String event = cursor.getString(cursor.getColumnIndex("Event"));
+			String id = cursor.getString(cursor.getColumnIndex("id"));	
+			String eventR= cursor.getString(cursor.getColumnIndex("EventResult"));	
+			UserEvent my = new UserEvent(CID, time, event,eventR);
+			list.add(my);
+			
+			
+			String exe = "update "+MySqlBase.doorXuNiEventTable+" set CheckData = 1 where id = "+id;  
+			//执行SQL  
+			sql.execSQL(exe);
+			
+			
+		}
+		
+
+
+		return list;
+
+	}
+	
 
 	
 	/*

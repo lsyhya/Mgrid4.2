@@ -43,14 +43,10 @@ public class HisEventTable extends ListView {
 		if (listTitles == null || listContends == null) // 如果标题或者内容为空 return；
 			return;
 		int column = listTitles.size(); // 得到标题的个数
-        if(oldTitleSize!=column)
-        {
-        	m_tableAdapter.titleIsChang=true;
-        	oldTitleSize=column;
-        }else
-        {
-        	m_tableAdapter.titleIsChang=false;
-        }
+		
+      
+        m_tableAdapter.titleIsChang=true;
+        
 
 		int width = (m_nRight - m_nLeft) / column; // 得到每个标题的宽度
 	
@@ -75,6 +71,10 @@ public class HisEventTable extends ListView {
 	public void setFontColor(int cColor) {
 		m_cFontColor = cColor;
 	}
+	
+	public void setChange(boolean isChange) {
+		this.isChange = isChange;
+	}
 
 	// params :
 	protected HisEventAdapter m_tableAdapter = null;
@@ -95,6 +95,7 @@ public class HisEventTable extends ListView {
 
 	public ArrayList<TableRow> table =null;
 	private int oldTitleSize=0;
+	private boolean isChange=false;
     int i=0; 
     
     

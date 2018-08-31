@@ -1,60 +1,83 @@
-package com.sg.common.lsyBase;
+package com.sg.uis.LsyNewView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
+import com.mgrid.main.NiuberDoorService;
+import com.mgrid.main.NiuberDoorService.SokectBind;
 import com.mgrid.main.R;
-import com.mgrid.main.user.User;
-import com.mgrid.util.FileUtil;
-import com.mgrid.util.TimeUtils;
+import com.mgrid.mysqlbase.SqliteUtil;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
-import com.sg.common.LanguageStr;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtExpressionParser.stExpression;
+import com.sg.common.lsyBase.DoorCallBack;
+import com.sg.common.lsyBase.Door_XuNiCallBack;
+import com.sg.common.lsyBase.Door_XuNiUtil;
 
-import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Handler;
+import android.os.IBinder;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class DoorInvented extends TextView implements IObject {
+public class DoorInvented extends TextView implements IObject, Door_XuNiCallBack {
 
 	private TextView tv;
 	private String sb = "";
 	private String cmd_value = "";
-	private String nowUser = "";
-	private String text19 = LanguageStr.text19;
-	private FileUtil util;
-	private String savePath = "/mgrid/log/DoorEvent/";
-	private String passWord="";//当前输入的密码
+	
+
+	private ServiceConnection serviceConnection = null;
+	private NiuberDoorService niuberDoorService = null;
+	private MGridActivity mActivity;
+	private DoorCallBack callBack;
+	private Door_XuNiUtil door_XuNiUtil = null;
+	// 数据库
+	private SqliteUtil sql;
 
 	private List<Button> btnData = new ArrayList<Button>();
 
 	public DoorInvented(Context context) {
 		super(context);
 
+		mActivity = (MGridActivity) context;
 		init();
+		initService();
+		startService();
+		getSqlite(context);
+		door_XuNiUtil.setSql(sql);
+		door_XuNiUtil.setCallBack(-1, this);
+	}
 
+	private void getSqlite(Context context) {
+		sql = new SqliteUtil(context);
+		sql.openorgetSql();
+	}
+
+	public SqliteUtil getSqliteUtil() {
+		return sql;
 	}
 
 	private void init() {
 		m_rBBox = new Rect();
-		util = new FileUtil();
+	
+		door_XuNiUtil = Door_XuNiUtil.getIntance();
 
 		tv = new TextView(getContext());
 		tv.setTextSize(25);
@@ -102,7 +125,9 @@ public class DoorInvented extends TextView implements IObject {
 
 					} else if (btn.getText().toString().equals("确认")) {
 
-						Sure();
+						String pw = tv.getText().toString();
+
+						Open(null, pw, -1);
 
 					} else {
 
@@ -112,6 +137,32 @@ public class DoorInvented extends TextView implements IObject {
 				}
 			});
 
+		}
+	}
+
+	public void setCallBack(DoorCallBack callBack) {
+		this.callBack = callBack;
+	}
+
+	public void callBackResult() {
+
+		if (callBack != null) {
+
+			callBack.onSetErr();
+		}
+
+	}
+
+	public void callBackResult(boolean bool, String obj) {
+		if (callBack != null) {
+			if (bool) {
+
+				callBack.onSetSuc(obj);
+
+			} else {
+
+				callBack.onSetFail(obj);
+			}
 		}
 	}
 
@@ -153,116 +204,107 @@ public class DoorInvented extends TextView implements IObject {
 		return true;
 	}
 
+	private void initService() {
+
+		serviceConnection = new ServiceConnection() {
+
+			@Override
+			public void onServiceDisconnected(ComponentName name) {
+
+			}
+
+			@Override
+			public void onServiceConnected(ComponentName name, IBinder service) {
+
+				NiuberDoorService.SokectBind sb = (SokectBind) service;
+				niuberDoorService = sb.getService();
+				niuberDoorService.set(DoorInvented.this);
+
+			}
+		};
+
+	}
+
+	private void startService() {
+
+		Intent intent = new Intent(mActivity, NiuberDoorService.class);
+		mActivity.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+	}
+
+	private void stopService() {
+
+		m_rRenderWindow.m_oMgridActivity.unbindService(serviceConnection);
+
+		Intent intent = new Intent(m_rRenderWindow.m_oMgridActivity, NiuberDoorService.class);
+
+		m_rRenderWindow.m_oMgridActivity.stopService(intent);
+
+	}
+
+	Handler handler = new Handler() {
+
+		public void handleMessage(android.os.Message msg) {
+
+			switch (msg.what) {
+			case 0:
+
+				Toast.makeText(getContext(), "失败", Toast.LENGTH_SHORT).show();
+				Clear();
+				callBackResult(false, "Open");
+
+				break;
+
+			case 1:
+
+				sendCmd();
+				Clear();
+				callBackResult(true, "Open");
+
+				break;
+
+			default:
+				break;
+			}
+
+		};
+
+	};
+
+	/**
+	 * 添加
+	 */
+	public void Add(String id, String pw, int index) {
+
+		door_XuNiUtil.add(id, pw, index);
+
+		
+	}
+
+	// 删除
+	public void Delete(String id, String pw, int index) {
+
+		door_XuNiUtil.delete(id, pw, index);
+	}
+
+	// 修改 暂时没用
+	public void Alter(String id, String pw, int index) {
+
+		door_XuNiUtil.alter(id, pw, index);
+	}
+
+	// 开门
+	public void Open(String id, String pw, int index) {
+
+		door_XuNiUtil.openDoor(id, pw, index);
+	}
+
 	/*
 	 * 清空
 	 */
 	private void Clear() {
 		tv.setText("");
 		sb = "";
-	}
-
-	// 确定
-	private void Sure() {
-
-		if (isSure()) {
-			sendCmd();
-		} else {
-			saveResult(0);
-
-			Toast.makeText(getContext(), text19, Toast.LENGTH_SHORT).show();
-		}
-		Clear();
-	}
-
-	// 密码是否正确
-	private boolean isSure() {
-
-		passWord = tv.getText().toString();
-
-		if (MGridActivity.m_ControlAway == 1) {
-
-			if (MGridActivity.userManager.getNowUser() != null) {
-
-				if (MGridActivity.userManager.getNowUser().getPassWord().equals(passWord)) {
-
-					saveResult(1);
-					return true;
-
-				}
-			}
-
-		} else if (MGridActivity.m_ControlAway == 0) {
-
-			if (MGridActivity.userManager.getPassWordList().contains(passWord)) {
-
-				saveResult(1);
-				return true;
-
-			}
-
-		}
-
-		return false;
-	}
-
-	// 保存结果
-	private void saveResult(final int i) {
-
-		MGridActivity.xianChengChi.execute(new Runnable() {
-
-			@Override
-			public void run() {
-
-				String nowTime = TimeUtils.getNowTime();
-				String event = "开门";
-				getNowUser();
-
-				switch (i) {
-				case 0:
-
-					util.saveDoorEvent(savePath, "DoorEven.dat", nowUser + "," + nowTime + "," + event + "," + "失败");
-
-					break;
-
-				case 1:
-
-					util.saveDoorEvent(savePath, "DoorEven.dat", nowUser + "," + nowTime + "," + event + "," + "成功");
-
-					break;
-				}
-
-			}
-		});
-
-	}
-
-	/**
-	 * 得到当前操作用户
-	 * 
-	 * @param string
-	 */
-	private void getNowUser() {
-
-		if (MGridActivity.m_ControlAway == 1) {
-			if (MGridActivity.userManager.getNowUser() != null) {
-				nowUser = MGridActivity.userManager.getNowUser().getUserID();
-			}
-		} else if (MGridActivity.m_ControlAway == 0) {
-
-			
-			Map<Integer, User> userManaget = MGridActivity.userManager.getUserManaget();
-			Iterator<Map.Entry<Integer, User>> it = userManaget.entrySet().iterator();
-			while (it.hasNext()) {
-				Map.Entry<Integer, User> entry = it.next();
-				if (entry.getValue().getPassWord().equals(passWord)) {
-					nowUser = entry.getValue().getUserID();
-					return;
-				}
-
-				nowUser = passWord;
-			} 
-
-		}
 	}
 
 	// 设置文字
@@ -416,18 +458,16 @@ public class DoorInvented extends TextView implements IObject {
 		} else if ("CmdExpression".equals(strName)) {
 			m_strCmdExpression = strValue;
 
-		}else if ("Style".equals(strName)) {
-			
-			if(strValue.equals("1"))
-			{
-				
-				for(Button btn:btnData)
-				{
-					
+		} else if ("Style".equals(strName)) {
+
+			if (strValue.equals("1")) {
+
+				for (Button btn : btnData) {
+
 					btn.setBackgroundResource(R.drawable.door_btn);
 				}
-		
-			}		
+
+			}
 		}
 
 	}
@@ -472,7 +512,7 @@ public class DoorInvented extends TextView implements IObject {
 	@Override
 	public void removeFromRenderWindow(MainWindow rWin) {
 		rWin.removeView(this);
-
+		stopService();
 	}
 
 	@Override
@@ -546,5 +586,66 @@ public class DoorInvented extends TextView implements IObject {
 	Rect m_rBBox = null;
 
 	public boolean m_bneedupdate = true;
+
+	@Override
+	public void onSuccess(int state,String id,String pw) {
+
+		switch (state) {
+		case 1:
+
+			handler.sendEmptyMessage(1);
+
+			break;
+
+		case 2:
+			
+			
+			callBackResult(true, "Add");
+
+			break;
+
+		case 3:
+
+			
+			callBackResult(true, "Delete");
+			
+			break;
+
+		default:
+			break;
+		}
+
+	}
+
+	@Override
+	public void onFail(int state) {
+
+		switch (state) {
+		case 0:
+
+			handler.sendEmptyMessage(0);
+
+			break;
+			
+		case 2:
+			
+			
+			callBackResult(false, "Add");
+			
+			break;
+
+		case 3:
+			
+			
+			callBackResult(false, "Delete");
+			
+			break;
+
+		default:
+			break;
+		}
+
+	}
+
 
 }

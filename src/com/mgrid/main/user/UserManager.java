@@ -2,8 +2,10 @@ package com.mgrid.main.user;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /*
  * 用户管理类
@@ -34,31 +36,44 @@ public class UserManager {
 	//添加User
 	public void addUser(int index,User user)
 	{
-		userList.add(user.getUserID());
-		passWordList.add(user.getPassWord());
-		
+			
 		userManaget.put(index, user);
+		ResetList();
 	}
 	
 	//删除User
 	public void deleteUser(int index)
 	{
-		userList.remove(userManaget.get(index).getUserID());
-		passWordList.remove(userManaget.get(index).getPassWord());
+		
 		userManaget.remove(index);
+		ResetList();
 	}
 	
-	public void setUser(int index,String UserID,String PassWord,String OUserID,String OPassWord)
+	private void ResetList()
+	{
+		userList.clear();
+		passWordList.clear();
+		Iterator<Entry<Integer,User>> it=userManaget.entrySet().iterator();
+		while(it.hasNext())
+		{
+			Entry<Integer,User> entry=it.next();
+			User u=entry.getValue();
+	
+			userList.add(u.getUid());
+			passWordList.add(u.getPw());
+		}
+		
+	}
+	
+	
+	
+	public void setUser(int index,String UserID,String PassWord)
 	{
 		
-		userList.remove(OUserID);
-		passWordList.remove(OPassWord);
-		
-		userList.add(UserID);
-		passWordList.add(PassWord);
-		
-		userManaget.get(index).setUserID(UserID);
-		userManaget.get(index).setPassWord(PassWord);
+
+		userManaget.get(index).setUid(UserID);
+		userManaget.get(index).setPw(PassWord);
+		ResetList();
 		
 		
 	}

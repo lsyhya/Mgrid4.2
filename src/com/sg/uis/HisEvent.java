@@ -39,10 +39,12 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mgrid.VariableConfig.VariableConfig;
 import com.mgrid.data.DataGetter;
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
+import com.mgrid.main.user.UserEvent;
 import com.mgrid.mysqlbase.SqliteUtil;
 import com.mgrid.util.FileUtil;
 import com.sg.common.IObject;
@@ -72,7 +74,8 @@ public class HisEvent extends HisEventTable implements IObject {
 	private String AlarmSeverity = LanguageStr.AlarmSeverity;
 	private String StartTime = LanguageStr.StartTime;
 	private String EndTime = LanguageStr.EndTime;
-
+    private int  TitleCount=0;
+	
 	private String DeviceList = LanguageStr.DeviceList;
 	private String SetTime = LanguageStr.SetTime;
 	private String PreveDay = LanguageStr.PreveDay;
@@ -240,7 +243,7 @@ public class HisEvent extends HisEventTable implements IObject {
 			AlarmTitles.add("控制结果");
 		}
 
-		if (doorFile.exists()) {
+		if (VariableConfig.isXUNIDOOR_inHisEvent) {
 			nameList.add("开门事件");
 			DoorEventTitles.add("用户ID");
 			DoorEventTitles.add("操作事件");
@@ -248,7 +251,7 @@ public class HisEvent extends HisEventTable implements IObject {
 			DoorEventTitles.add("操作结果");
 		}
 
-		if (NiuberFile.exists()) {
+		if (VariableConfig.isNIBERDOOR_inHisEvent) {
 			nameList.add("门禁事件");
 			NiuBerEventTitles.add("事件ID");
 			NiuBerEventTitles.add("事件结果");
@@ -265,35 +268,7 @@ public class HisEvent extends HisEventTable implements IObject {
 					get_equiptList();
 					isFirst = false;
 				}
-
-				if (doorFile.exists()) {
-
-					if (!nameList.contains("开门事件")) {
-						nameList.add("开门事件");
-					}
-
-					if (DoorEventTitles.size() == 0) {
-						DoorEventTitles.add("用户ID");
-						DoorEventTitles.add("操作事件");
-						DoorEventTitles.add("操作时间");
-						DoorEventTitles.add("操作结果");
-					}
-				}
 				
-				if (NiuberFile.exists()) {
-
-					if (!nameList.contains("门禁事件")) {
-						nameList.add("门禁事件");
-					}
-
-					if (NiuBerEventTitles.size() == 0) {
-						
-						NiuBerEventTitles.add("事件ID");
-						NiuBerEventTitles.add("事件结果");
-						NiuBerEventTitles.add("发生时间");
-					}
-				}
-
 				View view = m_rRenderWindow.m_oMgridActivity.getLayoutInflater().inflate(R.layout.pop, null);
 				popupWindow = new PopupWindow(view, view_text.getWidth(), 200, true);
 				// 设置一个透明的背景，不然无法实现点击弹框外，弹框消失
@@ -625,6 +600,8 @@ public class HisEvent extends HisEventTable implements IObject {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case 0:
+				
+				
 				for (int i = 0; i < m_title.length; i++)
 					m_title[i].setVisibility(View.VISIBLE);
 
@@ -908,6 +885,10 @@ public class HisEvent extends HisEventTable implements IObject {
 
 		 if (AllDevice.equals(closeEquiptName)) {
 
+			 
+			 setChange(7);
+				
+			 
 			m_bneedupdate = false;
 			handler.sendEmptyMessage(0);
 			for (int i = 0; i < ALLDeviceList.size(); i++) {
@@ -1012,6 +993,9 @@ public class HisEvent extends HisEventTable implements IObject {
 		} else if ("二次下电".equals(closeEquiptName)) {
 			handler.sendEmptyMessage(1);
 			m_bneedupdate = false;
+			
+			setChange(7);
+			
 
 			try {
 				BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(logFile), "GBK"));
@@ -1044,15 +1028,40 @@ public class HisEvent extends HisEventTable implements IObject {
 			}
 		} else if ("开门事件".equals(closeEquiptName)) {
 
+			setChange(4);
+						
 			m_bneedupdate = false;
 			handler.sendEmptyMessage(4);
-			List<locat_his_DoorEvent> doorList = fileUtil.getDoorEvent(doorFile);
-			for (locat_his_DoorEvent locat_his_DoorEvent : doorList) {
+			
+			if (sql == null) {
+				sql = new SqliteUtil(m_rRenderWindow.m_oMgridActivity.getApplication());
+				sql.openorgetSql();
+			}
+			
+			
+			String eTime = view_PerveDay.getText().toString();
+			String sTime = view_NextDay.getText().toString();
+			
+			List<UserEvent> doorList=null;
+			
+			if(eTime.length()==10&&sTime.length()==10)
+			{
+				eTime=getEedTime(eTime);
+				
+				doorList =sql.getXuNiListValues(sTime,eTime);
+				
+			}else
+			{
+				doorList =sql.getXuNiListValues();
+			}
+			
+			
+			for (UserEvent userEvent : doorList) {
 				List<String> list_DoorEvent = new ArrayList<String>();
-				list_DoorEvent.add(locat_his_DoorEvent.UserID);
-				list_DoorEvent.add(locat_his_DoorEvent.Event);
-				list_DoorEvent.add(locat_his_DoorEvent.Time);
-				list_DoorEvent.add(locat_his_DoorEvent.Result);
+				list_DoorEvent.add(userEvent.getUid());
+				list_DoorEvent.add(userEvent.getEvent());
+				list_DoorEvent.add(userEvent.getTime());
+				list_DoorEvent.add(userEvent.getEventresult());
 
 				lsyLs3.add(list_DoorEvent);
 			}
@@ -1062,8 +1071,12 @@ public class HisEvent extends HisEventTable implements IObject {
 			} else {
 				updateList(DoorEventTitles, lsyLs3.subList(0, 30));
 			}
+			
 		} else if ("门禁事件".equals(closeEquiptName)) {
 
+			
+			setChange(3);
+			
 			m_bneedupdate = false;
 			handler.sendEmptyMessage(5);
 
@@ -1079,7 +1092,10 @@ public class HisEvent extends HisEventTable implements IObject {
 			
 			if(eTime.length()==10&&sTime.length()==10)
 			{
+				eTime=getEedTime(eTime);
+				
 				doorList =sql.getListValues(sTime,eTime);
+				
 			}else
 			{
 				doorList =sql.getListValues();
@@ -1103,6 +1119,9 @@ public class HisEvent extends HisEventTable implements IObject {
 			}
 		}else
 		{
+			setChange(7);
+			
+			
 			handler.sendEmptyMessage(0);
 			lstContends.clear(); // 清楚页面的以前数据 行信号
 			m_bneedupdate = false; // 如果为真，表示数据不根据数据更新时时刷界面
@@ -1246,6 +1265,20 @@ public class HisEvent extends HisEventTable implements IObject {
 		return true;
 	}
 
+	
+	private void setChange(int count)
+	{
+		 if(TitleCount!=count)
+		 {
+			 TitleCount=count;
+			 setChange(true);
+		 }else
+		 {
+			 setChange(false);
+		 }
+	}
+	
+	
 	private List<local_his_event> getHisEvent() {
 		String filename = "hisevent-" + str_Equiptidlsy;
 		List<local_his_event> his_event_list = new ArrayList<local_his_event>();
@@ -1343,6 +1376,19 @@ public class HisEvent extends HisEventTable implements IObject {
 		return true;
 	}
 
+	private String getEedTime(String eTime)
+	{
+		String[] str=eTime.split("-");
+		eTime=Integer.parseInt(str[2])+1+"";
+		if(eTime.length()<2)
+		{
+			eTime="0"+eTime;
+		}
+		
+		return eTime;
+	}
+	
+	
 	private void updateList(List<String> items, List<List<String>> data) {
 		System.out.println(data.size());
 		updateContends(items, data);

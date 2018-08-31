@@ -34,6 +34,30 @@ public class ExpressionUtils {
 		}
 		return cmdList;
 	}
+	
+	//Binding{[Cmd[Equip:1-Temp:177-Command:2-Parameter:1-Value:0]]}	
+	public List<String> parseYKP(String cmd) {
+		String removeBind = removeBindingString(cmd); 
+		String[] eachCmd = removeBind.split("\\|"); 
+		List<String> cmdList = new ArrayList<String>();
+		for (int i = 0; i < eachCmd.length; i++) {
+			String[] eachPart = eachCmd[i].split("-");
+			if(eachPart.length==5)
+			{
+			String equipId = eachPart[0].split(":")[1];
+			String tempId = eachPart[1].split(":")[1];
+			String Command = eachPart[2].split(":")[1];
+			String Parameter = eachPart[3].split(":")[1];
+			String Value = eachPart[4].replace("]", "").split(":")[1];
+			cmdList.add(equipId + "-" + tempId + "-" + Command+"-"+Parameter+"-"+Value);
+			}else
+			{
+				String equipId = eachPart[0].replace("]", "").split(":")[1];
+				cmdList.add(equipId);
+			}
+		}
+		return cmdList;
+	}
 
 	public List<String> parseOnlyEq(String cmd) {
 		String removeBind = UtExpressionParser // [Value[Equip:118]]|[Value[Equip:119]]

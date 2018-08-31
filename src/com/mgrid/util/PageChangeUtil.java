@@ -225,8 +225,8 @@ public class PageChangeUtil {
 		Iterator<Map.Entry<Integer, User>> it = MGridActivity.userManager.getUserManaget().entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry<Integer, User> map = it.next();
-			if (map.getValue().getUserID().toString().equals(User) && 
-					map.getValue().getPassWord().equals(PassWord)) {
+			if (map.getValue().getUid().toString().equals(User) && 
+					map.getValue().getPw().equals(PassWord)) {
 
 				MGridActivity.userManager.setNowUser(map.getValue());
 				uisMa.hideView();

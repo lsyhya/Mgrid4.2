@@ -24,12 +24,14 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.FloatMath;
+import android.util.Log;
 import android.util.Xml;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.mgrid.VariableConfig.VariableConfig;
 import com.mgrid.data.DataGetter;
 import com.mgrid.data.EquipmentDataModel.Event;
 import com.mgrid.data.EquipmentDataModel.Signal;
@@ -44,7 +46,6 @@ import com.sg.common.TotalVariable;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtExpressionParser.stExpression;
-import com.sg.common.lsyBase.DoorInvented;
 import com.sg.uis.AutoSig;
 import com.sg.uis.AutoSigList;
 import com.sg.uis.Breaker;
@@ -119,6 +120,7 @@ import com.sg.uis.LsyNewView.ChangeLabel;
 import com.sg.uis.LsyNewView.ChangeLabelBtn;
 import com.sg.uis.LsyNewView.ChangeUserInfo;
 import com.sg.uis.LsyNewView.CoolButton;
+import com.sg.uis.LsyNewView.DoorInvented;
 import com.sg.uis.LsyNewView.EquipHistoryAlarm;
 import com.sg.uis.LsyNewView.EventLevelAlter;
 import com.sg.uis.LsyNewView.HistoryCurveChart;
@@ -136,6 +138,7 @@ import com.sg.uis.LsyNewView.SgPieChart3D;
 import com.sg.uis.LsyNewView.SgSplineChart;
 import com.sg.uis.LsyNewView.SgStackBarChart;
 import com.sg.uis.LsyNewView.SgVideoView;
+import com.sg.uis.LsyNewView.StateButton;
 
 import comm_service.local_file;
 import comm_service.service;
@@ -957,6 +960,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("DoorInvented".equals(strType)) {
 							DoorInvented DI = new DoorInvented(this.getContext());
 							m_mapUIs.put(strID, DI);
+							VariableConfig.isXUNIDOOR_inHisEvent=true;
 						} else if ("ChangeUserInfo".equals(strType)) {
 							ChangeUserInfo CUI = new ChangeUserInfo(this.getContext());
 							m_mapUIs.put(strID, CUI);
@@ -964,8 +968,13 @@ public class MainWindow extends ViewGroup {
 						} else if ("NBerDoorView".equals(strType)) {
 							NBerDoorView NBDV = new NBerDoorView(this.getContext());
 							m_mapUIs.put(strID, NBDV);
+							VariableConfig.isNIBERDOOR_inHisEvent=true;
 
-						} else {
+						}  else if ("StateButton".equals(strType)) {
+							StateButton SB = new StateButton(this.getContext());
+							m_mapUIs.put(strID, SB);						
+
+						}else {
 							showMsgDlg("警告", "不支持的控件类型： " + strType);
 							bExit = false;
 						}
@@ -1042,7 +1051,8 @@ public class MainWindow extends ViewGroup {
 								|| "CoolButton".equals(strElementType) || "SgPieChart3D".equals(strElementType)
 								|| "LanguageChange".equals(strElementType) || "SelfCheck".equals(strElementType)
 								|| "DoorInvented".equals(strElementType) || "ChangeUserInfo".equals(strElementType)
-								|| "NBerDoorView".equals(strElementType)) {
+								|| "NBerDoorView".equals(strElementType)
+								|| "StateButton".equals(strElementType)) {
 							try {
 								iCurrentObj.parseProperties(strName, strValue, m_strResFolder);
 							} catch (Throwable e) {
@@ -1326,9 +1336,9 @@ public class MainWindow extends ViewGroup {
 
 								Iterator<IObject> reglstobj_it2 = DataGetter.equipment.registedStateObj.iterator();
 								while (reglstobj_it2.hasNext()) {
-									
+
 									reglstobj_it2.next().needupdate(true);
-									
+
 									try {
 										sleep(50);
 									} catch (Exception e) {
@@ -1790,8 +1800,6 @@ public class MainWindow extends ViewGroup {
 					while (iter.hasNext()) {
 
 						HashMap.Entry<IObject, stExpression> entry = iter.next();
-						IObject io = entry.getKey();
-						String s = io.getType();
 
 						if (!entry.getKey().needupdate())
 							continue;
@@ -1837,14 +1845,6 @@ public class MainWindow extends ViewGroup {
 							}
 							if ("LocalList".equals(oExpression.strUiType)) {
 
-								// if(!getLocalData(oExpression)){
-								// continue;
-								// }
-								// Log.e("has getLocalData",local_data_list.toString());
-								// 把<控件名-历史数据列表>放入数据线程池的信号列表链
-								// m_oShareObject.m_mapLocalSignal.put(strKey,
-								// local_data_list);
-
 							}
 
 						} else if ("Name".equals(oExpression.strBindType)) {
@@ -1862,24 +1862,6 @@ public class MainWindow extends ViewGroup {
 
 								pushMutiChartDatas(strKey, oExpression);
 
-								/*
-								 * // 获取历史曲线数据 if ("HistorySignalCurve".equals(oExpression .strUiType)) {
-								 * List<ipc_history_signal> listHistorySignals = getHistorySinals(oExpression);
-								 * List<List<ipc_history_signal>> mutiLines = new
-								 * ArrayList<List<ipc_history_signal>>(); for (int i = 0; i <
-								 * oExpression.mapObjectExpress.size(); ++i) { mutiLines.add(new
-								 * ArrayList<ipc_history_signal>()); } for (int i = 0; i <
-								 * listHistorySignals.size(); ++i) { ipc_history_signal si =
-								 * listHistorySignals.get(i); int nIndex1 = 0; Iterator<String> iterMuti =
-								 * oExpression.mapObjectExpress .keySet().iterator(); while (iterMuti.hasNext())
-								 * { String strHistorySignalKey = iterMuti.next(); stBindingExpression bindExp =
-								 * oExpression.mapObjectExpress .get(strHistorySignalKey);
-								 * 
-								 * if (bindExp.nSignalId == si.sigid) { mutiLines.get(nIndex1).add(si); break; }
-								 * nIndex1++; }
-								 * 
-								 * } m_oShareObject.m_mapHistorySignals.put(strKey , mutiLines); }
-								 */
 							} else if ("SaveSignal".equals(oExpression.strUiType)) {
 
 								if (getSaveSignalList())
@@ -1898,7 +1880,7 @@ public class MainWindow extends ViewGroup {
 								// 待完善
 							} else if ("tigerLabel".equals(oExpression.strUiType)) {
 
-							} else {
+							}  else {
 
 								pushRealTimeValue(strKey, oExpression);
 
@@ -1974,7 +1956,7 @@ public class MainWindow extends ViewGroup {
 		HashMap<String, String> m_mapCaculateValues = null;
 		public Calculator m_oCalculator = null;
 		boolean m_bIsRunning = true;
-		boolean m_bHasRandomData = false;
+		public boolean m_bHasRandomData = false;
 
 		public List<local_his_signal> local_data_list = new ArrayList<local_his_signal>();
 		public List<local_his_signal> his_equipt_list = new ArrayList<local_his_signal>();

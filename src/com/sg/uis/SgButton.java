@@ -28,11 +28,16 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -195,6 +200,12 @@ public class SgButton extends TextView implements IObject {
 			m_strVerticalContentAlignment = strValue;
 		else if ("Expression".equals(strName)) {
 			// m_strCmdExpression = strValue; //fjw add //×¢ÊÍµô
+		}else if ("ImgSrc".equals(strName)) {
+			
+			String m_strImgSrc = Environment.getExternalStorageDirectory().getPath() + strResFolder + strValue; 
+		   // Bitmap bit=BitmapFactory.decodeFile(fileName);
+            Drawable able=new BitmapDrawable(getResources(), m_strImgSrc);
+			this.setBackground(able);
 		}
 	}
 

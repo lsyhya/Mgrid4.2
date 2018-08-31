@@ -8,8 +8,10 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import com.sg.uis.LsyNewView.DoorButtManager;
+import com.sg.common.IObject;
 import com.sg.uis.LsyNewView.NBerDoorView;
+
+import android.util.Log;
 
 public class ClientManager implements Runnable {
 
@@ -17,21 +19,23 @@ public class ClientManager implements Runnable {
 
 	private Socket socket;
 
-	private DoorButtManager DBManager;
+	private DoorManagerBase DBManager;
 
 	private PrintWriter out = null;
 	private BufferedReader in = null;
 
-	public ClientManager(Socket socket, NBerDoorView nDoorView) {
-		this.socket = socket;
-
-		DBManager = new DoorButtManager(this, nDoorView);
-
+	public ClientManager(Socket socket, DoorManagerBase DBManager) {
+		
+		this.socket = socket;	
+		this.DBManager=DBManager;
+		
+		DBManager.setManager(this);
+		
+		
 		try {
 
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "GBK"));// 获得输入流对象
-			
-			
+						
 			
 			// 客户端只要一连到服务器，便发送连接成功的信息
 			message = "服务器地址：" + this.socket.getInetAddress();
@@ -57,7 +61,9 @@ public class ClientManager implements Runnable {
 						closeSocket();
 						break;
 					} else {
+						
 						DBManager.getSendData(str);
+					
 					}
 				}
 				
@@ -66,6 +72,7 @@ public class ClientManager implements Runnable {
 			}
 		} catch (Exception e) {
 
+			Log.e("线程", "异常");
 			e.printStackTrace();
 
 		}

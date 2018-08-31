@@ -26,6 +26,7 @@ import com.mgrid.util.DialogUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.MyAdapter;
+import com.sg.common.lsyBase.DoorButtManager;
 import com.sg.common.lsyBase.DoorCallBack;
 import com.sg.common.lsyBase.DoorConfig;
 import com.sg.common.lsyBase.MyDoorAdapter;
@@ -135,7 +136,6 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 	private ServiceConnection serviceConnection = null;
 	private NiuberDoorService niuberDoorService = null;
-	private DoorButtManager DBManager = null;
 	private DoorCallBack callBack;
 	private NiuberDoorHandle niuHandle = NiuberDoorHandle.getIntance();
 
@@ -382,8 +382,8 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 	private void initListview(ListView lv) {
 
-		adapter = new MyDoorAdapter(mActivity, list, R.layout.door_list, new String[] { "text","text1","text2" },
-				new int[] { R.id.tv_doorID,R.id.tv_Cid,R.id.tv_time });
+		adapter = new MyDoorAdapter(mActivity, list, R.layout.door_list, new String[] { "text", "text1", "text2" },
+				new int[] { R.id.tv_doorID, R.id.tv_Cid, R.id.tv_time });
 		lv.setAdapter(adapter);
 		lv.setBackgroundColor(Color.parseColor("#C7C8CA"));
 		lv.setOnItemLongClickListener(this);
@@ -392,8 +392,8 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 	private void initListview2(ListView lv) {
 
-		adapter2 = new MyDoorAdapter(mActivity, list2, R.layout.door_list, new String[] { "text" },
-				new int[] { R.id.tv_doorID });
+		adapter2 = new MyDoorAdapter(mActivity, list2, R.layout.door_list, new String[] { "text", "text1", "text2" },
+				new int[] { R.id.tv_doorID, R.id.tv_Cid, R.id.tv_time });
 		lv.setAdapter(adapter2);
 		lv.setBackgroundColor(Color.parseColor("#C7C8CA"));
 
@@ -1010,7 +1010,7 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 						sql.addUserValue(my);
 						sql.setListValues(list, mydoorU);
 
-						callBackResult(true, "ADD");
+						callBackResult(true, "Add");
 
 						Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
 
@@ -1020,13 +1020,13 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 					} else {
 
-						callBackResult(false, "ADD");
+						callBackResult(false, "Add");
 
 						Toast.makeText(getContext(), "添加失败", Toast.LENGTH_SHORT).show();
 					}
 				} else {
 
-					callBackResult(false, "ADD");
+					callBackResult(false, "Add");
 					Toast.makeText(getContext(), "添加失败", Toast.LENGTH_SHORT).show();
 
 				}
@@ -1189,6 +1189,8 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 					}
 
 				}
+
+				btngetUser.setEnabled(true);
 
 				break;
 
@@ -1509,6 +1511,7 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 		// sql.setListValues(list, mydoorU);
 		// handler.sendEmptyMessage(4);
 
+		btngetUser.setEnabled(false);
 		getNiuberUser();
 
 	}
@@ -1599,6 +1602,8 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 				updateEvent();
 
+				getUserData();
+
 				startService();
 
 				Toast.makeText(mActivity, "成功", Toast.LENGTH_LONG).show();
@@ -1611,17 +1616,22 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 						try {
 
 							if (mActivity.iniReader != null) {
-								BufferedWriter bw = new BufferedWriter(
-										new OutputStreamWriter(new FileOutputStream(new File(Path)), "gb2312"));
 
-								mActivity.iniReader.getValue("SysConf", "DevicesPath");
+								synchronized (MGridActivity.mgridIniPath) {
 
-								mActivity.iniReader.setStr("SysConf", "DevicesPath", devicesPath);
+									BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
+											new FileOutputStream(new File(MGridActivity.mgridIniPath)), "gb2312"));
 
-								mActivity.iniReader.writeStr(bw);
+									mActivity.iniReader.getValue("SysConf", "DevicesPath");
 
-								bw.flush();
-								bw.close();
+									mActivity.iniReader.setStr("SysConf", "DevicesPath", devicesPath);
+
+									mActivity.iniReader.writeStr(bw);
+
+									bw.flush();
+									bw.close();
+
+								}
 
 							}
 
@@ -1679,6 +1689,16 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 		if (mSerialPort != null) {
 			mSerialPort.close();
 		}
+
+		isAlive = true;
+		isAdd = true;
+		isAllDelete = true;
+		isDelete = true;
+		isVIP = true;
+		isOpen = true;
+		isSetTime = true;
+		isGetUser = true;
+		getUserBack = false;
 
 	}
 
@@ -1744,6 +1764,16 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 					isSetTime = true;
 					isGetUser = true;
 					getUserBack = true;
+					
+					btngetUser.post(new Runnable() {
+						
+						@Override
+						public void run() {
+							btngetUser.setEnabled(true);
+							
+						}
+					});
+					
 
 				}
 			}
@@ -1897,7 +1927,7 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-		String str = (String) list.get(position).get("text");
+		String str = (String) list.get(position).get("text1");
 		String[] s = str.split(":");
 		currCID = s[s.length - 1];
 
@@ -2165,9 +2195,8 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 		long l = ByteUtil.hexStr2decimal(REMARK);
 		String event = DoorConfig.get((int) l, 0, CargID, mydoorU);
-		
-		if(event.equals(""))
-		{
+
+		if (event.equals("")) {
 			return;
 		}
 
@@ -2175,11 +2204,13 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 				+ time.substring(8, 10) + ":" + time.substring(10, 12) + ":" + time.substring(12, 14);
 
 		MyDoorEvent myevent = new MyDoorEvent(CargID, t, event);
-		sql.addEventValue(myevent);
+		sql.addEventValue(myevent, 0);
 		mydoorE.add(myevent);
 
 		Map<String, Object> hh = new HashMap<String, Object>();
-		hh.put("text", "事件ID:" + CargID + " 时间:" + t + " " + event);
+		hh.put("text", "ID:" + CargID);
+		hh.put("text1", "时间:" + t);
+		hh.put("text2", "详情:" + event);
 		list2.add(hh);
 
 		handler.sendEmptyMessage(1);

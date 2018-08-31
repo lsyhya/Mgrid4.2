@@ -2,8 +2,24 @@ package com.sg.uis;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.mgrid.main.MGridActivity;
+import com.mgrid.main.MainWindow;
+import com.mgrid.main.R;
+import com.mgrid.util.MediaUtil;
+import com.mgrid.util.PageChangeUtil;
+import com.sg.common.CFGTLS;
+import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
+import com.sg.common.SgRealTimeData;
+import com.sg.common.UtExpressionParser;
+import com.sg.common.UtExpressionParser.stIfElseExpression;
+import com.sg.common.UtGifHelper;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -28,20 +44,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mgrid.data.DataGetter;
-import com.mgrid.main.MGridActivity;
-import com.mgrid.main.MainWindow;
-import com.mgrid.main.R;
-import com.mgrid.util.MediaUtil;
-import com.mgrid.util.PageChangeUtil;
-import com.sg.common.CFGTLS;
-import com.sg.common.IObject;
-import com.sg.common.LanguageStr;
-import com.sg.common.SgRealTimeData;
-import com.sg.common.UtExpressionParser;
-import com.sg.common.UtExpressionParser.stIfElseExpression;
-import com.sg.common.UtGifHelper;
-
 /** 图片类(jpg png gif) */
 @SuppressLint({ "InflateParams", "ShowToast", "ClickableViewAccessibility" })
 public class SgImage extends View implements IObject {
@@ -58,8 +60,8 @@ public class SgImage extends View implements IObject {
 	public String userName = LanguageStr.userName;
 	public String PWD = LanguageStr.PWD;
 
-	private PageChangeUtil changeUtil=null;
-	
+	private PageChangeUtil changeUtil = null;
+
 	public SgImage(Context context) {
 		super(context);
 		this.setOnTouchListener(new OnTouchListener() {
@@ -212,8 +214,9 @@ public class SgImage extends View implements IObject {
 			canvas.drawRect(0, 0, nWidth, nHeight, m_oPaint);
 			m_oPaint.setColor(cColor);
 		}
-		if (m_oGifHelper != null) {
-			m_bitCurrentBackImage = m_oGifHelper.nextBitmap();
+		if (utGifMap.containsKey(currentImg)) {
+						
+			m_bitCurrentBackImage = utGifMap.get(currentImg).nextBitmap();
 		}
 	}
 
@@ -289,41 +292,45 @@ public class SgImage extends View implements IObject {
 		} else if ("Strtch".equals(strName))
 			m_strStrtch = strValue;
 		else if ("ImgSrc".equals(strName)) {
-			m_strImgSrc = Environment.getExternalStorageDirectory().getPath() + strResFolder + strValue;
+			
+			if (isValue(strValue)) {
+				
+				m_strImgSrc = Environment.getExternalStorageDirectory().getPath() + strResFolder + strValue;
 
-			String[] arrStr = strValue.split("\\.");
-			if ("gif".equals(arrStr[1])) {
-				MGridActivity.xianChengChi.execute(new Runnable() {
+				String[] arrStr = strValue.split("\\.");
+				if ("gif".equals(arrStr[1])) {
+					MGridActivity.xianChengChi.execute(new Runnable() {
 
-					@Override
-					public void run() {
-						InputStream is = null;
-						try {
-							is = new BufferedInputStream(new FileInputStream(m_strImgSrc));
-							m_oGifHelper = new UtGifHelper();
-							m_oGifHelper.read(is);
-							m_bitBackImage = m_oGifHelper.getImage();
-							m_bitCurrentBackImage = m_bitBackImage;
-							// gif 刷新线程
-							m_oInvalidateThread = new invalidateThread();
-							m_oInvalidateThread.start();
-							is.close();
-						} catch (Exception e) {
-							e.printStackTrace();
+						@Override
+						public void run() {
+							InputStream is = null;
+							try {
+								is = new BufferedInputStream(new FileInputStream(m_strImgSrc));
+								m_oGifHelper = new UtGifHelper();
+								m_oGifHelper.read(is);
+								m_bitBackImage = m_oGifHelper.getImage();
+								m_bitCurrentBackImage = m_bitBackImage;
+								// gif 刷新线程
+								m_oInvalidateThread = new invalidateThread();
+								m_oInvalidateThread.start();
+								is.close();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
-					}
-				});
-			} else {
-				m_bitBackImage = CFGTLS.getBitmapByPath(m_strImgSrc);
-				m_bitCurrentBackImage = m_bitBackImage;
+					});
+				} else {
+					m_bitBackImage = CFGTLS.getBitmapByPath(m_strImgSrc);
+					m_bitCurrentBackImage = m_bitBackImage;
+				}
+				
 			}
 
 		} else if ("ClickEvent".equals(strName))
 			m_strClickEvent = strValue;
 		else if ("ImageExpression".equals(strName)) {
 			m_strImageExpression = strValue;
-			// m_oMathExpression =
-			// UtExpressionParser.getInstance().parseExpression(strValue);
+
 			m_oIfElseExpression = UtExpressionParser.getInstance().parseIfElseExpression(strValue);
 			if (m_oIfElseExpression != null) {
 				String strTrueImge = Environment.getExternalStorageDirectory().getPath() + strResFolder
@@ -331,18 +338,13 @@ public class SgImage extends View implements IObject {
 				String strFalseImge = Environment.getExternalStorageDirectory().getPath() + strResFolder
 						+ m_oIfElseExpression.strFalseSelect;
 
-				// true
-				// InputStream isTrue = new BufferedInputStream(new
-				// FileInputStream(strTrueImge));
 				String[] arrTrueStr = strValue.split("\\.");
 				if ("gif".equals(arrTrueStr[1])) {
 					;
 				} else {
 					m_bitIfTrueImage = CFGTLS.getBitmapByPath(strTrueImge);
 				}
-				// false
-				// InputStream isFalse = new BufferedInputStream(new
-				// FileInputStream(strFalseImge));
+
 				String[] arrFalseStr = strValue.split("\\.");
 				if ("gif".equals(arrFalseStr[1])) {
 					;
@@ -359,12 +361,92 @@ public class SgImage extends View implements IObject {
 			m_nMaxValue = Integer.parseInt(strValue);
 		else if ("Expression".equals(strName)) {
 			m_strExpression = strValue;
-		} else if ("Url".equals(strName))
+		} else if ("Url".equals(strName)) {
 			m_strUrl = strValue;
-		else if ("user".equals(strName))
+		} else if ("user".equals(strName)) {
 			turnUsr = strValue;
-		else if ("passWork".equals(strName))
+		} else if ("passWork".equals(strName)) {
 			turnPass = strValue;
+
+		} else if ("Signal1".equals(strName)) {
+
+			if (isValue(strValue)) {
+				Signal1 =Integer.parseInt(strValue) ;
+			}
+
+		} else if ("Signal2".equals(strName)) {
+			if (isValue(strValue)) {
+				Signal2 = Integer.parseInt(strValue);
+			}
+
+		} else if ("Signal3".equals(strName)) {
+			if (isValue(strValue)) {
+				Signal3 = Integer.parseInt(strValue);
+			}
+
+		} else if ("Img1".equals(strName)) {
+			if (isValue(strValue)) {
+				Img1 = strValue;
+				getBitmap(Img1,strResFolder);
+			}
+
+		} else if ("Img2".equals(strName)) {
+			if (isValue(strValue)) {
+				Img2 = strValue;
+				getBitmap(Img2,strResFolder);
+			}
+
+		} else if ("Img3".equals(strName)) {
+			if (isValue(strValue)) {
+				Img3 = strValue;
+				getBitmap(Img3,strResFolder);
+			}
+		}
+	}
+
+	private boolean isValue(String value) {
+		if (value != null && !value.equals("")) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private void getBitmap(final String strValue, String strResFolder) throws FileNotFoundException {
+		m_strImgSrc = Environment.getExternalStorageDirectory().getPath() + strResFolder + strValue;
+
+		String[] arrStr = strValue.split("\\.");
+		if ("gif".equals(arrStr[1])) {
+			MGridActivity.xianChengChi.execute(new Runnable() {
+
+				@Override
+				public void run() {
+					InputStream is = null;
+					try {
+						is = new BufferedInputStream(new FileInputStream(m_strImgSrc));
+						UtGifHelper m_oGifHelper = new UtGifHelper();
+						m_oGifHelper.read(is);
+						is.close();
+						m_bitCurrentBackImage = m_oGifHelper.getImage();						
+						utGifMap.put(strValue, m_oGifHelper);						
+						
+						if (m_oInvalidateThread == null || !m_oInvalidateThread.isAlive()) {
+							// gif 刷新线程
+							m_oInvalidateThread = new invalidateThread();
+							m_oInvalidateThread.start();
+						}
+						
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		} else {
+			Bitmap m_bit = CFGTLS.getBitmapByPath(m_strImgSrc);
+			m_bitCurrentBackImage = m_bit;
+			bitMap.put(strValue, m_bit);
+		}
 	}
 
 	@Override
@@ -372,7 +454,7 @@ public class SgImage extends View implements IObject {
 	}
 
 	public String getBindingExpression() {
-		return m_strImageExpression;
+		return m_strExpression;
 	}
 
 	public void setUniqueID(String strID) {
@@ -401,11 +483,11 @@ public class SgImage extends View implements IObject {
 				MediaUtil.getMediaUtil().stopSound(m_rRenderWindow.m_oMgridActivity);
 
 			} else {
-//				
-				if(changeUtil==null)
-				 changeUtil=new PageChangeUtil(this, m_strClickEvent, m_rRenderWindow);
-			     changeUtil.changePage();
-				
+				//
+				if (changeUtil == null)
+					changeUtil = new PageChangeUtil(this, m_strClickEvent, m_rRenderWindow);
+				changeUtil.changePage();
+
 			}
 		} else {
 			// startAnimation(loadAnimation);
@@ -522,38 +604,63 @@ public class SgImage extends View implements IObject {
 		SgRealTimeData oRealTimeData = m_rRenderWindow.m_oShareObject.m_mapRealTimeDatas.get(this.getUniqueID());
 		if (oRealTimeData == null)
 			return false;
-		String strValue = oRealTimeData.strValue;
+		String strValue = oRealTimeData.strData;
 		if (strValue == null || "".equals(strValue) == true)
 			return false;
 
+		int value=(int) Float.parseFloat(strValue);
+		
+		Log.e(m_strBindingValue+"", value+"");
+		
 		// 内容变化才刷新页面
-		if (m_strBindingValue.equals(strValue) == false) {
-			m_strBindingValue = strValue;
+		if (m_strBindingValue!=value) {
+			m_strBindingValue = value;
 
-			if (m_oIfElseExpression != null) {
-				if (m_oIfElseExpression.isDigist == false) {
-					if (strValue.equals(m_oIfElseExpression.strRet))
-						m_bitCurrentBackImage = m_bitIfTrueImage;
-					else
-						m_bitCurrentBackImage = m_bitIfFalseImage;
-				} else {
-					try {
-						if (Double.parseDouble(strValue) == Double.parseDouble(m_oIfElseExpression.strRet))
-							m_bitCurrentBackImage = m_bitIfTrueImage;
-						else
-							m_bitCurrentBackImage = m_bitIfFalseImage;
-					} catch (Exception e) {
-						Log.v("Warnning", "SgImage 强转失败 字符串= " + strValue);
-					}
+			if (m_strBindingValue==Signal1) {
+				
+				currentImg=Img1;
+				if(utGifMap.containsKey(Img1))
+				{
+					
+					m_bitCurrentBackImage=utGifMap.get(Img1).getImage();
+					
+				}else {
+					
+					m_bitCurrentBackImage=bitMap.get(Img1);
 				}
+				
+
+			} else if (m_strBindingValue==Signal2) {
+				
+				currentImg=Img2;
+				if(utGifMap.containsKey(Img2))
+				{
+					
+					m_bitCurrentBackImage=utGifMap.get(Img2).getImage();
+					
+				}else {
+					
+					m_bitCurrentBackImage=bitMap.get(Img2);
+				}
+				
+
+			} else if (m_strBindingValue==Signal3) {
+				
+				currentImg=Img3;
+				if(utGifMap.containsKey(Img3))
+				{
+					
+					m_bitCurrentBackImage=utGifMap.get(Img3).getImage();
+					
+				}else {
+					
+					m_bitCurrentBackImage=bitMap.get(Img3);
+				}
+
+			} else {
+				return false;
 			}
 
-			if (m_oIfElseExpression != null) {
-				if (strValue.equals(m_oIfElseExpression.strRet))
-					m_bitCurrentBackImage = m_bitIfTrueImage;
-				else
-					m_bitCurrentBackImage = m_bitIfFalseImage;
-			}
 
 			return true;
 		}
@@ -598,6 +705,7 @@ public class SgImage extends View implements IObject {
 	long flag = 0;
 	Bitmap m_bitBackImage = null;
 	Bitmap m_bitCurrentBackImage = null;
+	String currentImg="";
 	UtGifHelper m_oGifHelper = null;
 	boolean m_bPressed = false;
 	MainWindow m_rRenderWindow = null;
@@ -616,7 +724,7 @@ public class SgImage extends View implements IObject {
 	stIfElseExpression m_oIfElseExpression = null;
 	Bitmap m_bitIfTrueImage = null;
 	Bitmap m_bitIfFalseImage = null;
-	String m_strBindingValue = "";
+	int  m_strBindingValue = -1;
 	Paint m_oPaint = null;
 	Rect m_rSrcRect = null;
 	Rect m_rDestRect = null;
@@ -625,11 +733,20 @@ public class SgImage extends View implements IObject {
 	String pass = "12348765";
 	String root = "fang";
 	String rootpass = "pass";
+	int Signal1 = -2;
+	int Signal2 = -3;
+	int Signal3 = -4;
+	String Img1 = "";
+	String Img2 = "";
+	String Img3 = "";
 
 	public boolean m_bneedupdate = true;
 	public static boolean isChangColor = true;
 	public static boolean isChangColor1 = false;
 	private Animation loadAnimation;
+
+	private Map<String, Bitmap> bitMap = new HashMap<>();
+	private Map<String, UtGifHelper> utGifMap = new HashMap<>();
 
 	invalidateThread m_oInvalidateThread = null;
 

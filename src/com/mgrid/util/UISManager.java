@@ -24,11 +24,11 @@ public class UISManager {
 		User user = MGridActivity.userManager.getNowUser();
 		if (user != null) {
 			for (ChangeUserInfo info : ChangeUserInfoList) {
-				if (user.getFlag() == 0) {
+				if (user.getIndex().equals("0")) {
 					info.showAllView();
-				} else if (info.index != user.getFlag()) {
+				} else if (info.index != Integer.parseInt(user.getIndex())) {
 					info.hideAllView();
-				} else if (info.index == user.getFlag()) {
+				} else if (info.index ==  Integer.parseInt(user.getIndex())) {
 					info.showAllView();
 				}
 			}

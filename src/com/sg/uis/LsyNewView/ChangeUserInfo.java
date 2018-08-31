@@ -1,9 +1,5 @@
 package com.sg.uis.LsyNewView;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -16,10 +12,12 @@ import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
 import com.mgrid.main.user.User;
-import com.mgrid.util.FileUtil;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
+import com.sg.common.lsyBase.DoorCallBack;
+import com.sg.common.lsyBase.Door_XuNiCallBack;
+import com.sg.common.lsyBase.Door_XuNiUtil;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -27,9 +25,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -46,7 +45,7 @@ import android.widget.Toast;
  * @author Administrator
  * 
  */
-public class ChangeUserInfo extends TextView implements IObject {
+public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBack {
 
 	private String UserID = LanguageStr.UserID;
 	private String PassWord = LanguageStr.PassWord;
@@ -54,20 +53,25 @@ public class ChangeUserInfo extends TextView implements IObject {
 	private String Add = LanguageStr.Add;
 	private String Alter = LanguageStr.Alter;
 	private String delete = LanguageStr.delete;
-	private boolean isdelete = true;
-	private ChangeUserInfo scnp;
-	private FileUtil fileUtil = null;
-	private String oldUserId = "";
-	private String oldPassWord = "";
+	private int x, y, w, h;
+	private int offset=1;
+	private static boolean isLayout = false;
+
+	private String oid, opw;
+
+	private Door_XuNiUtil door_XuNiUtil = null;
+	// private String oldUserId = "";
+	// private String oldPassWord = "";
 	public int index;
+	private DoorCallBack callBack;
 
 	public ChangeUserInfo(Context context) {
 		super(context);
+
 		this.setClickable(true);
 		this.setGravity(Gravity.CENTER);
 		this.setFocusableInTouchMode(true);
-		scnp = this;
-		fileUtil = new FileUtil();
+
 		m_fFontSize = this.getTextSize();
 		this.setTextSize(20);
 		this.setOnTouchListener(new OnTouchListener() {
@@ -167,40 +171,56 @@ public class ChangeUserInfo extends TextView implements IObject {
 			public void onClick(View arg0) {
 				// 删除xml内容
 
-				Delete();
+				String id = etName.getText().toString();
+				String pw = etPhone.getText().toString();
+
+				Delete(id, pw, index);
 
 			}
 		});
 
-		etName.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				imm.showSoftInput(etName, InputMethodManager.SHOW_FORCED);// 获取到这个类。
-				etName.setFocusableInTouchMode(true);// 获取焦点
-
-			}
-		});
-
-		etPhone.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				imm.showSoftInput(etPhone, InputMethodManager.SHOW_FORCED);// 获取到这个类。
-				etPhone.setFocusableInTouchMode(true);// 获取焦点
-
-			}
-		});
+		// etName.setOnClickListener(new View.OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View arg0) {
+		// imm.showSoftInput(etName, InputMethodManager.SHOW_FORCED);// 获取到这个类。
+		// etName.setFocusableInTouchMode(true);// 获取焦点
+		//
+		// }
+		// });
+		//
+		// etPhone.setOnClickListener(new View.OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View arg0) {
+		// imm.showSoftInput(etPhone, InputMethodManager.SHOW_FORCED);// 获取到这个类。
+		// etPhone.setFocusableInTouchMode(true);// 获取焦点
+		//
+		// }
+		// });
 
 		etName.setTextColor(Color.BLACK);
 		etPhone.setTextColor(Color.BLACK);
 
-		etName.setCursorVisible(true);// 让edittext出现光标
-		etPhone.setCursorVisible(true);
+		// etName.setCursorVisible(true);// 让edittext出现光标
+		// etPhone.setCursorVisible(true);
 
 		etPhone.setInputType(EditorInfo.TYPE_CLASS_PHONE);
 
-		imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);// 显示输入法窗口
+		// imm = (InputMethodManager)
+		// context.getSystemService(Context.INPUT_METHOD_SERVICE);// 显示输入法窗口
+
+		door_XuNiUtil = Door_XuNiUtil.getIntance();
+		door_XuNiUtil.setContext(context);
+
+	}
+
+	public void callBackResult() {
+
+		if (callBack != null) {
+
+			callBack.onSetErr();
+		}
 
 	}
 
@@ -224,9 +244,18 @@ public class ChangeUserInfo extends TextView implements IObject {
 			Show();
 
 		} else if (str.equals(Add)) {
-			Add();
+
+			String id = etName.getText().toString();
+			String pw = etPhone.getText().toString();
+
+			Add(id, pw, index);
+
 		} else if (str.equals(Alter)) {
-			Alter();
+
+			String id = etName.getText().toString();
+			String pw = etPhone.getText().toString();
+
+			Alter(id, pw, index);
 		}
 
 	}
@@ -235,7 +264,7 @@ public class ChangeUserInfo extends TextView implements IObject {
 	 * 隐藏所有View
 	 */
 	public void hideAllView() {
-		
+
 		tvTagorder.setVisibility(View.GONE);
 		etName.setVisibility(View.GONE);
 		tvName.setVisibility(View.GONE);
@@ -243,14 +272,14 @@ public class ChangeUserInfo extends TextView implements IObject {
 		tvPhone.setVisibility(View.GONE);
 		btDelete.setVisibility(View.GONE);
 		this.setVisibility(View.GONE);
-		
+
 	}
-    
+
 	/**
 	 * 显示所有View
 	 */
 	public void showAllView() {
-		
+
 		tvTagorder.setVisibility(View.VISIBLE);
 		etName.setVisibility(View.VISIBLE);
 		tvName.setVisibility(View.VISIBLE);
@@ -258,86 +287,25 @@ public class ChangeUserInfo extends TextView implements IObject {
 		tvPhone.setVisibility(View.VISIBLE);
 		btDelete.setVisibility(View.VISIBLE);
 		this.setVisibility(View.VISIBLE);
-		
+
 	}
 
 	// 修改
-	private void Alter() {
+	private void Alter(String id, String pw, int index) {
 
-		MGridActivity.xianChengChi.execute(new Runnable() {
-
-			@Override
-			public void run() {
-
-				String id = etName.getText().toString();
-				String pw = etPhone.getText().toString();
-
-				if (id.equals("") || pw.equals("")) {
-					handler.sendEmptyMessage(3);
-				} else {
-					Map<String, String> map = new HashMap<String, String>();
-					map.put("User" + index + "=" + oldUserId, "User" + index + "=" + id);
-					map.put("PassWord" + index + "=" + oldPassWord, "PassWord" + index + "=" + pw);
-					fileUtil.replaceUser(new File(Environment.getExternalStorageDirectory().getPath() + "/MGrid.ini"),
-							map);
-
-					MGridActivity.userManager.setUser(index, id, pw, oldUserId, oldPassWord);
-					handler.sendEmptyMessage(1);
-
-				}
-
-			}
-		});
+		door_XuNiUtil.alter(id, pw, index);
 	}
 
 	// 添加
-	private void Add() {
+	public void Add(String id, String pw, int index) {
+		door_XuNiUtil.add(id, pw, index);
 
-		MGridActivity.xianChengChi.execute(new Runnable() {
-
-			@Override
-			public void run() {
-
-				String id = etName.getText().toString();
-				String pw = etPhone.getText().toString();
-
-				if (id.equals("") || pw.equals("")) {
-					handler.sendEmptyMessage(3);
-				} else {
-					Map<String, String> map = new HashMap<String, String>();
-					map.put("User" + index + "=" + id, "PassWord" + index + "=" + pw);
-					fileUtil.AddUser(new File(Environment.getExternalStorageDirectory().getPath() + "/MGrid.ini"), map);
-					User user;
-					if (index != 0) {
-						user = new User(id, pw, 1);
-					} else {
-						user = new User(id, pw, 0);
-					}
-
-					MGridActivity.userManager.addUser(index, user);
-					handler.sendEmptyMessage(2);
-
-				}
-			}
-		});
 	}
 
 	// 删除
-	private void Delete() {
-		MGridActivity.xianChengChi.execute(new Runnable() {
+	private void Delete(String id, String pw, int index) {
 
-			@Override
-			public void run() {
-
-				List<String> list = new ArrayList<String>();
-				list.add("User" + index + "=" + etName.getText().toString());
-				list.add("PassWord" + index + "=" + etPhone.getText().toString());
-				fileUtil.deleteUser(new File(Environment.getExternalStorageDirectory().getPath() + "/MGrid.ini"), list);
-
-				MGridActivity.userManager.deleteUser(index);
-				handler.sendEmptyMessage(0);
-			}
-		});
+		door_XuNiUtil.delete(id, pw, index);
 	}
 
 	// 显示
@@ -346,16 +314,35 @@ public class ChangeUserInfo extends TextView implements IObject {
 		Map<Integer, User> map = MGridActivity.userManager.getUserManaget();
 		User user = map.get(Integer.parseInt(tvTagorder.getText().toString()));
 		if (user != null) {
-			oldUserId = user.getUserID();
-			etName.setText(oldUserId);
-			oldPassWord = user.getPassWord();
-			etPhone.setText(oldPassWord);
+			// oldUserId = user.getUserID();
+			etName.setText(user.getUid());
+			// oldPassWord = user.getPassWord();
+			etPhone.setText(user.getPw());
 			this.setText(Alter);
 			btDelete.setEnabled(true);
 		} else {
 			this.setText(Add);
+			etName.setText("");
+			etPhone.setText("");
 		}
 
+	}
+
+	private void setTexts(final String id, final String pw) {
+
+		etName.setText(id);
+		etPhone.setText(pw);
+
+		 etName.layout(x + (int) (w * 0.187f)+offset, y, x + (int) (w * 0.387f), y + h - h
+		 / 10);
+		 etPhone.layout(x + (int) (w * 0.545f)+offset, y, x + (int) (w * 0.745f), y + h - h
+		 / 10);
+
+		 offset=-offset;
+	}
+
+	public void setCallBack(DoorCallBack callBack) {
+		this.callBack = callBack;
 	}
 
 	Handler handler = new Handler() {
@@ -374,18 +361,24 @@ public class ChangeUserInfo extends TextView implements IObject {
 
 			case 1:
 
-				oldUserId = etName.getText().toString();
-				oldPassWord = etPhone.getText().toString();
 				Toast.makeText(getContext(), "修改成功", Toast.LENGTH_SHORT).show();
 
 				break;
 			case 2:
 
-				oldUserId = etName.getText().toString();
-				oldPassWord = etPhone.getText().toString();
-				setText(Alter);
-				btDelete.setEnabled(true);
+				if (isLayout) {
+					setTexts(oid, opw);
+					setText(Alter);
+					btDelete.setEnabled(true);
+				} else {
+
+				}
 				Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
+				break;
+
+			case 3:
+
+				Toast.makeText(getContext(), "失败", Toast.LENGTH_SHORT).show();
 
 				break;
 			}
@@ -406,6 +399,11 @@ public class ChangeUserInfo extends TextView implements IObject {
 		m_rBBox.top = nY;
 		m_rBBox.right = nX + nWidth;
 		m_rBBox.bottom = nY + nHeight;
+
+		x = nX;
+		y = nY;
+		w = nWidth;
+		h = nHeight;
 
 		Rect rect = new Rect();
 		getPaint().getTextBounds("用户密码", 0, "用户密码".length(), rect);
@@ -430,6 +428,8 @@ public class ChangeUserInfo extends TextView implements IObject {
 		btDelete.setPadding(0, (int) ((0.85 * nHeight - height) / 2), 0, 0);
 		etName.setPadding(0, (int) ((0.8 * nHeight - height) / 2), 0, 0);
 		etPhone.setPadding(0, (int) ((0.8 * nHeight - height) / 2), 0, 0);
+
+		isLayout = true;
 
 		// this.setPadding(0, (int)((nHeight-height)/2), 0, 0);
 
@@ -511,6 +511,8 @@ public class ChangeUserInfo extends TextView implements IObject {
 		} else if ("Labelorder".equals(strName)) {
 			tvTagorder.setText(strValue);
 			index = Integer.parseInt(tvTagorder.getText().toString());
+			door_XuNiUtil.setCallBack(index, this);
+
 		} else if ("FontSize".equals(strName)) {
 			fontSize = Integer.parseInt(strValue);
 			tvName.setTextSize(fontSize);
@@ -560,6 +562,7 @@ public class ChangeUserInfo extends TextView implements IObject {
 		rWin.removeView(etName);
 		rWin.removeView(tvName);
 		rWin.removeView(this);
+
 	}
 
 	@Override
@@ -657,5 +660,58 @@ public class ChangeUserInfo extends TextView implements IObject {
 	// 记录触摸坐标，过滤滑动操作。解决滑动误操作点击问题。
 	public float m_xscal = 0;
 	public float m_yscal = 0;
+
+	@Override
+	public void onSuccess(int state, String id, String pw) {
+
+		switch (state) {
+		case 0:
+
+			handler.sendEmptyMessage(0);
+
+			break;
+
+		case 1:
+
+			handler.sendEmptyMessage(1);
+
+			break;
+		case 2:
+
+			oid = id;
+			opw = pw;
+
+			handler.sendEmptyMessage(2);
+
+			break;
+		case 3:
+
+			break;
+		}
+
+	}
+
+	@Override
+	public void onFail(int state) {
+
+		switch (state) {
+		case 0:
+
+			break;
+
+		case 1:
+
+			break;
+		case 2:
+
+			break;
+		case 3:
+
+			handler.sendEmptyMessage(3);
+
+			break;
+		}
+
+	}
 
 }

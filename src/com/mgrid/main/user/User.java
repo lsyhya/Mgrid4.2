@@ -7,39 +7,49 @@ package com.mgrid.main.user;
 
 public class User {
 
-	private String UserID;
-	private String passWord;
-	private int flag=-1;//0代表管理员，其它代表普通用户
+	private String uid;
+	private String pw;
 	
-	public User(String UserID,String passWord,int flag)
+	private String index="";
+	
+	public User(String UserID,String passWord,String index)
 	{
-		this.UserID=UserID;
-		this.passWord=passWord;
-		this.flag=flag;
+		this.uid=UserID;
+		this.pw=passWord;	
+		this.index=index;
+	}
+	
+	public User()
+	{
+		
 	}
 
-	public String getUserID() {
-		return UserID;
+	public String getUid() {
+		return uid;
 	}
 
-	public void setUserID(String userID) {
-		UserID = userID;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getPassWord() {
-		return passWord;
+	public String getPw() {
+		return pw;
 	}
 
-	public void setPassWord(String passWord) {
-		this.passWord = passWord;
+	public void setPw(String pw) {
+		this.pw = pw;
 	}
 
-	public int getFlag() {
-		return flag;
+	public String getIndex() {
+		return index;
 	}
 
-	public void setFlag(int flag) {
-		this.flag = flag;
+	public void setIndex(String index) {
+		this.index = index;
 	}
+
+	
+
+	
 		
 }
