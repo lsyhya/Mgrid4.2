@@ -383,6 +383,7 @@ public class SgTriggerSetter extends TextView implements IObject {
 	Rect m_rBBox = null;
 	InputMethodManager imm = null;
 	EditText m_oEditText = null;
+	EditText end_oEditText = null;
 
 	// 记录触摸坐标，过滤滑动操作。解决滑动误操作点击问题。
 	public float m_xscal = 0;

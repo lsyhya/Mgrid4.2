@@ -153,21 +153,100 @@ public class MutiThreadShareObject {
 			if ("Trigger".equals(oExpress.strBindType))
 			{
 				
-				float value = Float.valueOf(m_mapTriggerCommand.get(strKey));// bindingExpression.strValue;
-				while (iterValue.hasNext())
+				String str=m_mapTriggerCommand.get(strKey);
+				String[]  strs=str.split(",");
+				Log.e("length", strs.length+"");
+				if(strs.length==1)
 				{
-					String strTempKey = iterValue.next();
-					stBindingExpression bindingExpression = oExpress.mapObjectExpress.get(strTempKey);
+					
+					float value = Float.valueOf(m_mapTriggerCommand.get(strKey).replace(",", ""));// bindingExpression.strValue;
+					while (iterValue.hasNext())
+					{
+						String strTempKey = iterValue.next();
+						stBindingExpression bindingExpression = oExpress.mapObjectExpress.get(strTempKey);
 
-					ipc_cfg_trigger_value ipcC = new ipc_cfg_trigger_value();
-					ipcC.equipid = bindingExpression.nEquipId;
-					ipcC.eventid = bindingExpression.nEventId;
-					ipcC.conditionid = bindingExpression.nConditionId;
-					ipcC.startvalue = value;
-					ipcC.mark = 1;
-					lstCtrl.add(ipcC);
-					ipcC = null;
+						ipc_cfg_trigger_value ipcC = new ipc_cfg_trigger_value();
+						ipcC.equipid = bindingExpression.nEquipId;
+						ipcC.eventid = bindingExpression.nEventId;
+						ipcC.conditionid = bindingExpression.nConditionId;
+						ipcC.startvalue = value;
+						ipcC.mark = 1;
+						lstCtrl.add(ipcC);
+						ipcC = null;
+					}
+					
+				}else
+				{
+					if(strs[0].equals(""))
+					{
+						Log.e("length","strs[0]");
+						float stop = Float.valueOf(strs[1]);// bindingExpression.strValue;
+						while (iterValue.hasNext())
+						{
+							String strTempKey = iterValue.next();
+							stBindingExpression bindingExpression = oExpress.mapObjectExpress.get(strTempKey);
+
+							ipc_cfg_trigger_value ipcC = new ipc_cfg_trigger_value();
+							ipcC.equipid = bindingExpression.nEquipId;
+							ipcC.eventid = bindingExpression.nEventId;
+							ipcC.conditionid = bindingExpression.nConditionId;
+							ipcC.stopvalue = stop;
+							ipcC.mark = 2;
+							lstCtrl.add(ipcC);
+							ipcC = null;
+						}
+						
+					}else if(strs[1].equals("")) {
+						
+						
+						Log.e("length","strs[1]");
+						float start = Float.valueOf(strs[0]);// bindingExpression.strValue;
+						while (iterValue.hasNext())
+						{
+							String strTempKey = iterValue.next();
+							stBindingExpression bindingExpression = oExpress.mapObjectExpress.get(strTempKey);
+
+							ipc_cfg_trigger_value ipcC = new ipc_cfg_trigger_value();
+							ipcC.equipid = bindingExpression.nEquipId;
+							ipcC.eventid = bindingExpression.nEventId;
+							ipcC.conditionid = bindingExpression.nConditionId;
+							ipcC.stopvalue = start;
+							ipcC.mark = 1;
+							lstCtrl.add(ipcC);
+							ipcC = null;
+						}
+						
+						
+					}else if(!strs[0].equals("")&&!strs[1].equals(""))
+					{
+						Log.e("length","strs[1]+strs[0]");
+						float stop = Float.valueOf(strs[1]);
+						float start = Float.valueOf(strs[0]);// bindingExpression.strValue;
+						while (iterValue.hasNext())
+						{
+							String strTempKey = iterValue.next();
+							stBindingExpression bindingExpression = oExpress.mapObjectExpress.get(strTempKey);
+
+							ipc_cfg_trigger_value ipcC = new ipc_cfg_trigger_value();
+							ipcC.equipid = bindingExpression.nEquipId;
+							ipcC.eventid = bindingExpression.nEventId;
+							ipcC.conditionid = bindingExpression.nConditionId;
+							ipcC.startvalue=start;
+							ipcC.stopvalue = stop;
+							ipcC.mark = 0;
+							lstCtrl.add(ipcC);
+							ipcC = null;
+						}
+						
+						
+					}
+						 
+					
+					
 				}
+				
+				
+			
 			} else if ("Mask".equals(oExpress.strBindType))
 			{
 				

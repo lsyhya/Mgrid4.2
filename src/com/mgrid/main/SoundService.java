@@ -3,8 +3,8 @@ package com.mgrid.main;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.os.Environment;
 import android.os.IBinder;
+import android.util.Log;
 
 public class SoundService extends Service {
 
@@ -12,13 +12,13 @@ public class SoundService extends Service {
 
 	@Override
 	public void onCreate() {
-		// TODO Auto-generated method stub
+		
 		super.onCreate();
 		mp = new MediaPlayer();
 		mp.setLooping(true);
-		// String song = Environment.getExternalStorageDirectory().getPath() +
-		// "/vtu_pagelist/Alarm.wav";
-		// System.out.println(song);
+		
+		
+		
 		synchronized (MGridActivity.NewWavPath) {
 			try {
 				mp.setDataSource(MGridActivity.NewWavPath);
@@ -62,6 +62,8 @@ public class SoundService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
+	
+		
 		boolean playing = intent.getBooleanExtra("playing", false);
 		if (playing) {
 			if (mp != null && !mp.isPlaying()) {

@@ -20,6 +20,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ListView;
@@ -214,7 +215,7 @@ public class AlarmLevel extends TextView implements IObject {
 				break;
 
 			case 2:
-				System.out.println("我要开始播放了");
+			
 				startSound();
 				break;
 

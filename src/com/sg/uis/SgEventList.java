@@ -80,6 +80,7 @@ public class SgEventList extends UtTable implements IObject {
 				update();
 				break;
 			case 2:
+				
 				startSound();
 				break;
 			case 3:

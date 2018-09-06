@@ -22,6 +22,7 @@ import android.graphics.Rect;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -59,15 +60,13 @@ public class ChangeLabelBtn extends TextView implements IObject {
 		Et_ChangeValue.setTextColor(Color.BLACK);
 		Et_ChangeValue.setSingleLine();
 		Et_ChangeValue.setGravity(Gravity.CENTER);
-		imm = (InputMethodManager) context
-				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		Et_ChangeValue.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				imm.showSoftInput(Et_ChangeValue,
-						InputMethodManager.SHOW_FORCED);// 获取到这个类。
+				imm.showSoftInput(Et_ChangeValue, InputMethodManager.SHOW_FORCED);// 获取到这个类。
 				Et_ChangeValue.setFocusableInTouchMode(true);// 获取焦点
 
 			}
@@ -91,11 +90,10 @@ public class ChangeLabelBtn extends TextView implements IObject {
 					if (index != null && !index.equals("")) {
 						if (TotalVariable.ORDERLISTS.containsKey(index)) {
 
-							ChangeLabel Cl = (ChangeLabel) TotalVariable.ORDERLISTS
-									.get(index);
+							ChangeLabel Cl = (ChangeLabel) TotalVariable.ORDERLISTS.get(index);
 							Cl.updateText(text);
-							if(MGridActivity.isLogin==true)
-							setLoginPassWord(text);
+							if (MGridActivity.isLogin == true)
+								setLoginPassWord(text);
 
 						} else {
 							Toast.makeText(context, "index配置可能有误", 200).show();
@@ -116,10 +114,9 @@ public class ChangeLabelBtn extends TextView implements IObject {
 			Toast.makeText(getContext(), "key表不存在", 2000).show();
 			return;
 		}
-		
+
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					new FileInputStream(f), "gb2312"));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "gb2312"));
 			String s = "";
 			while ((s = reader.readLine()) != null) {
 				String[] str = s.split("-");
@@ -127,21 +124,17 @@ public class ChangeLabelBtn extends TextView implements IObject {
 			}
 			reader.close();
 			String Code = text.substring(text.length() - 4, text.length());
-		
+
 			String RandomCode = loginRandomCode.get(Code);
-			
-			if(RandomCode!=null&&!RandomCode.equals(""))
-			{
-				
-				//makeLoginPassWord(Code, RandomCode);
-				MGridActivity.loginPassWord=RandomCode;
+
+			if (RandomCode != null && !RandomCode.equals("")) {
+
+				// makeLoginPassWord(Code, RandomCode);
+				MGridActivity.loginPassWord = RandomCode;
 				saveLoginPassWord();
-			}else
-			{
+			} else {
 				Toast.makeText(getContext(), "没有在key表里面找到对应的值", 2000).show();
 			}
-			
-			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -151,10 +144,9 @@ public class ChangeLabelBtn extends TextView implements IObject {
 	private void makeLoginPassWord(String Code, String RandomCode) {
 		char[] CodeChar = Code.toCharArray();
 		char[] RandomCodeChar = RandomCode.toCharArray();
-		System.out.println(Code+"::"+RandomCode);
-		MGridActivity.loginPassWord = CodeChar[0] + "" + RandomCodeChar[0] + ""
-				+ CodeChar[1] + "" + RandomCodeChar[1] + "" + CodeChar[2] + ""
-				+ RandomCodeChar[2] + "" + CodeChar[3] + "A";
+		System.out.println(Code + "::" + RandomCode);
+		MGridActivity.loginPassWord = CodeChar[0] + "" + RandomCodeChar[0] + "" + CodeChar[1] + "" + RandomCodeChar[1]
+				+ "" + CodeChar[2] + "" + RandomCodeChar[2] + "" + CodeChar[3] + "A";
 		saveLoginPassWord();
 	}
 
@@ -163,34 +155,39 @@ public class ChangeLabelBtn extends TextView implements IObject {
 			File f = new File(MGridActivity.logeFilePath);
 			if (!f.exists()) {
 				f.createNewFile();
-			}		
-			BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f),"gb2312"));
+			}
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), "gb2312"));
 			writer.write(MGridActivity.loginPassWord);
 			writer.flush();
 			writer.close();
 			File file = new File(filePath + "/vtu_pagelist/key.txt");
 			if (file.exists()) {
 				file.delete();
-			}			
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void setText() {
-		if (Et_ChangeValue.getText().toString() != null
-				|| !Et_ChangeValue.getText().toString().equals(""))
-			Et_ChangeValue.setText(Et_ChangeValue.getText().toString());
+
+		
+		Log.e("123", Et_ChangeValue.getText().toString());
+		if (Et_ChangeValue.getText().toString() != null || !Et_ChangeValue.getText().toString().equals("")) {
+			Message mes = new Message();
+			mes.obj = Et_ChangeValue.getText().toString();
+			mes.what = 0;
+			handler.sendMessage(mes);
+		}
+
 	}
 
 	@Override
 	public void doLayout(boolean bool, int l, int t, int r, int b) {
 		if (m_rRenderWindow == null)
 			return;
-		int nX = l
-				+ (int) (((float) m_nPosX / (float) MainWindow.FORM_WIDTH) * (r - l));
-		int nY = t
-				+ (int) (((float) m_nPosY / (float) MainWindow.FORM_HEIGHT) * (b - t));
+		int nX = l + (int) (((float) m_nPosX / (float) MainWindow.FORM_WIDTH) * (r - l));
+		int nY = t + (int) (((float) m_nPosY / (float) MainWindow.FORM_HEIGHT) * (b - t));
 		int nWidth = (int) (((float) m_nWidth / (float) MainWindow.FORM_WIDTH) * (r - l));
 		int nHeight = (int) (((float) m_nHeight / (float) MainWindow.FORM_HEIGHT) * (b - t));
 
@@ -200,8 +197,7 @@ public class ChangeLabelBtn extends TextView implements IObject {
 		m_rBBox.bottom = nY + nHeight;
 		if (m_rRenderWindow.isLayoutVisible(m_rBBox)) {
 
-			Et_ChangeValue.layout(nX, nY, nX + (int) (0.69 * nWidth), nY
-					+ nHeight);
+			Et_ChangeValue.layout(nX, nY, nX + (int) (0.69 * nWidth), nY + nHeight);
 			layout(nX + (int) (0.7 * nWidth), nY, nX + nWidth, nY + nHeight);
 		}
 	}
@@ -235,8 +231,7 @@ public class ChangeLabelBtn extends TextView implements IObject {
 		rWin.removeView(this);
 	}
 
-	public void parseProperties(String strName, String strValue,
-			String strResFolder) {
+	public void parseProperties(String strName, String strValue, String strResFolder) {
 
 		if ("ZIndex".equals(strName)) {
 			m_nZIndex = Integer.parseInt(strValue);
@@ -261,8 +256,7 @@ public class ChangeLabelBtn extends TextView implements IObject {
 			m_strFontFamily = strValue;
 		else if ("FontSize".equals(strName)) {
 
-			float fWinScale = (float) MainWindow.SCREEN_WIDTH
-					/ (float) MainWindow.FORM_WIDTH;
+			float fWinScale = (float) MainWindow.SCREEN_WIDTH / (float) MainWindow.FORM_WIDTH;
 			m_fFontSize = Float.parseFloat(strValue) * fWinScale;
 			this.setTextSize(m_fFontSize);
 			Et_ChangeValue.setTextSize(m_fFontSize);
@@ -278,23 +272,25 @@ public class ChangeLabelBtn extends TextView implements IObject {
 			m_strVerticalContentAlignment = strValue;
 		else if ("Expression".equals(strName))
 			m_strExpression = strValue;
-		else if ("index".equals(strName))
+		else if ("index".equals(strName)) {
 			index = strValue;
-		MGridActivity.xianChengChi.execute(new Runnable() {
 
-			@Override
-			public void run() {
+			MGridActivity.xianChengChi.execute(new Runnable() {
 
-				String str = readText();
-				if (str != null) {
-					Message mes = new Message();
-					mes.what = 0;
-					mes.obj = str;
-					handler.sendMessage(mes);
+				@Override
+				public void run() {
 
+					String str = readText();
+					if (str != null) {
+						Message mes = new Message();
+						mes.what = 0;
+						mes.obj = str;
+						handler.sendMessage(mes);
+
+					}
 				}
-			}
-		});
+			});
+		}
 
 	}
 
@@ -320,8 +316,7 @@ public class ChangeLabelBtn extends TextView implements IObject {
 			return null;
 		}
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					new FileInputStream(f), "gb2312"));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "gb2312"));
 			String str = reader.readLine();
 			reader.close();
 			return str;
@@ -345,13 +340,11 @@ public class ChangeLabelBtn extends TextView implements IObject {
 			nFlag |= Gravity.TOP;
 		else if ("Bottom".equals(m_strVerticalContentAlignment)) {
 			nFlag |= Gravity.BOTTOM;
-			double padSize = CFGTLS.getPadHeight(m_nHeight,
-					MainWindow.FORM_HEIGHT, getTextSize());
+			double padSize = CFGTLS.getPadHeight(m_nHeight, MainWindow.FORM_HEIGHT, getTextSize());
 			setPadding(0, (int) padSize, 0, 0);
 		} else if ("Center".equals(m_strVerticalContentAlignment)) {
 			nFlag |= Gravity.CENTER_VERTICAL;
-			double padSize = CFGTLS.getPadHeight(m_nHeight,
-					MainWindow.FORM_HEIGHT, getTextSize()) / 2;
+			double padSize = CFGTLS.getPadHeight(m_nHeight, MainWindow.FORM_HEIGHT, getTextSize()) / 2;
 			setPadding(0, (int) padSize, 0, (int) padSize);
 		}
 

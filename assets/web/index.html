@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<title>Charts</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<!-- VENDOR CSS -->
+	<link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="assets/vendor/linearicons/style.css">
+	<link rel="stylesheet" href="assets/vendor/chartist/css/chartist-custom.css">
+	<!-- MAIN CSS -->
+	<link rel="stylesheet" href="assets/css/main.css">
+	<!-- FOR DEMO PURPOSES ONLY. You should remove this in your project -->
+	<link rel="stylesheet" href="assets/css/demo.css">
+	<!-- GOOGLE FONTS -->
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
+	<!-- ICONS -->
+	<link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="assets/img/favicon.png">
+    
+    <script src="assets/scripts/echarts.js"></script>
+    <script src="assets/scripts/myData.js"></script>
+    
+</head>
+
+
+<style>
+
+
+.ct-chart{
+
+    width: 100%;
+    height: 350px;
+
+}
+
+</style>
+
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<!-- NAVBAR -->
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="brand">
+				<a href="index.html"><img src="assets/img/logo-dark.png" alt="Klorofil Logo" class="img-responsive logo"></a>
+			</div>
+			<div class="container-fluid">
+				<div class="navbar-btn">
+					<button type="button" class="btn-toggle-fullwidth"><i class="lnr lnr-arrow-left-circle"></i></button>
+				</div>
+				<form class="navbar-form navbar-left">
+					<div class="input-group">
+						<input type="text" value="" class="form-control" placeholder="Search dashboard...">
+						<span class="input-group-btn"><button type="button" class="btn btn-primary">Go</button></span>
+					</div>
+				</form>
+
+				<div id="navbar-menu">
+					<ul class="nav navbar-nav navbar-right">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
+								<i class="lnr lnr-alarm"></i>
+								<span class="badge bg-danger">5</span>
+							</a>
+							<ul class="dropdown-menu notifications">
+								<li><a href="#" class="notification-item"><span class="dot bg-warning"></span>温湿度温度过高</a></li>
+								<li><a href="#" class="notification-item"><span class="dot bg-danger"></span>温湿度湿度过高</a></li>
+								<li><a href="#" class="notification-item"><span class="dot bg-success"></span>Ups通讯中断</a></li>				
+								<li><a href="#" class="more">查看所有告警</a></li>
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-question-circle"></i> <span>帮助</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
+							<ul class="dropdown-menu">
+								<li><a href="#">帮助1</a></li>
+								<li><a href="#">帮助2</a></li>
+								<li><a href="#">帮助3</a></li>
+								<li><a href="#">帮助4</a></li>
+							</ul>
+						</li>
+						<!-- <li>
+							<a class="update-pro" href="#downloads/klorofil-pro-bootstrap-admin-dashboard-template/?utm_source=klorofil&utm_medium=template&utm_campaign=KlorofilPro" title="Upgrade to Pro" target="_blank"><i class="fa fa-rocket"></i> <span>UPGRADE TO PRO</span></a>
+						</li> -->
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<!-- END NAVBAR -->
+		<!-- LEFT SIDEBAR -->
+		<div id="sidebar-nav" class="sidebar">
+			<div class="sidebar-scroll">
+				<nav>
+					<ul class="nav">
+						<li><a href="index.html" class="active"><i class="lnr lnr-home"></i> <span>首页</span></a></li>
+							<li id="sbgl">
+							<a href="#subPages" data-toggle="collapse" class="collapsed id"><i class="lnr lnr-sun"></i> <span>设备管理</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+							<div id="subPages" class="collapse ">
+								<ul class="nav" id="sbgl_1">
+									<li><a href="ups.html" class=""><i class="lnr lnr-apartment"></i>UPS</a></li>
+									<li><a href="空调.html" class=""><i class="lnr lnr-pencil"></i>空调</a></li>	
+                                    <li><a href="电表.html" class=""><i class="lnr lnr-magic-wand"></i>电表</a></li>		
+                                    <li><a href="微环境.html" class=""><i class="lnr lnr-lighter"></i>微环境</a></li>	
+                                    <li><a href="配电柜.html" class=""><i class="lnr lnr-poop"></i>配电柜</a></li>										
+								</ul>
+							</div>
+						</li>
+						
+						<li>
+							<a href="#subPages2" data-toggle="collapse" class="collapsed"><i class="lnr lnr-moon"></i> <span>告警</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+							<div id="subPages2" class="collapse ">
+								<ul class="nav">
+									<li><a href="实时告警.html" class=""><i class="lnr lnr-sun"></i>实时告警</a></li>
+									<li><a href="历史告警.html" class=""><i class="lnr lnr-sun"></i>历史告警</a></li>					
+								</ul>
+							</div>
+						</li>
+							<li>
+							<a href="#subPages3" data-toggle="collapse" class="collapsed"><i class="lnr lnr-cloud"></i> <span>数据管理</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+							<div id="subPages3" class="collapse ">
+								<ul class="nav">
+									<li><a href="实时数据.html" class=""><i class="lnr lnr-sun"></i>实时数据</a></li>
+									<li><a href="历史数据.html" class=""><i class="lnr lnr-sun"></i>历史数据</a></li>										
+								</ul>
+							</div>
+						</li>
+						<li><a href="门禁管理.html" class=""><i class="lnr lnr-database"></i> <span>门禁管理</span></a></li>
+
+					</ul>
+				</nav>
+			</div>
+		</div>
+		<!-- END LEFT SIDEBAR -->
+		<!-- MAIN -->
+		<div class="main">
+			<!-- MAIN CONTENT -->
+			<div class="main-content">
+				<div class="container-fluid">
+					<h3 class="page-title">Charts</h3>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="panel">
+								<div class="panel-heading">
+									<h3 class="panel-title">Line Chart</h3>
+								</div>
+								<div class="panel-body">
+									<div id="chart1" class="ct-chart"></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="panel">
+								<div class="panel-heading">
+									<h3 class="panel-title">Bar Chart</h3>
+								</div>
+								<div class="panel-body">
+									<div id="chart2" class="ct-chart"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="panel">
+								<div class="panel-heading">
+									<h3 class="panel-title">Area Chart</h3>
+								</div>
+								<div class="panel-body">
+									<div id="chart3" class="ct-chart"></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="panel">
+								<div class="panel-heading">
+									<h3 class="panel-title">Multiple Chart</h3>
+								</div>
+								<div class="panel-body">
+									<div id="chart4" class="ct-chart"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- END MAIN CONTENT -->
+		</div>
+		<!-- END MAIN -->
+		<div class="clearfix"></div>
+		<footer>
+			<div class="container-fluid">
+				<p class="copyright">Copyright &copy; 2017.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="监控中心">监控中心</a> - Collect from <a href="http://www.cssmoban.com/" title="数据中心" target="_blank">数据中心</a></p>
+			</div>
+		</footer>
+	</div>
+	<!-- END WRAPPER -->
+	<!-- Javascript -->
+	<script src="assets/vendor/jquery/jquery.min.js"></script>
+	<script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+	<script src="assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="assets/vendor/chartist/js/chartist.min.js"></script>
+	<script src="assets/scripts/klorofil-common.js"></script>
+
+	<script>
+		
+   setGrdata("chart1","PUE",0,1,0.6);
+   setBardata("chart2","内阻");
+   setLinedata("chart3");
+   setPiedata("chart4");
+   
+   $(document).ready(function(){
+	  
+  $("#sbgl").one('click',(function(){
+	  
+       $("#sbgl_1").append("   <li class='pdg'><a href='配电柜.html' class=''><i class='lnr lnr-poop'></i>电池组</a></li>  ");
+	  
+  })
+);   
+});
+
+ $(function(){
+		$.ajax({
+			url : "index",	//请求url
+			type : "POST",	//请求类型  post|get
+		    data : "key=value&key1=value2",	//后台用 request.getParameter("key");
+			dataType : "json",  //返回数据的 类型 text|json|html--
+			success : function(users){	//回调函数 和 后台返回的 数据
+			
+			 alter("成功");
+			//	var users = JSON.parse(data);
+			//	var tBody = $("#tbBody");
+			//	for(var i=0; i<users.length; i++){  //通过遍历，创建行数据
+			//		var tr = $("<tr><td>"+users[i].age+"</td><td>"+users[i].name+"</td></tr>")
+			//		tBody.append(tr);
+			//	}
+
+			}
+		});
+	});
+	// get 方式 发送请求
+	// $.get(url,data,callback,type); data为 发送的数据  {key:value}形式 ，
+	//	callback成功时的回调函数 function(result){}  result 后台返回的数据  ，
+	//type  返回的数据类型  默认为 text ,可以设为 json text
+	//post 方式 发送请求
+	// $.post(url,data,callback,type);
+	
+   
+		
+	
+	</script>
+</body>
+
+</html>

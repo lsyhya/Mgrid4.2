@@ -11,9 +11,11 @@ import com.mgrid.util.ExpressionUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.SgRealTimeData;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -22,13 +24,15 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import comm_service.service;
 import data_model.ipc_control;
 
-public class StateButton extends Button implements IObject, OnClickListener {
+public class StateButton extends Button implements IObject, OnClickListener ,OnTouchListener{
 
 	private Rect m_rBBox;
 
@@ -41,11 +45,12 @@ public class StateButton extends Button implements IObject, OnClickListener {
 	private int openValue = -1, closeValue = -1;
 	private float m_fFontSize = 16;
 
-	private boolean isOpen = true;
+	private boolean m_bPressed=false;
+	private boolean isFrist = true;
 	public boolean m_bneedupdate = true;
 
 	private Timer timer=null;
-	
+	private Paint m_oPaint=null;
 	
 	private String m_strID = "";
 	private String m_strType = "";
@@ -95,13 +100,16 @@ public class StateButton extends Button implements IObject, OnClickListener {
 
 	}
 
+	@SuppressLint("ClickableViewAccessibility")
 	private void init() {
 
 		m_rBBox = new Rect();
-
+		m_oPaint=new Paint();
+		
 		setClickable(true);
 		setGravity(Gravity.CENTER);
 		setOnClickListener(this);
+		setOnTouchListener(this);
 		setBackgroundResource(android.R.drawable.btn_default);
 		setPadding(0, 0, 0, 0);
 		
@@ -213,11 +221,11 @@ public class StateButton extends Button implements IObject, OnClickListener {
 			String path = Environment.getExternalStorageDirectory().getPath() + strResFolder + strValue;
 			drawableClose = new BitmapDrawable(getResources(), path);
 
-		} else if ("openValue".equals(strName)) {
+		} else if ("OpenValue".equals(strName)) {
 
 			openValue = Integer.parseInt(strValue);
 
-		} else if ("closeValue".equals(strName)) {
+		} else if ("CloseValue".equals(strName)) {
 
 			closeValue = Integer.parseInt(strValue);
 		}
@@ -282,7 +290,7 @@ public class StateButton extends Button implements IObject, OnClickListener {
 	@Override
 	public void updateWidget() {
 
-		if (isOpen) {
+		if (!isFrist) {
 
 			this.setBackground(drawableOpen);
 
@@ -315,11 +323,11 @@ public class StateButton extends Button implements IObject, OnClickListener {
 
 				if (openValue == value) {
 
-					isOpen = true;
+					isFrist = false;
 
 				} else if (closeValue == value) {
 
-					isOpen = false;
+					isFrist = true;
 
 				} else {
 
@@ -376,6 +384,7 @@ public class StateButton extends Button implements IObject, OnClickListener {
 
 		
 		v.setEnabled(false);	
+		
 		timer.schedule(new TimerTask() {
 			
 			@Override
@@ -404,7 +413,7 @@ public class StateButton extends Button implements IObject, OnClickListener {
 	private void sendCmd() {
 		if (!m_strCloseExpression.equals("") && !m_strOpenExpression.equals("")&&cmdYKPList1!=null&&cmdYKPList2!=null) {
 
-			if (isOpen) {
+			if (isFrist) {
 
 				if (o_control.size() == 0) {
 					for (String cmd : cmdYKPList1) {
@@ -419,8 +428,11 @@ public class StateButton extends Button implements IObject, OnClickListener {
 					}
 				}
 
-				
-
+				for (ipc_control i : o_control) {
+					
+					Log.e(isFrist+"", i.equipid+""+i.ctrlid+""+i.valuetype+""+i.value);
+				}
+                
 				service.send_control_cmd(service.IP, service.PORT, o_control);
 
 			} else {
@@ -438,11 +450,63 @@ public class StateButton extends Button implements IObject, OnClickListener {
 					}
 				}
 
+                for (ipc_control i : c_control) {
+					
+					Log.e(isFrist+"", i.equipid+""+i.ctrlid+""+i.valuetype+""+i.value);
+				}
 				
 
 				service.send_control_cmd(service.IP, service.PORT, c_control);
 
 			}
+		}
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		
+		
+		
+		switch (event.getAction()) {
+		
+		case MotionEvent.ACTION_DOWN:
+			
+			m_bPressed = true;
+			invalidate();
+
+			
+			break;
+
+		case MotionEvent.ACTION_UP:
+			
+			m_bPressed = false;
+			invalidate();
+
+		
+
+			
+			break;
+
+		default:
+			break;
+		}
+		
+		return false;
+	}
+	
+	@Override
+	protected void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
+		
+		if (m_bPressed) {
+			int nWidth = (int) (((float) (m_nWidth) / (float) MainWindow.FORM_WIDTH)
+					* (m_rRenderWindow.VIEW_RIGHT - m_rRenderWindow.VIEW_LEFT));
+			int nHeight = (int) (((float) (m_nHeight) / (float) MainWindow.FORM_HEIGHT)
+					* (m_rRenderWindow.VIEW_BOTTOM - m_rRenderWindow.VIEW_TOP));
+
+			m_oPaint.setColor(0x500000F0);
+			m_oPaint.setStyle(Paint.Style.FILL);
+			canvas.drawRect(0, 0, nWidth, nHeight, m_oPaint);
 		}
 	}
 

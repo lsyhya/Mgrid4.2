@@ -67,8 +67,6 @@ import com.sg.uis.RC_RealTime;
 import com.sg.uis.SaveEquipt;
 import com.sg.uis.SaveSignal;
 import com.sg.uis.SeeImage;
-import com.sg.uis.SgAlarmAction;
-import com.sg.uis.SgAlarmActionShow;
 import com.sg.uis.SgAlarmChangTime;
 import com.sg.uis.SgAlarmLight;
 import com.sg.uis.SgAmmeter;
@@ -139,6 +137,10 @@ import com.sg.uis.LsyNewView.SgSplineChart;
 import com.sg.uis.LsyNewView.SgStackBarChart;
 import com.sg.uis.LsyNewView.SgVideoView;
 import com.sg.uis.LsyNewView.StateButton;
+import com.sg.uis.LsyNewView.AlarmAction.SgAlarmAction;
+import com.sg.uis.LsyNewView.AlarmAction.SgAlarmActionShow;
+import com.sg.uis.LsyNewView.StartAndEndTriggerSet.StartAndEndTriggerSet;
+import com.sg.uis.LsyNewView.TimingAndDelayed.TimingAndDelayedView;
 
 import comm_service.local_file;
 import comm_service.service;
@@ -201,7 +203,13 @@ public class MainWindow extends ViewGroup {
 											.removeBindingString(obj_Z.getBindingExpression()))) {
 										obj_Z.needupdate(true);
 									}
-								}
+								}else if(obj_Z.getType().equals("StartAndEndTriggerSet"))
+								{
+									if (obj_Y.getBindingExpression().contains(ExpressionUtils.getExpressionUtils()
+											.removeBindingString(obj_Z.getBindingExpression()))) {
+										obj_Z.needupdate(true);
+									}
+								}   
 							}
 						}
 					});
@@ -973,7 +981,17 @@ public class MainWindow extends ViewGroup {
 						}  else if ("StateButton".equals(strType)) {
 							StateButton SB = new StateButton(this.getContext());
 							m_mapUIs.put(strID, SB);						
-
+							
+						} else if ("TimingAndDelayed".equals(strType)) {
+							TimingAndDelayedView TD = new TimingAndDelayedView(this.getContext());
+							m_mapUIs.put(strID, TD);	
+							VariableConfig.timingAndDelayedViewList.add(TD);
+						
+						}else if("StartAndEndTriggerSet".equals(strType)){
+							
+							StartAndEndTriggerSet SAETS = new StartAndEndTriggerSet(this.getContext());
+							m_mapUIs.put(strID, SAETS);	
+							
 						}else {
 							showMsgDlg("警告", "不支持的控件类型： " + strType);
 							bExit = false;
@@ -1052,7 +1070,9 @@ public class MainWindow extends ViewGroup {
 								|| "LanguageChange".equals(strElementType) || "SelfCheck".equals(strElementType)
 								|| "DoorInvented".equals(strElementType) || "ChangeUserInfo".equals(strElementType)
 								|| "NBerDoorView".equals(strElementType)
-								|| "StateButton".equals(strElementType)) {
+								|| "StateButton".equals(strElementType)
+								|| "TimingAndDelayed".equals(strElementType)
+					            || "StartAndEndTriggerSet".equals(strElementType)) {
 							try {
 								iCurrentObj.parseProperties(strName, strValue, m_strResFolder);
 							} catch (Throwable e) {
@@ -1741,6 +1761,8 @@ public class MainWindow extends ViewGroup {
 				HashMap.Entry<String, stExpression> entry = exp_it.next();
 				String strKey = entry.getKey();// 获取的是UIid
 				stExpression oExpression = entry.getValue();
+				
+				
 
 				if (oExpression == null)
 					continue;
@@ -1753,7 +1775,13 @@ public class MainWindow extends ViewGroup {
 					if (strKey.contains("tigerLabel")) {
 						mapSignals.put(m_mapUIs.get(strKey), oExpression);
 
-					} else {
+					} else if(strKey.contains("StartAndEndTriggerSet"))
+					{
+						mapSignals.put(m_mapUIs.get(strKey), oExpression);
+						mapTriggers.put(strKey, oExpression);
+					}
+					else{
+						
 						mapTriggers.put(strKey, oExpression);
 					}
 
@@ -1801,8 +1829,13 @@ public class MainWindow extends ViewGroup {
 
 						HashMap.Entry<IObject, stExpression> entry = iter.next();
 
+					
+						
+						
 						if (!entry.getKey().needupdate())
 							continue;
+						
+						
 
 						String strKey = entry.getKey().getUniqueID();
 

@@ -200,12 +200,13 @@ public class SgButton extends TextView implements IObject {
 			m_strVerticalContentAlignment = strValue;
 		else if ("Expression".equals(strName)) {
 			// m_strCmdExpression = strValue; //fjw add //×¢ÊÍµô
-		}else if ("ImgSrc".equals(strName)) {
-			
-			String m_strImgSrc = Environment.getExternalStorageDirectory().getPath() + strResFolder + strValue; 
-		   // Bitmap bit=BitmapFactory.decodeFile(fileName);
-            Drawable able=new BitmapDrawable(getResources(), m_strImgSrc);
-			this.setBackground(able);
+		} else if ("ImgSrc".equals(strName)) {
+
+			if (strValue != null && !strValue.equals("")) {
+				String m_strImgSrc = Environment.getExternalStorageDirectory().getPath() + strResFolder + strValue;
+				Drawable able = new BitmapDrawable(getResources(), m_strImgSrc);
+				this.setBackground(able);
+			}
 		}
 	}
 
@@ -509,7 +510,7 @@ public class SgButton extends TextView implements IObject {
 						synchronized (m_rRenderWindow.m_oShareObject) {
 							deal_cmd();
 							if ("".equals(cmd_value) == false) {
-						
+
 								m_rRenderWindow.m_oShareObject.m_mapCmdCommand.put(getUniqueID(), cmd_value);
 
 							}

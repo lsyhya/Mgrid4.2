@@ -55,7 +55,7 @@ public class NiuberDoorService extends Service {
 			while (true) {
 				client = server.accept();
 				
-				Log.e("TAG", "进来了");
+				
 				
 				SocketList.add(client);
 				DoorManagerBase DBManager = null;
@@ -72,8 +72,8 @@ public class NiuberDoorService extends Service {
 				}
 
 				EService.execute(new ClientManager(client, DBManager)); // 启动一个线程，用以守候从客户端发来的消息
-				// toastMsg("连接一台客户端，IP："+client.getInetAddress().toString());
-				Log.e("TAG", "连接一台客户端，IP：" + client.getInetAddress().toString());
+				
+				//Log.e("TAG", "连接一台客户端，IP：" + client.getInetAddress().toString());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

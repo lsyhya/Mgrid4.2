@@ -25,6 +25,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.lsy.Service.TilmePlush.TimePlushService;
+import com.mgrid.VariableConfig.VariableConfig;
 import com.mgrid.data.DataGetter;
 import com.mgrid.main.user.User;
 import com.mgrid.main.user.UserManager;
@@ -36,7 +37,6 @@ import com.sg.common.LanguageStr;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtIniReader;
 import com.sg.uis.SaveEquipt;
-import com.sg.uis.SgAlarmAction;
 import com.sg.uis.SgAlarmChangTime;
 import com.sg.uis.SgImage;
 import com.sg.uis.LsyNewView.AlarmShieldTime;
@@ -44,6 +44,8 @@ import com.sg.uis.LsyNewView.ChangeLabelBtn;
 import com.sg.uis.LsyNewView.NBerDoorView;
 import com.sg.uis.LsyNewView.SgSplineChart;
 import com.sg.uis.LsyNewView.SgVideoView;
+import com.sg.uis.LsyNewView.AlarmAction.SgAlarmAction;
+import com.sg.uis.LsyNewView.TimingAndDelayed.TimingAndDelayedView;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -125,6 +127,9 @@ public class MGridActivity extends Activity {
 		} else {
 			showTaskUI(true);
 		}
+		
+		
+		
 
 	}
 
@@ -524,6 +529,14 @@ public class MGridActivity extends Activity {
 		mDataGetter.setPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
 		mDataGetter.start();
 	}
+	
+	private void initServiceManeger()
+	{
+		mServerManager=new ServerManager(this);
+		mServerManager.register();
+		mServerManager.startService();
+	}
+	
 
 	private boolean parsePageList() // 解析Pagelist
 	{
@@ -666,6 +679,7 @@ public class MGridActivity extends Activity {
 						isNOChangPage = true;
 						isLoading = false;
 
+						
 						System.out.println("所用时间：" + (System.currentTimeMillis() - starttime));
 
 						return;
@@ -711,7 +725,7 @@ public class MGridActivity extends Activity {
 						Toast.makeText(MGridActivity.this, Load, Toast.LENGTH_LONG).show();
 						isLoading = false;
 						isNOChangPage = true;
-
+						
 						System.out.println("所用时间：" + (System.currentTimeMillis() - starttime));
 					}
 				}
@@ -720,6 +734,8 @@ public class MGridActivity extends Activity {
 
 		handler.postDelayed(runnable, tmp_load_int_time);
 		runDataGetter();
+		//initServiceManeger();
+		
 	}
 
 	// 得到机器的IP地址
@@ -879,7 +895,7 @@ public class MGridActivity extends Activity {
 
 						if (sc.m_rRenderWindow != null && sc.m_rRenderWindow.m_bIsActive) {
 
-							Log.e("TAG", "刷新");
+							
 							sc.setUpdata(true);
 						}
 
@@ -947,6 +963,8 @@ public class MGridActivity extends Activity {
 		super.onDestroy();
 		// restartApplication();
 		releaseWakeLock();
+		
+		
 
 	}
 
@@ -1016,6 +1034,9 @@ public class MGridActivity extends Activity {
 
 	// 解析Mgrid.ini
 	public UtIniReader iniReader = null;
+	
+	//网页服务管理
+	private ServerManager mServerManager;
 
 	private int sleepTime = 2 * 60 * 60;// 屏保视频休眠时间
 	private Intent m_oTaskIntent = null;

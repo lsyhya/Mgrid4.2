@@ -29,6 +29,7 @@ import com.mgrid.main.MainWindow;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.UtIniReader;
+import com.sg.uis.LsyNewView.AlarmAction.ReadAlarmData;
 
 /** 告警屏蔽延时时间 */
 @SuppressLint({ "ShowToast", "InflateParams", "RtlHardcoded",
@@ -194,7 +195,7 @@ public class AlarmShieldTime extends TextView implements IObject {
 	}
 
 	public void updateText() {
-		shieldTime.setText(LaterTime);
+		handler.sendEmptyMessage(4);
 	}
 
 	private Handler handler = new Handler() {
@@ -216,6 +217,10 @@ public class AlarmShieldTime extends TextView implements IObject {
 			case 3:
 				setText("取消");
 				shieldTime.setText(LaterTime);
+			case 4:
+				
+				shieldTime.setText(LaterTime);
+				
 				break;
 
 			}
@@ -334,11 +339,11 @@ public class AlarmShieldTime extends TextView implements IObject {
 				if (!filePath.exists())
 					return;
 				try {
-					UtIniReader iniReader = new UtIniReader(filePath
+					ReadAlarmData iniReader = new ReadAlarmData(filePath
 							.getAbsolutePath());
 					OldTime = iniReader.getValue("ShieldTime", "OldTime");
 					LaterTime = iniReader.getValue("ShieldTime", "LaterTime");
-					System.out.println(OldTime + ";;;;" + LaterTime);
+					//System.out.println(OldTime + ";;;;" + LaterTime);
 					HashMap<Long, String> hashmap = new HashMap<Long, String>();
 					hashmap.put(Long.parseLong(OldTime), LaterTime);
 					synchronized (MGridActivity.AlarmShieldTimer) {

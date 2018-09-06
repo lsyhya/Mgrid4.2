@@ -18,8 +18,8 @@ import java.util.TimerTask;
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.mgrid.main.NiuberDoorService;
-import com.mgrid.main.NiuberDoorService.SokectBind;
 import com.mgrid.main.R;
+import com.mgrid.main.NiuberDoorService.SokectBind;
 import com.mgrid.mysqlbase.SqliteUtil;
 import com.mgrid.util.ByteUtil;
 import com.mgrid.util.DialogUtils;
@@ -798,8 +798,8 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 	}
 
 	public void setHindText() {
-		etCardID.setHint("长度为10的一串数字");
-		etTime.setHint("格式：20180808");
+		
+		handler.sendEmptyMessage(10);
 	}
 
 	@Override
@@ -1191,6 +1191,14 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 				}
 
 				btngetUser.setEnabled(true);
+
+				break;
+				
+			case 10:
+
+			
+				etCardID.setHint("长度为10的一串数字");
+				etTime.setHint("格式：20180808");
 
 				break;
 

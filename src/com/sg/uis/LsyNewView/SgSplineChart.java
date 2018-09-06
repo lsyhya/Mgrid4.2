@@ -477,15 +477,21 @@ public class SgSplineChart extends TextView implements IObject {
 		{
 			isFristUpdate=false;
 			Schart.setDataSource(chartData);	
+			
+		
+			
 			chart.invalidate();
 			
-			Log.e("Ë¢ÐÂ³É¹¦", getUniqueID());
+			
 		}
 		
 
 		if (isAuth) {
-			handler.postDelayed(runnable, 60 * 1000); // 30Ãë
+			
+			
 			isAuth = false;
+			handler.postDelayed(runnable, 60 * 1000); // 30Ãë
+		
 			if (isDay) {
 				isDay = false;
 				handDay.postDelayed(runDay, 20 * 1000 * 60);
@@ -750,6 +756,9 @@ public class SgSplineChart extends TextView implements IObject {
 			if (isHour) {
 				time = Double.parseDouble(Mintime) + (Double.parseDouble(Sintime) / 60);
 				Double H = Double.parseDouble(HourTime);
+				
+				
+				
 				linePointMapData.get(1).get(i).put(time, Double.parseDouble(value));
 				if (H != currentHour) {
 					currentHour = H;

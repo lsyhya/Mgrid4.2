@@ -27,6 +27,7 @@ import com.sg.common.IObject;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtExpressionParser.stExpression;
+import com.sg.uis.LsyNewView.AlarmAction.SgAlarmAction;
 
 @SuppressLint({ "RtlHardcoded", "ShowToast" })
 @SuppressWarnings("unused")
@@ -240,9 +241,17 @@ public class SgAlarmChangTime extends TextView implements IObject {
 
 	}
 	
-	public void updateText(String s)
+	public void updateText(final String s)
 	{
-		Et_ChangeValue.setText(s);
+		Et_ChangeValue.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				Et_ChangeValue.setText(s);
+				
+			}
+		});
 	}
 
 	@Override
