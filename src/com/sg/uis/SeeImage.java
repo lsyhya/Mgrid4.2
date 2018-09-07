@@ -388,17 +388,12 @@ public class SeeImage extends View implements IObject {
 	}
 	//activity Ìø×ª·½·¨
 	private void goSeePhoto(){
-		Log.e("SeeImage-goSeePhoto","into");
-		Intent intent2 = new Intent(m_context, GridviewActivity.class);
-		Log.e("SeeImage-goSeePhoto","into >>>>>");
+		
+		Intent intent2 = new Intent(m_context, GridviewActivity.class);		
 		m_context.startActivity(intent2);
-		Log.e("SeeImage-goSeePhoto","into end!");
+		
 	}
-	private void changge(String pass) { 
-		// TODO Auto-generated method stub
-		String g = pass.substring(0,3); 
-		pass = g+"xxxx";
-	}
+	
     
 	@Override
 	public void updateWidget() {

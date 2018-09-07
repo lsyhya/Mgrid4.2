@@ -786,7 +786,7 @@ public class SgSplineChart extends TextView implements IObject {
 				linePointMapData.get(3).get(i).put(time - 1, Double.parseDouble(value));
 				if (M != currentMonth || isFirstIN) {
 
-					if (M != currentDay)
+					if (M != currentMonth)
 						cleanData(3);
 
 					cleanFile(3);

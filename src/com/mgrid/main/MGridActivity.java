@@ -734,7 +734,7 @@ public class MGridActivity extends Activity {
 
 		handler.postDelayed(runnable, tmp_load_int_time);
 		runDataGetter();
-		//initServiceManeger();
+		initServiceManeger();
 		
 	}
 
@@ -942,7 +942,7 @@ public class MGridActivity extends Activity {
 	protected void onRestart() {
 		// TODO Auto-generated method stub
 		super.onRestart();
-		System.out.println("onRestart");
+	
 	}
 
 	/** 消息提示显示 **/
@@ -964,6 +964,10 @@ public class MGridActivity extends Activity {
 		// restartApplication();
 		releaseWakeLock();
 		
+		if(mServerManager!=null)
+		{
+			mServerManager.stopService();
+		}
 		
 
 	}
