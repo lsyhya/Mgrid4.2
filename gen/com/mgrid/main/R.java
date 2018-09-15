@@ -383,8 +383,8 @@ containing a value of this type.
          would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively).
     
          */
-        public static final int activity_horizontal_margin=0x7f060000;
-        public static final int activity_vertical_margin=0x7f060001;
+        public static final int activity_horizontal_margin=0x7f080000;
+        public static final int activity_vertical_margin=0x7f080001;
     }
     public static final class drawable {
         public static final int bg_shadow=0x7f020000;
@@ -414,75 +414,78 @@ containing a value of this type.
         public static final int twitter=0x7f020018;
     }
     public static final class id {
-        public static final int FB1=0x7f0b0041;
+        public static final int FB1=0x7f0b0043;
         public static final int bg_button=0x7f0b0013;
         public static final int bottom=0x7f0b0000;
         public static final int btn3=0x7f0b0014;
-        public static final int btn_back=0x7f0b002e;
-        public static final int btn_login=0x7f0b002d;
-        public static final int btn_play_back=0x7f0b003a;
+        public static final int btn_back=0x7f0b0030;
+        public static final int btn_login=0x7f0b002f;
+        public static final int btn_play_back=0x7f0b003c;
         public static final int camera_surfaceview=0x7f0b000e;
         public static final int center=0x7f0b0004;
         public static final int center_horizontal=0x7f0b0005;
         public static final int center_vertical=0x7f0b0006;
         public static final int clip_horizontal=0x7f0b0007;
         public static final int clip_vertical=0x7f0b0008;
-        public static final int dialog_loading_view=0x7f0b001b;
-        public static final int dialog_view=0x7f0b0042;
+        public static final int dialog_loading_view=0x7f0b001d;
+        public static final int dialog_view=0x7f0b0044;
         public static final int end=0x7f0b0009;
         public static final int etPWD=0x7f0b0012;
-        public static final int et_Port=0x7f0b002a;
-        public static final int et_Psd=0x7f0b002c;
-        public static final int et_User=0x7f0b002b;
-        public static final int et_change=0x7f0b0018;
-        public static final int et_ip=0x7f0b0029;
+        public static final int et_Port=0x7f0b002c;
+        public static final int et_Psd=0x7f0b002e;
+        public static final int et_User=0x7f0b002d;
+        public static final int et_change=0x7f0b001a;
+        public static final int et_ip=0x7f0b002b;
         public static final int etuserName=0x7f0b0010;
         public static final int fill=0x7f0b000a;
         public static final int fill_horizontal=0x7f0b000b;
         public static final int fill_vertical=0x7f0b000c;
-        public static final int flikerbar=0x7f0b0033;
-        public static final int gridCellID=0x7f0b0025;
-        public static final int img=0x7f0b0022;
-        public static final int info=0x7f0b0024;
-        public static final int item=0x7f0b003e;
-        public static final int itemImage=0x7f0b0026;
-        public static final int itemText=0x7f0b0027;
-        public static final int lastpagebtn=0x7f0b0034;
-        public static final int layout_pageID=0x7f0b0036;
+        public static final int flikerbar=0x7f0b0035;
+        public static final int gridCellID=0x7f0b0027;
+        public static final int img=0x7f0b0024;
+        public static final int info=0x7f0b0026;
+        public static final int item=0x7f0b0040;
+        public static final int itemImage=0x7f0b0028;
+        public static final int itemText=0x7f0b0029;
+        public static final int lastpagebtn=0x7f0b0036;
+        public static final int layout_pageID=0x7f0b0038;
         public static final int left=0x7f0b0001;
-        public static final int linLayout=0x7f0b0043;
-        public static final int lin_door=0x7f0b001e;
-        public static final int lin_login=0x7f0b0028;
-        public static final int list_info=0x7f0b0045;
-        public static final int list_title=0x7f0b0044;
-        public static final int lv_list=0x7f0b003b;
-        public static final int monitor=0x7f0b0032;
-        public static final int nextbtn=0x7f0b0035;
-        public static final int pageet=0x7f0b0038;
-        public static final int pagetv=0x7f0b0037;
-        public static final int pro1=0x7f0b003c;
-        public static final int progressBar1=0x7f0b001c;
-        public static final int progress_horizontal=0x7f0b0030;
-        public static final int progress_large=0x7f0b0031;
+        public static final int linLayout=0x7f0b0046;
+        public static final int lin_door=0x7f0b0020;
+        public static final int lin_login=0x7f0b002a;
+        public static final int list_info=0x7f0b0048;
+        public static final int list_title=0x7f0b0047;
+        public static final int lv_list=0x7f0b003d;
+        public static final int monitor=0x7f0b0034;
+        public static final int nextbtn=0x7f0b0037;
+        public static final int ninePlaceGridView=0x7f0b0045;
+        public static final int pageet=0x7f0b003a;
+        public static final int pagetv=0x7f0b0039;
+        public static final int photoBtn=0x7f0b0016;
+        public static final int photoList=0x7f0b0015;
+        public static final int pro1=0x7f0b003e;
+        public static final int progressBar1=0x7f0b001e;
+        public static final int progress_horizontal=0x7f0b0032;
+        public static final int progress_large=0x7f0b0033;
         public static final int right=0x7f0b0002;
-        public static final int selfCheckBtn=0x7f0b001a;
-        public static final int selfCheckTv=0x7f0b0019;
+        public static final int selfCheckBtn=0x7f0b001c;
+        public static final int selfCheckTv=0x7f0b001b;
         public static final int start=0x7f0b000d;
-        public static final int surface=0x7f0b0039;
-        public static final int tab1=0x7f0b003f;
-        public static final int text=0x7f0b002f;
-        public static final int textView1=0x7f0b0015;
-        public static final int textView2=0x7f0b0016;
-        public static final int textView3=0x7f0b0017;
-        public static final int tipTextView=0x7f0b001d;
-        public static final int title=0x7f0b0023;
+        public static final int surface=0x7f0b003b;
+        public static final int tab1=0x7f0b0041;
+        public static final int text=0x7f0b0031;
+        public static final int textView1=0x7f0b0017;
+        public static final int textView2=0x7f0b0018;
+        public static final int textView3=0x7f0b0019;
+        public static final int tipTextView=0x7f0b001f;
+        public static final int title=0x7f0b0025;
         public static final int top=0x7f0b0003;
-        public static final int tv=0x7f0b003d;
-        public static final int tv1=0x7f0b0040;
+        public static final int tv=0x7f0b003f;
+        public static final int tv1=0x7f0b0042;
         public static final int tvPWD=0x7f0b0011;
-        public static final int tv_Cid=0x7f0b0020;
-        public static final int tv_doorID=0x7f0b001f;
-        public static final int tv_time=0x7f0b0021;
+        public static final int tv_Cid=0x7f0b0022;
+        public static final int tv_doorID=0x7f0b0021;
+        public static final int tv_time=0x7f0b0023;
         public static final int tvuserName=0x7f0b000f;
     }
     public static final class layout {
@@ -490,42 +493,46 @@ containing a value of this type.
         public static final int activity_main=0x7f040001;
         public static final int auth_dialog=0x7f040002;
         public static final int bg_button=0x7f040003;
-        public static final int change_sgbrokenline=0x7f040004;
-        public static final int checkself=0x7f040005;
-        public static final int dialog_loading=0x7f040006;
-        public static final int door_list=0x7f040007;
-        public static final int elist=0x7f040008;
-        public static final int gridview=0x7f040009;
-        public static final int login_monitor=0x7f04000a;
-        public static final int lv_items=0x7f04000b;
-        public static final int main=0x7f04000c;
-        public static final int monitor=0x7f04000d;
-        public static final int mydialog=0x7f04000e;
-        public static final int nextpage=0x7f04000f;
-        public static final int page=0x7f040010;
-        public static final int page_xml=0x7f040011;
-        public static final int pass_dialog=0x7f040012;
-        public static final int play_monitor=0x7f040013;
-        public static final int pop=0x7f040014;
-        public static final int progress1=0x7f040015;
-        public static final int simple_spinner_itemtest=0x7f040016;
-        public static final int spring_item=0x7f040017;
-        public static final int tab1=0x7f040018;
-        public static final int test=0x7f040019;
-        public static final int thridlogin_dialog_loading=0x7f04001a;
-        public static final int vlist=0x7f04001b;
+        public static final int cameraphoto=0x7f040004;
+        public static final int change_sgbrokenline=0x7f040005;
+        public static final int checkself=0x7f040006;
+        public static final int dialog_loading=0x7f040007;
+        public static final int door_list=0x7f040008;
+        public static final int elist=0x7f040009;
+        public static final int gridview=0x7f04000a;
+        public static final int login_monitor=0x7f04000b;
+        public static final int lv_items=0x7f04000c;
+        public static final int main=0x7f04000d;
+        public static final int monitor=0x7f04000e;
+        public static final int mydialog=0x7f04000f;
+        public static final int nextpage=0x7f040010;
+        public static final int page=0x7f040011;
+        public static final int page_xml=0x7f040012;
+        public static final int pass_dialog=0x7f040013;
+        public static final int play_monitor=0x7f040014;
+        public static final int pop=0x7f040015;
+        public static final int progress1=0x7f040016;
+        public static final int simple_spinner_itemtest=0x7f040017;
+        public static final int spring_item=0x7f040018;
+        public static final int tab1=0x7f040019;
+        public static final int test=0x7f04001a;
+        public static final int thridlogin_dialog_loading=0x7f04001b;
+        public static final int timage_listactivity_listview_item=0x7f04001c;
+        public static final int vlist=0x7f04001d;
     }
     public static final class menu {
         public static final int main=0x7f0a0000;
     }
     public static final class mipmap {
-        public static final int ic_launcher=0x7f030000;
+        public static final int beauty=0x7f030000;
+        public static final int glenceluanch=0x7f030001;
+        public static final int ic_launcher=0x7f030002;
     }
     public static final class string {
-        public static final int IDU_name=0x7f070003;
-        public static final int action_settings=0x7f070002;
-        public static final int app_name=0x7f070000;
-        public static final int hello_world=0x7f070001;
+        public static final int IDU_name=0x7f060003;
+        public static final int action_settings=0x7f060002;
+        public static final int app_name=0x7f060000;
+        public static final int hello_world=0x7f060001;
     }
     public static final class style {
         /** 
@@ -569,36 +576,36 @@ containing a value of this type.
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f080000;
+        public static final int AppBaseTheme=0x7f070000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f080001;
-        public static final int DialogStyle=0x7f080009;
+        public static final int AppTheme=0x7f070001;
+        public static final int DialogStyle=0x7f070009;
         /**  加载进度对话框样式 
  模糊 
          */
-        public static final int Dialog_Fullscreen=0x7f080006;
+        public static final int Dialog_Fullscreen=0x7f070006;
         /**  自定义dialog背景全透明无边框theme 
          */
-        public static final int MyDialog=0x7f080008;
+        public static final int MyDialog=0x7f070008;
         /**  my loading dialog 
          */
-        public static final int MyDialogStyle=0x7f080007;
-        public static final int MyTest=0x7f08000b;
+        public static final int MyDialogStyle=0x7f070007;
+        public static final int MyTest=0x7f07000b;
         /**  Base application theme. 
  popup window 显示消失动画 
  指定消失的动画xml 
          */
-        public static final int PopWindowAnimStyle=0x7f080002;
-        public static final int TransDialogStyle=0x7f080003;
-        public static final int WhiteDialogStyle=0x7f080004;
-        public static final int custom_dialog=0x7f08000a;
+        public static final int PopWindowAnimStyle=0x7f070002;
+        public static final int TransDialogStyle=0x7f070003;
+        public static final int WhiteDialogStyle=0x7f070004;
+        public static final int custom_dialog=0x7f07000a;
         /**  模糊 
          */
-        public static final int loading_dialog=0x7f080005;
+        public static final int loading_dialog=0x7f070005;
     }
     public static final class styleable {
         /** Attributes that can be used with a FancyButtonsAttrs.

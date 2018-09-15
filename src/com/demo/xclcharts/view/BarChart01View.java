@@ -104,7 +104,7 @@ public class BarChart01View extends TouchView implements Runnable{
 		try {								
 			//设置绘图区默认缩进px值,留置空间显示Axis,Axistitle....		
 			int [] ltrb = getBarLnDefaultSpadding();
-			chart.setPadding(ltrb[0],40, ltrb[2], 20);			
+			chart.setPadding(50,40, ltrb[2], 20);	
 			
 			
 			//标题

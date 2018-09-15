@@ -419,7 +419,7 @@ public class TimingAndDelayedView extends Button implements IObject, OnClickList
 
 				
 				if (time.getTiming() == nowHour) {
-					Log.e("time4", "handle");
+					//Log.e("time4", "handle");
 					timingHandle();
 					setTimeTask();
 					break;
@@ -521,7 +521,7 @@ public class TimingAndDelayedView extends Button implements IObject, OnClickList
 				}
 			}
 
-			Log.e("close", c_control.get(0).equipid+":"+c_control.get(0).ctrlid+":"+c_control.get(0).valuetype+":"+c_control.get(0).value);
+			//Log.e("close", c_control.get(0).equipid+":"+c_control.get(0).ctrlid+":"+c_control.get(0).valuetype+":"+c_control.get(0).value);
 			service.send_control_cmd(service.IP, service.PORT, c_control);
 
 		}

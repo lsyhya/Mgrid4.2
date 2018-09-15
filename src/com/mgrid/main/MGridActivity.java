@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -46,6 +47,7 @@ import com.sg.uis.LsyNewView.SgSplineChart;
 import com.sg.uis.LsyNewView.SgVideoView;
 import com.sg.uis.LsyNewView.AlarmAction.SgAlarmAction;
 import com.sg.uis.LsyNewView.TimingAndDelayed.TimingAndDelayedView;
+import com.sg.web.base.ViewObjectBase;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -107,6 +109,7 @@ public class MGridActivity extends Activity {
 		m_oViewGroups = new HashMap<String, MainWindow>();
 		m_oPageList = new ArrayList<String>();
 		userManager = new UserManager();
+		ViewJosnObject=new HashMap<>();
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 强制为横屏
 		mImm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);// 输入法窗口
@@ -734,7 +737,10 @@ public class MGridActivity extends Activity {
 
 		handler.postDelayed(runnable, tmp_load_int_time);
 		runDataGetter();
+		if(OPENWEB)
+		{
 		initServiceManeger();
+		}
 		
 	}
 
@@ -1040,7 +1046,8 @@ public class MGridActivity extends Activity {
 	public UtIniReader iniReader = null;
 	
 	//网页服务管理
-	private ServerManager mServerManager;
+	public ServerManager mServerManager;
+	public static boolean OPENWEB=false;
 
 	private int sleepTime = 2 * 60 * 60;// 屏保视频休眠时间
 	private Intent m_oTaskIntent = null;
@@ -1112,7 +1119,8 @@ public class MGridActivity extends Activity {
 	public static ExecutorService ecOneService = Executors.newSingleThreadExecutor();
 	public static boolean isNOChangPage = false;
 	public static int saveTime; // 信号数据存储时间
-
+	public static HashMap<String,List<ViewObjectBase>> ViewJosnObject = null;
+	//public static HashMap<String,TreeMap<Integer, ViewObjectBase>> ViewJosnObject = null;
 	// 用户名和密码
 	public static String m_UserName;
 	public static String m_PassWord;

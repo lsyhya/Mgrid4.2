@@ -22,7 +22,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 
-		Log.e("广播", "进来");
+		//Log.e("广播", "进来");
 		
 		if (intent.getAction().equals(BC_ACTION)) {
 			

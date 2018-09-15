@@ -432,5 +432,21 @@ public class SqliteUtil {
 		String exe = "delete from " + MySqlBase.doorTable;
 		sql.execSQL(exe);
 	}
+	
+	/*
+	 * 删除所有记录
+	 */
+	public void cleanEventTable() {
+		String exe = "delete from " + MySqlBase.doorEventTable;
+		sql.execSQL(exe);
+	}
+	
+	/*
+	 * 删除所有记录
+	 */
+	public void cleanXuniEventTable() {
+		String exe = "delete from " + MySqlBase.doorXuNiEventTable;
+		sql.execSQL(exe);
+	}
 
 }

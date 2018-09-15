@@ -13,6 +13,9 @@ import com.sg.common.SgRealTimeData;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtExpressionParser.stExpression;
+import com.sg.web.LableObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -29,10 +32,13 @@ import comm_service.service;
 import data_model.ipc_control;
 
 /** ±Í«© */
-public class SgLabel extends TextView implements IObject {
+public class SgLabel extends TextView implements IObject ,ViewObjectSetCallBack{
 
 	// ShimmerTextView shimmerTv;
 	// Shimmer sr;
+	
+	public ViewObjectBase base=new LableObject();
+	
 
 	public SgLabel(Context context) {
 		super(context);
@@ -45,6 +51,8 @@ public class SgLabel extends TextView implements IObject {
 		view.setClickable(true);
 		view.setBackgroundColor(0x00000000);
 		m_rBBox = new Rect();
+		
+
 		view.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -191,16 +199,30 @@ public class SgLabel extends TextView implements IObject {
 
 		if ("ZIndex".equals(strName)) {
 			m_nZIndex = Integer.parseInt(strValue);
+				
+//			base.setZIndex(m_nZIndex);
+//			base.setFromWight(MainWindow.FORM_WIDTH);
+//			base.setFromHeight(MainWindow.FORM_HEIGHT);
+			
 			if (MainWindow.MAXZINDEX < m_nZIndex)
 				MainWindow.MAXZINDEX = m_nZIndex;
 		} else if ("Location".equals(strName)) {
 			String[] arrStr = strValue.split(",");
 			m_nPosX = Integer.parseInt(arrStr[0]);
 			m_nPosY = Integer.parseInt(arrStr[1]);
+			
+			//base.setLeft(m_nPosX);
+			//base.setTop(m_nPosY);
+			
+			
 		} else if ("Size".equals(strName)) {
 			String[] arrSize = strValue.split(",");
 			m_nWidth = Integer.parseInt(arrSize[0]);
 			m_nHeight = Integer.parseInt(arrSize[1]);
+			
+			//base.setWight(m_nWidth);
+			//base.setHeght(m_nHeight);
+			
 		} else if ("Alpha".equals(strName)) {
 			m_fAlpha = Float.parseFloat(strValue);
 		} else if ("RotateAngle".equals(strName)) {
@@ -209,6 +231,7 @@ public class SgLabel extends TextView implements IObject {
 			m_strContent = strValue;
 			c_Content = strValue;
 			this.setText(m_strContent);
+			//((LableObject)base).setText(c_Content);
 			// shimmerTv.setText(m_strContent);
 		} else if ("FontFamily".equals(strName)) {
 			m_strFontFamily = strValue;
@@ -216,13 +239,16 @@ public class SgLabel extends TextView implements IObject {
 		} else if ("FontSize".equals(strName)) {
 			float fWinScale = (float) MainWindow.SCREEN_WIDTH / (float) MainWindow.FORM_WIDTH;
 			m_fFontSize = Float.parseFloat(strValue) * fWinScale;
+			//((LableObject)base).setTextSize(m_fFontSize);
 			this.setTextSize(m_fFontSize);
 			// shimmerTv.setTextSize(m_fFontSize);
 		} else if ("IsBold".equals(strName))
 			m_bIsBold = Boolean.parseBoolean(strValue);
 		else if ("FontColor".equals(strName)) {
+			currColor=strValue;
 			m_cFontColor = Color.parseColor(strValue);
 			m_cStartFillColor = m_cFontColor;
+			//((LableObject)base).setTextColor("#"+strValue.substring(3, strValue.length()));
 			this.setTextColor(m_cFontColor);
 			// shimmerTv.setTextColor(m_cFontColor);
 		} else if ("HorizontalContentAlignment".equals(strName))
@@ -469,10 +495,12 @@ public class SgLabel extends TextView implements IObject {
 
 	public void setUniqueID(String strID) {
 		m_strID = strID;
+		//base.setTypeId(m_strID);
 	}
 
 	public void setType(String strType) {
 		m_strType = strType;
+		//base.setType(m_strType);
 	}
 
 	public String getUniqueID() {
@@ -504,6 +532,7 @@ public class SgLabel extends TextView implements IObject {
 	boolean m_bIsBold = false;
 	int m_cFontColor = 0xFF008000;
 	int m_cStartFillColor = 0x00000000;
+	String currColor;
 	String m_strHorizontalContentAlignment = "Center";
 	String m_strVerticalContentAlignment = "Center";
 	String m_strExpression = "Binding{[Value[Equip:114-Temp:173-Signal:1]]}";
@@ -525,4 +554,29 @@ public class SgLabel extends TextView implements IObject {
 	private String c_value = "", o_value = "";
 	List<ipc_control> c_control = new ArrayList<ipc_control>();
 	List<ipc_control> o_control = new ArrayList<ipc_control>();
+
+
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+		
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+		
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+		
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		((LableObject)base).setText(c_Content);
+		((LableObject)base).setTextSize(m_fFontSize);
+		((LableObject)base).setTextColor("#"+currColor.substring(3, currColor.length()));
+		
+	}
+	
+
 }

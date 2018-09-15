@@ -192,9 +192,9 @@ public class DoorButtManager implements DoorCallBack, DoorManagerBase {
 				@Override
 				public void run() {
 
-					Log.e("TIME", time.getYear() + time.getMonth() + time.getDay() + time.getWeek() + time.getHour() +
+					//Log.e("TIME", time.getYear() + time.getMonth() + time.getDay() + time.getWeek() + time.getHour() +
 
-							time.getMin() + time.getSec());
+					//		time.getMin() + time.getSec());
 
 					nDoorView.setTime(time.getYear(), time.getMonth(), time.getDay(),
 							"0" + TimeUtils.getWeekOfDate(new Date()), time.getHour(), time.getMin(), time.getSec());

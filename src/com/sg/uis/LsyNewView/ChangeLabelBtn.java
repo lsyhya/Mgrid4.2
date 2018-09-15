@@ -172,7 +172,7 @@ public class ChangeLabelBtn extends TextView implements IObject {
 	public void setText() {
 
 		
-		Log.e("123", Et_ChangeValue.getText().toString());
+		//Log.e("123", Et_ChangeValue.getText().toString());
 		if (Et_ChangeValue.getText().toString() != null || !Et_ChangeValue.getText().toString().equals("")) {
 			Message mes = new Message();
 			mes.obj = Et_ChangeValue.getText().toString();

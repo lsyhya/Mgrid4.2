@@ -6,15 +6,14 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
 import com.mgrid.main.GridviewActivity;
-import com.mgrid.main.ImageviewActivity;
-import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.SgRealTimeData;
 import com.sg.common.UtExpressionParser;
-import com.sg.common.UtGifHelper;
 import com.sg.common.UtExpressionParser.stIfElseExpression;
+import com.sg.common.UtGifHelper;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -25,7 +24,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -35,8 +33,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.sg.common.SgRealTimeData;
 
 /** fjw 定义图片类(jpg png gif)- 用于进入照片查看按钮功能 */
 public class SeeImage extends View implements IObject {
@@ -332,6 +328,8 @@ public class SeeImage extends View implements IObject {
 				if("".equals(turnUsr)){   //无需用户名密码跳转
 					//跳转进入图片查看 activity
 					goSeePhoto();
+					
+					//goPhoto();
 				}else{ //需要用户名密码跳转
 					showPassDialog();
 			    }
@@ -366,6 +364,7 @@ public class SeeImage extends View implements IObject {
    	    	if(userName.equals(root) && password.equals(rootpass)){
    	    		//跳转进入图片查看 activity
    	    		goSeePhoto();
+   	    		
    	    	}else if(userName.equals(turnUsr) && password.equals(turnPass)){
    	    		//跳转进入图片查看 activity
    	    		goSeePhoto();
@@ -393,6 +392,8 @@ public class SeeImage extends View implements IObject {
 		m_context.startActivity(intent2);
 		
 	}
+	
+   
 	
     
 	@Override

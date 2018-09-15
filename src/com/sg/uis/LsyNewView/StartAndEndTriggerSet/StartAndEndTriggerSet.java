@@ -299,7 +299,7 @@ public class StartAndEndTriggerSet extends TextView implements IObject {
 				m_rRenderWindow.m_oShareObject.m_mapTriggerCommand.put(getUniqueID(),
 						startvalue+","+stopvalue+"");
 				
-				Log.e(startvalue, stopvalue);
+				//Log.e(startvalue, stopvalue);
 			}
 		}
 
@@ -318,7 +318,7 @@ public class StartAndEndTriggerSet extends TextView implements IObject {
 				bt_EquipID = oBindingExpression.nEquipId;
 				bt_EventID = oBindingExpression.nEventId;
 				bt_Condition = oBindingExpression.nConditionId;
-				Log.e("tag", bt_EquipID+":"+bt_EventID+":"+bt_Condition);
+				//Log.e("tag", bt_EquipID+":"+bt_EventID+":"+bt_Condition);
 			}
 		}
 		return true;
@@ -363,12 +363,12 @@ public class StartAndEndTriggerSet extends TextView implements IObject {
 		// 获取告警阀值
 		List<ipc_cfg_trigger_value> triglst = service.get_cfg_trigger_value("127.0.0.1", 9630, bt_EquipID);
 		
-		Log.e("tag", "一");
+		//Log.e("tag", "一");
 		
 		if (triglst == null)
 			return false;
 		
-		Log.e("tag", "二");
+		//Log.e("tag", "二");
 		Iterator<ipc_cfg_trigger_value> iter = triglst.iterator();
 		while (iter.hasNext()) {
 			ipc_cfg_trigger_value clas_cfg = iter.next();
@@ -380,7 +380,7 @@ public class StartAndEndTriggerSet extends TextView implements IObject {
 			if ((bt_EquipID == c_equipID) && (bt_EventID == c_event) && (bt_Condition == c_condictoin)) {
 				strValue = String.valueOf(s_value);
 				stopValue = String.valueOf(e_value);
-				Log.e("tag", strValue+"::::"+stopValue);
+			//	Log.e("tag", strValue+"::::"+stopValue);
 			}
 		}
 

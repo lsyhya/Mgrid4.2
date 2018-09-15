@@ -9,9 +9,11 @@ import java.util.List;
 import com.mgrid.data.DataGetter;
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
+import com.mgrid.main.MonitorActivity;
 //import com.mgrid.main.MonitorActivity;
 import com.mgrid.main.R;
 import com.mgrid.main.SoundService;
+import com.mgrid.mysqlbase.SqliteUtil;
 import com.mgrid.util.ShellUtils;
 import com.mgrid.util.ShellUtils.CommandResult;
 import com.sg.common.CFGTLS;
@@ -20,6 +22,9 @@ import com.sg.common.LanguageStr;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtExpressionParser.stExpression;
+import com.sg.web.ButtonObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -51,13 +56,14 @@ import comm_service.service;
 import data_model.ipc_control;
 
 /** 按钮 */
-public class SgButton extends TextView implements IObject {
+public class SgButton extends TextView implements IObject, ViewObjectSetCallBack {
 
 	private String Prompt = LanguageStr.Prompt;
 	private String problem = LanguageStr.problem;
 	private String OK = LanguageStr.OK;
 	private String ON = LanguageStr.ON;
 	private String text = LanguageStr.text;
+	public ViewObjectBase base = new ButtonObject();
 
 	public SgButton(Context context) {
 		super(context);
@@ -185,8 +191,11 @@ public class SgButton extends TextView implements IObject {
 		} else if ("IsBold".equals(strName))
 			m_bIsBold = Boolean.parseBoolean(strValue);
 		else if ("FontColor".equals(strName)) {
+
+			textColor = "#" + strValue.substring(3, strValue.length());
 			m_cFontColor = Color.parseColor(strValue);
 			this.setTextColor(m_cFontColor);
+
 		} else if ("ClickEvent".equals(strName))
 			m_strClickEvent = strValue;
 		else if ("Url".equals(strName))
@@ -203,6 +212,9 @@ public class SgButton extends TextView implements IObject {
 		} else if ("ImgSrc".equals(strName)) {
 
 			if (strValue != null && !strValue.equals("")) {
+				
+				imgSrc=strResFolder.replace("/vtu_pagelist/", "")+strValue;
+				
 				String m_strImgSrc = Environment.getExternalStorageDirectory().getPath() + strResFolder + strValue;
 				Drawable able = new BitmapDrawable(getResources(), m_strImgSrc);
 				this.setBackground(able);
@@ -280,9 +292,19 @@ public class SgButton extends TextView implements IObject {
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
 
-						deleteDir(new File("/mgrid/log"));
-
-						showHint();
+						MGridActivity.xianChengChi.execute(new Runnable() {
+							
+							@Override
+							public void run() {
+								
+								deleteDir(new File("/mgrid/log"));
+								deleteDir(new File("/mgrid/data"));
+								SqliteUtil SQL=new SqliteUtil(getContext());
+								SQL.cleanEventTable();
+								SQL.cleanXuniEventTable();
+								handler.sendEmptyMessage(2);
+							}
+						});										
 					}
 				});
 				builder.setNegativeButton(ON, new DialogInterface.OnClickListener() {
@@ -344,9 +366,9 @@ public class SgButton extends TextView implements IObject {
 
 			} else if (m_strClickEvent.equals("视频")) {
 
-				// Intent intent=new Intent(getContext(),MonitorActivity.class);
-				// //intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-				// getContext().startActivity(intent);
+				Intent intent = new Intent(getContext(), MonitorActivity.class);
+				// intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+				getContext().startActivity(intent);
 
 			} else {
 				String[] arrStr = m_strClickEvent.split("\\(");
@@ -696,7 +718,7 @@ public class SgButton extends TextView implements IObject {
 		return m_rBBox;
 	}
 
-	public static Handler handler = new Handler() {
+	public  Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			// handler接收到消息后就会执行此方法
 			switch (msg.what) {
@@ -706,6 +728,13 @@ public class SgButton extends TextView implements IObject {
 				// 关闭ProgressDialog
 
 				break;
+				
+			case 2:
+				
+				showHint();
+				
+				break;
+				
 			default:
 				break;
 			}
@@ -728,6 +757,7 @@ public class SgButton extends TextView implements IObject {
 	float m_fFontSize = 12.0f;
 	boolean m_bIsBold = false;
 	int m_cFontColor = 0xFF008000;
+	private String textColor;
 	String m_strClickEvent = "科士达-IDU系统设定UPS.xml";
 	String m_strUrl = "www.baidu.com";
 	String m_strCmdExpression = "Binding{[Cmd[Equip:1-Temp:173-Command:1-Parameter:1-Value:1]]}";
@@ -736,6 +766,7 @@ public class SgButton extends TextView implements IObject {
 	boolean m_bPressed = false;
 	MainWindow m_rRenderWindow = null;
 	String cmd_value = "";
+	String imgSrc="";
 
 	Paint m_oPaint = null;
 	Rect m_rBBox = null;
@@ -756,4 +787,37 @@ public class SgButton extends TextView implements IObject {
 	private String c_value = "", o_value = "";
 	List<ipc_control> c_control = new ArrayList<ipc_control>();
 	List<ipc_control> o_control = new ArrayList<ipc_control>();
+
+	@Override
+	public void onCall() {
+
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+
+		((ButtonObject) base).setText(m_strContent);
+		((ButtonObject) base).setTextColor(textColor);
+		((ButtonObject) base).setTextSize(m_fFontSize);				
+		((ButtonObject) base).setImgSrc(imgSrc);
+
+		
+	    if(m_strClickEvent.contains("Show"))
+	    {
+	    	String[] s=m_strClickEvent.split("\\(");
+	    	String[] ss=s[1].split("\\)");
+	    	((ButtonObject) base).setHrefUrl(ss[0]);
+	    }
+	    
+	    
+	    
+	}
 }

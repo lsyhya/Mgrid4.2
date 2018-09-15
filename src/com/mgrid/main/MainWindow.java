@@ -16,21 +16,6 @@ import java.util.Random;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
-import android.util.FloatMath;
-import android.util.Log;
-import android.util.Xml;
-import android.view.MotionEvent;
-import android.view.VelocityTracker;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.mgrid.VariableConfig.VariableConfig;
 import com.mgrid.data.DataGetter;
 import com.mgrid.data.EquipmentDataModel.Event;
@@ -42,7 +27,6 @@ import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
 import com.sg.common.MutiThreadShareObject;
 import com.sg.common.SgRealTimeData;
-import com.sg.common.TotalVariable;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtExpressionParser.stExpression;
@@ -71,7 +55,6 @@ import com.sg.uis.SgAlarmChangTime;
 import com.sg.uis.SgAlarmLight;
 import com.sg.uis.SgAmmeter;
 import com.sg.uis.SgButton;
-import com.sg.uis.SgButton_new;
 import com.sg.uis.SgCableTerminal;
 import com.sg.uis.SgChangIP;
 import com.sg.uis.SgChangNamePhoneTypeState;
@@ -141,10 +124,25 @@ import com.sg.uis.LsyNewView.AlarmAction.SgAlarmAction;
 import com.sg.uis.LsyNewView.AlarmAction.SgAlarmActionShow;
 import com.sg.uis.LsyNewView.StartAndEndTriggerSet.StartAndEndTriggerSet;
 import com.sg.uis.LsyNewView.TimingAndDelayed.TimingAndDelayedView;
+import com.sg.web.HTML.BuildHtml;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.graphics.Canvas;
+import android.graphics.Rect;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.util.Xml;
+import android.view.MotionEvent;
+import android.view.VelocityTracker;
+import android.view.ViewGroup;
+import android.widget.Toast;
 import comm_service.local_file;
 import comm_service.service;
-
 import data_model.ipc_history_signal;
 import data_model.local_his_event;
 import data_model.local_his_signal;
@@ -159,10 +157,12 @@ public class MainWindow extends ViewGroup {
 	public MainWindow(final MGridActivity context) {
 		super(context);
 		setFocusableInTouchMode(true);
+
 		m_mapUIs = new HashMap<String, IObject>();
 		m_oShareObject = new MutiThreadShareObject();
 		m_YKobj = new ArrayList<ViewGroup>();
 		m_oMgridActivity = context;
+		viewList = new ArrayList<>();
 
 		m_oInvalidateHandler = new Handler() {
 
@@ -203,13 +203,12 @@ public class MainWindow extends ViewGroup {
 											.removeBindingString(obj_Z.getBindingExpression()))) {
 										obj_Z.needupdate(true);
 									}
-								}else if(obj_Z.getType().equals("StartAndEndTriggerSet"))
-								{
+								} else if (obj_Z.getType().equals("StartAndEndTriggerSet")) {
 									if (obj_Y.getBindingExpression().contains(ExpressionUtils.getExpressionUtils()
 											.removeBindingString(obj_Z.getBindingExpression()))) {
 										obj_Z.needupdate(true);
 									}
-								}   
+								}
 							}
 						}
 					});
@@ -635,12 +634,37 @@ public class MainWindow extends ViewGroup {
 	 * @throws FileNotFoundException
 	 */
 
-	public void parseXml(String xmlFile) throws FileNotFoundException {
+	public void parseXml(final String xmlFile) throws FileNotFoundException {
 		String[] arrStr = xmlFile.split("\\.");
 		m_strResFolder = m_strRootFolder + arrStr[0] + ".files/";
-		System.out.println("xmlFile:" + xmlFile);
-		System.out.println(Thread.currentThread().getName());
-		MGridActivity.XmlFile = xmlFile;
+		// Log.e("XML", arrStr[0]);
+		MGridActivity.XmlFile = arrStr[0];
+
+		if (MGridActivity.OPENWEB) {
+			
+			MGridActivity.xianChengChi.execute(new Runnable() {
+
+				@Override
+				public void run() {
+
+					if (xmlFile.equals(m_oMgridActivity.m_sMainPage)) {
+						BuildHtml.buildHtml(
+								Environment.getExternalStorageDirectory().getPath() + m_strRootFolder + "index.html",
+								MGridActivity.XmlFile);
+
+					} else {
+						BuildHtml.buildHtml(Environment.getExternalStorageDirectory().getPath() + m_strRootFolder
+								+ MGridActivity.XmlFile + ".html", MGridActivity.XmlFile);
+					}
+
+				}
+			});
+			
+			MGridActivity.ViewJosnObject.put(MGridActivity.XmlFile, viewList);
+			
+		}
+
+		
 		InputStream is = new BufferedInputStream(
 				new FileInputStream(Environment.getExternalStorageDirectory().getPath() + m_strRootFolder + xmlFile));
 		parseStream(is);
@@ -692,6 +716,8 @@ public class MainWindow extends ViewGroup {
 						} else if ("Label".equals(strType)) {
 							SgLabel sgLabel = new SgLabel(this.getContext());
 							m_mapUIs.put(strID, sgLabel);
+							viewList.add(sgLabel.base);
+							callBackList.add(sgLabel);
 						} else if ("TextClock".equals(strType)) {
 							SgTextClock sgTextClock = new SgTextClock(this.getContext());
 							m_mapUIs.put(strID, sgTextClock);
@@ -701,6 +727,8 @@ public class MainWindow extends ViewGroup {
 						} else if ("Rectangle".equals(strType)) {
 							SgRectangle sgRectangle = new SgRectangle(this.getContext());
 							m_mapUIs.put(strID, sgRectangle);
+							viewList.add(sgRectangle.base);
+							callBackList.add(sgRectangle);
 						} else if ("Ellipse".equals(strType)) {
 							SgEllipse sgEllipse = new SgEllipse(this.getContext());
 							m_mapUIs.put(strID, sgEllipse);
@@ -710,8 +738,12 @@ public class MainWindow extends ViewGroup {
 						} else if ("Image".equals(strType)) {
 							SgImage sgImage = new SgImage(this.getContext());
 							m_mapUIs.put(strID, sgImage);
+							viewList.add(sgImage.base);
+							callBackList.add(sgImage);
 						} else if ("Button".equals(strType)) {
 							SgButton sgButton = new SgButton(this.getContext());
+							viewList.add(sgButton.base);
+							callBackList.add(sgButton);
 							// SgButton_new sgButton = new SgButton_new(this.getContext());
 							m_mapUIs.put(strID, sgButton);
 						} else if ("TextBox".equals(strType)) {
@@ -720,6 +752,8 @@ public class MainWindow extends ViewGroup {
 						} else if ("Table".equals(strType)) {
 							SgTable sgTable = new SgTable(this.getContext());
 							m_mapUIs.put(strID, sgTable);
+							viewList.add(sgTable.base);
+							callBackList.add(sgTable);
 						} else if ("CommandButton".equals(strType)) {
 							SgCommandButton sgCommandButton = new SgCommandButton(this.getContext());
 							m_mapUIs.put(strID, sgCommandButton);
@@ -968,7 +1002,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("DoorInvented".equals(strType)) {
 							DoorInvented DI = new DoorInvented(this.getContext());
 							m_mapUIs.put(strID, DI);
-							VariableConfig.isXUNIDOOR_inHisEvent=true;
+							VariableConfig.isXUNIDOOR_inHisEvent = true;
 						} else if ("ChangeUserInfo".equals(strType)) {
 							ChangeUserInfo CUI = new ChangeUserInfo(this.getContext());
 							m_mapUIs.put(strID, CUI);
@@ -976,23 +1010,23 @@ public class MainWindow extends ViewGroup {
 						} else if ("NBerDoorView".equals(strType)) {
 							NBerDoorView NBDV = new NBerDoorView(this.getContext());
 							m_mapUIs.put(strID, NBDV);
-							VariableConfig.isNIBERDOOR_inHisEvent=true;
+							VariableConfig.isNIBERDOOR_inHisEvent = true;
 
-						}  else if ("StateButton".equals(strType)) {
+						} else if ("StateButton".equals(strType)) {
 							StateButton SB = new StateButton(this.getContext());
-							m_mapUIs.put(strID, SB);						
-							
+							m_mapUIs.put(strID, SB);
+
 						} else if ("TimingAndDelayed".equals(strType)) {
 							TimingAndDelayedView TD = new TimingAndDelayedView(this.getContext());
-							m_mapUIs.put(strID, TD);	
+							m_mapUIs.put(strID, TD);
 							VariableConfig.timingAndDelayedViewList.add(TD);
-						
-						}else if("StartAndEndTriggerSet".equals(strType)){
-							
+
+						} else if ("StartAndEndTriggerSet".equals(strType)) {
+
 							StartAndEndTriggerSet SAETS = new StartAndEndTriggerSet(this.getContext());
-							m_mapUIs.put(strID, SAETS);	
-							
-						}else {
+							m_mapUIs.put(strID, SAETS);
+
+						} else {
 							showMsgDlg("警告", "不支持的控件类型： " + strType);
 							bExit = false;
 						}
@@ -1069,10 +1103,9 @@ public class MainWindow extends ViewGroup {
 								|| "CoolButton".equals(strElementType) || "SgPieChart3D".equals(strElementType)
 								|| "LanguageChange".equals(strElementType) || "SelfCheck".equals(strElementType)
 								|| "DoorInvented".equals(strElementType) || "ChangeUserInfo".equals(strElementType)
-								|| "NBerDoorView".equals(strElementType)
-								|| "StateButton".equals(strElementType)
+								|| "NBerDoorView".equals(strElementType) || "StateButton".equals(strElementType)
 								|| "TimingAndDelayed".equals(strElementType)
-					            || "StartAndEndTriggerSet".equals(strElementType)) {
+								|| "StartAndEndTriggerSet".equals(strElementType)) {
 							try {
 								iCurrentObj.parseProperties(strName, strValue, m_strResFolder);
 							} catch (Throwable e) {
@@ -1094,6 +1127,12 @@ public class MainWindow extends ViewGroup {
 				}
 
 			} /* end of while */
+
+			for (ViewObjectSetCallBack back : callBackList) {
+
+				back.onCall();
+
+			}
 
 		} catch (XmlPullParserException e) {
 			e.printStackTrace();
@@ -1121,7 +1160,7 @@ public class MainWindow extends ViewGroup {
 	static public int FORM_HEIGHT = 0;
 	static public int SWITCH_STYLE = 0;
 	public HashMap<String, IObject> m_mapUIs = null;
-
+	public List<ViewObjectBase> viewList;
 	String m_strResFolder = "/";
 	String m_strRootFolder = "/"; // 指定文件夹,如 "/ShangeAndroidRes/"
 
@@ -1161,6 +1200,7 @@ public class MainWindow extends ViewGroup {
 
 	public Map<String, stExpression> Event_data = new HashMap<String, stExpression>();
 	public Map<String, stBindingExpression> Label_data = new HashMap<String, stBindingExpression>();
+	private List<ViewObjectSetCallBack> callBackList = new ArrayList<>();
 
 	static private short NUMOFDAILOG = 0;
 	// fjw add
@@ -1761,8 +1801,6 @@ public class MainWindow extends ViewGroup {
 				HashMap.Entry<String, stExpression> entry = exp_it.next();
 				String strKey = entry.getKey();// 获取的是UIid
 				stExpression oExpression = entry.getValue();
-				
-				
 
 				if (oExpression == null)
 					continue;
@@ -1775,13 +1813,11 @@ public class MainWindow extends ViewGroup {
 					if (strKey.contains("tigerLabel")) {
 						mapSignals.put(m_mapUIs.get(strKey), oExpression);
 
-					} else if(strKey.contains("StartAndEndTriggerSet"))
-					{
+					} else if (strKey.contains("StartAndEndTriggerSet")) {
 						mapSignals.put(m_mapUIs.get(strKey), oExpression);
 						mapTriggers.put(strKey, oExpression);
-					}
-					else{
-						
+					} else {
+
 						mapTriggers.put(strKey, oExpression);
 					}
 
@@ -1829,13 +1865,8 @@ public class MainWindow extends ViewGroup {
 
 						HashMap.Entry<IObject, stExpression> entry = iter.next();
 
-					
-						
-						
 						if (!entry.getKey().needupdate())
 							continue;
-						
-						
 
 						String strKey = entry.getKey().getUniqueID();
 
@@ -1913,7 +1944,7 @@ public class MainWindow extends ViewGroup {
 								// 待完善
 							} else if ("tigerLabel".equals(oExpression.strUiType)) {
 
-							}  else {
+							} else {
 
 								pushRealTimeValue(strKey, oExpression);
 

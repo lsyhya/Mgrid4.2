@@ -20,6 +20,10 @@ import com.sg.common.SgRealTimeData;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stIfElseExpression;
 import com.sg.common.UtGifHelper;
+import com.sg.web.ImageObject;
+import com.sg.web.LableObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -46,7 +50,7 @@ import android.widget.Toast;
 
 /** 图片类(jpg png gif) */
 @SuppressLint({ "InflateParams", "ShowToast", "ClickableViewAccessibility" })
-public class SgImage extends View implements IObject {
+public class SgImage extends View implements IObject ,ViewObjectSetCallBack{
 
 	public String denglu = LanguageStr.denglu;
 	public String yes = LanguageStr.yes;
@@ -59,11 +63,18 @@ public class SgImage extends View implements IObject {
 
 	public String userName = LanguageStr.userName;
 	public String PWD = LanguageStr.PWD;
+	
+	public ViewObjectBase base=new ImageObject();
 
 	private PageChangeUtil changeUtil = null;
+	private MGridActivity activity=null;
+	
 
 	public SgImage(Context context) {
 		super(context);
+		
+		activity=(MGridActivity)context;
+		
 		this.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View view, MotionEvent event) {
@@ -274,16 +285,30 @@ public class SgImage extends View implements IObject {
 	public void parseProperties(String strName, String strValue, String strResFolder) throws Exception {
 		if ("ZIndex".equals(strName)) {
 			m_nZIndex = Integer.parseInt(strValue);
+			
+//			base.setZIndex(m_nZIndex);
+//			base.setFromHeight(MainWindow.FORM_HEIGHT);
+//			base.setFromWight(MainWindow.FORM_WIDTH);
+			
 			if (MainWindow.MAXZINDEX < m_nZIndex)
 				MainWindow.MAXZINDEX = m_nZIndex;
 		} else if ("Location".equals(strName)) {
 			String[] arrStr = strValue.split(",");
 			m_nPosX = Integer.parseInt(arrStr[0]);
 			m_nPosY = Integer.parseInt(arrStr[1]);
+			
+			
+//			base.setLeft(m_nPosX);
+//			base.setTop(m_nPosY);
+			
 		} else if ("Size".equals(strName)) {
 			String[] arrSize = strValue.split(",");
 			m_nWidth = Integer.parseInt(arrSize[0]);
 			m_nHeight = Integer.parseInt(arrSize[1]);
+			
+//			base.setWight(m_nWidth);
+//			base.setHeght(m_nHeight);
+			
 		} else if ("Alpha".equals(strName)) {
 			m_fAlpha = Float.parseFloat(strValue);
 			m_oPaint.setAlpha((int) (m_fAlpha * 255));
@@ -297,6 +322,8 @@ public class SgImage extends View implements IObject {
 				
 				m_strImgSrc = Environment.getExternalStorageDirectory().getPath() + strResFolder + strValue;
 
+				ImagePath=strResFolder.replace("/vtu_pagelist/", "")+strValue;
+				
 				String[] arrStr = strValue.split("\\.");
 				if ("gif".equals(arrStr[1])) {
 					MGridActivity.xianChengChi.execute(new Runnable() {
@@ -327,7 +354,25 @@ public class SgImage extends View implements IObject {
 			}
 
 		} else if ("ClickEvent".equals(strName))
+		{
 			m_strClickEvent = strValue;
+		    if(m_strClickEvent.contains("Show"))
+		    {
+		    	String[] s=strValue.split("\\(");
+		    	String[] ss=s[1].split("\\)");
+		    	
+		    	if((ss[0]+".xml").equals(activity.m_sMainPage))
+		    	{
+		    	    HrefUrl="index";
+		    	}else
+		    	{
+		    		HrefUrl=ss[0];
+		    	}
+		    	
+		    }
+		}
+		
+		
 		else if ("ImageExpression".equals(strName)) {
 			m_strImageExpression = strValue;
 
@@ -459,10 +504,12 @@ public class SgImage extends View implements IObject {
 
 	public void setUniqueID(String strID) {
 		m_strID = strID;
+		//base.setTypeId(m_strID);
 	}
 
 	public void setType(String strType) {
 		m_strType = strType;
+		//base.setType(m_strType);
 	}
 
 	public String getUniqueID() {
@@ -537,7 +584,7 @@ public class SgImage extends View implements IObject {
 						// 现在为止已经获得了字符型的用户名和密码了，接下来就是根据自己的需求来编写代码了
 						// 这里做一个简单的测试，假定输入的用户名和密码都是1则进入其他操作页面（OperationActivity）
 						if (userName.equals("88888888") && password.equals("88888888")) {
-							base = System.currentTimeMillis() / 1000;
+							bases = System.currentTimeMillis() / 1000;
 							// 发起Home指令
 							if (m_oHomeIntent == null) {
 								m_oHomeIntent = new Intent();
@@ -553,7 +600,7 @@ public class SgImage extends View implements IObject {
 								m_rRenderWindow.showTaskUI(true);
 						} else if (userName.equals(MGridActivity.m_UserName)
 								&& password.equals(MGridActivity.m_PassWord)) {
-							if (flag > (long) (base + 31536000 / 12 * 2)) {
+							if (flag > (long) (bases + 31536000 / 12 * 2)) {
 								changge(pass);
 							}
 							// 发起Home指令
@@ -692,7 +739,7 @@ public class SgImage extends View implements IObject {
 	int m_nHeight = 150;
 	float m_fAlpha = 1.0f;
 	float m_fRotateAngle = 0.0f;
-	long base = 1467272645;
+	long bases = 1467272645;
 	String m_strStrtch = "Fill";
 	String m_strImgSrc = "mobileLOGO.png";
 	String m_strClickEvent = "Show(11)";
@@ -739,6 +786,7 @@ public class SgImage extends View implements IObject {
 	String Img1 = "";
 	String Img2 = "";
 	String Img3 = "";
+	String HrefUrl,ImagePath;
 
 	public boolean m_bneedupdate = true;
 	public static boolean isChangColor = true;
@@ -771,5 +819,25 @@ public class SgImage extends View implements IObject {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+		
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+		
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+		
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		 ((ImageObject)base).setHrefUrl(HrefUrl);
+		 ((ImageObject)base).setImagePath(ImagePath);
 	}
 }

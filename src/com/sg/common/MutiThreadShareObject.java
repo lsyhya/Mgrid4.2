@@ -96,7 +96,7 @@ public class MutiThreadShareObject {
         	stExpression oExpress = mapCmds.get(strKey); 
     
         	if (oExpress == null){
-        		Log.e("threadShare-processCmdCommands","oExpress == null");
+        		//Log.e("threadShare-processCmdCommands","oExpress == null");
         		continue;
         	}
         	Iterator<String> iterValue = oExpress.mapObjectExpress.keySet().iterator();
@@ -155,7 +155,7 @@ public class MutiThreadShareObject {
 				
 				String str=m_mapTriggerCommand.get(strKey);
 				String[]  strs=str.split(",");
-				Log.e("length", strs.length+"");
+				//Log.e("length", strs.length+"");
 				if(strs.length==1)
 				{
 					
@@ -179,7 +179,7 @@ public class MutiThreadShareObject {
 				{
 					if(strs[0].equals(""))
 					{
-						Log.e("length","strs[0]");
+						//Log.e("length","strs[0]");
 						float stop = Float.valueOf(strs[1]);// bindingExpression.strValue;
 						while (iterValue.hasNext())
 						{
@@ -199,7 +199,7 @@ public class MutiThreadShareObject {
 					}else if(strs[1].equals("")) {
 						
 						
-						Log.e("length","strs[1]");
+						//Log.e("length","strs[1]");
 						float start = Float.valueOf(strs[0]);// bindingExpression.strValue;
 						while (iterValue.hasNext())
 						{
@@ -219,7 +219,7 @@ public class MutiThreadShareObject {
 						
 					}else if(!strs[0].equals("")&&!strs[1].equals(""))
 					{
-						Log.e("length","strs[1]+strs[0]");
+						//Log.e("length","strs[1]+strs[0]");
 						float stop = Float.valueOf(strs[1]);
 						float start = Float.valueOf(strs[0]);// bindingExpression.strValue;
 						while (iterValue.hasNext())

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.util.Log;
 import data_model.local_his_signal;
 import data_model.rc_value;
 
@@ -59,7 +60,7 @@ public class local_rc {
 		try{
 			if(mode==0){    //mon=0£»
 				filename = String.valueOf(equipID)+"-"+String.valueOf(signalID)+"#C_Year#"+String.valueOf(year);
-		
+		        Log.e("Äê", filename);
 				local_file l_file = new local_file(); 
 				l_file.has_file(filename, 4);				
 				l_file.read_all_line();
@@ -73,6 +74,7 @@ public class local_rc {
 
 					Dlist.add(rc_class);   
 				}
+				Log.e("Äê", Dlist.size()+"");
 
 			}else if(mode==1)
 			{
@@ -221,8 +223,12 @@ public class local_rc {
 				rcYEAR_class.datetime = String.valueOf(year_p);
 				
 				String cYEAR_filename = name_head+"#C_Year#"+String.valueOf(year_p);
+				String aYEAR_filename = name_head+"#C_Year#0";
 				String bufYEAR_line = rcYEAR_class.to_string();
 				if(!save_rc(cYEAR_filename, bufYEAR_line)){		
+					
+				}
+                if(!save_rc(aYEAR_filename, bufYEAR_line)){		
 					
 				}
 			

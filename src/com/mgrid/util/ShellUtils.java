@@ -177,7 +177,7 @@ public class ShellUtils {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-            SgButton.handler.sendEmptyMessage(1);
+            //SgButton.handler.sendEmptyMessage(1);
            
         }
         return new CommandResult(result, successMsg == null ? null : successMsg.toString(), errorMsg == null ? null
