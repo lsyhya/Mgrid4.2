@@ -38,6 +38,10 @@ import com.mgrid.main.R;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
+import com.sg.web.ChangeNPTSObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
 /**
  * 改号码
@@ -45,7 +49,7 @@ import com.sg.common.LanguageStr;
  * @author Administrator
  * 
  */
-public class SgChangNamePhoneTypeState extends TextView implements IObject {
+public class SgChangNamePhoneTypeState extends TextView implements IObject ,ViewObjectSetCallBack{
 
 	private String Name=LanguageStr.Name;
 	private String Phone=LanguageStr.Phone;
@@ -573,6 +577,8 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 				setBackgroundResource(android.R.drawable.btn_default);
 			}
 		} else if ("FontColor".equals(strName)) {
+			
+			fontColor=strValue;
 			m_cFontColor = Color.parseColor(strValue);
 			this.setTextColor(m_cFontColor);
 			btDelete.setTextColor(m_cFontColor);
@@ -592,6 +598,8 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 		} else if ("ButtonWidthRate".equals(strName)) {
 			m_fButtonWidthRate = Float.parseFloat(strValue);
 		} else if ("Labelorder".equals(strName)) {
+			
+			label=strValue;
 			tvTagorder.setText(strValue);
 		} else if ("FontSize".equals(strName)) {
 			fontSize = Integer.parseInt(strValue);
@@ -625,7 +633,8 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
-
+		m_rRenderWindow.viewList.add(base);
+		
 		rWin.addView(tvTagorder);
 		rWin.addView(etName);
 		rWin.addView(tvName);
@@ -705,6 +714,7 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 	String m_strFontFamily = "微软雅黑";
 	int m_cBackgroundColor = 0xFFFCFCFC;
 	int m_cFontColor = 0xFF000000;
+	String fontColor,label;
 	String m_strContent = "Setting";
 	String m_strCmdExpression = "";
 	boolean m_bIsValueRelateSignal = false;
@@ -727,6 +737,7 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 	TextView tvTagorder = null;
 	Button btDelete = null;
 
+	
 	// 解析XML
 	DocumentBuilderFactory dbf = null;
 	DocumentBuilder db = null;
@@ -744,5 +755,35 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject {
 	// 记录触摸坐标，过滤滑动操作。解决滑动误操作点击问题。
 	public float m_xscal = 0;
 	public float m_yscal = 0;
+    
+	private ViewObjectBase base=new ChangeNPTSObject(); 
+	
+	
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+		
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+		
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+		
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		((ChangeNPTSObject)base).setFontColor(ViewObjectColorUtil.getColor(fontColor));
+		((ChangeNPTSObject)base).setLabelOrder(label);
+		((ChangeNPTSObject)base).setFontSize(fontSize);
+	}
+
+	@Override
+	public void onSetData() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

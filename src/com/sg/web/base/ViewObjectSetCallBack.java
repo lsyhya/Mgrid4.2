@@ -4,4 +4,6 @@ public interface ViewObjectSetCallBack {
 
 	public void onCall();
 	
+	public void onSetData();
+	
 }

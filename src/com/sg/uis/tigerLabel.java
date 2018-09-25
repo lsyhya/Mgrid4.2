@@ -22,6 +22,11 @@ import com.sg.common.SgRealTimeData;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtExpressionParser.stExpression;
+import com.sg.web.LableObject;
+import com.sg.web.TigerLabelObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
 import comm_service.service;
 
@@ -30,7 +35,7 @@ import data_model.ipc_cfg_trigger_value;
 
 //fjw made 告警阀值回显标签  author made by：fjw0312
 //date:2016 4 18
-public class tigerLabel extends TextView implements IObject {
+public class tigerLabel extends TextView implements IObject,ViewObjectSetCallBack {
 
 	public tigerLabel(Context context) {
 		// TODO Auto-generated constructor stub
@@ -81,6 +86,7 @@ public class tigerLabel extends TextView implements IObject {
 		@Override
 		public void addToRenderWindow(MainWindow rWin) {
 			m_rRenderWindow = rWin;
+			m_rRenderWindow.viewList.add(base);
 			rWin.addView(this);
 		}
 
@@ -125,6 +131,7 @@ public class tigerLabel extends TextView implements IObject {
 	        else if ("IsBold".equals(strName))
 	       	 	m_bIsBold = Boolean.parseBoolean(strValue);
 	        else if ("FontColor".equals(strName)) {
+	        	currColor=strValue;
 	       	 	m_cFontColor = Color.parseColor(strValue);
 	       	 	m_cStartFillColor = m_cFontColor;
 	       	 	this.setTextColor(m_cFontColor);     	 	
@@ -345,6 +352,41 @@ public class tigerLabel extends TextView implements IObject {
 		int bt_Condition =1;
 		
 		public boolean m_bneedupdate = true;
+        private ViewObjectBase base=new TigerLabelObject();
+        private String currColor;
+
+
+		@Override
+		public void onCall() {
+			
+			base.setZIndex(m_nZIndex);
+			base.setFromHeight(MainWindow.FORM_HEIGHT);
+			base.setFromWight(MainWindow.FORM_WIDTH);
+			
+			base.setWight(m_nWidth);
+			base.setHeght(m_nHeight);
+			
+			base.setLeft(m_nPosX);
+			base.setTop(m_nPosY);
+			
+			base.setTypeId(m_strID);
+			base.setType(m_strType);
+			
+			base.setCmd(m_strExpression);
+			
+			((TigerLabelObject)base).setText(m_strContent);
+			((TigerLabelObject)base).setTextSize(m_fFontSize);
+			((TigerLabelObject)base).setTextColor(ViewObjectColorUtil.getColor(currColor));
+			
+		}
+
+
+		@Override
+		public void onSetData() {
+			
+			base.setValue(m_strContent);
+			
+		}
 }
 
 

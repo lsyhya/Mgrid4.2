@@ -11,11 +11,28 @@ public class ViewObjectBase {
     int    ZIndex;  //显示顺序  越大越显示在后层；
     float  fromWight;//初始宽度
     float  fromHeight;//初始高度
-    
+    String value;
+    String cmd;
 
    
     
  
+
+	public String getCmd() {
+		return cmd;
+	}
+
+	public void setCmd(String cmd) {
+		this.cmd = cmd;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
 
 	public float getFromWight() {
 		return fromWight;

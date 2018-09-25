@@ -187,6 +187,7 @@ public class SgLabel extends TextView implements IObject ,ViewObjectSetCallBack{
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
 		rWin.addView(this);
+		m_rRenderWindow.viewList.add(base);
 		// rWin.addView(shimmerTv);
 	}
 
@@ -559,6 +560,8 @@ public class SgLabel extends TextView implements IObject ,ViewObjectSetCallBack{
 	@Override
 	public void onCall() {
 		
+		
+		
 		base.setZIndex(m_nZIndex);
 		base.setFromHeight(MainWindow.FORM_HEIGHT);
 		base.setFromWight(MainWindow.FORM_WIDTH);
@@ -572,10 +575,21 @@ public class SgLabel extends TextView implements IObject ,ViewObjectSetCallBack{
 		base.setTypeId(m_strID);
 		base.setType(m_strType);
 		
+		base.setCmd(m_strExpression);
+		
 		((LableObject)base).setText(c_Content);
 		((LableObject)base).setTextSize(m_fFontSize);
 		((LableObject)base).setTextColor("#"+currColor.substring(3, currColor.length()));
 		
+		
+		
+	}
+
+	@Override
+	public void onSetData() {
+		
+		base.setValue(m_strContent);
+		//((LableObject)base).setTextColor(m_cFontColor);
 	}
 	
 

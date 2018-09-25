@@ -158,6 +158,8 @@ public class SgTable extends View implements IObject, ViewObjectSetCallBack {
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
 
+		m_rRenderWindow.viewList.add(base);
+		
 		m_vTableBody.setBackgroundColor(m_cTableBackgroundColor);
 		m_vTableTitleClo.setBackgroundColor(m_cHeadBackgroundColor);
 		m_vTableTitleRow.setBackgroundColor(m_cFirstColBackgroundColor);
@@ -346,6 +348,7 @@ public class SgTable extends View implements IObject, ViewObjectSetCallBack {
 	@Override
 	public void onCall() {
 
+		
 		base.setZIndex(m_nZIndex);
 		base.setFromHeight(MainWindow.FORM_HEIGHT);
 		base.setFromWight(MainWindow.FORM_WIDTH);
@@ -364,5 +367,11 @@ public class SgTable extends View implements IObject, ViewObjectSetCallBack {
 		((TableObject) base).setFirstCol(m_fFirstColRatio);
 		((TableObject) base).setFirstRow(m_fFirstRowRatio);
 		((TableObject) base).setLineColor(lineColor);
+	}
+
+	@Override
+	public void onSetData() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -23,6 +23,9 @@ import com.sg.common.MyAdapter;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtTable;
 import com.sg.common.UtTableAdapter;
+import com.sg.web.SaveEquiptObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtExpressionParser.stExpression;
 
@@ -61,7 +64,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 // 信号历史数据 SaveEquipt
 // author :fjw0312
 // time:2015 11 02
-public class SaveEquipt extends UtTable implements IObject {
+public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack {
 
 	// 方便中英文切换
 	private String DeviceName = LanguageStr.DeviceName;
@@ -454,6 +457,7 @@ public class SaveEquipt extends UtTable implements IObject {
 			rWin.addView(m_title[i]);
 		}
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 		// view_button画布添加到窗口
 		rWin.addView(view_Receive);
@@ -750,4 +754,30 @@ public class SaveEquipt extends UtTable implements IObject {
 
 	private ArrayList<String> nameList = new ArrayList<String>();
 	private boolean isFirst = true;
+	private ViewObjectBase base=new SaveEquiptObject();
+
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+		
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+		
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+		
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+	}
+
+
+	@Override
+	public void onSetData() {
+		// TODO Auto-generated method stub
+		
+	}
 }

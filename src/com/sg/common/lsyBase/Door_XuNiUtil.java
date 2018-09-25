@@ -64,31 +64,41 @@ public class Door_XuNiUtil {
 
 				Door_XuNiCallBack back = backMap.get(index);
 
+				//Log.e("tag", id+"::"+pw+"::"+index);
 				if (id.equals("") || pw.equals("")) {
 
+					
 					if (back != null) {
 						
 						back.onFail(3);
-						backMap.get(-1).onFail(2);
+						
 						
 					}
+					
+					backMap.get(-1).onFail(2);
 
 				} else {
 
-					Map<String, String> map = new HashMap<String, String>();
-					map.put("User" + index, id);
-					map.put("PassWord" + index, pw);
-
-					User user;
-					user = new User(id, pw, index + "");
-					MGridActivity.userManager.addUser(index, user);
-
-					saveData("SysConf", map, false);
+				   
 
 					if (back != null)
 					{
+						
+						Map<String, String> map = new HashMap<String, String>();
+						map.put("User" + index, id);
+						map.put("PassWord" + index, pw);
+
+						User user;
+						user = new User(id, pw, index + "");
+						MGridActivity.userManager.addUser(index, user);
+
+						saveData("SysConf", map, false);
+						
 						backMap.get(-1).onSuccess(2,id,pw);
 						back.onSuccess(2,id,pw);	
+					}else
+					{
+						backMap.get(-1).onFail(2);
 					}
 
 				}
@@ -111,7 +121,7 @@ public class Door_XuNiUtil {
 			public void run() {
 				
 				
-				
+				//Log.e("tag", id+"::"+pw+"::"+index);
 				
 				Door_XuNiCallBack back = backMap.get(index);
 				
@@ -121,10 +131,11 @@ public class Door_XuNiUtil {
 					
 					if (back != null) {
 						
-						back.onFail(3);
-						backMap.get(-1).onFail(3);
+						back.onFail(3);						
 						
 					}
+					
+					backMap.get(-1).onFail(3);
 					
 					return ;
 					
@@ -132,20 +143,21 @@ public class Door_XuNiUtil {
 				
 
 				
-				Map<String, String> map = new HashMap<String, String>();
-
-				map.put("User" + index, id);
-				map.put("PassWord" + index, pw);
-
-				saveData("SysConf", map, true);
-
-				MGridActivity.userManager.deleteUser(index);
+				
 
 				if (back != null)
 				{
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("User" + index, id);
+					map.put("PassWord" + index, pw);
+					saveData("SysConf", map, true);
+					MGridActivity.userManager.deleteUser(index);					
 					back.onSuccess(0,id,pw);
 					backMap.get(-1).onSuccess(3,id,pw);
 					
+				}else
+				{
+					backMap.get(-1).onFail(3);
 				}
 			}
 		});
@@ -188,6 +200,8 @@ public class Door_XuNiUtil {
 	}
 
 	public void openDoor(String uid, String pw, int index) {
+		
+		
 		if (uid != null) {
 
 			User user = MGridActivity.userManager.getUserManaget().get(index);

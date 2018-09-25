@@ -19,9 +19,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import com.sg.common.SgRealTimeData;
+import com.sg.web.AlarmLightObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
 
 /** ¸æ¾¯µÆ */
-public class SgAlarmLight extends View implements IObject {
+public class SgAlarmLight extends View implements IObject,ViewObjectSetCallBack {
 	public SgAlarmLight(Context context) {  
         super(context); 
         this.setOnTouchListener(new OnTouchListener() {
@@ -120,6 +123,7 @@ public class SgAlarmLight extends View implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 	}
 	
@@ -299,4 +303,32 @@ public class SgAlarmLight extends View implements IObject {
 	Rect m_rBBox = null;
 	
 	public boolean m_bneedupdate = true;
+    private ViewObjectBase base=new AlarmLightObject();
+	
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+		
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+		
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+		
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		base.setCmd(m_strEventLevelExpression);
+		base.setValue(m_nLevel+"");
+	}
+
+	@Override
+	public void onSetData() {
+		
+		base.setValue(m_nLevel+"");
+		
+	}
 }

@@ -188,7 +188,15 @@ public class DoorXuNiManager implements DoorManagerBase,DoorCallBack{
 			} else if (recive.startsWith("OPEN")) {
 
 				String bean = recive.replace("OPEN", "");
-                openDoor(bean);
+				if (!bean.equals("")) {
+
+					openDoor(bean);
+
+				} else {
+
+					nDoorView.callBackResult(false, "Open");
+				}
+                
 
 			} else if (recive.startsWith("PROMISE")) {
 

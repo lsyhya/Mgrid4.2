@@ -254,6 +254,7 @@ public class SgImage extends View implements IObject ,ViewObjectSetCallBack{
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 	}
 
@@ -824,6 +825,7 @@ public class SgImage extends View implements IObject ,ViewObjectSetCallBack{
 	@Override
 	public void onCall() {
 		
+	
 		base.setZIndex(m_nZIndex);
 		base.setFromHeight(MainWindow.FORM_HEIGHT);
 		base.setFromWight(MainWindow.FORM_WIDTH);
@@ -839,5 +841,11 @@ public class SgImage extends View implements IObject ,ViewObjectSetCallBack{
 		
 		 ((ImageObject)base).setHrefUrl(HrefUrl);
 		 ((ImageObject)base).setImagePath(ImagePath);
+	}
+
+	@Override
+	public void onSetData() {
+		// TODO Auto-generated method stub
+		
 	}
 }

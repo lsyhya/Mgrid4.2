@@ -21,9 +21,14 @@ import com.mgrid.main.MainWindow;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
 import com.sg.common.UtTable;
+import com.sg.web.EventListObject;
+import com.sg.web.SignalListObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
 /** 信号 */
-public class SgSignalList extends UtTable implements IObject {
+public class SgSignalList extends UtTable implements IObject,ViewObjectSetCallBack {
 
 	
 	//方便中英文切换
@@ -170,6 +175,7 @@ public class SgSignalList extends UtTable implements IObject {
 		*/
 		
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 	}
 
@@ -220,10 +226,12 @@ public class SgSignalList extends UtTable implements IObject {
         }
         else if ("ForeColor".equals(strName)) {
         	m_cForeColor = Color.parseColor(strValue);
+        	foreColor=strValue;
         	this.setFontColor(m_cForeColor);
         }
         else if ("BackgroundColor".equals(strName)) {
         	m_cBackgroundColor = Color.parseColor(strValue);
+        	backgroundColor=strValue;
         	this.setBackgroundColor(m_cBackgroundColor);
         }
         else if ("BorderColor".equals(strName)) {
@@ -231,9 +239,11 @@ public class SgSignalList extends UtTable implements IObject {
         }
         else if ("OddRowBackground".equals(strName)) {
         	m_cOddRowBackground = Color.parseColor(strValue);
+        	oddRowBackground=strValue;
         }
         else if ("EvenRowBackground".equals(strName)) {
         	m_cEvenRowBackground = Color.parseColor(strValue);
+        	evenRowBackground=strValue;
         }
 	}
 
@@ -417,4 +427,39 @@ public class SgSignalList extends UtTable implements IObject {
 	ArrayList<String> m_sortedarray = null;
 	List<String> lstTitles = null;
 	List<List<String>> lstContends = null;
+	private ViewObjectBase base=new SignalListObject();
+
+	String backgroundColor="";
+	String foreColor="";
+	String evenRowBackground="";
+	String oddRowBackground="";
+
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+
+		((SignalListObject)base).setBackgroundColor(ViewObjectColorUtil.getColor(backgroundColor));
+		((SignalListObject)base).setForeColor(ViewObjectColorUtil.getColor(foreColor));
+		((SignalListObject)base).setEvenRowBackground(ViewObjectColorUtil.getColor(evenRowBackground));
+		((SignalListObject)base).setOddRowBackground(ViewObjectColorUtil.getColor(oddRowBackground));
+		
+	}
+
+	@Override
+	public void onSetData() {
+		// TODO Auto-generated method stub
+		
+	}
 }

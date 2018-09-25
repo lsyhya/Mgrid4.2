@@ -21,8 +21,12 @@ import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.web.TriggerSetterObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
-public class SgTriggerSetter extends TextView implements IObject {
+public class SgTriggerSetter extends TextView implements IObject,ViewObjectSetCallBack{
 	public SgTriggerSetter(Context context) {
 		super(context);
 		this.setClickable(true);
@@ -179,7 +183,7 @@ public class SgTriggerSetter extends TextView implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
-
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(m_oEditText);
 		rWin.addView(this);
 	}
@@ -225,6 +229,7 @@ public class SgTriggerSetter extends TextView implements IObject {
 				m_cBackgroundColor = Color.parseColor(strValue);
 			}
 		} else if ("FontColor".equals(strName)) {
+			fontColor=strValue;
 			m_cFontColor = Color.parseColor(strValue);
 			this.setTextColor(m_cFontColor);
 		}  else if ("FontSize".equals(strName)) {
@@ -384,8 +389,39 @@ public class SgTriggerSetter extends TextView implements IObject {
 	InputMethodManager imm = null;
 	EditText m_oEditText = null;
 	EditText end_oEditText = null;
-
+    String fontColor; 
+    
+	private ViewObjectBase base=new TriggerSetterObject();
+	
 	// 记录触摸坐标，过滤滑动操作。解决滑动误操作点击问题。
 	public float m_xscal = 0;
 	public float m_yscal = 0;
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+		
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+		
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+		
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		
+		((TriggerSetterObject)base).setContent(m_strContent);
+		((TriggerSetterObject)base).setFontColor(ViewObjectColorUtil.getColor(fontColor));
+		((TriggerSetterObject)base).setFontSize(m_fFontSize);
+	}
+
+	@Override
+	public void onSetData() {
+	
+		
+		
+	}
 }

@@ -3,8 +3,9 @@ package com.mgrid.main;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
-import com.mgrid.main.service.andservice.IndexHandler;
 import com.mgrid.util.NetUtils;
+import com.sg.web.handler.IndexHandler;
+import com.sg.web.handler.SendDataHandler;
 import com.yanzhenjie.andserver.AndServer;
 import com.yanzhenjie.andserver.Server;
 import com.yanzhenjie.andserver.filter.HttpCacheFilter;
@@ -55,7 +56,8 @@ public class MyAndSerVice extends Service{
 	                .port(8080)
 	                .timeout(15, TimeUnit.SECONDS)
 	                .website(new StorageWebsite(file.getAbsolutePath()))
-	                .registerHandler("/test", new IndexHandler())                
+	                .registerHandler("/test", new IndexHandler())   
+	                .registerHandler("/getdata", new SendDataHandler())
 	                .filter(new HttpCacheFilter())
 	                .listener(mListener)
 	                .build();
@@ -76,8 +78,12 @@ public class MyAndSerVice extends Service{
     private Server.ServerListener mListener = new Server.ServerListener() {
         @Override
         public void onStarted() {
-            String hostAddress = mServer.getInetAddress().getHostAddress();
-            ServerManager.serverStart(MyAndSerVice.this, hostAddress);
+           // String hostAddress = mServer.getInetAddress().getHostAddress();
+        	if(mServer==null)
+        	{
+        		Log.e("webService", "Ê§°Ü");
+        	}
+            ServerManager.serverStart(MyAndSerVice.this, NetUtils.getLocalIPAddress().getHostAddress());
         }
 
         @Override
@@ -112,8 +118,8 @@ public class MyAndSerVice extends Service{
     private void startServer() {
         if (mServer != null) {
             if (mServer.isRunning()) {
-                String hostAddress = mServer.getInetAddress().getHostAddress();
-                ServerManager.serverStart(MyAndSerVice.this, hostAddress);
+               // String hostAddress = mServer.getInetAddress().getHostAddress();
+                ServerManager.serverStart(MyAndSerVice.this, NetUtils.getLocalIPAddress().getHostAddress());
             } else {
                 mServer.startup();
             }

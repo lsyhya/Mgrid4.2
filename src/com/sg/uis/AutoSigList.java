@@ -21,13 +21,17 @@ import android.widget.RadioButton;
 import com.mgrid.main.MainWindow;
 import com.sg.common.IObject;
 import com.sg.common.SgRealTimeData;
+import com.sg.web.AutoSigListObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
 /** 动态后台实时信号曲线（可绑定一个式子结果） **/
 // author：fjw0312
 // made time：2015.12.4
 // 该控件采集
 @SuppressLint({ "UseSparseArrays", "DrawAllocation", "SimpleDateFormat" })
-public class AutoSigList extends View implements IObject {
+public class AutoSigList extends View implements IObject ,ViewObjectSetCallBack{
 
 	public AutoSigList(Context context) {
 		super(context);
@@ -272,6 +276,7 @@ public class AutoSigList extends View implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 		for (int i = 0; i < ridobuttons.length; i++)
 			rWin.addView(ridobuttons[i]);
@@ -304,9 +309,11 @@ public class AutoSigList extends View implements IObject {
 		} else if ("Expression".equals(strName)) {
 			m_strExpression = strValue;
 		} else if ("FontSize".equals(strName)) {
+		
 			m_fFontSize = Float.parseFloat(strValue);
 			this.setFontSize(m_fFontSize);
 		} else if ("FontColor".equals(strName)) {
+			fontColor=strValue;
 			m_nFontColor = Color.parseColor(strValue);
 			this.setFontColor(m_nFontColor);
 			for (int i = 0; i < 4; i++) {
@@ -314,6 +321,7 @@ public class AutoSigList extends View implements IObject {
 			}
 			
 		} else if ("LineColor".equals(strName)) {
+			lineColor=strValue;
 			m_nLineColor = Color.parseColor(strValue);
 			this.setLineColor(m_nLineColor);
 		} else if ("BackgroundColor".equals(strName)) {
@@ -625,4 +633,36 @@ public class AutoSigList extends View implements IObject {
 	private String old_Year = "";
 	
 	private int old_time;
+	private ViewObjectBase base=new AutoSigListObject();
+	private String fontColor,lineColor;
+
+	@Override
+	public void onCall() {
+		
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		((AutoSigListObject)base).setFontColor(ViewObjectColorUtil.getColor(fontColor));
+		((AutoSigListObject)base).setFontSize(m_fFontSize);
+		((AutoSigListObject)base).setLineColor(ViewObjectColorUtil.getColor(lineColor));
+
+		
+	}
+
+	@Override
+	public void onSetData() {
+		// TODO Auto-generated method stub
+		
+	}
 }

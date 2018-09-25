@@ -21,8 +21,12 @@ import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.web.YTParameterObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
-public class SgYTParameter extends TextView implements IObject {
+public class SgYTParameter extends TextView implements IObject,ViewObjectSetCallBack {
 	public SgYTParameter(Context context) {
 		super(context); 
 		this.setClickable(true);
@@ -185,7 +189,7 @@ public class SgYTParameter extends TextView implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
-		
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(m_oEditText);
 		rWin.addView(this);
 	}
@@ -225,6 +229,9 @@ public class SgYTParameter extends TextView implements IObject {
         else if ("IsBold".equals(strName))
        	 	m_bIsBold = Boolean.parseBoolean(strValue);
         else if ("BackgroundColor".equals(strName)) 
+        {
+        	
+        	  fontColor=strValue;
         	  if("#FF000000".equals(strValue))
 			    {
         		    setBackgroundResource(R.drawable.bg_shadow);        	
@@ -233,6 +240,7 @@ public class SgYTParameter extends TextView implements IObject {
 			    {
 			    	m_cBackgroundColor = Color.parseColor(strValue);
 			    }
+        }
         else if ("FontColor".equals(strName)) {
 	       	 m_cFontColor = Color.parseColor(strValue);
 	       	 this.setTextColor(m_cFontColor);
@@ -393,6 +401,7 @@ public class SgYTParameter extends TextView implements IObject {
 	float m_fAlpha = 1.0f;
 	boolean m_bIsBold = false;
 	String m_strFontFamily = "微软雅黑";
+	String fontColor;
 	int m_cBackgroundColor = 0xFFFCFCFC;
 	int m_cFontColor = 0xFF000000;
 	String m_strContent = "Setting";
@@ -410,4 +419,34 @@ public class SgYTParameter extends TextView implements IObject {
 	// 记录触摸坐标，过滤滑动操作。解决滑动误操作点击问题。
 	public float m_xscal = 0;
 	public float m_yscal = 0;
+	
+	
+	private ViewObjectBase base=new YTParameterObject();
+	
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+		
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+		
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+		
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		((YTParameterObject)base).setContent(m_strContent);
+		((YTParameterObject)base).setFontColor(ViewObjectColorUtil.getColor(fontColor));
+		
+	}
+
+	@Override
+	public void onSetData() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -111,16 +111,16 @@ public class MGridActivity extends Activity {
 		userManager = new UserManager();
 		ViewJosnObject=new HashMap<>();
 
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// å¼ºåˆ¶ä¸ºæ¨ªå±
-		mImm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);// è¾“å…¥æ³•çª—å£
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// Ç¿ÖÆÎªºáÆÁ
+		mImm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);// ÊäÈë·¨´°¿Ú
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-				WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);// å¯¹è¯¥windowè¿›è¡Œç¡¬ä»¶åŠ é€Ÿ.
-		// è®¾ç½®å±å¹•å®½é«˜
+				WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);// ¶Ô¸Ãwindow½øĞĞÓ²¼ş¼ÓËÙ.
+		// ÉèÖÃÆÁÄ»¿í¸ß
 		mContainer = new ContainerView(this);
 		MainWindow.SCREEN_WIDTH = 1024;
 		MainWindow.SCREEN_HEIGHT = 768;
 
-		setBroadcastReceiver(); // æ³¨å†Œå¹¿æ’­
+		setBroadcastReceiver(); // ×¢²á¹ã²¥
 		if (parseMgridIni()) {
 			// setProgressDialog();
 			if (!SIP.equals("")) {
@@ -136,24 +136,24 @@ public class MGridActivity extends Activity {
 
 	}
 
-	// å¹¿æ’­æ³¨å†Œ
+	// ¹ã²¥×¢²á
 	private void setBroadcastReceiver() {
 		final IntentFilter filter = new IntentFilter();
-		filter.addAction(Intent.ACTION_SCREEN_ON);// ç›‘å¬å±å¹• å¼€
-		filter.addAction(Intent.ACTION_SCREEN_OFF);// ç›‘å¬å±å¹• å…³
-		// é€šè¿‡å¹¿æ’­æ¥å‘é€æ¶ˆæ¯
+		filter.addAction(Intent.ACTION_SCREEN_ON);// ¼àÌıÆÁÄ» ¿ª
+		filter.addAction(Intent.ACTION_SCREEN_OFF);// ¼àÌıÆÁÄ» ¹Ø
+		// Í¨¹ı¹ã²¥À´·¢ËÍÏûÏ¢
 		BroadcastReceiver BroastcastScreenOn = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context arg0, Intent arg1) {
 
-				if (arg1.getAction().equals(Intent.ACTION_SCREEN_ON)) { // ç›‘å¬å±å¹•äº®
+				if (arg1.getAction().equals(Intent.ACTION_SCREEN_ON)) { // ¼àÌıÆÁÄ»ÁÁ
 
-					// æ‹ç…§åŠŸèƒ½æ˜¯å¦å¼€å¯
+					// ÅÄÕÕ¹¦ÄÜÊÇ·ñ¿ªÆô
 					if (m_bTakePhoto) {
-						// æ‰“å¼€æ‹ç…§å·¥å…·
+						// ´ò¿ªÅÄÕÕ¹¤¾ß
 						// final CameraUtils cameraUtils = new CameraUtils(getApplicationContext());
 						// cameraUtils.openCamera();
-						// å¯åŠ¨æ‹ç…§é¡µé¢
+						// Æô¶¯ÅÄÕÕÒ³Ãæ
 						isNOChangPage = false;
 						Intent intent = new Intent(MGridActivity.this, CameraActivity.class);
 						intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -162,15 +162,15 @@ public class MGridActivity extends Activity {
 					}
 				}
 
-				if (arg1.getAction().equals(Intent.ACTION_SCREEN_OFF)) {// ç›‘å¬å±å¹•ç†„ç­
+				if (arg1.getAction().equals(Intent.ACTION_SCREEN_OFF)) {// ¼àÌıÆÁÄ»Ï¨Ãğ
 
-					if (!isLoading && isPlaygif) {// åˆ¤æ–­æ˜¯å¦åŠ è½½å®Œæˆå¹¶ä¸”å¼€å¯å±ä¿gifåŠŸèƒ½
+					if (!isLoading && isPlaygif) {// ÅĞ¶ÏÊÇ·ñ¼ÓÔØÍê³É²¢ÇÒ¿ªÆôÆÁ±£gif¹¦ÄÜ
 						onPageChange("gif.xml");
 						if (isChangGif) {
 							SgImage.isChangColor = false;
 							acquireWakeLock();
 						}
-					} else if (!isLoading && isPlaymv) {// åˆ¤æ–­æ˜¯å¦åŠ è½½å®Œæˆå¹¶ä¸”å¼€å¯å±ä¿mvåŠŸèƒ½
+					} else if (!isLoading && isPlaymv) {// ÅĞ¶ÏÊÇ·ñ¼ÓÔØÍê³É²¢ÇÒ¿ªÆôÆÁ±£mv¹¦ÄÜ
 						if (isChangGif) {
 							if (isSleep) {
 								SgImage.isChangColor = true;
@@ -198,7 +198,7 @@ public class MGridActivity extends Activity {
 		} catch (Exception e) {
 			iniReader = null;
 			e.printStackTrace();
-			new AlertDialog.Builder(this).setTitle("é”™è¯¯").setMessage("è¯»å–é…ç½®æ–‡ä»¶ [ MGrid.ini ] å¼‚å¸¸ï¼Œåœæ­¢åŠ è½½ï¼\nè¯¦æƒ…ï¼š" + e.toString())
+			new AlertDialog.Builder(this).setTitle("´íÎó").setMessage("¶ÁÈ¡ÅäÖÃÎÄ¼ş [ MGrid.ini ] Òì³££¬Í£Ö¹¼ÓÔØ£¡\nÏêÇé£º" + e.toString())
 					.show();
 		}
 
@@ -304,7 +304,7 @@ public class MGridActivity extends Activity {
 				}
 
 			} catch (Exception e2) {
-				Toast.makeText(this, "Mgrid.iniæ–‡ä»¶ä¸­SaveTimeå±æ€§è®¾ç½®å¼‚å¸¸,å·²ç»æ¢å¤é»˜è®¤å€¼", 1000).show();
+				Toast.makeText(this, "Mgrid.iniÎÄ¼şÖĞSaveTimeÊôĞÔÉèÖÃÒì³£,ÒÑ¾­»Ö¸´Ä¬ÈÏÖµ", 1000).show();
 				SaveEquipt.save_time = 24 * 60 * 60;
 			}
 
@@ -330,11 +330,11 @@ public class MGridActivity extends Activity {
 		}
 
 		// m_pageUserName = iniReader.getValue("SysConf", "MaskPageUser", "admin");
-		// è·å–ç”¨æˆ·ç®¡ç†æ–¹å¼
+		// »ñÈ¡ÓÃ»§¹ÜÀí·½Ê½
 		m_UserAway = Integer.parseInt(iniReader.getValue("SysConf", "UserAway", "0"));
-		// è·å–ç”¨æˆ·é¡µé¢ä¸ªæ•°
+		// »ñÈ¡ÓÃ»§Ò³Ãæ¸öÊı
 		m_MaskCount = Integer.parseInt(iniReader.getValue("SysConf", "MaskCount", "0"));
-		// è·å–æ§åˆ¶æ¨¡å¼
+		// »ñÈ¡¿ØÖÆÄ£Ê½
 		m_ControlAway = Integer.parseInt(iniReader.getValue("SysConf", "ControlAway", "0"));
 
 		if (m_MaskCount == 0) {
@@ -446,18 +446,18 @@ public class MGridActivity extends Activity {
 
 			if (m_bTakeEMail == true && (mailProtocol == null || myEmailSMTPHost == null || myEmailAccount == null
 					|| myEmailPassword == null || receiveMailAccount == null || Subject == null || fromName == null)) {
-				Toast.makeText(getApplicationContext(), "iniæ–‡ä»¶é‚®ç®±å¡«å†™ä¸è§„èŒƒ", 1000).show();
+				Toast.makeText(getApplicationContext(), "iniÎÄ¼şÓÊÏäÌîĞ´²»¹æ·¶", 1000).show();
 				m_bTakeEMail = false;
 			}
 
 		} catch (Exception e) {
-			mailProtocol = "smtp"; // åè®®
+			mailProtocol = "smtp"; // Ğ­Òé
 			myEmailSMTPHost = "smtp.qq.com";
-			myEmailAccount = "453938089@qq.com"; // å‘é€é‚®ç®±è´¦å·
-			myEmailPassword = "sgipglsayogvcaih"; // æˆæƒç 
-			receiveMailAccount = "leisiyang521@163.com"; // æ¥æ”¶é‚®ç®±è´¦å·
-			Subject = "æ ‡é¢˜"; // é‚®ç®±æ ‡é¢˜
-			fromName = "å‘ä»¶äººåç§°"; // å‘ä»¶äººåç§°
+			myEmailAccount = "453938089@qq.com"; // ·¢ËÍÓÊÏäÕËºÅ
+			myEmailPassword = "sgipglsayogvcaih"; // ÊÚÈ¨Âë
+			receiveMailAccount = "leisiyang521@163.com"; // ½ÓÊÕÓÊÏäÕËºÅ
+			Subject = "±êÌâ"; // ÓÊÏä±êÌâ
+			fromName = "·¢¼şÈËÃû³Æ"; // ·¢¼şÈËÃû³Æ
 		}
 
 		CFGTLS.BITMAP_HIGHQUALITY = m_bBitmapHIghQuality;
@@ -541,7 +541,7 @@ public class MGridActivity extends Activity {
 	}
 	
 
-	private boolean parsePageList() // è§£æPagelist
+	private boolean parsePageList() // ½âÎöPagelist
 	{
 		String line = "";
 		MainWindow page = null;
@@ -551,7 +551,7 @@ public class MGridActivity extends Activity {
 			reader = new BufferedReader(new InputStreamReader(
 					new FileInputStream(
 							Environment.getExternalStorageDirectory().getPath() + m_sRootFolder + "pagelist"),
-					"gb2312")); // è·å–é¡µé¢åˆ—è¡¨
+					"gb2312")); // »ñÈ¡Ò³ÃæÁĞ±í
 
 			DataGetter.bIsLoading = true;
 			for (int i = 0; i < 1024; i++) {
@@ -559,7 +559,7 @@ public class MGridActivity extends Activity {
 				if ((line = reader.readLine()) == null)
 					break;
 
-				line = line.trim(); // ç§»é™¤ä¸¤è¾¹çš„ç©ºç™½å­—ç¬¦
+				line = line.trim(); // ÒÆ³ıÁ½±ßµÄ¿Õ°××Ö·û
 				if (line.isEmpty())
 					continue;
 
@@ -570,8 +570,8 @@ public class MGridActivity extends Activity {
 				}
 
 				page = new MainWindow(this);
-				page.m_strRootFolder = m_sRootFolder;// è·¯å¾„
-				page.m_bHasRandomData = m_bHasRandomData;// æ˜¯å¦ä½¿ç”¨éšæœºæ•°æ®
+				page.m_strRootFolder = m_sRootFolder;// Â·¾¶
+				page.m_bHasRandomData = m_bHasRandomData;// ÊÇ·ñÊ¹ÓÃËæ»úÊı¾İ
 				page.loadPage(line);
 				page.active(false);
 
@@ -584,7 +584,7 @@ public class MGridActivity extends Activity {
 			reader.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			new AlertDialog.Builder(this).setTitle("é”™è¯¯").setMessage("è¯»å–é…ç½®æ–‡ä»¶ [ pagelist ] å¼‚å¸¸ï¼Œåœæ­¢åŠ è½½ï¼\nè¯¦æƒ…ï¼š" + e.toString())
+			new AlertDialog.Builder(this).setTitle("´íÎó").setMessage("¶ÁÈ¡ÅäÖÃÎÄ¼ş [ pagelist ] Òì³££¬Í£Ö¹¼ÓÔØ£¡\nÏêÇé£º" + e.toString())
 					.show();
 
 			return false;
@@ -592,7 +592,7 @@ public class MGridActivity extends Activity {
 
 		m_oSgSgRenderManager = m_oViewGroups.get(m_sMainPage);
 		if (null == m_oSgSgRenderManager) {
-			new AlertDialog.Builder(this).setTitle("é”™è¯¯").setMessage("æ‰¾ä¸åˆ°ä¸»é¡µ [ " + m_sMainPage + " ] ï¼").show();
+			new AlertDialog.Builder(this).setTitle("´íÎó").setMessage("ÕÒ²»µ½Ö÷Ò³ [ " + m_sMainPage + " ] £¡").show();
 			return false;
 		}
 		if (0 != mContainer.getChildCount() && null != m_oSgSgRenderManager) {
@@ -606,12 +606,12 @@ public class MGridActivity extends Activity {
 			m_oSgSgRenderManager.setVisibility(View.VISIBLE);
 			// m_oSgSgRenderManager.requestFocus();
 
-			requestWindowFeature(Window.FEATURE_NO_TITLE); // å–æ¶ˆæ ‡é¢˜
-			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);// å…¨å±è®¾ç½®
+			requestWindowFeature(Window.FEATURE_NO_TITLE); // È¡Ïû±êÌâ
+			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);// È«ÆÁÉèÖÃ
 			getWindow().setFlags(
 					WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
 					WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-			// Windowçº§æ§åˆ¶ç¡¬ä»¶åŠ é€Ÿ
+			// Window¼¶¿ØÖÆÓ²¼ş¼ÓËÙ
 			// setTheme(android.R.style.Theme_Black_NoTitleBar_Fullscreen);
 
 			setContentView(mContainer);
@@ -619,7 +619,7 @@ public class MGridActivity extends Activity {
 
 			showTaskUI(false);
 
-			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);// è§£å†³androidè½¯é”®ç›˜æŒ¡ä½è¾“å…¥æ¡†é—®é¢˜ï¼
+			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);// ½â¾öandroidÈí¼üÅÌµ²×¡ÊäÈë¿òÎÊÌâ£¡
 		} else {
 
 			requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -633,7 +633,7 @@ public class MGridActivity extends Activity {
 		return true;
 	}
 
-	// åˆ¤æ–­ç¨‹åºæ˜¯å¦è¿›å…¥åå°
+	// ÅĞ¶Ï³ÌĞòÊÇ·ñ½øÈëºóÌ¨
 
 	private boolean isAppOnForeground() {
 		ActivityManager activityManager = (ActivityManager) getApplicationContext()
@@ -683,7 +683,7 @@ public class MGridActivity extends Activity {
 						isLoading = false;
 
 						
-						System.out.println("æ‰€ç”¨æ—¶é—´ï¼š" + (System.currentTimeMillis() - starttime));
+						System.out.println("ËùÓÃÊ±¼ä£º" + (System.currentTimeMillis() - starttime));
 
 						return;
 					}
@@ -704,8 +704,8 @@ public class MGridActivity extends Activity {
 						e.printStackTrace();
 						tmp_flag_loading = false;
 						DataGetter.bIsLoading = false;
-						new AlertDialog.Builder(MGridActivity.this).setTitle("é”™è¯¯")
-								.setMessage("åŠ è½½é¡µé¢ [ " + pagename + " ] å‡ºç°å¼‚å¸¸ï¼Œåœæ­¢åŠ è½½ï¼\nè¯¦æƒ…ï¼š" + e.toString()).show();
+						new AlertDialog.Builder(MGridActivity.this).setTitle("´íÎó")
+								.setMessage("¼ÓÔØÒ³Ãæ [ " + pagename + " ] ³öÏÖÒì³££¬Í£Ö¹¼ÓÔØ£¡\nÏêÇé£º" + e.toString()).show();
 						return;
 					}
 
@@ -729,7 +729,7 @@ public class MGridActivity extends Activity {
 						isLoading = false;
 						isNOChangPage = true;
 						
-						System.out.println("æ‰€ç”¨æ—¶é—´ï¼š" + (System.currentTimeMillis() - starttime));
+						System.out.println("ËùÓÃÊ±¼ä£º" + (System.currentTimeMillis() - starttime));
 					}
 				}
 			} // end of run
@@ -744,12 +744,12 @@ public class MGridActivity extends Activity {
 		
 	}
 
-	// å¾—åˆ°æœºå™¨çš„IPåœ°å€
+	// µÃµ½»úÆ÷µÄIPµØÖ·
 	public static String getLocalIP() {
 		String IP = null;
 		StringBuilder IPStringBuilder = new StringBuilder();
 		try {
-			// NetworkInterfaceè¡¨ç¤ºç‰©ç†ç¡¬ä»¶å’Œè™šæ‹Ÿåœ°å€
+			// NetworkInterface±íÊ¾ÎïÀíÓ²¼şºÍĞéÄâµØÖ·
 			Enumeration<NetworkInterface> networkInterfaceEnumeration = NetworkInterface.getNetworkInterfaces();
 			while (networkInterfaceEnumeration.hasMoreElements()) {
 				NetworkInterface networkInterface = networkInterfaceEnumeration.nextElement();
@@ -770,7 +770,7 @@ public class MGridActivity extends Activity {
 		return IP;
 	}
 
-	// ä¿®æ”¹å¯†ç 
+	// ĞŞ¸ÄÃÜÂë
 	public static void changPassWord(String type, String newPassWord) {
 		textReplace(type, m_PassWord, newPassWord, -1);
 		m_PassWord = newPassWord;
@@ -782,7 +782,7 @@ public class MGridActivity extends Activity {
 
 	}
 
-	// æ–‡æœ¬æ›¿æ¢
+	// ÎÄ±¾Ìæ»»
 	public static void textReplace(String type, String oldText, String newText, int count) {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -822,8 +822,8 @@ public class MGridActivity extends Activity {
 		final float centerX = mContainer.getWidth() / 2.0f;
 		final float centerY = mContainer.getHeight() / 2.0f;
 
-		// æä¾›å‚æ•°åˆ›å»ºä¸€ä¸ªæ–°çš„3Dç¿»æ»šåŠ¨ç”»
-		// è¿™ä¸ªåŠ¨ç”»ç›‘å¬å™¨ç”¨æ¥è§¦å‘ä¸‹ä¸€ä¸ªåŠ¨ç”»
+		// Ìá¹©²ÎÊı´´½¨Ò»¸öĞÂµÄ3D·­¹ö¶¯»­
+		// Õâ¸ö¶¯»­¼àÌıÆ÷ÓÃÀ´´¥·¢ÏÂÒ»¸ö¶¯»­
 		final Rotate3dAnimation rotation = new Rotate3dAnimation(start, end, centerX, centerY, 310.0f, true);
 		rotation.setDuration(500);
 		rotation.setFillAfter(true);
@@ -837,9 +837,9 @@ public class MGridActivity extends Activity {
 
 		if (null == m_oViewGroups.get(pagename)) {
 			if (tmp_flag_loading)
-				new AlertDialog.Builder(this).setTitle("æç¤ºï¼").setMessage("ç›®æ ‡é¡µé¢æ­£åœ¨åŠ è½½ä¸­ â€¦").show();
+				new AlertDialog.Builder(this).setTitle("ÌáÊ¾£¡").setMessage("Ä¿±êÒ³ÃæÕıÔÚ¼ÓÔØÖĞ ¡­").show();
 			else
-				new AlertDialog.Builder(this).setTitle("é”™è¯¯ï¼").setMessage("æ— æ³•æ‰¾åˆ°ç»„æ€é¡µé¢ï¼š " + pagename).show();
+				new AlertDialog.Builder(this).setTitle("´íÎó£¡").setMessage("ÎŞ·¨ÕÒµ½×éÌ¬Ò³Ãæ£º " + pagename).show();
 			isChangGif = false;
 			return;
 		}
@@ -848,7 +848,7 @@ public class MGridActivity extends Activity {
 		m_oSgSgRenderManager = m_oViewGroups.get(pagename);
 		m_oSgSgRenderManager.active(true);
 
-		// ä¸å†ä½¿ç”¨è®¾ç½®æ˜¾ç¤º View æ–¹æ¡ˆï¼Œä»¥ä¸‹é¢æ“ä½œä»£æ›¿ -- CharlesChen May 8, 2014.
+		// ²»ÔÙÊ¹ÓÃÉèÖÃÏÔÊ¾ View ·½°¸£¬ÒÔÏÂÃæ²Ù×÷´úÌæ -- CharlesChen May 8, 2014.
 		// setContentView(m_oSgSgRenderManager);
 
 		mContainer.mCurrentView.setVisibility(View.GONE);
@@ -917,7 +917,7 @@ public class MGridActivity extends Activity {
 		});
 	}
 
-	/** æ˜¾ç¤º/éšè—ä»»åŠ¡èœå• */
+	/** ÏÔÊ¾/Òş²ØÈÎÎñ²Ëµ¥ */
 	public void showTaskUI(boolean bShow) {
 		if (m_oTaskIntent == null)
 			m_oTaskIntent = new Intent();
@@ -932,7 +932,7 @@ public class MGridActivity extends Activity {
 		}
 	}
 
-	/** è°ƒç”¨ä¸€äº›åˆ·æ–°UIçš„å‡½æ•° **/
+	/** µ÷ÓÃÒ»Ğ©Ë¢ĞÂUIµÄº¯Êı **/
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -951,18 +951,18 @@ public class MGridActivity extends Activity {
 	
 	}
 
-	/** æ¶ˆæ¯æç¤ºæ˜¾ç¤º **/
+	/** ÏûÏ¢ÌáÊ¾ÏÔÊ¾ **/
 	void showToast(CharSequence msg) {
 		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 	}
 
-	/** æ¶ˆæ¯æç¤ºæ˜¾ç¤º **/
+	/** ÏûÏ¢ÌáÊ¾ÏÔÊ¾ **/
 	void showLoadProgToast(CharSequence msg, int duration) {
 		if (m_bShowLoadProgress)
 			Toast.makeText(this, msg, duration).show();
 	}
 
-	// é¡µé¢finishæ—¶æ‰§è¡Œ
+	// Ò³ÃæfinishÊ±Ö´ĞĞ
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
@@ -999,7 +999,7 @@ public class MGridActivity extends Activity {
 
 	}
 
-	// é‡å¯åº”ç”¨
+	// ÖØÆôÓ¦ÓÃ
 	private void restartApplication() {
 		final Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -1011,7 +1011,7 @@ public class MGridActivity extends Activity {
 
 			Object obj = msg.obj;
 
-			// handleræ¥æ”¶åˆ°æ¶ˆæ¯åå°±ä¼šæ‰§è¡Œæ­¤æ–¹æ³•
+			// handler½ÓÊÕµ½ÏûÏ¢ºó¾Í»áÖ´ĞĞ´Ë·½·¨
 			switch (msg.what) {
 			case 1:
 
@@ -1019,8 +1019,8 @@ public class MGridActivity extends Activity {
 			case 2:
 				String s = (String) msg.obj;
 				if (context != null)
-					new AlertDialog.Builder(context).setTitle("é”™è¯¯")
-							.setMessage("é¡µé¢ï¼š" + MGridActivity.XmlFile + "\n" + "è¯»å–è¡¨è¾¾å¼ å¼‚å¸¸ï¼Œåœæ­¢åŠ è½½ï¼\nè¯¦æƒ…ï¼š" + s).show();
+					new AlertDialog.Builder(context).setTitle("´íÎó")
+							.setMessage("Ò³Ãæ£º" + MGridActivity.XmlFile + "\n" + "¶ÁÈ¡±í´ïÊ½ Òì³££¬Í£Ö¹¼ÓÔØ£¡\nÏêÇé£º" + s).show();
 
 				break;
 			case 3:
@@ -1042,14 +1042,14 @@ public class MGridActivity extends Activity {
 		}
 	};
 
-	// è§£æMgrid.ini
+	// ½âÎöMgrid.ini
 	public UtIniReader iniReader = null;
 	
-	//ç½‘é¡µæœåŠ¡ç®¡ç†
+	//ÍøÒ³·şÎñ¹ÜÀí
 	public ServerManager mServerManager;
-	public static boolean OPENWEB=false;
+	public static boolean OPENWEB=true;
 
-	private int sleepTime = 2 * 60 * 60;// å±ä¿è§†é¢‘ä¼‘çœ æ—¶é—´
+	private int sleepTime = 2 * 60 * 60;// ÆÁ±£ÊÓÆµĞİÃßÊ±¼ä
 	private Intent m_oTaskIntent = null;
 	private MainWindow m_oSgSgRenderManager = null;
 	private HashMap<String, MainWindow> m_oViewGroups = null;
@@ -1064,12 +1064,12 @@ public class MGridActivity extends Activity {
 	// private SelfDialog dialog = null;
 	public static String mgridIniPath = Environment.getExternalStorageDirectory().getPath() + "/MGrid.ini";
 	public static String logeFilePath = Environment.getExternalStorageDirectory().getPath() + "/login" + ".login";
-	public WakeLock mWakeLock;// é”å±ç±»
-	public SgVideoView svv = null; // æ’­æ”¾è§†é¢‘
+	public WakeLock mWakeLock;// ËøÆÁÀà
+	public SgVideoView svv = null; // ²¥·ÅÊÓÆµ
 	public Handler mTimeHandler = new Handler();
 
 	/**
-	 * å–‡å­å‘Šè­¦å£°éŸ³çš„è·¯å¾„ å› ä¸ºåŸè·¯å¾„ä¼šå¯¼è‡´æ–‡ä»¶åˆ é™¤ä¸å¹²å‡€ æ‰€ä»¥ç”Ÿæˆä¸€ä¸ªæ–°çš„è·¯å¾„
+	 * À®°È¸æ¾¯ÉùÒôµÄÂ·¾¶ ÒòÎªÔ­Â·¾¶»áµ¼ÖÂÎÄ¼şÉ¾³ı²»¸É¾» ËùÒÔÉú³ÉÒ»¸öĞÂµÄÂ·¾¶
 	 */
 	public static String oldWavPath = Environment.getExternalStorageDirectory().getPath() + "/vtu_pagelist/Alarm.wav";
 	public static String NewWavPath = Environment.getExternalStorageDirectory().getPath() + "/Alarm.wav";
@@ -1085,7 +1085,7 @@ public class MGridActivity extends Activity {
 	public static String Language = "";
 
 	public InputMethodManager mImm = null;
-	// åŠ è½½ç”¨
+	// ¼ÓÔØÓÃ
 	public int tmp_load_int_time = 20;
 	public int tmp_load_pageseek = 0;
 	public boolean tmp_flag_loading = true;
@@ -1103,38 +1103,38 @@ public class MGridActivity extends Activity {
 	public static boolean m_bCanZoom = true;
 	public static boolean m_bTakePhoto = false;
 
-	public static boolean m_bTakeEMail = false; // æ˜¯å¦å®æ—¶å‘Šè­¦é‚®ä»¶å‘é€
-	public static String mailProtocol = "smtp"; // åè®®
+	public static boolean m_bTakeEMail = false; // ÊÇ·ñÊµÊ±¸æ¾¯ÓÊ¼ş·¢ËÍ
+	public static String mailProtocol = "smtp"; // Ğ­Òé
 	public static String myEmailSMTPHost = "smtp.qq.com";
-	public static String myEmailAccount = "453938089@qq.com"; // å‘é€é‚®ç®±è´¦å·
-	public static String myEmailPassword = "sgipglsayogvcaih"; // æˆæƒç 
-	public static String receiveMailAccount = "leisiyang521@163.com"; // æ¥æ”¶é‚®ç®±è´¦å·
-	public static String Subject = "æ ‡é¢˜"; // é‚®ç®±æ ‡é¢˜
-	public static String fromName = "å‘ä»¶äººåç§°"; // å‘ä»¶äººåç§°d
+	public static String myEmailAccount = "453938089@qq.com"; // ·¢ËÍÓÊÏäÕËºÅ
+	public static String myEmailPassword = "sgipglsayogvcaih"; // ÊÚÈ¨Âë
+	public static String receiveMailAccount = "leisiyang521@163.com"; // ½ÓÊÕÓÊÏäÕËºÅ
+	public static String Subject = "±êÌâ"; // ÓÊÏä±êÌâ
+	public static String fromName = "·¢¼şÈËÃû³Æ"; // ·¢¼şÈËÃû³Æd
 
-	public static boolean whatLanguage = true;// ç³»ç»Ÿè¯­è¨€
+	public static boolean whatLanguage = true;// ÏµÍ³ÓïÑÔ
 	public static Map<String, Map<String, String>> EventClose = new HashMap<String, Map<String, String>>();
 	public static HashMap<String, ArrayList<String>> AlarmShow = new HashMap<String, ArrayList<String>>();
 	public static ExecutorService xianChengChi = Executors.newCachedThreadPool();
 	public static ExecutorService ecOneService = Executors.newSingleThreadExecutor();
 	public static boolean isNOChangPage = false;
-	public static int saveTime; // ä¿¡å·æ•°æ®å­˜å‚¨æ—¶é—´
+	public static int saveTime; // ĞÅºÅÊı¾İ´æ´¢Ê±¼ä
 	public static HashMap<String,List<ViewObjectBase>> ViewJosnObject = null;
 	//public static HashMap<String,TreeMap<Integer, ViewObjectBase>> ViewJosnObject = null;
-	// ç”¨æˆ·åå’Œå¯†ç 
+	// ÓÃ»§ÃûºÍÃÜÂë
 	public static String m_UserName;
 	public static String m_PassWord;
 
-	// é¡µé¢æƒé™ç”¨æˆ·åå’Œå¯†ç 
-	// public static String m_pageUserName; //æœªä½¿ç”¨è¿‡ ç§»é™¤
+	// Ò³ÃæÈ¨ÏŞÓÃ»§ÃûºÍÃÜÂë
+	// public static String m_pageUserName; //Î´Ê¹ÓÃ¹ı ÒÆ³ı
 	public static String[] m_pagePassWord;
 
-	// lsy 18/6/20æ–°å¢ userç®¡ç†åŠŸèƒ½
-	public static int m_UserAway = 0;// 0ä»£è¡¨è€ç‰ˆæœ¬ï¼Œ1ä»£è¡¨æ¯ä¸ªæƒé™é¡µé¢éœ€è¦å¯†ç ç™»å½•ï¼Œå¯è®°å½•ã€‚ 2ä»£è¡¨ç”¨æˆ·å å¯†ç ç™»å½•åè¿›è¡Œæ“ä½œã€‚
+	// lsy 18/6/20ĞÂÔö user¹ÜÀí¹¦ÄÜ
+	public static int m_UserAway = 0;// 0´ú±íÀÏ°æ±¾£¬1´ú±íÃ¿¸öÈ¨ÏŞÒ³ÃæĞèÒªÃÜÂëµÇÂ¼£¬¿É¼ÇÂ¼¡£ 2´ú±íÓÃ»§Ãû ÃÜÂëµÇÂ¼ºó½øĞĞ²Ù×÷¡£
 
-	public static String[][] m_MaskPage;// æƒé™é¡µé¢å†…çš„å­é¡µé¢
-	public static int m_MaskCount;// æ€»æƒé™é¡µé¢çš„ä¸ªæ•°
-	public static int m_ControlAway;// æ§åˆ¶æ¨¡å¼ 0é»˜è®¤ä¸è¾“å…¥å¯†ç  1è¾“å…¥å¯†ç ã€‚
+	public static String[][] m_MaskPage;// È¨ÏŞÒ³ÃæÄÚµÄ×ÓÒ³Ãæ
+	public static int m_MaskCount;// ×ÜÈ¨ÏŞÒ³ÃæµÄ¸öÊı
+	public static int m_ControlAway;// ¿ØÖÆÄ£Ê½ 0Ä¬ÈÏ²»ÊäÈëÃÜÂë 1ÊäÈëÃÜÂë¡£
 
 	public static UserManager userManager;
 
@@ -1151,11 +1151,11 @@ public class MGridActivity extends Activity {
 	public static List<ipc_control> lstCtrlDo1 = null;
 	public static List<ipc_control> lstCtrlDo2 = null;
 
-	// å‘Šè­¦å±è”½æ—¶é—´ä¿å­˜
+	// ¸æ¾¯ÆÁ±ÎÊ±¼ä±£´æ
 	public static HashMap<String, HashMap<Long, String>> AlarmShieldTimer = new HashMap<String, HashMap<Long, String>>();
 
 	/**
-	 * ä»¥ä¸‹ä»£ç ä¸ºå†…éƒ¨ç±» This class listens for the end of the first half of the animation.
+	 * ÒÔÏÂ´úÂëÎªÄÚ²¿Àà This class listens for the end of the first half of the animation.
 	 * It then posts a new action that effectively swaps the views when the
 	 * container is rotated 90 degrees and thus invisible.
 	 */
@@ -1178,7 +1178,7 @@ public class MGridActivity extends Activity {
 	}
 
 	/**
-	 * è¯¥ç±»è´Ÿè´£åˆ‡æ¢Viewç•Œé¢ å¹¶æ‰§è¡ŒååŠéƒ¨åˆ†çš„åŠ¨ç”»æ•ˆæœ
+	 * ¸ÃÀà¸ºÔğÇĞ»»View½çÃæ ²¢Ö´ĞĞºó°ë²¿·ÖµÄ¶¯»­Ğ§¹û
 	 */
 	private final class SwapViews implements Runnable {
 		private final String mPageName;
@@ -1195,7 +1195,7 @@ public class MGridActivity extends Activity {
 			onPageChange(mPageName);
 
 			/*
-			 * j ä¸¤ç§åˆ‡æ¢è§’åº¦çš„å°è¯• if (mPosition > -1) { mPhotosList.setVisibility(View.GONE);
+			 * j Á½ÖÖÇĞ»»½Ç¶ÈµÄ³¢ÊÔ if (mPosition > -1) { mPhotosList.setVisibility(View.GONE);
 			 * mImageView.setVisibility(View.VISIBLE); mImageView.requestFocus();
 			 * 
 			 * rotation = new Rotate3dAnimation(90, 180, centerX, centerY, 310.0f, false); }
@@ -1205,8 +1205,8 @@ public class MGridActivity extends Activity {
 			 * rotation = new Rotate3dAnimation(90, 0, centerX, centerY, 310.0f, false); }
 			 */
 
-			// TODO: æš‚æ—¶å°è¯•åšåœ†å‘¨ç¿»æ»šæ•ˆæœï¼Œä»¥åæœ‰æ—¶é—´å†è°ƒæ ¡æœ€ä½³æ•ˆæœ -- CharlesChen
-			rotation = new Rotate3dAnimation(270, 360, centerX, centerY, 310.0f, false); // å†æ¬¡ä¼˜åŒ–ï¼Œ ä»270åº¦å¼€å§‹ç¿»æ»šå¯é¿å…åè½¬ã€‚
+			// TODO: ÔİÊ±³¢ÊÔ×öÔ²ÖÜ·­¹öĞ§¹û£¬ÒÔºóÓĞÊ±¼äÔÙµ÷Ğ£×î¼ÑĞ§¹û -- CharlesChen
+			rotation = new Rotate3dAnimation(270, 360, centerX, centerY, 310.0f, false); // ÔÙ´ÎÓÅ»¯£¬ ´Ó270¶È¿ªÊ¼·­¹ö¿É±ÜÃâ·´×ª¡£
 
 			rotation.setDuration(500);
 			rotation.setFillAfter(true);

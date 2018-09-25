@@ -30,6 +30,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -590,6 +591,8 @@ public class DoorInvented extends TextView implements IObject, Door_XuNiCallBack
 	@Override
 	public void onSuccess(int state,String id,String pw) {
 
+		Log.e("²»¶®", state+"");
+		
 		switch (state) {
 		case 1:
 

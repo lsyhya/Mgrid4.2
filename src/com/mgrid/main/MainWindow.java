@@ -716,7 +716,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("Label".equals(strType)) {
 							SgLabel sgLabel = new SgLabel(this.getContext());
 							m_mapUIs.put(strID, sgLabel);
-							viewList.add(sgLabel.base);
+							//viewList.add(sgLabel.base);
 							callBackList.add(sgLabel);
 						} else if ("TextClock".equals(strType)) {
 							SgTextClock sgTextClock = new SgTextClock(this.getContext());
@@ -727,7 +727,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("Rectangle".equals(strType)) {
 							SgRectangle sgRectangle = new SgRectangle(this.getContext());
 							m_mapUIs.put(strID, sgRectangle);
-							viewList.add(sgRectangle.base);
+							//viewList.add(sgRectangle.base);
 							callBackList.add(sgRectangle);
 						} else if ("Ellipse".equals(strType)) {
 							SgEllipse sgEllipse = new SgEllipse(this.getContext());
@@ -738,11 +738,11 @@ public class MainWindow extends ViewGroup {
 						} else if ("Image".equals(strType)) {
 							SgImage sgImage = new SgImage(this.getContext());
 							m_mapUIs.put(strID, sgImage);
-							viewList.add(sgImage.base);
+							//viewList.add(sgImage.base);
 							callBackList.add(sgImage);
 						} else if ("Button".equals(strType)) {
 							SgButton sgButton = new SgButton(this.getContext());
-							viewList.add(sgButton.base);
+							//viewList.add(sgButton.base);
 							callBackList.add(sgButton);
 							// SgButton_new sgButton = new SgButton_new(this.getContext());
 							m_mapUIs.put(strID, sgButton);
@@ -752,7 +752,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("Table".equals(strType)) {
 							SgTable sgTable = new SgTable(this.getContext());
 							m_mapUIs.put(strID, sgTable);
-							viewList.add(sgTable.base);
+							//viewList.add(sgTable.base);
 							callBackList.add(sgTable);
 						} else if ("CommandButton".equals(strType)) {
 							SgCommandButton sgCommandButton = new SgCommandButton(this.getContext());
@@ -760,6 +760,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("YTParameter".equals(strType)) {
 							SgYTParameter sgYTParameter = new SgYTParameter(this.getContext());
 							m_mapUIs.put(strID, sgYTParameter);
+							callBackList.add(sgYTParameter);
 						} else if ("YKParameter".equals(strType)) {
 							SgYKParameter sgYKParameter = new SgYKParameter(this.getContext());
 							m_mapUIs.put(strID, sgYKParameter);
@@ -767,6 +768,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("AlarmLight".equals(strType)) {
 							SgAlarmLight sgAlarmLight = new SgAlarmLight(this.getContext());
 							m_mapUIs.put(strID, sgAlarmLight);
+							callBackList.add(sgAlarmLight);
 						} else if ("Thermometer".equals(strType)) {
 							SgThermometer sgThermometer = new SgThermometer(this.getContext());
 							m_mapUIs.put(strID, sgThermometer);
@@ -776,9 +778,11 @@ public class MainWindow extends ViewGroup {
 						} else if ("SignalList".equals(strType)) {
 							SgSignalList sgSignalList = new SgSignalList(this.getContext());
 							m_mapUIs.put(strID, sgSignalList);
+							callBackList.add(sgSignalList);
 						} else if ("EventList".equals(strType)) {
 							SgEventList sgEventList = new SgEventList(this.getContext());
 							m_mapUIs.put(strID, sgEventList);
+							callBackList.add(sgEventList);
 						} else if ("StatePanel".equals(strType)) {
 							SgStatePanel sgStatePanel = new SgStatePanel(this.getContext());
 							m_mapUIs.put(strID, sgStatePanel);
@@ -793,6 +797,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("EventConditionStartSetter".equals(strType)) {
 							SgTriggerSetter triggerSetter = new SgTriggerSetter(this.getContext());
 							m_mapUIs.put(strID, triggerSetter);
+							callBackList.add(triggerSetter);
 						} else if ("HistorySignalCurve".equals(strType)) {
 							SgCurveLineChart sgLineChart = new SgCurveLineChart(this.getContext());
 							m_mapUIs.put(strID, sgLineChart);
@@ -834,6 +839,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("SaveEquipt".equals(strType)) {
 							SaveEquipt saveequipt = new SaveEquipt(this.getContext());
 							m_mapUIs.put(strID, saveequipt);
+							callBackList.add(saveequipt);
 						} else if ("SignalCurve".equals(strType)) {
 							SignalCurve signalcurve = new SignalCurve(this.getContext());
 							m_mapUIs.put(strID, signalcurve);
@@ -852,6 +858,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("AutoSigList".equals(strType)) {
 							AutoSigList autosiglist = new AutoSigList(this.getContext());
 							m_mapUIs.put(strID, autosiglist);
+							callBackList.add(autosiglist);
 						} else if ("SeeImage".equals(strType)) {
 							SeeImage seeimage = new SeeImage(this.getContext());
 							m_mapUIs.put(strID, seeimage);
@@ -861,6 +868,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("tigerLabel".equals(strType)) {
 							tigerLabel tigerLabel = new tigerLabel(this.getContext());
 							m_mapUIs.put(strID, tigerLabel);
+							callBackList.add(tigerLabel);
 						} else if ("Dial".equals(strType)) {
 							Dial dial = new Dial(this.getContext());
 							m_mapUIs.put(strID, dial);
@@ -873,6 +881,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("Dial_C".equals(strType)) {
 							Dial_C dial_c = new Dial_C(this.getContext());
 							m_mapUIs.put(strID, dial_c);
+							callBackList.add(dial_c);
 						} else if ("Image_change".equals(strType)) {
 
 						} else if ("ELabel".equals(strType)) {
@@ -890,6 +899,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("ChangePassWord".equals(strType)) {
 							SgChangePassWord cpw = new SgChangePassWord(this.getContext());
 							m_mapUIs.put(strID, cpw);
+							callBackList.add(cpw);
 						} else if ("ChangeIP".equals(strType)) {
 							SgChangIP CIP = new SgChangIP(this.getContext());
 							m_mapUIs.put(strID, CIP);
@@ -897,7 +907,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("SMSConfig".equals(strType)) {
 							SgChangNamePhoneTypeState CNPTS = new SgChangNamePhoneTypeState(this.getContext());
 							m_mapUIs.put(strID, CNPTS);
-
+							callBackList.add(CNPTS);
 						} else if ("ChangXmlPW".equals(strType)) {
 							SgChangXmlPW xmlPW = new SgChangXmlPW(this.getContext());
 							m_mapUIs.put(strID, xmlPW);
@@ -1967,6 +1977,13 @@ public class MainWindow extends ViewGroup {
 						m_oInvalidateHandler.sendEmptyMessage(0);
 
 					Thread.sleep(200);
+					
+					for (ViewObjectSetCallBack back : callBackList) {
+
+						back.onSetData();
+
+					}
+					
 				} /* end of while (m_bIsRunning) */
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();

@@ -20,6 +20,9 @@ import com.mgrid.main.MainWindow;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
+import com.sg.web.ChangePassWordObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
 
 /**
  * 改密码
@@ -27,7 +30,7 @@ import com.sg.common.LanguageStr;
  * @author lsy
  * 
  */
-public class SgChangePassWord extends TextView implements IObject {
+public class SgChangePassWord extends TextView implements IObject,ViewObjectSetCallBack {
 
 	
 	private String oldPw=LanguageStr.oldPw;
@@ -318,6 +321,8 @@ public class SgChangePassWord extends TextView implements IObject {
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
 
+		m_rRenderWindow.viewList.add(base);
+		
 		rWin.addView(m_oEditTextNEW);
 		rWin.addView(m_oEditTextOLD);
 		rWin.addView(tvNew);
@@ -412,5 +417,32 @@ public class SgChangePassWord extends TextView implements IObject {
 	// 记录触摸坐标，过滤滑动操作。解决滑动误操作点击问题。
 	public float m_xscal = 0;
 	public float m_yscal = 0;
+	
+	private ViewObjectBase base=new ChangePassWordObject();
+	
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+		
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+		
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+		
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+				
+		
+	}
+
+	@Override
+	public void onSetData() {
+		
+		
+	}
 
 }

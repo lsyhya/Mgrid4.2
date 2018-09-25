@@ -88,11 +88,12 @@ public class LsyChangExpression extends TextView implements IObject {
 //						if(MGridActivity.whatLanguage)
 //						Toast.makeText(context, "ÐÞ¸Ä³É¹¦", 500).show();
 //						else
-						Toast.makeText(context, LanguageStr.Success, 500).show();	
+					
 						break;
 					}
 				}
 				xml.saveXmlData();
+				Toast.makeText(context, LanguageStr.Success, 500).show();	
 
 			}
 		});

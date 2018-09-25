@@ -109,6 +109,7 @@ public class SgRectangle extends View implements IObject, ViewObjectSetCallBack 
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);		
 		rWin.addView(this);
 	}
 
@@ -149,12 +150,12 @@ public class SgRectangle extends View implements IObject, ViewObjectSetCallBack 
 			m_fRotateAngle = Float.parseFloat(strValue);
 		} else if ("BorderColor".equals(strName)) {
 			m_cBorderColor = Color.parseColor(strValue);
-			if (strValue.substring(1, 3).equals("00")) {
-				BorderColor="#FFFFFFFF";
-			} else {
-				BorderColor="#" + strValue.substring(3, strValue.length());
-			}
-			//BorderColor = strValue;
+//			if (strValue.substring(1, 3).equals("00")) {
+//				BorderColor="#FFFFFFFF";
+//			} else {
+//				BorderColor="#" + strValue.substring(3, strValue.length());
+//			}
+			BorderColor = strValue;
 			// ((RectangleObject)base).setBorderColor("#"+strValue.substring(3,
 			// strValue.length()));
 		} else if ("BorderWidth".equals(strName)) {
@@ -185,7 +186,7 @@ public class SgRectangle extends View implements IObject, ViewObjectSetCallBack 
 				m_arrGradientFillColor = new int[nCount];
 				int nIndex = 0;
 				for (int i = 2; i < arrStr.length; i += 2) {
-					BgColor="#" + arrStr[i].substring(3, arrStr[i].length());
+					BgColor="#" + arrStr[2].substring(3, arrStr[2].length());
 					int color = Color.parseColor(arrStr[i]);
 					m_arrGradientFillColor[nIndex] = Color.argb((int) (Color.alpha(color) * m_fAlpha), Color.red(color),
 							Color.green(color), Color.blue(color));
@@ -362,6 +363,7 @@ public class SgRectangle extends View implements IObject, ViewObjectSetCallBack 
 	@Override
 	public void onCall() {
 
+		
 		base.setZIndex(m_nZIndex);
 		base.setFromHeight(MainWindow.FORM_HEIGHT);
 		base.setFromWight(MainWindow.FORM_WIDTH);
@@ -380,5 +382,11 @@ public class SgRectangle extends View implements IObject, ViewObjectSetCallBack 
         ((RectangleObject) base).setBgColor(BgColor);
 		
 
+	}
+
+	@Override
+	public void onSetData() {
+		// TODO Auto-generated method stub
+		
 	}
 }

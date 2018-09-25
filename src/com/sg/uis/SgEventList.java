@@ -34,12 +34,17 @@ import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtExpressionParser.stExpression;
 import com.sg.common.UtTable;
+import com.sg.web.EventListObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
+
 import comm_service.service;
 
 import data_model.ipc_control;
 
 /** 事件列表 */
-public class SgEventList extends UtTable implements IObject {
+public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBack {
 
 	private String DeviceName=LanguageStr.DeviceName;
 	private String AlarmName=LanguageStr.AlarmName;
@@ -48,6 +53,7 @@ public class SgEventList extends UtTable implements IObject {
 	private String StartTime=LanguageStr.StartTime;
     private Hashtable<String, Hashtable<String, Event>> listEvents = null;
 	private List<String> cmd_list = new ArrayList<String>();
+	private ViewObjectBase base=new EventListObject();
 
 	public SgEventList(Context context) {
 		super(context);
@@ -182,12 +188,14 @@ public class SgEventList extends UtTable implements IObject {
 		}
 
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 	}
 
 	@Override
 	public void removeFromRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = null;
+		
 		rWin.removeView(this);
 	}
 
@@ -234,18 +242,21 @@ public class SgEventList extends UtTable implements IObject {
 			// }
 		} else if ("ForeColor".equals(strName)) {
 			m_cForeColor = Color.parseColor(strValue);
+			foreColor=strValue;
 			this.setFontColor(m_cForeColor);
 		} else if ("BackgroundColor".equals(strName)) {
-			m_cBackgroundColor = Color.parseColor(strValue);
-			Log.d("背景颜色", strValue);
+			m_cBackgroundColor = Color.parseColor(strValue);		
+			backgroundColor=strValue;
 			this.setBackgroundColor(m_cBackgroundColor);
 		} else if ("BorderColor".equals(strName)) {
 			m_cBorderColor = Color.parseColor(strValue);
 		} else if ("OddRowBackground".equals(strName)) {
 			m_cOddRowBackground = Color.parseColor(strValue);
+			oddRowBackground=strValue;
 			//ji=strValue;
 		} else if ("EvenRowBackground".equals(strName)) {
 			m_cEvenRowBackground = Color.parseColor(strValue);
+			evenRowBackground=strValue;
 			//ou=strValue;
 		} else if ("CmdExpression".equals(strName)) {
 			m_strCmdExpression = strValue;
@@ -635,6 +646,10 @@ public class SgEventList extends UtTable implements IObject {
 	String m_strCmdExpression = "";
 	int m_cForeColor = 0xFF00FF00;
 	int m_cBackgroundColor = 0x00000000;
+	String backgroundColor="";
+	String foreColor="";
+	String evenRowBackground="";
+	String oddRowBackground="";
 	int m_cBorderColor = 0xFFFFFFFF;
 	MainWindow m_rRenderWindow = null;
 	Rect m_rBBox = null;
@@ -658,6 +673,34 @@ public class SgEventList extends UtTable implements IObject {
 	ArrayList<List<String>> lstContends = null;
 	ArrayList<List<String>> lstContends_two = null;
 	String one=LanguageStr.one,two=LanguageStr.two,three=LanguageStr.three,four=LanguageStr.four;
+
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		
+		((EventListObject)base).setBackgroundColor(ViewObjectColorUtil.getColor(backgroundColor));
+		((EventListObject)base).setForeColor(ViewObjectColorUtil.getColor(foreColor));
+		((EventListObject)base).setEvenRowBackground(ViewObjectColorUtil.getColor(evenRowBackground));
+		((EventListObject)base).setOddRowBackground(ViewObjectColorUtil.getColor(oddRowBackground));
+	}
+	@Override
+	public void onSetData() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
 
