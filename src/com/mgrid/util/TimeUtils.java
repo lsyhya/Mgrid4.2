@@ -14,6 +14,15 @@ public class TimeUtils {
 		return dateString;
 	}
 	
+	public static String getNowFormatTime(String format)
+	{
+		Date curr=new Date();
+		SimpleDateFormat dateFormat=new SimpleDateFormat(format);
+		String dateString=dateFormat.format(curr);		
+		return dateString;
+	}
+	
+	
 	
 	public static String getYM()
 	{

@@ -67,12 +67,13 @@ public class UserManager {
 	
 	
 	
-	public void setUser(int index,String UserID,String PassWord)
+	public void setUser(int index,String UserID,String PassWord,String time)
 	{
 		
 
 		userManaget.get(index).setUid(UserID);
 		userManaget.get(index).setPw(PassWord);
+		userManaget.get(index).setTime(time);
 		ResetList();
 		
 		

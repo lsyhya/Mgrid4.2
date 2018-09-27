@@ -3,6 +3,10 @@ package com.sg.uis;
 import com.mgrid.main.MainWindow;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.web.FromObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,11 +16,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Environment;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 /** ´°¿Ú */
-public class SgForm extends View implements IObject {
+public class SgForm extends View implements IObject ,ViewObjectSetCallBack{
 	public SgForm(Context context) {  
         super(context); 
         this.setOnTouchListener(new OnTouchListener() {
@@ -73,6 +78,7 @@ public class SgForm extends View implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 	}
 	
@@ -94,6 +100,7 @@ public class SgForm extends View implements IObject {
        	 	MainWindow.FORM_HEIGHT = m_nHeight;
         }
         else if ("BackColor".equals(strName)) {
+        	bg=strValue;
        	 	m_cBackColor = Color.parseColor(strValue);
         }
         else if ("BackImage".equals(strName)) {
@@ -101,6 +108,7 @@ public class SgForm extends View implements IObject {
        	 		m_strBackImage = Environment.getExternalStorageDirectory().getPath() + strResFolder + strValue;
        	 		//m_bitBackImage = BitmapFactory.decodeFile(m_strBackImage);
        	 		m_bitBackImage = CFGTLS.getBitmapByPath(m_strBackImage);
+       	 	    image=strResFolder.replace("/vtu_pagelist/", "")+strValue;
        	 		/*
         		 try {
         			 InputStream is = new BufferedInputStream(new FileInputStream(m_strBackImage));
@@ -203,4 +211,35 @@ public class SgForm extends View implements IObject {
 	Rect m_rBBox = null;
 	
 	public boolean m_bneedupdate = true;
+	
+	ViewObjectBase base=new FromObject();
+	String bg,image;
+
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+		
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+		
+		base.setLeft(0);
+		base.setTop(0);
+		
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+	
+		
+		((FromObject)base).setBg(ViewObjectColorUtil.getColor(bg));
+		((FromObject)base).setImage(image);
+	}
+
+	@Override
+	public void onSetData() {
+		// TODO Auto-generated method stub
+		
+	}
 }

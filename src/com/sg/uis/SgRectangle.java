@@ -9,6 +9,7 @@ import com.sg.common.UtExpressionParser.stIntervalExpression;
 import com.sg.web.RectangleObject;
 import com.sg.web.base.ViewObjectBase;
 import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -380,7 +381,10 @@ public class SgRectangle extends View implements IObject, ViewObjectSetCallBack 
 		((RectangleObject) base).setBorderWidth(m_nBorderWidth);
 		((RectangleObject) base).setBorderColor(BorderColor);
         ((RectangleObject) base).setBgColor(BgColor);
-		
+        ((RectangleObject) base).setAlpha(ViewObjectColorUtil.getArgb(m_cSingleFillColor));
+        ((RectangleObject) base).setRed(ViewObjectColorUtil.getRed(m_cSingleFillColor));
+        ((RectangleObject) base).setGreen(ViewObjectColorUtil.getGreen(m_cSingleFillColor));
+        ((RectangleObject) base).setBlue(ViewObjectColorUtil.getBlue(m_cSingleFillColor));
 
 	}
 

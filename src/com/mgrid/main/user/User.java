@@ -11,14 +11,24 @@ public class User {
 	private String pw;
 	
 	private String index="";
+	private String time="";
 	
-	public User(String UserID,String passWord,String index)
+	public User(String UserID,String passWord,String index,String time)
 	{
 		this.uid=UserID;
 		this.pw=passWord;	
 		this.index=index;
+		this.time=time;
 	}
 	
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+
 	public User()
 	{
 		

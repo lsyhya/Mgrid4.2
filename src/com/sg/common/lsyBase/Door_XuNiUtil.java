@@ -7,11 +7,13 @@ import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.user.User;
 import com.mgrid.main.user.UserEvent;
 import com.mgrid.mysqlbase.SqliteUtil;
+import com.mgrid.util.MathUtil;
 import com.mgrid.util.TimeUtils;
 
 import android.content.Context;
@@ -50,12 +52,17 @@ public class Door_XuNiUtil {
 			mActivity = (MGridActivity) context;
 		}
 	}
+	
+	public  boolean isNumeric(String str){
+	    Pattern pattern = Pattern.compile("[0-9]*");
+	    return pattern.matcher(str).matches();   
+	}
 
 	/**
 	 * 添加用户
 	 */
 
-	public void add(final String id, final String pw, final int index) {
+	public void add(final String id, final String pw, final int index,final String time) {
 
 		MGridActivity.ecOneService.execute(new Runnable() {
 
@@ -65,7 +72,7 @@ public class Door_XuNiUtil {
 				Door_XuNiCallBack back = backMap.get(index);
 
 				//Log.e("tag", id+"::"+pw+"::"+index);
-				if (id.equals("") || pw.equals("")) {
+				if (id.equals("") || pw.equals("")|| time.equals("")) {
 
 					
 					if (back != null) {
@@ -84,18 +91,26 @@ public class Door_XuNiUtil {
 					if (back != null)
 					{
 						
-						Map<String, String> map = new HashMap<String, String>();
-						map.put("User" + index, id);
-						map.put("PassWord" + index, pw);
+						if(isNumeric(pw)&&MathUtil.getMathUtil().isValidDate(time))
+						{
+							Map<String, String> map = new HashMap<String, String>();
+							map.put("User" + index, id);
+							map.put("PassWord" + index, pw);
+							map.put("Time" + index, time);
 
-						User user;
-						user = new User(id, pw, index + "");
-						MGridActivity.userManager.addUser(index, user);
+							User user;
+							user = new User(id, pw, index + "",time);
+							MGridActivity.userManager.addUser(index, user);
 
-						saveData("SysConf", map, false);
-						
-						backMap.get(-1).onSuccess(2,id,pw);
-						back.onSuccess(2,id,pw);	
+							saveData("SysConf", map, false);
+							
+							backMap.get(-1).onSuccess(2,id,pw,time);
+							back.onSuccess(2,id,pw,time);	
+						}else
+						{
+							backMap.get(-1).onFail(2);
+						}
+			
 					}else
 					{
 						backMap.get(-1).onFail(2);
@@ -120,29 +135,28 @@ public class Door_XuNiUtil {
 			@Override
 			public void run() {
 				
+			
 				
-				//Log.e("tag", id+"::"+pw+"::"+index);
 				
-				Door_XuNiCallBack back = backMap.get(index);
 				
-				if(id.equals("") || pw.equals(""))
-				{
-					
-					
-					if (back != null) {
-						
-						back.onFail(3);						
-						
-					}
-					
-					backMap.get(-1).onFail(3);
-					
-					return ;
-					
-				}
-				
+//				if(id.equals("") || pw.equals(""))
+//				{
+//					
+//					
+//					if (back != null) {
+//						
+//						back.onFail(3);						
+//						
+//					}
+//					
+//					backMap.get(-1).onFail(3);
+//					
+//					return ;
+//					
+//				}
+//				
 
-				
+				Door_XuNiCallBack back = backMap.get(index);
 				
 
 				if (back != null)
@@ -150,10 +164,11 @@ public class Door_XuNiUtil {
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("User" + index, id);
 					map.put("PassWord" + index, pw);
+					map.put("Time" + index, "");
 					saveData("SysConf", map, true);
 					MGridActivity.userManager.deleteUser(index);					
-					back.onSuccess(0,id,pw);
-					backMap.get(-1).onSuccess(3,id,pw);
+					back.onSuccess(0,id,pw,"");
+					backMap.get(-1).onSuccess(3,id,pw,"");
 					
 				}else
 				{
@@ -168,7 +183,7 @@ public class Door_XuNiUtil {
 	 * 修改用户
 	 */
 
-	public void alter(final String id, final String pw, final int index) {
+	public void alter(final String id, final String pw, final int index,final String time) {
 		MGridActivity.ecOneService.execute(new Runnable() {
 
 			@Override
@@ -185,13 +200,14 @@ public class Door_XuNiUtil {
 
 					map.put("User" + index, id);
 					map.put("PassWord" + index, pw);
+					map.put("Time" + index, time);
 
 					saveData("SysConf", map, false);
 
-					MGridActivity.userManager.setUser(index, id, pw);
+					MGridActivity.userManager.setUser(index, id, pw,time);
 
 					if (back != null)
-						back.onSuccess(1,id,pw);
+						back.onSuccess(1,id,pw,"");
 
 				}
 
@@ -206,7 +222,7 @@ public class Door_XuNiUtil {
 
 			User user = MGridActivity.userManager.getUserManaget().get(index);
 			nowUser = uid;
-			if (user.getUid().equals(uid) && user.getPw().equals(pw)) {
+			if (user.getUid().equals(uid) && user.getPw().equals(pw)&&Integer.parseInt(user.getTime())>Integer.parseInt(TimeUtils.getNowFormatTime("yyyyMMdd"))) {
 				saveResult(1);
 
 			} else {
@@ -234,7 +250,7 @@ public class Door_XuNiUtil {
 
 			if (MGridActivity.userManager.getNowUser() != null) {
 
-				if (MGridActivity.userManager.getNowUser().getPw().equals(passWord)) {
+				if (MGridActivity.userManager.getNowUser().getPw().equals(passWord)&&Integer.parseInt(MGridActivity.userManager.getNowUser().getTime())>Integer.parseInt(TimeUtils.getNowFormatTime("yyyyMMdd"))) {
 
 					saveResult(1);
 					return true;
@@ -282,7 +298,7 @@ public class Door_XuNiUtil {
 
 					UserEvent ue2 = new UserEvent(nowUser, nowTime, event, "成功");
 					sql.addXuNiEventValue(ue2, 0);
-					backMap.get(-1).onSuccess(1,"","");
+					backMap.get(-1).onSuccess(1,"","","");
 
 					break;
 				}

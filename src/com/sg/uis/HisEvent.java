@@ -3,9 +3,7 @@ package com.sg.uis;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -15,8 +13,26 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+import com.mgrid.VariableConfig.VariableConfig;
+import com.mgrid.data.DataGetter;
+import com.mgrid.main.MainWindow;
+import com.mgrid.main.R;
+import com.mgrid.main.user.UserEvent;
+import com.mgrid.mysqlbase.SqliteUtil;
+import com.mgrid.util.FileUtil;
+import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
+import com.sg.common.MyAdapter;
+import com.sg.common.UtExpressionParser;
+import com.sg.common.lsyBase.HisEventTable;
+import com.sg.common.lsyBase.MyDoorEvent;
+import com.sg.web.HisEventObject;
+import com.sg.web.SaveEquiptObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
+
 import android.app.DatePickerDialog;
-import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
@@ -33,38 +49,18 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.mgrid.VariableConfig.VariableConfig;
-import com.mgrid.data.DataGetter;
-import com.mgrid.main.MGridActivity;
-import com.mgrid.main.MainWindow;
-import com.mgrid.main.R;
-import com.mgrid.main.user.UserEvent;
-import com.mgrid.mysqlbase.SqliteUtil;
-import com.mgrid.util.FileUtil;
-import com.sg.common.IObject;
-import com.sg.common.LanguageStr;
-import com.sg.common.MyAdapter;
-import com.sg.common.UtExpressionParser;
-import com.sg.common.lsyBase.HisEventTable;
-import com.sg.common.lsyBase.MyDoorEvent;
-
 import comm_service.local_file;
-
 import data_model.local_his_Alarm;
 import data_model.local_his_event;
-import data_model.locat_his_DoorEvent;
 
 /** 历史告警 */
 // 信号告警数据 HisEvent
 // author :fjw0312
 // time:2016 5 17
-public class HisEvent extends HisEventTable implements IObject {
+public class HisEvent extends HisEventTable implements IObject ,ViewObjectSetCallBack{
 
 	// 方便中英文切换
 	private String DeviceName = LanguageStr.DeviceName;
@@ -718,7 +714,7 @@ public class HisEvent extends HisEventTable implements IObject {
 		}
 
 		m_rRenderWindow = rWin;
-
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 		// view_button画布添加到窗口
 		rWin.addView(view_Receive);
@@ -778,16 +774,20 @@ public class HisEvent extends HisEventTable implements IObject {
 		} else if ("RadioButtonColor".equals(strName)) {
 			m_cRadioButtonColor = Color.parseColor(strValue);
 		} else if ("ForeColor".equals(strName)) {
+			foreColor=strValue;
 			m_cForeColor = Color.parseColor(strValue);
 			this.setFontColor(m_cForeColor);
 		} else if ("BackgroundColor".equals(strName)) {
+			backgroundColor=strValue;
 			m_cBackgroundColor = Color.parseColor(strValue);
 			this.setBackgroundColor(m_cBackgroundColor);
 		} else if ("BorderColor".equals(strName)) {
 			m_cBorderColor = Color.parseColor(strValue);
 		} else if ("OddRowBackground".equals(strName)) {
+			oddRowBackground=strValue;
 			m_cOddRowBackground = Color.parseColor(strValue);
 		} else if ("EvenRowBackground".equals(strName)) {
+			evenRowBackground=strValue;
 			m_cEvenRowBackground = Color.parseColor(strValue);
 		} else if ("BtnColor".equals(strName)) {
 			if (!strValue.isEmpty()) {
@@ -1493,4 +1493,43 @@ public class HisEvent extends HisEventTable implements IObject {
 	private int index = 1;
 	String one = LanguageStr.one, two = LanguageStr.two, three = LanguageStr.three, four = LanguageStr.four;
 	String set = LanguageStr.set;
+	private ViewObjectBase base=new HisEventObject();
+	String foreColor,backgroundColor,oddRowBackground,evenRowBackground;
+
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+		
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+		
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+		
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		((HisEventObject)base).setBtnColor(ViewObjectColorUtil.getColor(btnColor));
+		((HisEventObject)base).setTextColor(ViewObjectColorUtil.getColor(textColor));
+		((HisEventObject)base).setTitleColr(ViewObjectColorUtil.getColor(titleColor));
+		((HisEventObject)base).setNameList(lstTitles);
+		
+		
+		((HisEventObject)base).setBackgroundColor(ViewObjectColorUtil.getColor(backgroundColor)); 
+		((HisEventObject)base).setForeColor(ViewObjectColorUtil.getColor(foreColor));
+		((HisEventObject)base).setEvenRowBackground(ViewObjectColorUtil.getColor(evenRowBackground));
+		((HisEventObject)base).setOddRowBackground(ViewObjectColorUtil.getColor(oddRowBackground));
+		
+		
+		
+	}
+
+	@Override
+	public void onSetData() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -25,15 +25,20 @@ import com.mgrid.main.MainWindow;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.SgRealTimeData;
+import com.sg.web.HalfCircleChartObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
 /** ∞Î‘≤“«≈Ã±Ì */
 @SuppressLint({ "ShowToast", "InflateParams", "RtlHardcoded",
 		"ClickableViewAccessibility" })
-public class SgHalfCircleChart extends TextView implements IObject {
+public class SgHalfCircleChart extends TextView implements IObject,ViewObjectSetCallBack {
 
 	private GaugeChart Gchart;
 	private List<String> label_list = new ArrayList<String>();
 	private List<String> color_list = new ArrayList<String>();
+	private List<String> webcolor_list = new ArrayList<String>();
 	private List<String> andel_list = new ArrayList<String>();
 	public SgHalfCircleChart(Context context) {
 		super(context);
@@ -73,6 +78,7 @@ public class SgHalfCircleChart extends TextView implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 		rWin.addView(Gauge01View);
 
@@ -193,6 +199,7 @@ public class SgHalfCircleChart extends TextView implements IObject {
 	
 		for (int i = 0; i < s.length; i++) {
 			color_list.add(s[i]);
+			webcolor_list.add(ViewObjectColorUtil.getColor(s[i]));
 			
 		}
 		Gauge01View.colorData.clear();
@@ -438,4 +445,39 @@ public class SgHalfCircleChart extends TextView implements IObject {
 	private String colorData;
     private float max_data=30;
     private boolean isMath=false;
+    
+    ViewObjectBase base=new HalfCircleChartObject();
+    
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+		
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+		
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+		
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		
+		((HalfCircleChartObject)base).setFontColor(ViewObjectColorUtil.getColor(FontColor));
+		((HalfCircleChartObject)base).setMaxValue(max_data);
+		((HalfCircleChartObject)base).setMinValue(0);
+		((HalfCircleChartObject)base).setScaleColor(ViewObjectColorUtil.getColor(ScaleColor));
+		((HalfCircleChartObject)base).setListValue(andel_list);
+		((HalfCircleChartObject)base).setListColor(webcolor_list);
+		
+	}
+
+	@Override
+	public void onSetData() {
+		
+		 base.setValue(newValue+"");
+		
+	}
 }

@@ -275,9 +275,9 @@ public class DoorInvented extends TextView implements IObject, Door_XuNiCallBack
 	/**
 	 * 添加
 	 */
-	public void Add(String id, String pw, int index) {
+	public void Add(String id, String pw, int index,String time) {
 
-		door_XuNiUtil.add(id, pw, index);
+		door_XuNiUtil.add(id, pw, index,time);
 
 		
 	}
@@ -291,7 +291,7 @@ public class DoorInvented extends TextView implements IObject, Door_XuNiCallBack
 	// 修改 暂时没用
 	public void Alter(String id, String pw, int index) {
 
-		door_XuNiUtil.alter(id, pw, index);
+		//door_XuNiUtil.alter(id, pw, index);
 	}
 
 	// 开门
@@ -589,7 +589,7 @@ public class DoorInvented extends TextView implements IObject, Door_XuNiCallBack
 	public boolean m_bneedupdate = true;
 
 	@Override
-	public void onSuccess(int state,String id,String pw) {
+	public void onSuccess(int state,String id,String pw,String time) {
 
 		Log.e("不懂", state+"");
 		

@@ -713,6 +713,7 @@ public class MainWindow extends ViewGroup {
 						if ("Form".equals(strType)) {
 							SgForm from = new SgForm(this.getContext());
 							m_mapUIs.put(strID, from);
+							callBackList.add(from);
 						} else if ("Label".equals(strType)) {
 							SgLabel sgLabel = new SgLabel(this.getContext());
 							m_mapUIs.put(strID, sgLabel);
@@ -827,6 +828,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("HisEvent".equals(strType)) {
 							HisEvent hiseventlist = new HisEvent(this.getContext());
 							m_mapUIs.put(strID, hiseventlist);
+							callBackList.add(hiseventlist);
 						} else if ("HistoryEventList".equals(strType)) {
 							HistoryEventList hiseventlist = new HistoryEventList(this.getContext());
 							m_mapUIs.put(strID, hiseventlist);
@@ -967,6 +969,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("SgHalfCircleChar".equals(strType)) {
 							SgHalfCircleChart SCC = new SgHalfCircleChart(this.getContext());
 							m_mapUIs.put(strID, SCC);
+							callBackList.add(SCC);
 						} else if ("SgClickPieChart".equals(strType)) {
 							SgClickPieChart SCPC = new SgClickPieChart(this.getContext());
 							m_mapUIs.put(strID, SCPC);

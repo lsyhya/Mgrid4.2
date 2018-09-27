@@ -99,7 +99,7 @@ public class SgAlarmLight extends View implements IObject,ViewObjectSetCallBack 
 		m_rDestRect.right = nWidth;
 		m_rDestRect.bottom = nHeight;
 		canvas.drawBitmap(m_bitCurrentAlarmImage, m_rSrcRect, m_rDestRect, m_oPaint);
-		Log.e("ui-AlarmLight","into onDraw!");
+		//Log.e("ui-AlarmLight","into onDraw!");
 	}
 	
 	@Override
@@ -194,7 +194,7 @@ public class SgAlarmLight extends View implements IObject,ViewObjectSetCallBack 
 	@Override
 	public boolean updateValue() 
 	{
-		Log.e("ui-AlarmLight","into updateValue!");
+		//Log.e("ui-AlarmLight","into updateValue!");
 		m_bneedupdate = false;
 		SgRealTimeData oRealTimeData = m_rRenderWindow.m_oShareObject.m_mapRealTimeDatas.get(this.getUniqueID());
 		if (oRealTimeData == null)

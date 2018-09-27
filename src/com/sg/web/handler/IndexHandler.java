@@ -28,12 +28,8 @@ public class IndexHandler implements RequestHandler{
 		
 		  Log.e("HEHE","我进来了");
 
-		   Map<String, String> params = HttpRequestParser.parseParams(arg0);	       
-	 
-	
-		   
-		  
-		   
+		  Map<String, String> params = HttpRequestParser.parseParams(arg0);	       
+
 		  if(params.containsKey("titleName"))
 		  {
 			  

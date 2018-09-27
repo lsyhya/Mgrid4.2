@@ -117,6 +117,7 @@ public class LanguageStr {
 	
 	
 	public static String text20 = "文件不完整";
+	public static String OkTime = "有效时间";
 	
 	
 
@@ -280,6 +281,7 @@ public class LanguageStr {
 		
 		
 		text20="fail";
+		OkTime="OkTime";
 		
 		
 	}

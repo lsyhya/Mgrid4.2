@@ -41,7 +41,7 @@ public class DoorXuNiManager implements DoorManagerBase,DoorCallBack{
 
 		if (my != null) {
 
-			nDoorView.Add(my.getUid(),my.getPw(),Integer.parseInt(my.getIndex()));
+			nDoorView.Add(my.getUid(),my.getPw(),Integer.parseInt(my.getIndex()),my.getTime());
 
 		}
 		

@@ -363,11 +363,12 @@ public class MGridActivity extends Activity {
 
 				String id = iniReader.getValue("SysConf", "User" + i);
 				String pw = iniReader.getValue("SysConf", "PassWord" + i);
+				String te = iniReader.getValue("SysConf", "Time" + i,"20991230");
 				if (id == null || pw == null) {
 					continue;
 				}
 
-				User user = new User(id, pw, i + "");
+				User user = new User(id, pw, i + "",te);
 				userManager.addUser(i, user);
 
 			}
@@ -1047,7 +1048,7 @@ public class MGridActivity extends Activity {
 	
 	//网页服务管理
 	public ServerManager mServerManager;
-	public static boolean OPENWEB=true;
+	public static boolean OPENWEB=false;
 
 	private int sleepTime = 2 * 60 * 60;// 屏保视频休眠时间
 	private Intent m_oTaskIntent = null;

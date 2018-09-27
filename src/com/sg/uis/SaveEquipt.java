@@ -2,19 +2,13 @@ package com.sg.uis;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
 import com.mgrid.data.DataGetter;
-import com.mgrid.data.EquipmentDataModel.Signal;
-import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
 import com.sg.common.IObject;
@@ -22,43 +16,30 @@ import com.sg.common.LanguageStr;
 import com.sg.common.MyAdapter;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtTable;
-import com.sg.common.UtTableAdapter;
 import com.sg.web.SaveEquiptObject;
 import com.sg.web.base.ViewObjectBase;
 import com.sg.web.base.ViewObjectSetCallBack;
-import com.sg.common.UtExpressionParser.stBindingExpression;
-import com.sg.common.UtExpressionParser.stExpression;
-
-import data_model.ipc_history_signal;
-import data_model.local_his_signal;
+import com.sg.web.utils.ViewObjectColorUtil;
 
 import android.app.DatePickerDialog;
-import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.Paint.Style;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
+import data_model.local_his_signal;
 
 /** 历史信号 */
 // 信号历史数据 SaveEquipt
@@ -128,6 +109,8 @@ public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack
 		// Receive=" Receipt ";
 		// }
 
+		
+		
 		// 标头标题
 		lstTitles = new ArrayList<String>();
 		lstTitles.add(DeviceName);
@@ -515,16 +498,21 @@ public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack
 		} else if ("RadioButtonColor".equals(strName)) {
 			m_cRadioButtonColor = Color.parseColor(strValue);
 		} else if ("ForeColor".equals(strName)) {
+			foreColor=strValue;
 			m_cForeColor = Color.parseColor(strValue);
 			this.setFontColor(m_cForeColor);
 		} else if ("BackgroundColor".equals(strName)) {
+			backgroundColor=strValue;
 			m_cBackgroundColor = Color.parseColor(strValue);
 			this.setBackgroundColor(m_cBackgroundColor);
 		} else if ("BorderColor".equals(strName)) {
+			
 			m_cBorderColor = Color.parseColor(strValue);
 		} else if ("OddRowBackground".equals(strName)) {
+			oddRowBackground=strValue;
 			m_cOddRowBackground = Color.parseColor(strValue);
 		} else if ("EvenRowBackground".equals(strName)) {
+			evenRowBackground=strValue;
 			m_cEvenRowBackground = Color.parseColor(strValue);
 		} else if ("SaveTime".equals(strName)) {
 			// save_time = Integer.parseInt(strValue);
@@ -533,6 +521,8 @@ public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack
 		} else if ("BtnColor".equals(strName)) {
 			if (!strValue.isEmpty()) {
 
+			
+				
 				if ("#FF000000".equals(strValue)) {
 					view_text.setBackgroundResource(R.drawable.bg_shadow);
 					view_timeButton.setBackgroundResource(R.drawable.bg_shadow);
@@ -552,7 +542,10 @@ public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack
 				}
 			}
 		} else if ("TextColor".equals(strName)) {
+			
+			
 			if (!strValue.isEmpty()) {
+			
 				textColor = strValue;
 				myAdapter.setTextColor(textColor);
 				view_text.setTextColor(Color.parseColor(textColor));
@@ -563,6 +556,7 @@ public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack
 			}
 		} else if ("TitleColor".equals(strName)) {
 			if (!strValue.isEmpty()) {
+			
 				titleColor = strValue;
 				myAdapter.notifyDataSetChanged();
 			}
@@ -753,8 +747,11 @@ public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack
 	List<List<String>> lstContends = null;
 
 	private ArrayList<String> nameList = new ArrayList<String>();
+	
 	private boolean isFirst = true;
 	private ViewObjectBase base=new SaveEquiptObject();
+	
+	String foreColor,backgroundColor,oddRowBackground,evenRowBackground;
 
 	@Override
 	public void onCall() {
@@ -771,6 +768,20 @@ public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack
 		
 		base.setTypeId(m_strID);
 		base.setType(m_strType);
+		
+		
+	
+		
+		((SaveEquiptObject)base).setBtnColor(ViewObjectColorUtil.getColor(btnColor));
+		((SaveEquiptObject)base).setTextColor(ViewObjectColorUtil.getColor(textColor));
+		((SaveEquiptObject)base).setTitleColr(ViewObjectColorUtil.getColor(titleColor));
+		((SaveEquiptObject)base).setNameList(lstTitles);
+		
+		
+		((SaveEquiptObject)base).setBackgroundColor(ViewObjectColorUtil.getColor(backgroundColor)); 
+		((SaveEquiptObject)base).setForeColor(ViewObjectColorUtil.getColor(foreColor));
+		((SaveEquiptObject)base).setEvenRowBackground(ViewObjectColorUtil.getColor(evenRowBackground));
+		((SaveEquiptObject)base).setOddRowBackground(ViewObjectColorUtil.getColor(oddRowBackground));
 		
 	}
 

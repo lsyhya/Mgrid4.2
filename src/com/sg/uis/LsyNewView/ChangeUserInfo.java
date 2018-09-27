@@ -53,11 +53,12 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 	private String Add = LanguageStr.Add;
 	private String Alter = LanguageStr.Alter;
 	private String delete = LanguageStr.delete;
+	private String OkTime = LanguageStr.OkTime;
 	private int x, y, w, h;
 	private int offset=1;
 	private static boolean isLayout = false;
 
-	private String oid, opw;
+	private String oid, opw,otime;
 
 	private Door_XuNiUtil door_XuNiUtil = null;
 	// private String oldUserId = "";
@@ -107,9 +108,11 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 
 		etName = new EditText(context);
 		etPhone = new EditText(context);
+		etTime = new EditText(context);
 
 		tvName = new TextView(context);
 		tvPhone = new TextView(context);
+		tvTime = new TextView(context);
 
 		tvTagorder = new TextView(context);
 
@@ -117,12 +120,15 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 
 		etName.setBackgroundResource(R.drawable.et_select);
 		etPhone.setBackgroundResource(R.drawable.et_select);
+		etTime.setBackgroundResource(R.drawable.et_select);
+
 
 		btDelete.setBackgroundResource(R.drawable.bg_shadow);
 		setBackgroundResource(R.drawable.bg_shadow);
 
 		tvName.setPadding(0, 0, 0, 0);
 		tvPhone.setPadding(0, 0, 0, 0);
+		tvTime.setPadding(0, 0, 0, 0);
 
 		tvTagorder.setPadding(0, 0, 0, 0);
 
@@ -130,6 +136,7 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 
 		tvName.setTextSize(15);
 		tvPhone.setTextSize(15);
+		tvTime.setTextSize(15);
 
 		tvTagorder.setTextSize(15);
 
@@ -140,6 +147,7 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 
 		tvName.setText(UserID);
 		tvPhone.setText(PassWord);
+		tvTime.setText(OkTime);
 
 		this.setText(Show);
 
@@ -150,17 +158,21 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 
 		tvName.setTextColor(Color.BLACK);
 		tvPhone.setTextColor(Color.BLACK);
-
+		tvTime.setTextColor(Color.BLACK);
+		
 		tvTagorder.setTextColor(Color.BLACK);
 
 		etName.setFilters(new InputFilter[] { new InputFilter.LengthFilter(12) });
 		etPhone.setFilters(new InputFilter[] { new InputFilter.LengthFilter(11) });
+		
 
 		etName.setSingleLine();
 		etPhone.setSingleLine();
+		etTime.setSingleLine();
 
 		etName.setGravity(Gravity.CENTER);
 		etPhone.setGravity(Gravity.CENTER);
+		etTime.setGravity(Gravity.CENTER);
 
 		tvTagorder.setGravity(Gravity.CENTER);
 		btDelete.setGravity(Gravity.CENTER);
@@ -201,11 +213,13 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 
 		etName.setTextColor(Color.BLACK);
 		etPhone.setTextColor(Color.BLACK);
+		etTime.setTextColor(Color.BLACK);
 
 		// etName.setCursorVisible(true);// 让edittext出现光标
 		// etPhone.setCursorVisible(true);
 
 		etPhone.setInputType(EditorInfo.TYPE_CLASS_PHONE);
+		etTime.setInputType(EditorInfo.TYPE_CLASS_PHONE);
 
 		// imm = (InputMethodManager)
 		// context.getSystemService(Context.INPUT_METHOD_SERVICE);// 显示输入法窗口
@@ -247,15 +261,17 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 
 			String id = etName.getText().toString();
 			String pw = etPhone.getText().toString();
+			String time=etTime.getText().toString();
 
-			Add(id, pw, index);
+			Add(id, pw, index,time);
 
 		} else if (str.equals(Alter)) {
 
 			String id = etName.getText().toString();
 			String pw = etPhone.getText().toString();
+			String time=etTime.getText().toString();
 
-			Alter(id, pw, index);
+			Alter(id, pw, index,time);
 		}
 
 	}
@@ -270,7 +286,9 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 		tvName.setVisibility(View.GONE);
 		etPhone.setVisibility(View.GONE);
 		tvPhone.setVisibility(View.GONE);
-		btDelete.setVisibility(View.GONE);
+		etTime.setVisibility(View.GONE);
+		tvTime.setVisibility(View.GONE);
+		btDelete.setVisibility(View.GONE);		
 		this.setVisibility(View.GONE);
 
 	}
@@ -285,20 +303,22 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 		tvName.setVisibility(View.VISIBLE);
 		etPhone.setVisibility(View.VISIBLE);
 		tvPhone.setVisibility(View.VISIBLE);
+		etTime.setVisibility(View.VISIBLE);
+		tvTime.setVisibility(View.VISIBLE);
 		btDelete.setVisibility(View.VISIBLE);
 		this.setVisibility(View.VISIBLE);
 
 	}
 
 	// 修改
-	private void Alter(String id, String pw, int index) {
+	private void Alter(String id, String pw, int index,String time) {
 
-		door_XuNiUtil.alter(id, pw, index);
+		door_XuNiUtil.alter(id, pw, index,time);
 	}
 
 	// 添加
-	public void Add(String id, String pw, int index) {
-		door_XuNiUtil.add(id, pw, index);
+	public void Add(String id, String pw, int index,String time) {
+		door_XuNiUtil.add(id, pw, index,time);
 
 	}
 
@@ -318,26 +338,31 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 			etName.setText(user.getUid());
 			// oldPassWord = user.getPassWord();
 			etPhone.setText(user.getPw());
+			etTime.setText(user.getTime());
 			this.setText(Alter);
 			btDelete.setEnabled(true);
 		} else {
 			this.setText(Add);
 			etName.setText("");
 			etPhone.setText("");
+			etTime.setText("");
 		}
 
 	}
 
-	private void setTexts(final String id, final String pw) {
+	private void setTexts(final String id, final String pw,final String time) {
 
 		etName.setText(id);
 		etPhone.setText(pw);
+		etTime.setText(time);
 
-		 etName.layout(x + (int) (w * 0.187f)+offset, y, x + (int) (w * 0.387f), y + h - h
+		 etName.layout(x + (int) (w * 0.12f)+offset, y, x + (int) (w * 0.28f), y + h - h
 		 / 10);
-		 etPhone.layout(x + (int) (w * 0.545f)+offset, y, x + (int) (w * 0.745f), y + h - h
+		 etPhone.layout(x + (int) (w * 0.38f)+offset, y, x + (int) (w * 0.54f), y + h - h
 		 / 10);
-
+		 etTime.layout(x + (int) (w * 0.64f)+offset, y, x + (int) (w *0.8f), y + h - h
+		 / 10);
+		
 		 offset=-offset;
 	}
 
@@ -354,6 +379,7 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 				setText(Add);
 				etName.setText("");
 				etPhone.setText("");
+				etTime.setText("");
 				btDelete.setEnabled(false);
 				Toast.makeText(getContext(), "刪除成功", Toast.LENGTH_SHORT).show();
 
@@ -367,7 +393,7 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 			case 2:
 
 				if (isLayout) {
-					setTexts(oid, opw);
+					setTexts(oid, opw,otime);
 					setText(Alter);
 					btDelete.setEnabled(true);
 				} else {
@@ -412,22 +438,37 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 
 		if (m_rRenderWindow.isLayoutVisible(m_rBBox)) {
 
-			tvTagorder.layout(nX, (int) (nY), nX + (int) (nWidth * 0.029f), nY + nHeight);
-			tvName.layout(nX + (int) (nWidth * 0.058f), (int) (nY), nX + (int) (nWidth * 0.158f), nY + nHeight);
-			etName.layout(nX + (int) (nWidth * 0.187f), nY, nX + (int) (nWidth * 0.387f), nY + nHeight - nHeight / 10);
-			tvPhone.layout(nX + (int) (nWidth * 0.416f), (int) (nY), nX + (int) (nWidth * 0.516f), nY + nHeight);
-			etPhone.layout(nX + (int) (nWidth * 0.545f), nY, nX + (int) (nWidth * 0.745f), nY + nHeight - nHeight / 10);
+//			tvTagorder.layout(nX, (int) (nY), nX + (int) (nWidth * 0.029f), nY + nHeight);
+//			tvName.layout(nX + (int) (nWidth * 0.058f), (int) (nY), nX + (int) (nWidth * 0.158f), nY + nHeight);
+//			etName.layout(nX + (int) (nWidth * 0.187f), nY, nX + (int) (nWidth * 0.387f), nY + nHeight - nHeight / 10);
+//			tvPhone.layout(nX + (int) (nWidth * 0.416f), (int) (nY), nX + (int) (nWidth * 0.516f), nY + nHeight);
+//			etPhone.layout(nX + (int) (nWidth * 0.545f), nY, nX + (int) (nWidth * 0.745f), nY + nHeight - nHeight / 10);
+//
+//			this.layout(nX + (int) (nWidth * 0.774f), nY, nX + (int) (nWidth * 0.874f), nY + nHeight);
+//			btDelete.layout(nX + (int) (nWidth * 0.903f), nY, nX + (int) (nWidth * 1), nY + nHeight);
+			
+			tvTagorder.layout(nX, (int) (nY), nX + (int) (nWidth * 0.02f), nY + nHeight);
+			tvName.layout(nX + (int) (nWidth * 0.02f), (int) (nY), nX + (int) (nWidth * 0.12f), nY + nHeight);
+			etName.layout(nX + (int) (nWidth * 0.12f), nY, nX + (int) (nWidth * 0.28f), nY + nHeight - nHeight / 10);
+			tvPhone.layout(nX + (int) (nWidth * 0.28f), (int) (nY), nX + (int) (nWidth * 0.38f), nY + nHeight);
+			etPhone.layout(nX + (int) (nWidth * 0.38f), nY, nX + (int) (nWidth * 0.54f), nY + nHeight - nHeight / 10);
+			
+			tvTime.layout(nX + (int) (nWidth * 0.54f), (int) (nY), nX + (int) (nWidth * 0.64f), nY + nHeight);
+			etTime.layout(nX + (int) (nWidth * 0.64f), nY, nX + (int) (nWidth * 0.8f), nY + nHeight - nHeight / 10);
 
-			this.layout(nX + (int) (nWidth * 0.774f), nY, nX + (int) (nWidth * 0.874f), nY + nHeight);
+			this.layout(nX + (int) (nWidth * 0.8f), nY, nX + (int) (nWidth * 0.897f), nY + nHeight);
 			btDelete.layout(nX + (int) (nWidth * 0.903f), nY, nX + (int) (nWidth * 1), nY + nHeight);
+			
 		}
 
 		tvTagorder.setPadding(0, (int) ((0.85 * nHeight - height) / 2), 0, 0);
 		tvName.setPadding((int) ((0.1 * nWidth - width) / 3), (int) ((0.85 * nHeight - height) / 2), 0, 0);
 		tvPhone.setPadding((int) ((0.1 * nWidth - width) / 3), (int) ((0.85 * nHeight - height) / 2), 0, 0);
+		tvTime.setPadding((int) ((0.1 * nWidth - width) / 3), (int) ((0.85 * nHeight - height) / 2), 0, 0);
 		btDelete.setPadding(0, (int) ((0.85 * nHeight - height) / 2), 0, 0);
 		etName.setPadding(0, (int) ((0.8 * nHeight - height) / 2), 0, 0);
 		etPhone.setPadding(0, (int) ((0.8 * nHeight - height) / 2), 0, 0);
+		etTime.setPadding(0, (int) ((0.8 * nHeight - height) / 2), 0, 0);
 
 		isLayout = true;
 
@@ -496,7 +537,7 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 			btDelete.setTextColor(m_cFontColor);
 			tvName.setTextColor(m_cFontColor);
 			tvPhone.setTextColor(m_cFontColor);
-
+			tvTime.setTextColor(m_cFontColor);
 			tvTagorder.setTextColor(m_cFontColor);
 
 		} else if ("CmdExpression".equals(strName)) {
@@ -517,14 +558,15 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 			fontSize = Integer.parseInt(strValue);
 			tvName.setTextSize(fontSize);
 			tvPhone.setTextSize(fontSize);
-
+			tvPhone.setTextSize(fontSize);
+			tvTime.setTextSize(fontSize);
 			tvTagorder.setTextSize(fontSize);
 
 			btDelete.setTextSize(fontSize);
 
 			etName.setTextSize(fontSize);
 			etPhone.setTextSize(fontSize);
-
+			etTime.setTextSize(fontSize);
 			this.setTextSize(fontSize);
 
 		}
@@ -550,6 +592,9 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 
 		rWin.addView(etPhone);
 		rWin.addView(tvPhone);
+		
+		rWin.addView(etTime);
+		rWin.addView(tvTime);
 
 		rWin.addView(btDelete);
 		rWin.addView(this);
@@ -639,6 +684,8 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 	TextView tvName = null;
 	EditText etPhone = null;
 	TextView tvPhone = null;
+	EditText etTime = null;
+	TextView tvTime = null;
 
 	TextView tvTagorder = null;
 	Button btDelete = null;
@@ -662,7 +709,7 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 	public float m_yscal = 0;
 
 	@Override
-	public void onSuccess(int state, String id, String pw) {
+	public void onSuccess(int state, String id, String pw,String time) {
 
 		switch (state) {
 		case 0:
@@ -680,6 +727,7 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 
 			oid = id;
 			opw = pw;
+			otime=time;
 
 			handler.sendEmptyMessage(2);
 
