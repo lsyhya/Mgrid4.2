@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.user.User;
-import com.sg.uis.LsyNewView.ChangeUserInfo;
+import com.sg.uis.newView.ChangeUserInfo;
 
 /**
  * 负责管理一类控件的集合

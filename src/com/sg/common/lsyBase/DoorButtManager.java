@@ -15,7 +15,7 @@ import com.mgrid.main.user.User;
 import com.mgrid.mysqlbase.SqliteUtil;
 import com.mgrid.util.TimeUtils;
 import com.sg.common.IObject;
-import com.sg.uis.LsyNewView.NBerDoorView;
+import com.sg.uis.newView.NBerDoorView;
 
 import android.util.Log;
 import android.widget.Switch;

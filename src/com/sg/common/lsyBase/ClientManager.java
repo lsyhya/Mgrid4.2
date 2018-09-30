@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import com.sg.common.IObject;
-import com.sg.uis.LsyNewView.NBerDoorView;
+import com.sg.uis.newView.NBerDoorView;
 
 import android.util.Log;
 

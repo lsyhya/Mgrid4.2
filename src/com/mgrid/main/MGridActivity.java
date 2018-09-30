@@ -37,16 +37,16 @@ import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtIniReader;
-import com.sg.uis.SaveEquipt;
-import com.sg.uis.SgAlarmChangTime;
-import com.sg.uis.SgImage;
-import com.sg.uis.LsyNewView.AlarmShieldTime;
-import com.sg.uis.LsyNewView.ChangeLabelBtn;
-import com.sg.uis.LsyNewView.NBerDoorView;
-import com.sg.uis.LsyNewView.SgSplineChart;
-import com.sg.uis.LsyNewView.SgVideoView;
 import com.sg.uis.LsyNewView.AlarmAction.SgAlarmAction;
 import com.sg.uis.LsyNewView.TimingAndDelayed.TimingAndDelayedView;
+import com.sg.uis.newView.AlarmShieldTime;
+import com.sg.uis.newView.ChangeLabelBtn;
+import com.sg.uis.newView.NBerDoorView;
+import com.sg.uis.newView.SgSplineChart;
+import com.sg.uis.newView.SgVideoView;
+import com.sg.uis.oldView.SaveEquipt;
+import com.sg.uis.oldView.SgAlarmChangTime;
+import com.sg.uis.oldView.SgImage;
 import com.sg.web.base.ViewObjectBase;
 
 import android.annotation.SuppressLint;
@@ -1048,7 +1048,7 @@ public class MGridActivity extends Activity {
 	
 	//网页服务管理
 	public ServerManager mServerManager;
-	public static boolean OPENWEB=false;
+	public static boolean OPENWEB=true;
 
 	private int sleepTime = 2 * 60 * 60;// 屏保视频休眠时间
 	private Intent m_oTaskIntent = null;

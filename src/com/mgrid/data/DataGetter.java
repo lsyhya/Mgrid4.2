@@ -28,8 +28,9 @@ import com.mgrid.data.EquipmentDataModel.Signal;
 import com.mgrid.main.MGridActivity;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
-import com.sg.uis.SaveEquipt;
-import com.sg.uis.SaveSignal;
+import com.sg.uis.oldView.SaveEquipt;
+import com.sg.uis.oldView.SaveSignal;
+
 import comm_service.local_file;
 import comm_service.local_rc;
 import comm_service.msg_head;

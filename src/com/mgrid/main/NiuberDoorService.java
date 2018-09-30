@@ -13,8 +13,8 @@ import com.sg.common.lsyBase.ClientManager;
 import com.sg.common.lsyBase.DoorButtManager;
 import com.sg.common.lsyBase.DoorManagerBase;
 import com.sg.common.lsyBase.DoorXuNiManager;
-import com.sg.uis.LsyNewView.DoorInvented;
-import com.sg.uis.LsyNewView.NBerDoorView;
+import com.sg.uis.newView.DoorInvented;
+import com.sg.uis.newView.NBerDoorView;
 
 import android.app.Service;
 import android.content.Intent;

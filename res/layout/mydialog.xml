@@ -13,7 +13,7 @@
         android:orientation="vertical" 
         >
 
-        <com.sg.uis.LsyNewView.FlikerProgressBar   
+        <com.sg.uis.newView.FlikerProgressBar   
         android:id="@+id/flikerbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

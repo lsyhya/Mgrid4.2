@@ -8,7 +8,7 @@ import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
 import com.mgrid.main.user.User;
-import com.sg.uis.SgImage;
+import com.sg.uis.oldView.SgImage;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

@@ -30,100 +30,101 @@ import com.sg.common.SgRealTimeData;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtExpressionParser.stExpression;
-import com.sg.uis.AutoSig;
-import com.sg.uis.AutoSigList;
-import com.sg.uis.Breaker;
-import com.sg.uis.Dial;
-import com.sg.uis.Dial_A;
-import com.sg.uis.Dial_B;
-import com.sg.uis.Dial_C;
-import com.sg.uis.EventLabel;
-import com.sg.uis.HisEvent;
-import com.sg.uis.HistoryEventList;
-import com.sg.uis.HistorySignalList;
-import com.sg.uis.LocalList;
-import com.sg.uis.LsyChangExpression;
-import com.sg.uis.Pilar;
-import com.sg.uis.Pilar_A;
-import com.sg.uis.RC_Label;
-import com.sg.uis.RC_Label_FFF;
-import com.sg.uis.RC_RealTime;
-import com.sg.uis.SaveEquipt;
-import com.sg.uis.SaveSignal;
-import com.sg.uis.SeeImage;
-import com.sg.uis.SgAlarmChangTime;
-import com.sg.uis.SgAlarmLight;
-import com.sg.uis.SgAmmeter;
-import com.sg.uis.SgButton;
-import com.sg.uis.SgCableTerminal;
-import com.sg.uis.SgChangIP;
-import com.sg.uis.SgChangNamePhoneTypeState;
-import com.sg.uis.SgChangXmlPW;
-import com.sg.uis.SgChangePassWord;
-import com.sg.uis.SgChart;
-import com.sg.uis.SgCircleChart;
-import com.sg.uis.SgCommandButton;
-import com.sg.uis.SgControlAlarmWay;
-import com.sg.uis.SgCurveLineChart;
-import com.sg.uis.SgEllipse;
-import com.sg.uis.SgEventList;
-import com.sg.uis.SgForm;
-import com.sg.uis.SgGND;
-import com.sg.uis.SgImage;
-import com.sg.uis.SgIsolationEventSetter;
-import com.sg.uis.SgIsolationSwitch;
-import com.sg.uis.SgLabel;
-import com.sg.uis.SgPolyline;
-import com.sg.uis.SgRectangle;
-import com.sg.uis.SgSignalList;
-import com.sg.uis.SgSignalNameSetter;
-import com.sg.uis.SgStatePanel;
-import com.sg.uis.SgStraightLine;
-import com.sg.uis.SgTable;
-import com.sg.uis.SgTextBox;
-import com.sg.uis.SgTextClock;
-import com.sg.uis.SgThermometer;
-import com.sg.uis.SgTriggerSetter;
-import com.sg.uis.SgYKParameter;
-import com.sg.uis.SgYTParameter;
-import com.sg.uis.SignalCurve;
-import com.sg.uis.SignalCurves;
-import com.sg.uis.fjw_history_SignalList;
-import com.sg.uis.multi_Event_data;
-import com.sg.uis.multi_data;
-import com.sg.uis.test_quxian;
-import com.sg.uis.tigerLabel;
-import com.sg.uis.LsyNewView.AlarmCount;
-import com.sg.uis.LsyNewView.AlarmLevel;
-import com.sg.uis.LsyNewView.AlarmRectangle;
-import com.sg.uis.LsyNewView.AlarmShieldTime;
-import com.sg.uis.LsyNewView.ChangeLabel;
-import com.sg.uis.LsyNewView.ChangeLabelBtn;
-import com.sg.uis.LsyNewView.ChangeUserInfo;
-import com.sg.uis.LsyNewView.CoolButton;
-import com.sg.uis.LsyNewView.DoorInvented;
-import com.sg.uis.LsyNewView.EquipHistoryAlarm;
-import com.sg.uis.LsyNewView.EventLevelAlter;
-import com.sg.uis.LsyNewView.HistoryCurveChart;
-import com.sg.uis.LsyNewView.LanguageChange;
-import com.sg.uis.LsyNewView.NBerDoorView;
-import com.sg.uis.LsyNewView.OnClickBtn;
-import com.sg.uis.LsyNewView.SelfCheck;
-import com.sg.uis.LsyNewView.SgBARS;
-import com.sg.uis.LsyNewView.SgBarChartView;
-import com.sg.uis.LsyNewView.SgBrokenLine;
-import com.sg.uis.LsyNewView.SgClickPieChart;
-import com.sg.uis.LsyNewView.SgDial;
-import com.sg.uis.LsyNewView.SgHalfCircleChart;
-import com.sg.uis.LsyNewView.SgPieChart3D;
-import com.sg.uis.LsyNewView.SgSplineChart;
-import com.sg.uis.LsyNewView.SgStackBarChart;
-import com.sg.uis.LsyNewView.SgVideoView;
-import com.sg.uis.LsyNewView.StateButton;
 import com.sg.uis.LsyNewView.AlarmAction.SgAlarmAction;
 import com.sg.uis.LsyNewView.AlarmAction.SgAlarmActionShow;
+import com.sg.uis.LsyNewView.ChangeAbleLabel.ChangeableLabel;
 import com.sg.uis.LsyNewView.StartAndEndTriggerSet.StartAndEndTriggerSet;
 import com.sg.uis.LsyNewView.TimingAndDelayed.TimingAndDelayedView;
+import com.sg.uis.newView.AlarmCount;
+import com.sg.uis.newView.AlarmLevel;
+import com.sg.uis.newView.AlarmRectangle;
+import com.sg.uis.newView.AlarmShieldTime;
+import com.sg.uis.newView.ChangeLabel;
+import com.sg.uis.newView.ChangeLabelBtn;
+import com.sg.uis.newView.ChangeUserInfo;
+import com.sg.uis.newView.CoolButton;
+import com.sg.uis.newView.DoorInvented;
+import com.sg.uis.newView.EquipHistoryAlarm;
+import com.sg.uis.newView.EventLevelAlter;
+import com.sg.uis.newView.HistoryCurveChart;
+import com.sg.uis.newView.LanguageChange;
+import com.sg.uis.newView.NBerDoorView;
+import com.sg.uis.newView.OnClickBtn;
+import com.sg.uis.newView.SelfCheck;
+import com.sg.uis.newView.SgBARS;
+import com.sg.uis.newView.SgBarChartView;
+import com.sg.uis.newView.SgBrokenLine;
+import com.sg.uis.newView.SgClickPieChart;
+import com.sg.uis.newView.SgDial;
+import com.sg.uis.newView.SgHalfCircleChart;
+import com.sg.uis.newView.SgPieChart3D;
+import com.sg.uis.newView.SgSplineChart;
+import com.sg.uis.newView.SgStackBarChart;
+import com.sg.uis.newView.SgVideoView;
+import com.sg.uis.newView.StateButton;
+import com.sg.uis.oldView.AutoSig;
+import com.sg.uis.oldView.AutoSigList;
+import com.sg.uis.oldView.Breaker;
+import com.sg.uis.oldView.Dial;
+import com.sg.uis.oldView.Dial_A;
+import com.sg.uis.oldView.Dial_B;
+import com.sg.uis.oldView.Dial_C;
+import com.sg.uis.oldView.EventLabel;
+import com.sg.uis.oldView.HisEvent;
+import com.sg.uis.oldView.HistoryEventList;
+import com.sg.uis.oldView.HistorySignalList;
+import com.sg.uis.oldView.LocalList;
+import com.sg.uis.oldView.LsyChangExpression;
+import com.sg.uis.oldView.Pilar;
+import com.sg.uis.oldView.Pilar_A;
+import com.sg.uis.oldView.RC_Label;
+import com.sg.uis.oldView.RC_Label_FFF;
+import com.sg.uis.oldView.RC_RealTime;
+import com.sg.uis.oldView.SaveEquipt;
+import com.sg.uis.oldView.SaveSignal;
+import com.sg.uis.oldView.SeeImage;
+import com.sg.uis.oldView.SgAlarmChangTime;
+import com.sg.uis.oldView.SgAlarmLight;
+import com.sg.uis.oldView.SgAmmeter;
+import com.sg.uis.oldView.SgButton;
+import com.sg.uis.oldView.SgCableTerminal;
+import com.sg.uis.oldView.SgChangIP;
+import com.sg.uis.oldView.SgChangNamePhoneTypeState;
+import com.sg.uis.oldView.SgChangXmlPW;
+import com.sg.uis.oldView.SgChangePassWord;
+import com.sg.uis.oldView.SgChart;
+import com.sg.uis.oldView.SgCircleChart;
+import com.sg.uis.oldView.SgCommandButton;
+import com.sg.uis.oldView.SgControlAlarmWay;
+import com.sg.uis.oldView.SgCurveLineChart;
+import com.sg.uis.oldView.SgEllipse;
+import com.sg.uis.oldView.SgEventList;
+import com.sg.uis.oldView.SgForm;
+import com.sg.uis.oldView.SgGND;
+import com.sg.uis.oldView.SgImage;
+import com.sg.uis.oldView.SgIsolationEventSetter;
+import com.sg.uis.oldView.SgIsolationSwitch;
+import com.sg.uis.oldView.SgLabel;
+import com.sg.uis.oldView.SgPolyline;
+import com.sg.uis.oldView.SgRectangle;
+import com.sg.uis.oldView.SgSignalList;
+import com.sg.uis.oldView.SgSignalNameSetter;
+import com.sg.uis.oldView.SgStatePanel;
+import com.sg.uis.oldView.SgStraightLine;
+import com.sg.uis.oldView.SgTable;
+import com.sg.uis.oldView.SgTextBox;
+import com.sg.uis.oldView.SgTextClock;
+import com.sg.uis.oldView.SgThermometer;
+import com.sg.uis.oldView.SgTriggerSetter;
+import com.sg.uis.oldView.SgYKParameter;
+import com.sg.uis.oldView.SgYTParameter;
+import com.sg.uis.oldView.SignalCurve;
+import com.sg.uis.oldView.SignalCurves;
+import com.sg.uis.oldView.fjw_history_SignalList;
+import com.sg.uis.oldView.multi_Event_data;
+import com.sg.uis.oldView.multi_data;
+import com.sg.uis.oldView.test_quxian;
+import com.sg.uis.oldView.tigerLabel;
 import com.sg.web.HTML.BuildHtml;
 import com.sg.web.base.ViewObjectBase;
 import com.sg.web.base.ViewObjectSetCallBack;
@@ -135,7 +136,6 @@ import android.graphics.Rect;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.util.Xml;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -874,6 +874,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("Dial".equals(strType)) {
 							Dial dial = new Dial(this.getContext());
 							m_mapUIs.put(strID, dial);
+							callBackList.add(dial);
 						} else if ("Dial_A".equals(strType)) {
 							Dial_A dial_a = new Dial_A(this.getContext());
 							m_mapUIs.put(strID, dial_a);
@@ -973,15 +974,18 @@ public class MainWindow extends ViewGroup {
 						} else if ("SgClickPieChart".equals(strType)) {
 							SgClickPieChart SCPC = new SgClickPieChart(this.getContext());
 							m_mapUIs.put(strID, SCPC);
+							callBackList.add(SCPC);
 						} else if ("SgSplineChart".equals(strType)) {
 							SgSplineChart SSC = new SgSplineChart(this.getContext());
 							m_mapUIs.put(strID, SSC);
+							callBackList.add(SSC);
 						} else if ("AlarmRectangle".equals(strType)) {
 							AlarmRectangle AR = new AlarmRectangle(this.getContext());
 							m_mapUIs.put(strID, AR);
 						} else if ("SgBarChartView".equals(strType)) {
 							SgBarChartView SBCV = new SgBarChartView(this.getContext());
 							m_mapUIs.put(strID, SBCV);
+							callBackList.add(SBCV);
 						} else if ("SgStackBarChart".equals(strType)) {
 							SgStackBarChart SSBC = new SgStackBarChart(this.getContext());
 							m_mapUIs.put(strID, SSBC);
@@ -1039,7 +1043,12 @@ public class MainWindow extends ViewGroup {
 							StartAndEndTriggerSet SAETS = new StartAndEndTriggerSet(this.getContext());
 							m_mapUIs.put(strID, SAETS);
 
-						} else {
+						} else if ("ChangeableLabel".equals(strType)) {
+
+							ChangeableLabel CL = new ChangeableLabel(this.getContext());
+							m_mapUIs.put(strID, CL);
+
+						}else {
 							showMsgDlg("警告", "不支持的控件类型： " + strType);
 							bExit = false;
 						}
@@ -1118,7 +1127,8 @@ public class MainWindow extends ViewGroup {
 								|| "DoorInvented".equals(strElementType) || "ChangeUserInfo".equals(strElementType)
 								|| "NBerDoorView".equals(strElementType) || "StateButton".equals(strElementType)
 								|| "TimingAndDelayed".equals(strElementType)
-								|| "StartAndEndTriggerSet".equals(strElementType)) {
+								|| "StartAndEndTriggerSet".equals(strElementType)
+								|| "ChangeableLabel".equals(strElementType)) {
 							try {
 								iCurrentObj.parseProperties(strName, strValue, m_strResFolder);
 							} catch (Throwable e) {

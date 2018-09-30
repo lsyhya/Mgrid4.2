@@ -13,7 +13,7 @@ import org.w3c.dom.NodeList;
 
 import com.mgrid.main.MainWindow;
 import com.sg.common.IObject;
-import com.sg.uis.SgIsolationEventSetter;
+import com.sg.uis.oldView.SgIsolationEventSetter;
 
 import android.content.Context;
 

@@ -10,7 +10,7 @@ import com.mgrid.main.MGridActivity;
 import com.mgrid.main.user.User;
 import com.mgrid.main.user.UserEvent;
 import com.sg.common.IObject;
-import com.sg.uis.LsyNewView.DoorInvented;
+import com.sg.uis.newView.DoorInvented;
 
 import android.util.Log;
 

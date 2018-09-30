@@ -19,7 +19,7 @@ public class BuildHtml {
 				file.createNewFile();
 			}
 			
-			PrintStream ps=new PrintStream(new FileOutputStream(file));
+			PrintStream ps=new PrintStream(new  FileOutputStream(file));
 			sbHtml.append("<html>\r\n" + 
 					"<head>\r\n" + 
 					"\r\n" + 

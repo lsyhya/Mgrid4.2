@@ -35,6 +35,11 @@ public class ExpressionUtils {
 		return cmdList;
 	}
 	
+	
+	
+
+	
+	
 	//Binding{[Cmd[Equip:1-Temp:177-Command:2-Parameter:1-Value:0]]}	
 	public List<String> parseYKP(String cmd) {
 		String removeBind = removeBindingString(cmd); 
