@@ -38,11 +38,15 @@ import com.sg.common.LanguageStr;
 import com.sg.common.MySimpleAdapter;
 import com.sg.common.TotalVariable;
 import com.sg.common.UtTable;
+import com.sg.web.AlarmLevelObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
 /** 告警等级分类 */
 @SuppressLint({ "ShowToast", "InflateParams", "RtlHardcoded",
 		"ClickableViewAccessibility" })
-public class AlarmLevel extends TextView implements IObject {
+public class AlarmLevel extends TextView implements IObject ,ViewObjectSetCallBack{
 
 	// TabHost tablehost;
 	
@@ -52,11 +56,14 @@ public class AlarmLevel extends TextView implements IObject {
 	private String four=LanguageStr.four;
 	private String level=LanguageStr.level;
 	
-	
+	MGridActivity  mg=null;
 
 	public AlarmLevel(Context context) {
 		super(context);
 
+		
+		mg=(MGridActivity) context;
+		
 		m_oPaint = new Paint();
 		m_rBBox = new Rect();
 
@@ -109,6 +116,7 @@ public class AlarmLevel extends TextView implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 		rWin.addView(listView);
 
@@ -154,15 +162,22 @@ public class AlarmLevel extends TextView implements IObject {
 			m_bIsBold = Boolean.parseBoolean(strValue);
 		else if ("FontColor".equals(strName)) {
 			if (!strValue.isEmpty())
+			{
 				adapter.setInfoColor(strValue);
+				infoColor=strValue;
+			}
 		} else if ("ColorData".equals(strName)) {
 			if (!strValue.isEmpty())
+			{
 				adapter.setLinColor(strValue);
+				lineColor=strValue;
 
+			}
 		} else if ("ScaleColor".equals(strName)) {
 			if (!strValue.isEmpty()) {
 				adapter.setTitleColor(strValue);
 				adapter.notifyDataSetChanged();
+				titleColor=strValue;
 			}
 		} else if ("CmdExpression".equals(strName))
 			m_strCmdExpression = strValue;
@@ -228,17 +243,17 @@ public class AlarmLevel extends TextView implements IObject {
 	};
 
 	private void startSound() {
-		Intent intent = new Intent(m_rRenderWindow.m_oMgridActivity,
+		Intent intent = new Intent(mg,
 				SoundService.class);
 		intent.putExtra("playing", true);
-		m_rRenderWindow.m_oMgridActivity.startService(intent);
+		mg.startService(intent);
 	}
 
 	private void stopSound() {
-		Intent intent = new Intent(m_rRenderWindow.m_oMgridActivity,
+		Intent intent = new Intent(mg,
 				SoundService.class);
 		intent.putExtra("playing", false);
-		m_rRenderWindow.m_oMgridActivity.startService(intent);
+		mg.startService(intent);
 	}
 
 	@Override
@@ -560,4 +575,47 @@ public class AlarmLevel extends TextView implements IObject {
 	private int m_nLayoutBottomOffset = 1;
 	private String grade = "0";
 	private Hashtable<String, Hashtable<String, Event>> oldEvenLists = null;
+
+
+	ViewObjectBase base=new AlarmLevelObject();
+	
+	String titleColor,lineColor,infoColor;
+
+	
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		((AlarmLevelObject)base).setTitleColor(ViewObjectColorUtil.getColor(titleColor));
+		((AlarmLevelObject)base).setLineColor(ViewObjectColorUtil.getColor(lineColor));
+		((AlarmLevelObject)base).setInfoColor(ViewObjectColorUtil.getColor(infoColor));
+		
+		
+	}
+
+	@Override
+	public void onSetData() {
+		
+		((AlarmLevelObject)base).setList(old_list);
+		
+		
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -1,5 +1,6 @@
 package com.sg.uis.newView;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -8,6 +9,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import com.alibaba.fastjson.JSON;
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
@@ -18,6 +20,9 @@ import com.sg.common.LanguageStr;
 import com.sg.common.lsyBase.DoorCallBack;
 import com.sg.common.lsyBase.Door_XuNiCallBack;
 import com.sg.common.lsyBase.Door_XuNiUtil;
+import com.sg.web.ChangeUserInfoObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -26,7 +31,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Handler;
-import android.os.Message;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.Gravity;
@@ -45,7 +49,7 @@ import android.widget.Toast;
  * @author Administrator
  * 
  */
-public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBack {
+public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBack,ViewObjectSetCallBack {
 
 	private String UserID = LanguageStr.UserID;
 	private String PassWord = LanguageStr.PassWord;
@@ -65,6 +69,9 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 	// private String oldPassWord = "";
 	public int index;
 	private DoorCallBack callBack;
+	private Map<String,String> mapData=new HashMap<>();
+	
+	
 
 	public ChangeUserInfo(Context context) {
 		super(context);
@@ -381,17 +388,23 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 				etPhone.setText("");
 				etTime.setText("");
 				btDelete.setEnabled(false);
+				mapData.clear();
 				Toast.makeText(getContext(), "刪除成功", Toast.LENGTH_SHORT).show();
 
 				break;
 
 			case 1:
 
+				
+				setData();				
+				setTexts(oid, opw,otime);
 				Toast.makeText(getContext(), "修改成功", Toast.LENGTH_SHORT).show();
 
 				break;
 			case 2:
+				
 
+				setData();			
 				if (isLayout) {
 					setTexts(oid, opw,otime);
 					setText(Alter);
@@ -584,7 +597,7 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
-
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(tvTagorder);
 
 		rWin.addView(etName);
@@ -707,6 +720,28 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 	// 记录触摸坐标，过滤滑动操作。解决滑动误操作点击问题。
 	public float m_xscal = 0;
 	public float m_yscal = 0;
+	
+	
+	ViewObjectBase base=new ChangeUserInfoObject();
+	
+	
+	
+	private void  setData()
+	{
+		
+		Map<Integer, User> map = MGridActivity.userManager.getUserManaget();
+		User user = map.get(Integer.parseInt(tvTagorder.getText().toString()));
+		if (user != null) {
+			
+			mapData.put("uid", user.getUid());
+			mapData.put("pw", user.getPw());
+			mapData.put("time", user.getTime());
+			
+
+		}
+		
+	}
+	
 
 	@Override
 	public void onSuccess(int state, String id, String pw,String time) {
@@ -760,6 +795,81 @@ public class ChangeUserInfo extends TextView implements IObject, Door_XuNiCallBa
 			break;
 		}
 
+	}
+
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		setData();
+		
+		((ChangeUserInfoObject)base).setIndex(index);
+		
+		((ChangeUserInfoObject)base).setMapData(mapData);
+		
+		
+	}
+
+	@Override
+	public void onSetData() {
+		
+		
+		((ChangeUserInfoObject)base).setMapData(mapData);
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		
+		String str = (String) obj;
+
+		Map<String, String> maps = (Map<String, String>) JSON.parse(str);
+
+		String type = maps.get("type");
+		String id = maps.get("uid");
+		String pw = maps.get("pw");
+		String time = maps.get("time");
+
+		Log.e("type", type);
+
+		if (type.equals("delete")) {
+
+			Delete(id, pw, index);
+		}
+
+		if (type.equals("alter")) {
+
+			
+			     oid = id;
+			     opw = pw;
+			     otime=time;
+			
+				if(mapData.size()==0)
+				{
+					Add(id, pw, index,time);
+					
+				}else
+				{
+					Alter(id, pw, index,time);
+				}				
+				
+			
+
+		}
+		
+		
+		
 	}
 
 }

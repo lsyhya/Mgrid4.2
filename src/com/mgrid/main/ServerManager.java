@@ -106,7 +106,7 @@ public class ServerManager extends BroadcastReceiver {
                 }
                 case CMD_VALUE_ERROR: {
                     String error = intent.getStringExtra(MESSAGE_KEY);
-                   // mActivity.serverError(error);
+                    //mActivity.serverError(error);
                     break;
                 }
                 case CMD_VALUE_STOP: {

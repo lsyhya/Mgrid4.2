@@ -23,6 +23,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,11 +40,14 @@ import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
 import com.sg.common.UtExpressionParser.stBindingExpression;
+import com.sg.web.SgIsolationEventSetterObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
 import com.sun.mail.dsn.message_deliverystatus;
 
 import data_model.ipc_cfg_trigger_value;
 
-public class SgIsolationEventSetter extends ToggleButton implements IObject {
+public class SgIsolationEventSetter extends ToggleButton implements IObject ,ViewObjectSetCallBack{
 
 	private stBindingExpression oBindingExpression;
     private SelfDialog dialog=null;
@@ -96,26 +100,10 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 			@Override
 			public void onClick(View arg0) {
 				
-				dialog.show();
-				// 发送控制命令
-				if ("".equals(m_strCmdExpression) == false) {
-					// TODO: 依据当前告警状态区分设定还是切换显示状态
 	
-						synchronized (m_rRenderWindow.m_oShareObject) {
-					
-							
-							SgIsolationEventSetter.this.setEnabled(false);							
-							handler.postDelayed(runnable, 3000);
-							m_rRenderWindow.m_oShareObject.m_mapTriggerCommand.put(getUniqueID(),
-									isChecked() ? "1" : "0");
-							if (isChecked()) {
-								setTextColor(Color.BLUE);
-							} else {
-								setTextColor(Color.RED);
-							}
-						}
-					}
-				}
+				sendCmd();
+				
+			}
 			
 		});
 
@@ -131,13 +119,76 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 
 	}
 
-	// private boolean xmlState()
-	// {
-	//
-	//
-	// return false;
-	// }
 
+	private void   onClickEvent()
+	{
+		
+		
+		this.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				
+				dialog.show();
+				// 发送控制命令
+				if ("".equals(m_strCmdExpression) == false) {
+					// TODO: 依据当前告警状态区分设定还是切换显示状态
+
+						synchronized (m_rRenderWindow.m_oShareObject) {
+					
+							
+							
+							sendCmd();
+							
+						
+							if (isChecked()) {
+								
+								text=m_strTextOff;
+								textColor="#FF0000";
+								setTextColor(Color.RED);
+								setChecked(false);
+							} else {
+								text=m_strTextOn;
+								textColor="#0000FF";
+								setTextColor(Color.BLUE);								
+								setChecked(true);
+							}
+						}
+					}
+				
+			}
+		});
+		
+		
+		
+	}
+	
+	
+	private void sendCmd()
+	{
+		SgIsolationEventSetter.this.setEnabled(false);							
+		handler.postDelayed(runnable, 3000);
+		m_rRenderWindow.m_oShareObject.m_mapTriggerCommand.put(getUniqueID(),
+				isChecked() ? "1" : "0");
+		
+		if (isChecked()) {
+			
+		
+			text=m_strTextOn;
+			textColor="#0000FF";
+			setTextColor(Color.BLUE);
+			
+		} else {
+		
+			text=m_strTextOff;
+			textColor="#FF0000";
+			setTextColor(Color.RED);								
+		}
+		
+	}
+	
+	
 	@SuppressLint("DrawAllocation")
 	protected void onDraw(Canvas canvas) {
 		/*
@@ -178,6 +229,7 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		// int
 		// enabled=m_rRenderWindow.m_oShareObject.m_SgIsolationEventSetter.get(m_strID);
 		// if(enabled==1){
@@ -353,6 +405,8 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 			case 0:
 
 				
+				text=m_strTextOff;
+				textColor="#FF0000";
 				setText(off);
 				setChecked(false);
 				setTextColor(Color.RED);
@@ -361,7 +415,9 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 
 			case 1:
 
-				
+			
+				text=m_strTextOn;
+				textColor="#0000FF";
 				setText(on);
 				setChecked(true);
 				setTextColor(Color.BLUE);
@@ -371,12 +427,12 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 			case 2:
 
 				String s = msg.obj.toString();
-				//Toast.makeText(getContext(), "设备Id" + s + "并没有找到,检查一下吧", 200).show();
+				
 
 				break;
 			case 3:
 
-				//Toast.makeText(getContext(), "屏蔽整个设备时发生错误", 200).show();
+
 
 				break;
 			case 4:
@@ -534,5 +590,49 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject {
 	// 记录触摸坐标，过滤滑动操作。解决滑动误操作点击问题。
 	public float m_xscal = 0;
 	public float m_yscal = 0;
+	
+	String text,textColor;
+
+	
+	ViewObjectBase base=new SgIsolationEventSetterObject();
+
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		base.setType(m_strType);
+		
+		((SgIsolationEventSetterObject)base).setText(text);
+		((SgIsolationEventSetterObject)base).setTextColor(textColor);
+		
+		
+	}
+
+	@Override
+	public void onSetData() {
+		
+		((SgIsolationEventSetterObject)base).setText(text);
+		((SgIsolationEventSetterObject)base).setTextColor(textColor);
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		
+		
+		onClickEvent();
+		
+	}
 
 }

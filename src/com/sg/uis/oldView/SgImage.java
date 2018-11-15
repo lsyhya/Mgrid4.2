@@ -362,13 +362,13 @@ public class SgImage extends View implements IObject ,ViewObjectSetCallBack{
 		    	String[] s=strValue.split("\\(");
 		    	String[] ss=s[1].split("\\)");
 		    	
-		    	if((ss[0]+".xml").equals(activity.m_sMainPage))
-		    	{
-		    	    HrefUrl="index";
-		    	}else
-		    	{
+//		    	if((ss[0]+".xml").equals(activity.m_sMainPage))
+//		    	{
+//		    	    HrefUrl="index";
+//		    	}else
+//		    	{
 		    		HrefUrl=ss[0];
-		    	}
+//		    	}
 		    	
 		    }
 		}
@@ -845,6 +845,12 @@ public class SgImage extends View implements IObject ,ViewObjectSetCallBack{
 
 	@Override
 	public void onSetData() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onControl(Object obj) {
 		// TODO Auto-generated method stub
 		
 	}

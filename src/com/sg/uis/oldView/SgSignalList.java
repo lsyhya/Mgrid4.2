@@ -43,23 +43,7 @@ public class SgSignalList extends UtTable implements IObject,ViewObjectSetCallBa
 		super(context);
 		m_rBBox = new Rect();
 		
-//		if(MGridActivity.whatLanguage)
-//		{
-//			Name="名称";
-//			RefreshTime="刷新时间";
-//			Value="值";
-//			Implication="含义";
-//			Unit="单位";
-//		}
-//		else
-//		{
-//			Name="Name";
-//			RefreshTime="RefreshTime";
-//			Value="Value";
-//			Implication="Implication";
-//			Unit="Unit";
-//		
-//		}
+
 		
 		lstTitles = new ArrayList<String>();
 		lstTitles.add(Name);
@@ -68,14 +52,7 @@ public class SgSignalList extends UtTable implements IObject,ViewObjectSetCallBa
 	//	lstTitles.add("告警等级");
 		lstTitles.add(Implication);
 		lstTitles.add(Unit);
-/*		
-		lstTitles.add("Name");
-		lstTitles.add("Achieve time");
-		lstTitles.add("Value");
-//		lstTitles.add("Alarm severity");
-		lstTitles.add("Meaning");
-		lstTitles.add("Unit");
-*/		
+
 		lstContends = new ArrayList<List<String>>();
 		m_sortedarray = new ArrayList<String>();
 	}
@@ -141,38 +118,7 @@ public class SgSignalList extends UtTable implements IObject,ViewObjectSetCallBa
 			m_title[i].setText(lstTitles.get(i));
 			rWin.addView(m_title[i]);
 		}
-		
-		/*
-		m_oRadioButtons = new RadioButton[2];
-		//bt1
-		m_oRadioButtons[0] = new RadioButton(this.getContext());
-		m_oRadioButtons[0].setText("全部");
-		m_oRadioButtons[0].setChecked(true);
-		// bt2
-		m_oRadioButtons[1] = new RadioButton(this.getContext());
-		m_oRadioButtons[1].setText("遥测");
-		
-		m_oRadioButtons[0].setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (m_oRadioButtons[0].isChecked()) {
-					m_oRadioButtons[1].setChecked(false);
-				}
-			}
-		});
-		
-		m_oRadioButtons[1].setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (m_oRadioButtons[1].isChecked()) {
-					m_oRadioButtons[0].setChecked(false);
-				}
-			}
-		});
-
-		for (int i = 0; i < m_oRadioButtons.length; ++i)
-			rWin.addView(m_oRadioButtons[i]);
-		*/
+	
 		
 		m_rRenderWindow = rWin;
 		m_rRenderWindow.viewList.add(base);
@@ -459,6 +405,13 @@ public class SgSignalList extends UtTable implements IObject,ViewObjectSetCallBa
 
 	@Override
 	public void onSetData() {
+		
+		((SignalListObject)base).setData(lstContends);
+		
+	}
+
+	@Override
+	public void onControl(Object obj) {
 		// TODO Auto-generated method stub
 		
 	}

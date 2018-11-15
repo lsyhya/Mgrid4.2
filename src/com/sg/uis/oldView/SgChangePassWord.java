@@ -445,4 +445,10 @@ public class SgChangePassWord extends TextView implements IObject,ViewObjectSetC
 		
 	}
 
+	@Override
+	public void onControl(Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -11,6 +11,11 @@ import com.mgrid.util.ExpressionUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.SgRealTimeData;
+import com.sg.web.DoorInventedObject;
+import com.sg.web.StateButtonObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -32,7 +37,7 @@ import android.widget.Button;
 import comm_service.service;
 import data_model.ipc_control;
 
-public class StateButton extends Button implements IObject, OnClickListener ,OnTouchListener{
+public class StateButton extends Button implements IObject, OnClickListener ,OnTouchListener,ViewObjectSetCallBack{
 
 	private Rect m_rBBox;
 
@@ -214,11 +219,17 @@ public class StateButton extends Button implements IObject, OnClickListener ,OnT
 		} else if ("ImageOpen".equals(strName)) {
 
 			String path = Environment.getExternalStorageDirectory().getPath() + strResFolder + strValue;
+			
+			openPath=strResFolder.replace("/vtu_pagelist/", "")+strValue;
+			
 			drawableOpen = new BitmapDrawable(getResources(), path);
 
 		} else if ("ImageClose".equals(strName)) {
 
 			String path = Environment.getExternalStorageDirectory().getPath() + strResFolder + strValue;
+			
+			closePath=strResFolder.replace("/vtu_pagelist/", "")+strValue;
+			
 			drawableClose = new BitmapDrawable(getResources(), path);
 
 		} else if ("OpenValue".equals(strName)) {
@@ -276,6 +287,7 @@ public class StateButton extends Button implements IObject, OnClickListener ,OnT
 	public void addToRenderWindow(MainWindow rWin) {
 
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 
 	}
@@ -293,10 +305,12 @@ public class StateButton extends Button implements IObject, OnClickListener ,OnT
 		if (!isFrist) {
 
 			this.setBackground(drawableOpen);
+			ImagePath=openPath;
 
 		} else {
 
 			this.setBackground(drawableClose);
+			ImagePath=closePath;
 
 		}
 
@@ -383,26 +397,36 @@ public class StateButton extends Button implements IObject, OnClickListener ,OnT
 	public void onClick(final View v) {
 
 		
-		v.setEnabled(false);	
 		
-		timer.schedule(new TimerTask() {
+		v.post(new Runnable() {
 			
 			@Override
 			public void run() {
 				
-				handler.sendEmptyMessage(0);
+				
+				v.setEnabled(false);	
+				
+				timer.schedule(new TimerTask() {
+					
+					@Override
+					public void run() {
+						
+						handler.sendEmptyMessage(0);
+						
+					}
+				}, 3000);
 				
 			}
-		}, 3000);
+		});
+		
+	
 		
 		MGridActivity.xianChengChi.execute(new Runnable() {
 
 			@Override
 			public void run() {
 
-				
-				
-				
+
 				sendCmd();
 
 			}
@@ -508,6 +532,48 @@ public class StateButton extends Button implements IObject, OnClickListener ,OnT
 			m_oPaint.setStyle(Paint.Style.FILL);
 			canvas.drawRect(0, 0, nWidth, nHeight, m_oPaint);
 		}
+	}
+	
+	
+	ViewObjectBase base=new StateButtonObject();
+	String 	ImagePath="";
+	String 	openPath="";
+	String 	closePath="";
+
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		((StateButtonObject)base).setImagePath(ImagePath);
+		
+	}
+
+	@Override
+	public void onSetData() {
+		
+		((StateButtonObject)base).setImagePath(ImagePath);
+		
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		
+		
+		
+		onClick(this);
+		
 	}
 
 }

@@ -331,4 +331,10 @@ public class SgAlarmLight extends View implements IObject,ViewObjectSetCallBack 
 		base.setValue(m_nLevel+"");
 		
 	}
+
+	@Override
+	public void onControl(Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
 }

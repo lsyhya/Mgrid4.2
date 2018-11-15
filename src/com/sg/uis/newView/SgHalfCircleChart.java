@@ -480,4 +480,10 @@ public class SgHalfCircleChart extends TextView implements IObject,ViewObjectSet
 		 base.setValue(newValue+"");
 		
 	}
+
+	@Override
+	public void onControl(Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
 }

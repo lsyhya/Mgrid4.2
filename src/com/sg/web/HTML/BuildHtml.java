@@ -24,15 +24,27 @@ public class BuildHtml {
 					"<head>\r\n" + 
 					"\r\n" + 
 					"    <title>"+dataName+"</title>\r\n" + 
-					"\r\n" + 
+					"\r\n" +" <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\r\n" + 
+							"    <meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\">"+ 
+					
+					"    <link rel=\"stylesheet\" href=\"css/reset.css\" />\r\n" + 
+					"    <link rel=\"stylesheet\" href=\"css/styleDate.css\" />\r\n" + 					
 					"    <script src=\"js/myData.js\"></script>\r\n" + 
 					"    <script src=\"js/echarts.js\"></script>\r\n" + 
 					"    <script src=\"js/BuildHtml.js\"></script>\r\n" + 
 					"    <script src=\"js/jquery.min.js\"></script>\r\n" + 
 					"    <script src=\"js/jquery.form.js\"></script>\r\n" + 
+					"    <script src=\"js/Ecalendar.jquery.min.js\"></script>"+
 					"\r\n" + 
 					"  <script type=\"text/javascript\">\r\n" + 
-					"\r\n" + 
+					"\r\n" + "   $(document).ready(function(){\r\n" + 
+							"\r\n" + 
+							"\r\n" + 
+							"          if(getCookie(\"user\")==\"\")\r\n" + 
+							"          {\r\n" + 
+							"              window.location.href=\"index.html\";\r\n" + 
+							"          }\r\n" + 
+							"      });"+
 					"\r\n" + 
 					"\r\n" + 
 					"      function refreshOnTime(){\r\n" + 
@@ -49,7 +61,7 @@ public class BuildHtml {
 					"                  if(users!='fail')\r\n" + 
 					"                  {\r\n" + 
 					"\r\n" + 
-					"\r\n" + 
+					"\r\n" +               
 					"\r\n" + 
 					"                      for(var i=0; i<users.length; i++){\r\n" + 
 					"\r\n" + 
@@ -80,7 +92,7 @@ public class BuildHtml {
 					"			success : function(users){	//回调函数 和 后台返回的 数据\r\n" + 
 					"\r\n" + 
 					"                if(users!='fail')\r\n" + 
-					"                {\r\n" + 
+					"                {\r\n" + 			
 					"\r\n" + 
 					"                   // var wh=window.screen.availWidth/1024;\r\n" + 
 					"                    $(\"div.Main\").css({\"position\":\"absolute\",\"left\":\"0px\",\"top\":\"0px\",\"background-color\":\"white\",\"height\":window.screen.availHeight,\"width\":window.screen.availWidth});\r\n" + 

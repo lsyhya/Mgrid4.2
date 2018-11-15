@@ -157,11 +157,11 @@ public class Axis extends View{
 		   Date d=new Date(time);
 		   String s=sd.format(d);
 		   String dateTime = s.substring(0,10); 
-		   int year = Integer.parseInt( dateTime.substring(0,4));
+		   int year = Integer.parseInt( dateTime.substring(0,4))+5;
 		   x_markValue.clear();
 		   for(int i=year-x_num;i<=year;i++){			
 				 x_markValue.add(String.valueOf(i));		
-		  }
+		   }
 			
 		}
 	

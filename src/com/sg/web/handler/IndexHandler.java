@@ -1,7 +1,6 @@
 package com.sg.web.handler;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.httpcore.HttpException;
@@ -34,8 +33,10 @@ public class IndexHandler implements RequestHandler{
 		  {
 			  
 			  String json=JSON.toJSON(MGridActivity.ViewJosnObject.get(params.get("titleName"))).toString();	
-			  Log.e("json", MGridActivity.ViewJosnObject.get(params.get("titleName")).size()+"");
-			  Log.e("json", json);
+//			  String json=JSON.toJSONString(MGridActivity.ViewJosnObject.get(params.get("titleName")));
+//			  Log.e("json", MGridActivity.ViewJosnObject.get(params.get("titleName")).size()+"");
+			 // Log.e("Tag", json.length()+"");
+			  //showLogCompletion(json,2000);
 			  StringEntity stringEntity = new StringEntity(json, "utf-8");
 			  arg1.setStatusCode(200);
 			  arg1.setEntity(stringEntity);
@@ -52,6 +53,34 @@ public class IndexHandler implements RequestHandler{
 		  
 		
 	}
+	
+	
+	
+	/**
+	 * 分段打印出较长log文本
+	 * @param log        原log文本
+	 * @param showCount  规定每段显示的长度（最好不要超过eclipse限制长度）
+	 */
+	public static void showLogCompletion(String log,int showCount){
+		if(log.length() >showCount){
+			String show = log.substring(0, showCount);
+//			System.out.println(show);
+			Log.i("TAG", show+"");
+			if((log.length() - showCount)>showCount){//剩下的文本还是大于规定长度
+				String partLog = log.substring(showCount,log.length());
+				showLogCompletion(partLog, showCount);
+			}else{
+				String surplusLog = log.substring(showCount, log.length());
+//				System.out.println(surplusLog);
+				Log.i("TAG", surplusLog+"");
+			}
+			
+		}else{
+//			System.out.println(log);
+			Log.i("TAG", log+"");
+		}
+	}
+
 	
 	
 	

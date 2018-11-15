@@ -1,13 +1,55 @@
 package com.sg.web.utils;
 
+import android.util.Log;
+
 public class ViewObjectColorUtil {
 
 	public static String getColor(String color) {
-		if (color == null || !color.startsWith("#") || color.length() != 9 || color.substring(1, 3).equals("00")) {
-			return "transparent";
-		}
+		
+		
+		try {
+			
+			if (color == null || !color.startsWith("#") || color.length() != 9 || color.substring(1, 3).equals("00")) {
 
-		return "#" + color.substring(3, color.length());
+				if(color==null)
+				{
+					return "transparent";
+				}
+				
+				
+				switch (color) {
+				case "Red":
+
+					return "#FF0000";
+
+				case "Greed":
+
+					return "#00FF00";
+					
+					
+				default :
+					
+					return "transparent";
+					
+				}
+
+				
+			}
+
+			
+			return "#" + color.substring(3, color.length());
+			
+			
+		} catch (Exception e) {
+		
+			
+			e.printStackTrace();
+			Log.e("TAG", color);
+			return "transparent";
+			
+		}
+		
+		
 	}
 
 	public static int getArgb(int color) {

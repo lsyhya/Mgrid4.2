@@ -1779,19 +1779,7 @@ public class DataGetter extends Thread {
 			}
 		}
 		
-//		if (flag_state == 1) {
-//			flag_state = 0;
-//			Iterator<IObject> reglstobj_it2 = equipment.registedStateObj.iterator();
-//			while (reglstobj_it2.hasNext()) {
-//				reglstobj_it2.next().needupdate(true);
-//				try {
-//					sleep(50);
-//				} catch (Exception e) {
-//					;
-//				}
-//			}
-//		}
-		
+
 
 		return true;
 	} // end of proc_allrtalarm

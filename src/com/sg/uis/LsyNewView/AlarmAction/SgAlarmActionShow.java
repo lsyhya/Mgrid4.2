@@ -19,10 +19,14 @@ import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.web.SgAlarmActionShowObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
 /** ±Í«© */
 @SuppressLint({ "RtlHardcoded", "HandlerLeak" })
-public class SgAlarmActionShow extends TextView implements IObject {
+public class SgAlarmActionShow extends TextView implements IObject,ViewObjectSetCallBack {
 
 	public SgAlarmActionShow(Context context) {
 		super(context);
@@ -71,6 +75,7 @@ public class SgAlarmActionShow extends TextView implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 	}
 
@@ -111,6 +116,7 @@ public class SgAlarmActionShow extends TextView implements IObject {
 		} else if ("IsBold".equals(strName))
 			m_bIsBold = Boolean.parseBoolean(strValue);
 		else if ("FontColor".equals(strName)) {
+			textColor=strValue;
 			m_cFontColor = Color.parseColor(strValue);
 			m_cStartFillColor = m_cFontColor;
 			this.setTextColor(m_cFontColor);
@@ -352,4 +358,43 @@ public class SgAlarmActionShow extends TextView implements IObject {
 	private HashMap<String, ArrayList<String>> show = new HashMap<String, ArrayList<String>>();
 	ArrayList<String> alist=null;
 	String text="";
+	
+	ViewObjectBase base=new SgAlarmActionShowObject();
+	
+	String textColor="";
+
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		((SgAlarmActionShowObject)base).setTextColor(ViewObjectColorUtil.getColor(textColor));
+		((SgAlarmActionShowObject)base).setTextSize(m_fFontSize);
+		((SgAlarmActionShowObject)base).setText(this.getText().toString());
+		
+	}
+
+	@Override
+	public void onSetData() {
+		
+		((SgAlarmActionShowObject)base).setText(this.getText().toString());
+		
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
 }

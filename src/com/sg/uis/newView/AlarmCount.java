@@ -10,6 +10,8 @@ import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.web.AlarmCountObject;
+import com.sg.web.base.ViewObjectSetCallBack;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -28,7 +30,7 @@ import android.widget.TextView;
 /** 分类告警数量统计 */
 @SuppressLint({ "ShowToast", "InflateParams", "RtlHardcoded",
 		"ClickableViewAccessibility" })
-public class AlarmCount extends TextView implements IObject {
+public class AlarmCount extends TextView implements IObject ,ViewObjectSetCallBack{
 
 
 	public AlarmCount(Context context) {
@@ -100,9 +102,8 @@ public class AlarmCount extends TextView implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
-		
-		
 
 	}
 
@@ -360,4 +361,42 @@ public class AlarmCount extends TextView implements IObject {
 	private String grade = "0";
 	private String Text="0";
 	private int x,y;
+	
+	AlarmCountObject base=new AlarmCountObject();
+
+	@Override
+	public void onCall() {
+		
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		((AlarmCountObject)base).setText(Text);
+		((AlarmCountObject)base).setGrad(grade);
+	}
+
+
+	@Override
+	public void onSetData() {
+		
+		((AlarmCountObject)base).setText(Text);
+		
+	}
+
+
+	@Override
+	public void onControl(Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
 }

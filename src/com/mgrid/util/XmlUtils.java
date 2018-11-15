@@ -73,6 +73,12 @@ public class XmlUtils {
 					e.printStackTrace();
 				}
 				NodeList ET_list = doc.getElementsByTagName("EquipTemplate");
+				
+				if(ET_list==null||ET_list.getLength()==0)
+				{
+					continue;
+				}
+				
 				Element element1 = (Element) ET_list.item(0);
 				String ET_Id = element1.getAttribute("EquipTemplateId");
 				if (!ET_Id.equals(EquipTemplateId)) {

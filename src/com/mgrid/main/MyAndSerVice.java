@@ -4,7 +4,10 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import com.mgrid.util.NetUtils;
+import com.sg.web.handler.DataCallBackHandler;
 import com.sg.web.handler.IndexHandler;
+import com.sg.web.handler.LoginHandler;
+import com.sg.web.handler.OnClickHandler;
 import com.sg.web.handler.SendDataHandler;
 import com.yanzhenjie.andserver.AndServer;
 import com.yanzhenjie.andserver.Server;
@@ -58,6 +61,9 @@ public class MyAndSerVice extends Service{
 	                .website(new StorageWebsite(file.getAbsolutePath()))
 	                .registerHandler("/test", new IndexHandler())   
 	                .registerHandler("/getdata", new SendDataHandler())
+	                .registerHandler("/onClick", new OnClickHandler())
+	                .registerHandler("/callback", new DataCallBackHandler())
+	                .registerHandler("/login", new LoginHandler())
 	                .filter(new HttpCacheFilter())
 	                .listener(mListener)
 	                .build();
@@ -78,7 +84,7 @@ public class MyAndSerVice extends Service{
     private Server.ServerListener mListener = new Server.ServerListener() {
         @Override
         public void onStarted() {
-           // String hostAddress = mServer.getInetAddress().getHostAddress();
+          
         	if(mServer==null)
         	{
         		Log.e("webService", "Ê§°Ü");

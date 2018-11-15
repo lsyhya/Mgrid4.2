@@ -27,6 +27,12 @@ public class PageChangeUtil {
 	private String pageXml = "";
 	private UISManager uisMa=new UISManager();
 
+	
+	public PageChangeUtil()
+	{
+		
+	}
+	
 	public PageChangeUtil(SgImage image, String m_strClickEvent, MainWindow m_rRenderWindow) {
 		this.image = image;
 		this.m_strClickEvent = m_strClickEvent;
@@ -221,7 +227,7 @@ public class PageChangeUtil {
 	}
 
 	//判断用户密码正确否
-	private boolean judgeUserPW(String User, String PassWord) {
+	public boolean judgeUserPW(String User, String PassWord) {
 		Iterator<Map.Entry<Integer, User>> it = MGridActivity.userManager.getUserManaget().entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry<Integer, User> map = it.next();
@@ -237,5 +243,24 @@ public class PageChangeUtil {
 
 		return false;
 	}
+	
+	
+	//获取index
+	public String getIndex(String User, String PassWord) {
+		Iterator<Map.Entry<Integer, User>> it = MGridActivity.userManager.getUserManaget().entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<Integer, User> map = it.next();
+			if (map.getValue().getUid().toString().equals(User) && 
+					map.getValue().getPw().equals(PassWord)) {
+
+				
+				return map.getValue().getIndex();
+			}
+		}
+
+		return "";
+	}
+	
+	
 
 }

@@ -394,7 +394,7 @@ public class Dial extends View implements IObject,ViewObjectSetCallBack {
 		base.setTypeId(m_strID);
 		base.setType(m_strType);
 		base.setValue(data_value+"");
-		((DialObject)base).setFillColor(fillColor);
+		((DialObject)base).setFillColor(ViewObjectColorUtil.getColor(fillColor));
 		((DialObject)base).setWarmPerColor(ViewObjectColorUtil.getColor(warmPerColor));
 		((DialObject)base).setLineColor(ViewObjectColorUtil.getColor(lineColor));
 		((DialObject)base).setWarmPer(WarmPer);
@@ -405,5 +405,11 @@ public class Dial extends View implements IObject,ViewObjectSetCallBack {
 	public void onSetData() {
 		
 		base.setValue(data_value+"");
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		// TODO Auto-generated method stub
+		
 	}
 }

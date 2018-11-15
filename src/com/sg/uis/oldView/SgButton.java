@@ -45,6 +45,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -357,6 +358,7 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 
 			} else if (m_strClickEvent.equals("关闭告警")) {
 
+				
 				Intent intent = new Intent(m_rRenderWindow.m_oMgridActivity, SoundService.class);
 				intent.putExtra("playing", false);
 				m_rRenderWindow.m_oMgridActivity.startService(intent);
@@ -810,13 +812,22 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 		((ButtonObject) base).setTextColor(textColor);
 		((ButtonObject) base).setTextSize(m_fFontSize);				
 		((ButtonObject) base).setImgSrc(imgSrc);
-
+		
 		
 	    if(m_strClickEvent.contains("Show"))
 	    {
+	    	
 	    	String[] s=m_strClickEvent.split("\\(");
 	    	String[] ss=s[1].split("\\)");
 	    	((ButtonObject) base).setHrefUrl(ss[0]);
+	    	
+	    }else if(!m_strClickEvent.equals("")||!m_strCmdExpression.equals("")) {
+	    	
+	    	((ButtonObject) base).setClick(true);
+	    	
+	    }else
+	    {
+	    	((ButtonObject) base).setClick(false);
 	    }
 	    
 	    
@@ -827,5 +838,30 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 	public void onSetData() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		
+		if(!m_strClickEvent.equals(""))
+		{
+			onClicked();
+			
+		}else if(!m_strCmdExpression.equals(""))
+		{
+			
+			synchronized (m_rRenderWindow.m_oShareObject) {
+				deal_cmd();
+				if ("".equals(cmd_value) == false) {
+
+					//Log.e("TAG", "发送数据");
+					m_rRenderWindow.m_oShareObject.m_mapCmdCommand.put(getUniqueID(), cmd_value);
+
+				}
+			}
+
+			
+		}
+	
 	}
 }

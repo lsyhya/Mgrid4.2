@@ -8,6 +8,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import com.mgrid.main.MainWindow;
+import com.sg.common.IObject;
+import com.sg.common.SgRealTimeData;
+import com.sg.web.AutoSigListObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -17,14 +25,6 @@ import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.view.View;
 import android.widget.RadioButton;
-
-import com.mgrid.main.MainWindow;
-import com.sg.common.IObject;
-import com.sg.common.SgRealTimeData;
-import com.sg.web.AutoSigListObject;
-import com.sg.web.base.ViewObjectBase;
-import com.sg.web.base.ViewObjectSetCallBack;
-import com.sg.web.utils.ViewObjectColorUtil;
 
 /** 动态后台实时信号曲线（可绑定一个式子结果） **/
 // author：fjw0312
@@ -439,6 +439,7 @@ public class AutoSigList extends View implements IObject ,ViewObjectSetCallBack{
 		map_Htime_vlaue.put(dd_time, strValue);
 		max_value[0] = get_max_vlaue(map_Htime_vlaue);
 		Htimelist.add(dd_time);
+		ht.add(strValue);
 		
 		if (old_hour.equals(""))
 			old_hour = hour;
@@ -458,6 +459,7 @@ public class AutoSigList extends View implements IObject ,ViewObjectSetCallBack{
 			map_Htime_vlaue.clear();
 			map_Htime_vlaue = null;
 			map_Htime_vlaue = new HashMap<Integer, String>();
+			ht.clear();
 		}
 
 		if (newTime - d_oldTime > 1000 * 60 * 10) {
@@ -466,6 +468,7 @@ public class AutoSigList extends View implements IObject ,ViewObjectSetCallBack{
 			map_Dtime_vlaue.put(i_hour * 60 + i_min, strValue);
 			max_value[1] = get_max_vlaue(map_Dtime_vlaue);
 			Dtimelist.add(i_hour * 60 + i_min);
+			dt.add(strValue);
 
 			if (!old_day.equals(day)&& (map_Dtime_vlaue != null)) {
 
@@ -473,7 +476,8 @@ public class AutoSigList extends View implements IObject ,ViewObjectSetCallBack{
 				map_Mtime_vlaue.put(i_day, m_value);
 				max_value[2] = get_max_vlaue(map_Mtime_vlaue); // 计算出链表的最大值
 				Mtimelist.add(i_day);
- 
+                mt.add(m_value);
+				
 					old_day=day;
 					Dtimelist.clear();
 					Dtimelist = null;
@@ -481,6 +485,7 @@ public class AutoSigList extends View implements IObject ,ViewObjectSetCallBack{
 					map_Dtime_vlaue.clear();
 					map_Dtime_vlaue = null;
 					map_Dtime_vlaue = new HashMap<Integer, String>();
+					dt.clear();
 				
 			}
 		}
@@ -494,6 +499,7 @@ public class AutoSigList extends View implements IObject ,ViewObjectSetCallBack{
 			map_Ytime_vlaue.put(i_mon - 1, y_value);
 			max_value[3] = get_max_vlaue(map_Ytime_vlaue);
 			Ytimelist.add(i_mon - 1);
+			yt.add(y_value);
 
 			Mtimelist.clear();
 			Mtimelist = null;
@@ -501,6 +507,7 @@ public class AutoSigList extends View implements IObject ,ViewObjectSetCallBack{
 			map_Mtime_vlaue.clear();
 			map_Mtime_vlaue = null;
 			map_Mtime_vlaue = new HashMap<Integer, String>();
+			mt.clear();
 
 		}
 
@@ -512,6 +519,8 @@ public class AutoSigList extends View implements IObject ,ViewObjectSetCallBack{
 			map_Ytime_vlaue.clear();
 			map_Ytime_vlaue = null;
 			map_Ytime_vlaue = new HashMap<Integer, String>();
+			yt.clear();
+			
 		}
 
 		if (Htimelist.size() > 2000 || map_Htime_vlaue.size() > 2000) {
@@ -620,6 +629,12 @@ public class AutoSigList extends View implements IObject ,ViewObjectSetCallBack{
 	List<Integer> Dtimelist = null;
 	List<Integer> Mtimelist = null;
 	List<Integer> Ytimelist = null;
+	
+	
+	List<String> ht = new ArrayList<String>();
+	List<String> dt = new ArrayList<String>();
+	List<String> mt = new ArrayList<String>();
+	List<String> yt = new ArrayList<String>();
 
 	float max_value[] = { 0, 0, 0, 0 };
 	public static int old_min = 0;
@@ -656,12 +671,30 @@ public class AutoSigList extends View implements IObject ,ViewObjectSetCallBack{
 		((AutoSigListObject)base).setFontColor(ViewObjectColorUtil.getColor(fontColor));
 		((AutoSigListObject)base).setFontSize(m_fFontSize);
 		((AutoSigListObject)base).setLineColor(ViewObjectColorUtil.getColor(lineColor));
-
+		
+		
+		
+		((AutoSigListObject)base).setMapHvlaue(map_Htime_vlaue);
+		((AutoSigListObject)base).setMapDvlaue(map_Dtime_vlaue);
+		((AutoSigListObject)base).setMapMvlaue(map_Mtime_vlaue);
+		((AutoSigListObject)base).setMapYvlaue(map_Ytime_vlaue);
+				
 		
 	}
 
 	@Override
 	public void onSetData() {
+		
+		((AutoSigListObject)base).setMapHvlaue(map_Htime_vlaue);
+		((AutoSigListObject)base).setMapDvlaue(map_Dtime_vlaue);
+		((AutoSigListObject)base).setMapMvlaue(map_Mtime_vlaue);
+		((AutoSigListObject)base).setMapYvlaue(map_Ytime_vlaue);
+		
+		
+	}
+
+	@Override
+	public void onControl(Object obj) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -1,5 +1,7 @@
 package com.sg.web;
 
+import java.util.List;
+
 import com.sg.web.base.ViewObjectBase;
 
 public class EventListObject extends ViewObjectBase
@@ -9,6 +11,13 @@ public class EventListObject extends ViewObjectBase
 	String backgroundColor;
 	String oddRowBackground;
 	String evenRowBackground;
+	List<List<String>> data;
+	public List<List<String>> getData() {
+		return data;
+	}
+	public void setData(List<List<String>> data) {
+		this.data = data;
+	}
 	public String getForeColor() {
 		return foreColor;
 	}
@@ -33,9 +42,5 @@ public class EventListObject extends ViewObjectBase
 	public void setEvenRowBackground(String evenRowBackground) {
 		this.evenRowBackground = evenRowBackground;
 	}
-	
-	
-	
-	
-	
+
 }

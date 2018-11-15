@@ -1,6 +1,9 @@
 package com.sg.common.lsyBase;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import com.sg.common.lsyBase.HisEventAdapter.TableCell;
@@ -75,6 +78,18 @@ public class HisEventTable extends ListView {
 	public void setChange(boolean isChange) {
 		this.isChange = isChange;
 	}
+	
+	public static String getDate(long milliSeconds, String dateFormat) {
+		if (0 == milliSeconds)
+			return ""; // 0 表示未获取到有效时间 -- CharlesChen
+
+		DateFormat formatter = new SimpleDateFormat(dateFormat);
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(milliSeconds);
+		return new String(formatter.format(calendar.getTime()));
+	}
+
 
 	// params :
 	protected HisEventAdapter m_tableAdapter = null;

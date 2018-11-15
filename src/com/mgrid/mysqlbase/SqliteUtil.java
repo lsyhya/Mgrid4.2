@@ -290,9 +290,7 @@ public class SqliteUtil {
 			String event = cursor.getString(cursor.getColumnIndex("Event"));
 			String eventresult = cursor.getString(cursor.getColumnIndex("EventResult"));
 			UserEvent my = new UserEvent(CID, time, event,eventresult);
-			
-			
-			
+		
 			list.add(my);
 		}
 		return list;

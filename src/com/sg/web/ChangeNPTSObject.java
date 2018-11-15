@@ -1,5 +1,8 @@
 package com.sg.web;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.sg.web.base.ViewObjectBase;
 
 public class ChangeNPTSObject extends ViewObjectBase{
@@ -8,6 +11,16 @@ public class ChangeNPTSObject extends ViewObjectBase{
 	String labelOrder;
 	float  fontSize;
 	String name,number,level;
+	Map<String,String> map=new HashMap<>();
+	
+	
+	
+	public Map<String, String> getMap() {
+		return map;
+	}
+	public void setMap(Map<String, String> map) {
+		this.map = map;
+	}
 	public String getFontColor() {
 		return fontColor;
 	}

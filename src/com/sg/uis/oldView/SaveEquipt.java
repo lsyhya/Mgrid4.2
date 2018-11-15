@@ -8,7 +8,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.httpcore.HttpResponse;
+import org.apache.httpcore.entity.StringEntity;
+
+import com.alibaba.fastjson.JSON;
 import com.mgrid.data.DataGetter;
+import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
 import com.sg.common.IObject;
@@ -16,9 +21,11 @@ import com.sg.common.LanguageStr;
 import com.sg.common.MyAdapter;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtTable;
+import com.sg.web.RectangleObject;
 import com.sg.web.SaveEquiptObject;
 import com.sg.web.base.ViewObjectBase;
 import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.object.SaveEquiptOb;
 import com.sg.web.utils.ViewObjectColorUtil;
 
 import android.app.DatePickerDialog;
@@ -201,7 +208,7 @@ public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack
 			@Override
 			public void onClick(View v) {
 
-				if (isFirst) {
+				if (isFirst&&nameList.size()==0) {
 					parse_expression();
 					isFirst = false;
 				}
@@ -651,6 +658,8 @@ public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack
 			lstContends.add(lstRow_his);
 
 		}
+		
+		
 		updateContends(lstTitles, lstContends);
 		updateContends(lstTitles, lstContends);
 		// fjw_signal.clear();
@@ -658,6 +667,42 @@ public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack
 
 		return true;
 	}
+	
+	private void  setData(List<local_his_signal> his_sig_list,List<List<String>> list)
+	{
+		
+	
+		// 遍历第一个列表 获得第一个设备历史信号
+		if (his_sig_list == null) {
+
+			return;
+		}
+
+		// 遍历第一个设备列表 将每个历史信号的结构体
+		list.clear(); // 清楚页面的以前数据 行信号
+		Iterator<local_his_signal> iterator_his = his_sig_list.iterator();
+		while (iterator_his.hasNext()) {
+			local_his_signal his_sig = iterator_his.next();
+			List<String> lstRow_his = new ArrayList<String>();
+
+			lstRow_his.add(his_sig.equip_name);
+			lstRow_his.add(his_sig.name);
+			float f = Float.parseFloat(his_sig.value);
+			int ii = (int) (f * 100);
+			f = (float) (ii / 100.0);
+			lstRow_his.add(f + ""); // 这一坨操作就是为了保留小数点后两位
+
+			lstRow_his.add(his_sig.unit);
+			lstRow_his.add(his_sig.value_type);
+			lstRow_his.add(his_sig.severity);
+			lstRow_his.add(his_sig.freshtime);
+			// fjw_signal.addAll(lstRow_his);
+			list.add(lstRow_his);
+
+		}
+		
+	}
+	
 
 	// 解析出控件表达式，返回控件表达式类
 	@SuppressWarnings({ "unchecked", "static-access" })
@@ -770,12 +815,15 @@ public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack
 		base.setType(m_strType);
 		
 		
-	
+		parse_expression();
+		
 		
 		((SaveEquiptObject)base).setBtnColor(ViewObjectColorUtil.getColor(btnColor));
 		((SaveEquiptObject)base).setTextColor(ViewObjectColorUtil.getColor(textColor));
 		((SaveEquiptObject)base).setTitleColr(ViewObjectColorUtil.getColor(titleColor));
-		((SaveEquiptObject)base).setNameList(lstTitles);
+		((SaveEquiptObject)base).setNameList(nameList);
+		
+		
 		
 		
 		((SaveEquiptObject)base).setBackgroundColor(ViewObjectColorUtil.getColor(backgroundColor)); 
@@ -783,12 +831,50 @@ public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack
 		((SaveEquiptObject)base).setEvenRowBackground(ViewObjectColorUtil.getColor(evenRowBackground));
 		((SaveEquiptObject)base).setOddRowBackground(ViewObjectColorUtil.getColor(oddRowBackground));
 		
+        ((SaveEquiptObject) base).setEvenalpha(ViewObjectColorUtil.getArgb(m_cEvenRowBackground));      
+        ((SaveEquiptObject) base).setOddalpha(ViewObjectColorUtil.getArgb(m_cOddRowBackground));
+      
+		
 	}
 
 
 	@Override
 	public void onSetData() {
 		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void onControl(Object obj) {
+	
+		
+		
+		SaveEquiptOb ob=(SaveEquiptOb) obj;		
+		
+		String id =map_EquiptNameList.get(ob.getEquipName());
+	
+		List<local_his_signal> his_sig_list = m_rRenderWindow.m_oCaculateThread.getSaveEquiptList(id,ob.getTime());
+		
+		
+
+		
+		setData(his_sig_list,ob.getListData());
+		
+		
+		
+		
+		String json=JSON.toJSON(ob).toString();	
+		
+		
+
+		StringEntity stringEntity = new StringEntity(json, "utf-8");
+		
+		HttpResponse arg1= ob.getResponse();
+		
+		arg1.setStatusCode(200);
+		
+	    arg1.setEntity(stringEntity);
 		
 	}
 }

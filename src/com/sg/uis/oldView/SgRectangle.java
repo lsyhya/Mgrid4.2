@@ -379,7 +379,7 @@ public class SgRectangle extends View implements IObject, ViewObjectSetCallBack 
 		base.setType(m_strType);
 
 		((RectangleObject) base).setBorderWidth(m_nBorderWidth);
-		((RectangleObject) base).setBorderColor(BorderColor);
+		((RectangleObject) base).setBorderColor(ViewObjectColorUtil.getColor(BorderColor));
         ((RectangleObject) base).setBgColor(BgColor);
         ((RectangleObject) base).setAlpha(ViewObjectColorUtil.getArgb(m_cSingleFillColor));
         ((RectangleObject) base).setRed(ViewObjectColorUtil.getRed(m_cSingleFillColor));
@@ -390,6 +390,12 @@ public class SgRectangle extends View implements IObject, ViewObjectSetCallBack 
 
 	@Override
 	public void onSetData() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onControl(Object obj) {
 		// TODO Auto-generated method stub
 		
 	}

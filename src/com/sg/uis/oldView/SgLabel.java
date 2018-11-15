@@ -24,6 +24,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -247,6 +248,7 @@ public class SgLabel extends TextView implements IObject ,ViewObjectSetCallBack{
 			m_bIsBold = Boolean.parseBoolean(strValue);
 		else if ("FontColor".equals(strName)) {
 			currColor=strValue;
+			startColor=strValue;
 			m_cFontColor = Color.parseColor(strValue);
 			m_cStartFillColor = m_cFontColor;
 			//((LableObject)base).setTextColor("#"+strValue.substring(3, strValue.length()));
@@ -433,6 +435,7 @@ public class SgLabel extends TextView implements IObject ,ViewObjectSetCallBack{
 	// 颜色解析函数 传入参数：显示值 fjw add
 	public int parseFontcolor(String strValue) {
 		m_cFontColor = m_cStartFillColor;
+		currColor=startColor;
 		if ((m_strColorExpression == null) || ("".equals(m_strColorExpression)))
 			return -1;
 		if ((strValue == null) || ("".equals(strValue)))
@@ -453,6 +456,7 @@ public class SgLabel extends TextView implements IObject ,ViewObjectSetCallBack{
 			float data = Float.parseFloat(a[0]); // 获得比较值
 			float value = Float.parseFloat(strValue); // 输入值
 			if (value > data) {
+				currColor=a[1];
 				m_cFontColor = Color.parseColor(a[1]);
 			}
 		}
@@ -533,7 +537,8 @@ public class SgLabel extends TextView implements IObject ,ViewObjectSetCallBack{
 	boolean m_bIsBold = false;
 	int m_cFontColor = 0xFF008000;
 	int m_cStartFillColor = 0x00000000;
-	String currColor;
+	
+	String currColor,startColor;
 	String m_strHorizontalContentAlignment = "Center";
 	String m_strVerticalContentAlignment = "Center";
 	String m_strExpression = "Binding{[Value[Equip:114-Temp:173-Signal:1]]}";
@@ -589,7 +594,17 @@ public class SgLabel extends TextView implements IObject ,ViewObjectSetCallBack{
 	public void onSetData() {
 		
 		base.setValue(m_strContent);
-		//((LableObject)base).setTextColor(m_cFontColor);
+		
+		
+		((LableObject)base).setTextColor("#"+currColor.substring(3, currColor.length()));
+		
+	
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 

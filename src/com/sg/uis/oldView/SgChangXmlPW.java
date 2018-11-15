@@ -22,6 +22,9 @@ import com.mgrid.main.R;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
+import com.sg.web.SgChangXmlPWObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
 
 /**
  * 改密码
@@ -29,7 +32,7 @@ import com.sg.common.LanguageStr;
  * @author lsy
  *
  */
-public class SgChangXmlPW extends TextView implements IObject {
+public class SgChangXmlPW extends TextView implements IObject,ViewObjectSetCallBack{
 
 	private String oldPw = LanguageStr.oldPw;
 	private String newPw = LanguageStr.newPw;
@@ -125,7 +128,13 @@ public class SgChangXmlPW extends TextView implements IObject {
 					// MakeBtn.setBackgroundResource(android.R.drawable.btn_default_small);
 					// MakeBtn.setText("修改");
 					if (m_xscal == event.getX() && m_yscal == event.getY())
-						onClicked();
+					{
+						
+						String oldPassWord = m_oEditTextOLD.getText().toString().trim();
+						String newPassWord = m_oEditTextNEW.getText().toString().trim();
+						String newPassWordTwo = E_CPassword.getText().toString().trim();
+						onClicked(oldPassWord,newPassWord,newPassWordTwo);
+					}
 					break;
 				default:
 					break;
@@ -183,43 +192,47 @@ public class SgChangXmlPW extends TextView implements IObject {
 		super.onDraw(canvas);
 	}
 
-	protected void onClicked() {
-		String oldPassWord = m_oEditTextOLD.getText().toString().trim();
-		String newPassWord = m_oEditTextNEW.getText().toString().trim();
-		String newPassWordTwo = E_CPassword.getText().toString().trim();
+	protected void onClicked(String oldPassWord,String newPassWord,String newPassWordTwo) {
+	
 		if ((oldPassWord.equals("") || newPassWord.equals("") || newPassWordTwo.equals("")) == false && label > 0) {
 			if (MGridActivity.m_pagePassWord == null) {
 
-				Toast.makeText(getContext(), text12, 1000).show();
+				//Toast.makeText(getContext(), text12, 1000).show();
+				post(text12);
 				return;
 			}
 
 			if (!newPassWordTwo.equals(newPassWord)) {
 
-				Toast.makeText(getContext(), text13, 1000).show();
+				//Toast.makeText(getContext(), text13, 1000).show();
+				post(text13);
 				return;
 			}
 			if (MGridActivity.m_pagePassWord.length < label) {
 
-				Toast.makeText(getContext(), text14, 1000).show();
+				//Toast.makeText(getContext(), text14, 1000).show();
+				post(text14);
 				return;
 			}
 			if (oldPassWord.equals(MGridActivity.m_pagePassWord[label - 1]) || oldPassWord.equals("88888888")) {
 
 				changPassWord(newPassWord);
 				
-					Toast.makeText(m_rRenderWindow.getContext(), text15, Toast.LENGTH_SHORT).show();
+					//Toast.makeText(m_rRenderWindow.getContext(), text15, Toast.LENGTH_SHORT).show();
+					post(text15);
 
 			} else {
 
-				Toast.makeText(m_rRenderWindow.getContext(), text16, Toast.LENGTH_SHORT).show();
+				//Toast.makeText(m_rRenderWindow.getContext(), text16, Toast.LENGTH_SHORT).show();
+				post(text16);
 			}
 			m_oEditTextOLD.setText("");
 			m_oEditTextNEW.setText("");
 			E_CPassword.setText("");
 		} else {
 
-			Toast.makeText(m_rRenderWindow.getContext(), text17, Toast.LENGTH_SHORT).show();
+			//Toast.makeText(m_rRenderWindow.getContext(), text17, Toast.LENGTH_SHORT).show();
+			post(text17);
 		}
 	}
 
@@ -232,6 +245,19 @@ public class SgChangXmlPW extends TextView implements IObject {
 			Toast.makeText(getContext(), text11, 1000).show();
 		}
 
+	}
+	
+	
+	private void post(final String text)
+	{
+		this.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				Toast.makeText(m_rRenderWindow.getContext(), text, Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 
 	@Override
@@ -249,17 +275,7 @@ public class SgChangXmlPW extends TextView implements IObject {
 		m_rBBox.bottom = nY + nHeight;
 
 		if (m_rRenderWindow.isLayoutVisible(m_rBBox)) {
-			// this.layout(nX+(int)(nWidth*0.9f), nY, nX+nWidth, nY+nHeight);
 
-			// m_oEditTextNEW.layout(nX + (int) (nWidth * 0.56f), nY, nX
-			// + (int) (nWidth * 0.89f), nY + (int) (nHeight * 1.0f));
-			// m_oEditTextOLD.layout(nX + (int) (nWidth * 0.11f), nY, nX
-			// + (int) (nWidth * 0.44f), nY + (int) (nHeight * 1.0f));
-			// tvOld.layout(nX, nY + (int) (nHeight * 0.15f), nX
-			// + (int) (nWidth * 0.1f), nY + (int) (nHeight * 1.0f));
-			// tvNew.layout(nX + (int) (nWidth * 0.45f), nY
-			// + (int) (nHeight * 0.15f), nX + (int) (nWidth * 0.55f), nY
-			// + (int) (nHeight * 1.0f));
 			tvOld.layout(nX + (int) (nWidth * 0.1f), nY + (int) (nHeight * 0.1f), nX + (int) (nWidth * 0.3f),
 					nY + (int) (nHeight * 0.24f));
 			m_oEditTextOLD.layout(nX + (int) (nWidth * 0.35f), nY + (int) (nHeight * 0.1f), nX + (int) (nWidth * 0.9f),
@@ -281,8 +297,7 @@ public class SgChangXmlPW extends TextView implements IObject {
 		getPaint().getTextBounds("修改", 0, 2, rect);
 		int h = rect.height();
 
-		//System.out.println(nHeight * 0.18 + ":高度：" + h);
-		// MakeBtn.setPadding(0,(int)(nHeight * 0.18-h)/2, 0, 0);
+		
 
 	}
 
@@ -384,8 +399,9 @@ public class SgChangXmlPW extends TextView implements IObject {
 
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
+		
 		m_rRenderWindow = rWin;
-
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(m_oEditTextNEW);
 		rWin.addView(m_oEditTextOLD);
 		rWin.addView(tvNew);
@@ -488,5 +504,49 @@ public class SgChangXmlPW extends TextView implements IObject {
 	// 记录触摸坐标，过滤滑动操作。解决滑动误操作点击问题。
 	public float m_xscal = 0;
 	public float m_yscal = 0;
+	
+	
+	ViewObjectBase base=new SgChangXmlPWObject();
+	
+
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+
+		
+	}
+
+	@Override
+	public void onSetData() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		
+		String value=(String)obj;
+		String[] str=value.split("-");
+		
+		if(str.length==3)
+		{
+			onClicked(str[0],str[1],str[2]);
+		}
+		
+		
+		
+	}
 
 }

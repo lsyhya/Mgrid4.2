@@ -6,6 +6,14 @@ public class YTParameterObject extends ViewObjectBase{
 	
 	String content;
 	String fontColor;
+	boolean click;
+	
+	public boolean isClick() {
+		return click;
+	}
+	public void setClick(boolean click) {
+		this.click = click;
+	}
 	public String getFontColor() {
 		return fontColor;
 	}

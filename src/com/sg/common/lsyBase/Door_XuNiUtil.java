@@ -218,11 +218,17 @@ public class Door_XuNiUtil {
 	public void openDoor(String uid, String pw, int index) {
 		
 		
+		
+		
 		if (uid != null) {
 
+			
+			
+			
 			User user = MGridActivity.userManager.getUserManaget().get(index);
 			nowUser = uid;
 			if (user.getUid().equals(uid) && user.getPw().equals(pw)&&Integer.parseInt(user.getTime())>Integer.parseInt(TimeUtils.getNowFormatTime("yyyyMMdd"))) {
+								
 				saveResult(1);
 
 			} else {
@@ -230,9 +236,12 @@ public class Door_XuNiUtil {
 			}
 
 		} else {
+			
+			
 
 			if (isSure(pw)) {
 
+				
 			} else {
 				saveResult(0);
 			}
@@ -245,9 +254,14 @@ public class Door_XuNiUtil {
 	private boolean isSure(String passWord) {
 
 		getNowUser(passWord);
+		
+		
+	
 
 		if (MGridActivity.m_ControlAway == 1) {
 
+			
+			
 			if (MGridActivity.userManager.getNowUser() != null) {
 
 				if (MGridActivity.userManager.getNowUser().getPw().equals(passWord)&&Integer.parseInt(MGridActivity.userManager.getNowUser().getTime())>Integer.parseInt(TimeUtils.getNowFormatTime("yyyyMMdd"))) {
@@ -256,8 +270,13 @@ public class Door_XuNiUtil {
 					return true;
 
 				}
+				
+				Log.e("tag", "MGridActivity.userManager.getNowUser()密码不对或者超时");
 
 			}
+			
+			Log.e("tag", "MGridActivity.userManager.getNowUser()为null");
+			
 
 		} else if (MGridActivity.m_ControlAway == 0) {
 
@@ -267,8 +286,12 @@ public class Door_XuNiUtil {
 				return true;
 
 			}
+			
+		
 
 		}
+		
+		
 
 		return false;
 	}
@@ -296,6 +319,7 @@ public class Door_XuNiUtil {
 
 				case 1:
 
+					Log.e("tag", "成功");
 					UserEvent ue2 = new UserEvent(nowUser, nowTime, event, "成功");
 					sql.addXuNiEventValue(ue2, 0);
 					backMap.get(-1).onSuccess(1,"","","");

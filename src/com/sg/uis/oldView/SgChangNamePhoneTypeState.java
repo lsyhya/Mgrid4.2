@@ -2,6 +2,9 @@ package com.sg.uis.oldView;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -15,24 +18,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.text.InputFilter;
-import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.mgrid.main.MGridActivity;
+import com.alibaba.fastjson.JSON;
 import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
 import com.sg.common.CFGTLS;
@@ -43,30 +29,54 @@ import com.sg.web.base.ViewObjectBase;
 import com.sg.web.base.ViewObjectSetCallBack;
 import com.sg.web.utils.ViewObjectColorUtil;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.os.Handler;
+import android.os.Message;
+import android.text.InputFilter;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
 /**
  * 改号码
  * 
  * @author Administrator
  * 
  */
-public class SgChangNamePhoneTypeState extends TextView implements IObject ,ViewObjectSetCallBack{
+public class SgChangNamePhoneTypeState extends TextView implements IObject, ViewObjectSetCallBack {
 
-	private String Name=LanguageStr.Name;
-	private String Phone=LanguageStr.Phone;
+	private String Name = LanguageStr.Name;
+	private String Phone = LanguageStr.Phone;
 
-	private String Level=LanguageStr.Level;
-	private String Show=LanguageStr.Show;
-	private String Add=LanguageStr.Add;
-	private String Alter=LanguageStr.Alter;
-	private String State=LanguageStr.State;
+	private String Level = LanguageStr.Level;
+	private String Show = LanguageStr.Show;
+	private String Add = LanguageStr.Add;
+	private String Alter = LanguageStr.Alter;
+	private String State = LanguageStr.State;
 
-	private String delete=LanguageStr.delete;
+	private String delete = LanguageStr.delete;
 
-	private String text4=LanguageStr.text4, text5=LanguageStr.text5, text6=LanguageStr.text6, text7=LanguageStr.text7, text8=LanguageStr.text8, text9=LanguageStr.text9, text10=LanguageStr.text10;
+	private String text4 = LanguageStr.text4, text5 = LanguageStr.text5, text6 = LanguageStr.text6,
+			text7 = LanguageStr.text7, text8 = LanguageStr.text8, text9 = LanguageStr.text9,
+			text10 = LanguageStr.text10;
 
-	private String NO=LanguageStr.NO;
+	private String NO = LanguageStr.NO;
 	boolean isdelete = true;
 	SgChangNamePhoneTypeState scnp;
+
+	private Map<String, String> dataMap = new HashMap<>();
 
 	public SgChangNamePhoneTypeState(Context context) {
 		super(context);
@@ -102,8 +112,6 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject ,View
 			}
 		});
 
-
-
 		setPadding(0, 0, 0, 0);
 
 		m_oPaint = new Paint();
@@ -120,10 +128,8 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject ,View
 		tvState = new TextView(context);
 		tvTagorder = new TextView(context);
 
-		
 		btDelete = new Button(context);
 
-	
 		etName.setBackgroundResource(R.drawable.et_select);
 		etPhone.setBackgroundResource(R.drawable.et_select);
 		etState.setBackgroundResource(R.drawable.et_select);
@@ -145,7 +151,6 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject ,View
 		tvType.setTextSize(15);
 		tvTagorder.setTextSize(15);
 
-		
 		btDelete.setTextSize(15);
 
 		etName.setTextSize(15);
@@ -159,11 +164,9 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject ,View
 		tvType.setText(Level);
 		this.setText(Show);
 
-		
 		btDelete.setText(delete);
 		btDelete.setEnabled(false);
 
-		
 		btDelete.setTextColor(Color.BLACK);
 
 		tvName.setTextColor(Color.BLACK);
@@ -199,54 +202,7 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject ,View
 				String phone = etPhone.getText().toString();
 				String type = "";
 
-				try {
-					db = dbf.newDocumentBuilder();
-					doc = db.parse(new File("/data/mgrid/sampler/XmlCfg/sms_notification.xml"));
-					list1 = doc.getElementsByTagName("user");
-					list2 = doc.getElementsByTagName("rule");
-
-				} catch (Exception e) {
-
-					e.printStackTrace();
-				}
-
-				Element users = (Element) doc.getElementsByTagName("users").item(0);
-				Element rules = (Element) doc.getElementsByTagName("rules").item(0);
-
-				for (int i = 0; i < list1.getLength(); i++) {
-
-					Element element1 = (Element) list1.item(i);
-					String pn = element1.getAttribute("name");
-					String np = element1.getAttribute("tel_number");
-					if (pn.equals(name) && np.equals(phone)) {
-						users.removeChild(element1);
-						saveXmlData();
-						Toast.makeText(getContext(), text10, 500).show();
-						btDelete.setEnabled(false);
-						etName.setText("");
-						etPhone.setText("");
-						etType.setText("");
-						scnp.setText(Add);
-						isdelete = false;
-					}
-
-				}
-				list1 = doc.getElementsByTagName("user");
-				for (int i = 0; i < list1.getLength(); i++) {
-
-					Element element1 = (Element) list1.item(i);
-					type = type + "," + element1.getAttribute("rule_type");
-				}
-
-				for (int i = 0; i < list2.getLength(); i++) {
-					Element element1 = (Element) list2.item(i);
-					String s = element1.getAttribute("type");
-					if (!type.contains(s)) {
-						rules.removeChild(element1);
-						saveXmlData();
-					}
-
-				}
+				delete(name, phone, type);
 
 			}
 		});
@@ -319,7 +275,6 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject ,View
 		if (m_rRenderWindow.isLayoutVisible(getBBox()) == false)
 			return;
 
-		
 		super.onDraw(canvas);
 	}
 
@@ -330,8 +285,6 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject ,View
 		String name = etName.getText().toString();
 		String phone = etPhone.getText().toString();
 		String level = etType.getText().toString();
-		// String state =etState.getText().toString();
-		// String state=btState.getText().toString();
 
 		boolean isSave = false;
 		xmlPhoneNumber = Integer.parseInt(tvTagorder.getText().toString());
@@ -358,14 +311,24 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject ,View
 				Element element1 = (Element) list1.item(i);
 				String rule_type = element1.getAttribute("rule_type");
 				if (rule_type.equals(xmlPhoneNumber + "")) {
+					
+					
 					etName.setText(element1.getAttribute("name"));
 					etPhone.setText(element1.getAttribute("tel_number"));
+					
+					
 					for (int j = 0; j < list2.getLength(); j++) {
 						Element element2 = (Element) list2.item(j);
 						if (rule_type.equals(element2.getAttribute("type"))) {
 							etType.setText(element2.getAttribute("alarm_level"));
 						}
 					}
+					
+					dataMap.clear();
+					dataMap.put("name", etName.getText().toString());
+					dataMap.put("tel_number", etPhone.getText().toString());
+					dataMap.put("alarm_level", etType.getText().toString());
+					
 					this.setText(Alter);
 					btDelete.setEnabled(true);
 					isAdd = false;
@@ -407,6 +370,11 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject ,View
 
 						isSave = true;
 
+						dataMap.clear();
+						dataMap.put("name", name);
+						dataMap.put("tel_number", phone);
+						dataMap.put("alarm_level", level);
+
 						Toast.makeText(getContext(), text6, Toast.LENGTH_SHORT).show();
 
 					} else {
@@ -438,26 +406,344 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject ,View
 
 					users.appendChild(user);
 					isSave = true;
-					
-						Toast.makeText(getContext(), text9, Toast.LENGTH_SHORT).show();
+
+					dataMap.clear();
+					dataMap.put("name", name);
+					dataMap.put("tel_number", phone);
+					dataMap.put("alarm_level", level);
+
+					Toast.makeText(getContext(), text9, Toast.LENGTH_SHORT).show();
 					this.setText(Alter);
 					btDelete.setEnabled(true);
 				} else {
-				
-						Toast.makeText(getContext(), text7, Toast.LENGTH_SHORT).show();
+
+					Toast.makeText(getContext(), text7, Toast.LENGTH_SHORT).show();
 				}
 			} else {
-				
-					Toast.makeText(getContext(), text8, Toast.LENGTH_SHORT).show();
+
+				Toast.makeText(getContext(), text8, Toast.LENGTH_SHORT).show();
 			}
 		} else {
-			
-				Toast.makeText(getContext(), text8, Toast.LENGTH_SHORT).show();
+
+			Toast.makeText(getContext(), text8, Toast.LENGTH_SHORT).show();
 		}
 
 		if (isSave) {
 			saveXmlData();
 		}
+	}
+
+	private void init() {
+		dbf = DocumentBuilderFactory.newInstance();
+		xmlPhoneNumber = Integer.parseInt(tvTagorder.getText().toString());
+		if (xmlPhoneNumber == -1)
+			return;
+		try {
+			db = dbf.newDocumentBuilder();
+			doc = db.parse(new File("/data/mgrid/sampler/XmlCfg/sms_notification.xml"));
+			list1 = doc.getElementsByTagName("user");
+			list2 = doc.getElementsByTagName("rule");
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+	}
+
+	private Handler handler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+
+			switch (msg.what) {
+			case 0:
+
+				btDelete.setEnabled(false);
+				etName.setText("");
+				etPhone.setText("");
+				etType.setText("");
+				scnp.setText(Add);
+				isdelete = false;
+				dataMap.clear();
+				Toast.makeText(getContext(), text10, 500).show();
+
+				break;
+
+			case 1:
+
+				Map<String, String> map = (Map<String, String>) msg.obj;
+
+				if (getText().equals(Alter)) {
+
+					etName.setText(map.get("name"));
+					etPhone.setText(map.get("tel_number"));
+					etType.setText(map.get("alarm_level"));
+
+				} else if (getText().equals(Add)) {
+
+					etName.setText(map.get("name"));
+					etPhone.setText(map.get("tel_number"));
+					etType.setText(map.get("alarm_level"));
+					scnp.setText(Alter);
+					btDelete.setEnabled(true);
+				}
+
+				break;
+			}
+
+		};
+	};
+
+	private Map<String, String> show() {
+
+		init();
+
+		if (list1 == null || list2 == null) {
+			Toast.makeText(getContext(), text4, 200).show();
+			return dataMap;
+		}
+
+		for (int i = 0; i < list1.getLength(); i++) {
+			Element element1 = (Element) list1.item(i);
+			String rule_type = element1.getAttribute("rule_type");
+			if (rule_type.equals(xmlPhoneNumber + "")) {
+
+				dataMap.put("name", element1.getAttribute("name"));
+				dataMap.put("tel_number", element1.getAttribute("tel_number"));
+
+				for (int j = 0; j < list2.getLength(); j++) {
+					Element element2 = (Element) list2.item(j);
+					if (rule_type.equals(element2.getAttribute("type"))) {
+						dataMap.put("alarm_level", element2.getAttribute("alarm_level"));
+					}
+				}
+				break;
+			}
+		}
+
+		return dataMap;
+	}
+
+	private void alter(String name, String phone, String level) {
+
+		init();
+
+		if (list1 == null || list2 == null) {
+			Toast.makeText(getContext(), text4, 200).show();
+			return;
+		}
+
+		boolean isSave = false;
+
+		for (int i = 0; i < list1.getLength(); i++) {
+
+			Element ele = (Element) list1.item(i);
+			String rule_type = ele.getAttribute("rule_type");
+			if (!(xmlPhoneNumber + "").equals(rule_type)) {
+				continue;
+			}
+
+			if ((name.equals("") || level.equals("") || phone.equals("")) != true) {
+				if (phone.length() == 11) {
+					ele.setAttribute("name", name);
+					ele.setAttribute("tel_number", phone);
+					ele.setAttribute("enable", "ture");
+
+					for (int j = 0; j < list2.getLength(); j++) {
+
+						Element ele2 = (Element) list2.item(j);
+						if (rule_type.equals(ele2.getAttribute("type"))) {
+							ele2.setAttribute("alarm_level", level);
+							break;
+						}
+					}
+
+					isSave = true;
+
+					this.post(new Runnable() {
+
+						@Override
+						public void run() {
+
+							Toast.makeText(getContext(), text6, Toast.LENGTH_SHORT).show();
+
+						}
+					});
+
+				} else {
+
+					this.post(new Runnable() {
+
+						@Override
+						public void run() {
+
+							Toast.makeText(getContext(), text7, Toast.LENGTH_SHORT).show();
+
+						}
+					});
+
+				}
+
+			} else {
+
+				this.post(new Runnable() {
+
+					@Override
+					public void run() {
+
+						Toast.makeText(getContext(), text8, Toast.LENGTH_SHORT).show();
+
+					}
+				});
+
+			}
+		}
+
+		if (isSave) {
+
+			saveXmlData();
+			dataMap.clear();
+			dataMap.put("name", name);
+			dataMap.put("tel_number", phone);
+			dataMap.put("alarm_level", level);
+
+			Message msg = new Message();
+			msg.obj = dataMap;
+			msg.what = 1;
+			handler.sendMessage(msg);
+		}
+
+	}
+
+	private void delete(String name, String phone, String type) {
+
+		try {
+			db = dbf.newDocumentBuilder();
+			doc = db.parse(new File("/data/mgrid/sampler/XmlCfg/sms_notification.xml"));
+			list1 = doc.getElementsByTagName("user");
+			list2 = doc.getElementsByTagName("rule");
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
+		Element users = (Element) doc.getElementsByTagName("users").item(0);
+		Element rules = (Element) doc.getElementsByTagName("rules").item(0);
+
+		for (int i = 0; i < list1.getLength(); i++) {
+
+			Element element1 = (Element) list1.item(i);
+			String pn = element1.getAttribute("name");
+			String np = element1.getAttribute("tel_number");
+
+		
+
+			if (pn.equals(name) && np.equals(phone)) {
+
+				users.removeChild(element1);
+				handler.sendEmptyMessage(0);
+
+				saveXmlData();
+
+			}
+
+		}
+		list1 = doc.getElementsByTagName("user");
+		for (int i = 0; i < list1.getLength(); i++) {
+
+			Element element1 = (Element) list1.item(i);
+			type = type + "," + element1.getAttribute("rule_type");
+		}
+
+		for (int i = 0; i < list2.getLength(); i++) {
+			Element element1 = (Element) list2.item(i);
+			String s = element1.getAttribute("type");
+			if (!type.contains(s)) {
+				rules.removeChild(element1);
+				saveXmlData();
+			}
+		}
+
+	}
+
+	private void Add(String name, String phone, String level) {
+
+		init();
+
+		if (list1 == null || list2 == null) {
+			Toast.makeText(getContext(), text4, 200).show();
+			return;
+		}
+
+		boolean isSave = false;
+
+		if ((name.equals("") || level.equals("") || phone.equals("")) != true) {
+			if (phone.length() == 11) {
+				Element user = doc.createElement("user");
+				user.setAttribute("name", name);
+				user.setAttribute("tel_number", phone);
+				user.setAttribute("enable", "true");
+				Element users = (Element) doc.getElementsByTagName("users").item(0);
+
+				user.setAttribute("rule_type", "" + xmlPhoneNumber);
+				Element rule = doc.createElement("rule");
+				rule.setAttribute("type", "" + xmlPhoneNumber);
+				rule.setAttribute("alarm_level", level);
+				Element rules = (Element) doc.getElementsByTagName("rules").item(0);
+				rules.appendChild(rule);
+
+				users.appendChild(user);
+				isSave = true;
+
+				this.post(new Runnable() {
+
+					@Override
+					public void run() {
+
+						Toast.makeText(getContext(), text9, Toast.LENGTH_SHORT).show();
+
+					}
+				});
+
+			} else {
+
+				this.post(new Runnable() {
+
+					@Override
+					public void run() {
+
+						Toast.makeText(getContext(), text7, Toast.LENGTH_SHORT).show();
+
+					}
+				});
+
+			}
+		} else {
+			this.post(new Runnable() {
+
+				@Override
+				public void run() {
+
+					Toast.makeText(getContext(), text8, Toast.LENGTH_SHORT).show();
+
+				}
+			});
+
+		}
+
+		if (isSave) {
+
+			saveXmlData();
+			dataMap.clear();
+			dataMap.put("name", name);
+			dataMap.put("tel_number", phone);
+			dataMap.put("alarm_level", level);
+
+			Message msg = new Message();
+			msg.obj = dataMap;
+			msg.what = 1;
+			handler.sendMessage(msg);
+		}
+
 	}
 
 	// 保存xml数据
@@ -577,8 +863,8 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject ,View
 				setBackgroundResource(android.R.drawable.btn_default);
 			}
 		} else if ("FontColor".equals(strName)) {
-			
-			fontColor=strValue;
+
+			fontColor = strValue;
 			m_cFontColor = Color.parseColor(strValue);
 			this.setTextColor(m_cFontColor);
 			btDelete.setTextColor(m_cFontColor);
@@ -598,8 +884,8 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject ,View
 		} else if ("ButtonWidthRate".equals(strName)) {
 			m_fButtonWidthRate = Float.parseFloat(strValue);
 		} else if ("Labelorder".equals(strName)) {
-			
-			label=strValue;
+
+			label = strValue;
 			tvTagorder.setText(strValue);
 		} else if ("FontSize".equals(strName)) {
 			fontSize = Integer.parseInt(strValue);
@@ -634,7 +920,7 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject ,View
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
 		m_rRenderWindow.viewList.add(base);
-		
+
 		rWin.addView(tvTagorder);
 		rWin.addView(etName);
 		rWin.addView(tvName);
@@ -714,7 +1000,7 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject ,View
 	String m_strFontFamily = "微软雅黑";
 	int m_cBackgroundColor = 0xFFFCFCFC;
 	int m_cFontColor = 0xFF000000;
-	String fontColor,label;
+	String fontColor, label;
 	String m_strContent = "Setting";
 	String m_strCmdExpression = "";
 	boolean m_bIsValueRelateSignal = false;
@@ -737,7 +1023,6 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject ,View
 	TextView tvTagorder = null;
 	Button btDelete = null;
 
-	
 	// 解析XML
 	DocumentBuilderFactory dbf = null;
 	DocumentBuilder db = null;
@@ -755,35 +1040,74 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject ,View
 	// 记录触摸坐标，过滤滑动操作。解决滑动误操作点击问题。
 	public float m_xscal = 0;
 	public float m_yscal = 0;
-    
-	private ViewObjectBase base=new ChangeNPTSObject(); 
-	
-	
+
+	private ViewObjectBase base = new ChangeNPTSObject();
+
 	@Override
 	public void onCall() {
-		
+
 		base.setZIndex(m_nZIndex);
 		base.setFromHeight(MainWindow.FORM_HEIGHT);
 		base.setFromWight(MainWindow.FORM_WIDTH);
-		
+
 		base.setWight(m_nWidth);
 		base.setHeght(m_nHeight);
-		
+
 		base.setLeft(m_nPosX);
 		base.setTop(m_nPosY);
-		
+
 		base.setTypeId(m_strID);
 		base.setType(m_strType);
-		
-		((ChangeNPTSObject)base).setFontColor(ViewObjectColorUtil.getColor(fontColor));
-		((ChangeNPTSObject)base).setLabelOrder(label);
-		((ChangeNPTSObject)base).setFontSize(fontSize);
+
+		show();
+		((ChangeNPTSObject) base).setFontColor(ViewObjectColorUtil.getColor(fontColor));
+		((ChangeNPTSObject) base).setLabelOrder(label);
+		((ChangeNPTSObject) base).setFontSize(fontSize);
+		((ChangeNPTSObject) base).setMap(dataMap);
+
 	}
 
 	@Override
 	public void onSetData() {
-		// TODO Auto-generated method stub
+
 		
+		
+	}
+
+	@Override
+	public void onControl(Object obj) {
+
+		String str = (String) obj;
+
+		Map<String, String> maps = (Map<String, String>) JSON.parse(str);
+
+		String type = maps.get("type");
+		String name = maps.get("name");
+		String phone = maps.get("tel_number");
+		String level = maps.get("alarm_level");
+
+		Log.e("type", type);
+
+		if (type.equals("delete")) {
+
+			delete(name, phone, "");
+		}
+
+		if (type.equals("alter")) {
+
+			
+				if(dataMap.size()==0)
+				{
+					Add(name, phone, level);
+				}else
+				{
+					alter(name, phone, level);
+				}				
+				
+			
+
+		}
+
 	}
 
 }

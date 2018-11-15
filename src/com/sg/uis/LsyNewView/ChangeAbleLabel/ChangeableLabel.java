@@ -448,4 +448,10 @@ public class ChangeableLabel extends TextView implements IObject, ViewObjectSetC
 		// ((LableObject)base).setTextColor(m_cFontColor);
 	}
 
+	@Override
+	public void onControl(Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

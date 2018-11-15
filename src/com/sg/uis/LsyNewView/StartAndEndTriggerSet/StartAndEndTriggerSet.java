@@ -1,5 +1,20 @@
 package com.sg.uis.LsyNewView.StartAndEndTriggerSet;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+import com.mgrid.main.MainWindow;
+import com.mgrid.main.R;
+import com.sg.common.CFGTLS;
+import com.sg.common.IObject;
+import com.sg.common.UtExpressionParser;
+import com.sg.common.UtExpressionParser.stBindingExpression;
+import com.sg.common.UtExpressionParser.stExpression;
+import com.sg.web.StartAndEndTriggerSetObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -18,19 +33,7 @@ import android.widget.TextView;
 import comm_service.service;
 import data_model.ipc_cfg_trigger_value;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
-import com.mgrid.main.MainWindow;
-import com.mgrid.main.R;
-import com.sg.common.CFGTLS;
-import com.sg.common.IObject;
-import com.sg.common.UtExpressionParser;
-import com.sg.common.UtExpressionParser.stBindingExpression;
-import com.sg.common.UtExpressionParser.stExpression;
-
-public class StartAndEndTriggerSet extends TextView implements IObject {
+public class StartAndEndTriggerSet extends TextView implements IObject ,ViewObjectSetCallBack{
 	public StartAndEndTriggerSet(Context context) {
 		super(context);
 		this.setClickable(true);
@@ -58,7 +61,11 @@ public class StartAndEndTriggerSet extends TextView implements IObject {
 					view.invalidate();
 
 					if (m_xscal == event.getX() && m_yscal == event.getY())
-						onClicked();
+					{
+						String startvalue = m_oEditText.getText().toString().trim();
+						String stopvalue = end_oEditText.getText().toString().trim();
+						onClicked(startvalue,stopvalue);
+					}
 					break;
 
 				default:
@@ -86,18 +93,7 @@ public class StartAndEndTriggerSet extends TextView implements IObject {
 		initTv(sTextview, "开始:");
 		initTv(eTextview, "结束:");
 
-		// m_oEditText.setOnClickListener(new View.OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View arg0) {
-		// imm.showSoftInput(m_oEditText, InputMethodManager.SHOW_FORCED);
-		// m_oEditText.setFocusableInTouchMode(true);
-		//
-		// }
-		// });
-		//
-		// imm = (InputMethodManager) context
-		// .getSystemService(Context.INPUT_METHOD_SERVICE);
+
 
 		setText("设置");
 		setTextColor(Color.WHITE);
@@ -178,7 +174,7 @@ public class StartAndEndTriggerSet extends TextView implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
-
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(sTextview);
 		rWin.addView(start_Textview);
 		rWin.addView(m_oEditText);
@@ -280,10 +276,9 @@ public class StartAndEndTriggerSet extends TextView implements IObject {
 		return m_strType;
 	}
 
-	private void onClicked() {
+	private void onClicked(String startvalue,String stopvalue) {
 
-		String startvalue = m_oEditText.getText().toString().trim();
-		String stopvalue = end_oEditText.getText().toString().trim();
+		
 
 		if(startvalue.isEmpty()&&stopvalue.isEmpty())
 		{
@@ -427,8 +422,8 @@ public class StartAndEndTriggerSet extends TextView implements IObject {
 	String m_strFontFamily = "微软雅黑";
 	int m_cBackgroundColor = 0xFFFCFCFC;
 	int m_cFontColor = 0xFF000000;
-	String m_strContent = "Setting";
-	String stop_strContent = "Setting";
+	String m_strContent = "0";
+	String stop_strContent = "0";
 	String m_strCmdExpression = "";
 	boolean m_bIsValueRelateSignal = false;
 	float m_fButtonWidthRate = 0.3f;
@@ -455,4 +450,49 @@ public class StartAndEndTriggerSet extends TextView implements IObject {
 	// 记录触摸坐标，过滤滑动操作。解决滑动误操作点击问题。
 	public float m_xscal = 0;
 	public float m_yscal = 0;
+	
+	private ViewObjectBase base=new StartAndEndTriggerSetObject();
+	
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		((StartAndEndTriggerSetObject)base).setStartValue(start_Textview.getText().toString());
+		((StartAndEndTriggerSetObject)base).setStopValue(end_Textview.getText().toString());
+		
+	}
+
+	@Override
+	public void onSetData() {
+		
+		((StartAndEndTriggerSetObject)base).setStartValue(start_Textview.getText().toString());
+		((StartAndEndTriggerSetObject)base).setStopValue(end_Textview.getText().toString());
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		String value=(String)obj;
+		
+		String[] str=value.split("-");
+		
+		
+		if(str.length==2)
+		{
+
+			onClicked(str[0], str[1]);
+		}
+
+	}
 }

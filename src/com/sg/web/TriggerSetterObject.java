@@ -6,7 +6,14 @@ public class TriggerSetterObject extends ViewObjectBase{
 	
 	String content,fontColor;
 	float  fontSize;
+	boolean click;
 	
+	public boolean isClick() {
+		return click;
+	}
+	public void setClick(boolean click) {
+		this.click = click;
+	}
 	public String getContent() {
 		return content;
 	}

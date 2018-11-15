@@ -4,12 +4,27 @@ import com.sg.web.base.ViewObjectBase;
 
 public class ButtonObject extends ViewObjectBase{
 
-	String text;
-	String textColor;
-	float  textSize;
-	String imgSrc;	
-	String hrefUrl;
+	String  text;
+	String  textColor;
+	float   textSize;
+	String  imgSrc;	
+	String  hrefUrl;
+	boolean click;
+	String  titleName;
 	
+	
+	public String getTitleName() {
+		return titleName;
+	}
+	public void setTitleName(String titleName) {
+		this.titleName = titleName;
+	}
+	public boolean isClick() {
+		return click;
+	}
+	public void setClick(boolean click) {
+		this.click = click;
+	}
 	public String getText() {
 		return text;
 	}

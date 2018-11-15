@@ -39,8 +39,6 @@ public class SendDataHandler implements RequestHandler{
 		  {
 			  
 			  String json=JSON.toJSON(MGridActivity.ViewJosnObject.get(params.get("titleName"))).toString();	
-			  Log.e("json", MGridActivity.ViewJosnObject.get(params.get("titleName")).size()+"");
-			  Log.e("json", json);
 			  StringEntity stringEntity = new StringEntity(json, "utf-8");
 			  response.setStatusCode(200);
 			  response.setEntity(stringEntity);

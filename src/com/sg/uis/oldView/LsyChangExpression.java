@@ -28,11 +28,14 @@ import com.sg.common.LanguageStr;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtExpressionParser.stExpression;
+import com.sg.web.ChangeExpressionObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
 
 @SuppressLint("RtlHardcoded")
 @SuppressWarnings("unused")
 /** 标签 */
-public class LsyChangExpression extends TextView implements IObject {
+public class LsyChangExpression extends TextView implements IObject,ViewObjectSetCallBack{
 
 	private EditText Et_ChangeValue = null;
 
@@ -73,32 +76,52 @@ public class LsyChangExpression extends TextView implements IObject {
 			public void onClick(View v) {
 
 				String value = Et_ChangeValue.getText().toString();
-				xml = XmlUtils.getXml();
-				nodeList = xml.getNodeList("EquipSignal", tempId + "");
-				if (nodeList == null || nodeList.getLength() <= 0)
-					return;
-
 				
-				for (int i = 0; i <nodeList.getLength(); i++) {
-					Element element1 = (Element) nodeList.item(i);
-					String sId = element1.getAttribute("SignalId");
-					if (sId.equals(signalId+"")) {
-						element = element1;
-						element.setAttribute("Expression", value);		
-//						if(MGridActivity.whatLanguage)
-//						Toast.makeText(context, "修改成功", 500).show();
-//						else
-					
-						break;
-					}
-				}
-				xml.saveXmlData();
-				Toast.makeText(context, LanguageStr.Success, 500).show();	
-
+				onClickBack(value);
 			}
 		});
 
 	}
+	
+	
+	private void  onClickBack(String value)
+	{
+		
+		xml = XmlUtils.getXml();
+		nodeList = xml.getNodeList("EquipSignal", tempId + "");
+		if (nodeList == null || nodeList.getLength() <= 0)
+			return;
+
+		
+		for (int i = 0; i <nodeList.getLength(); i++) {
+			Element element1 = (Element) nodeList.item(i);
+			String sId = element1.getAttribute("SignalId");
+			if (sId.equals(signalId+"")) {
+				element = element1;
+				element.setAttribute("Expression", value);		
+//				if(MGridActivity.whatLanguage)
+//				Toast.makeText(context, "修改成功", 500).show();
+//				else
+			
+				break;
+			}
+		}
+		xml.saveXmlData();
+		
+		this.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				Toast.makeText(getContext(), LanguageStr.Success, 500).show();	
+				
+			}
+		});
+		
+		
+		
+	}
+	
 
 	@Override
 	public void doLayout(boolean bool, int l, int t, int r, int b) {
@@ -150,6 +173,7 @@ public class LsyChangExpression extends TextView implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 		rWin.addView(Et_ChangeValue);
 	}
@@ -344,4 +368,40 @@ public class LsyChangExpression extends TextView implements IObject {
 	private NodeList nodeList = null;
 	private Element element = null;
 	private XmlUtils xml=null;
+	
+	
+	ViewObjectBase base=new ChangeExpressionObject();
+
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+	}
+
+	@Override
+	public void onSetData() {
+		
+		
+		
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		
+		String value=(String)obj;
+		onClickBack(value);
+		
+	}
 }

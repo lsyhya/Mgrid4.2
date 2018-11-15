@@ -13,8 +13,11 @@ import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stIfElseExpression;
+import com.sg.web.TextClockObject;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
-public class SgTextClock extends TextClock implements IObject
+public class SgTextClock extends TextClock implements IObject,ViewObjectSetCallBack
 {
 	public SgTextClock(Context context)
 	{
@@ -80,6 +83,7 @@ public class SgTextClock extends TextClock implements IObject
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 	}
 
@@ -124,6 +128,7 @@ public class SgTextClock extends TextClock implements IObject
         else if ("IsBold".equals(strName))
        	 	m_bIsBold = Boolean.parseBoolean(strValue);
         else if ("FontColor".equals(strName)) {
+        	textColor=strValue;
        	 	m_cFontColor = Color.parseColor(strValue);
        	 	this.setTextColor(m_cFontColor);
         }
@@ -240,8 +245,46 @@ public class SgTextClock extends TextClock implements IObject
 	MainWindow m_rRenderWindow = null;	
 	stIfElseExpression m_oIfElseExpression = null;
 	String m_strSignalValue = "";
-	
+	String textColor;
 	Rect m_rBBox = null;
 	
 	public boolean m_bneedupdate = true;
+	
+	private TextClockObject base=new TextClockObject();
+	
+
+	@Override
+	public void onCall() {
+	
+		
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+		
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+		
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+		
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		base.setCmd(m_strExpression);
+		
+		
+		((TextClockObject)base).setTextColor(ViewObjectColorUtil.getColor(textColor));
+		((TextClockObject)base).setTextSize(m_fFontSize);
+	}
+
+	@Override
+	public void onSetData() {
+		
+		
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		
+		
+	}
 }

@@ -36,17 +36,40 @@ public class UtTable extends ListView {
 				- m_nLayoutBottomOffset);
 		m_nLayoutBottomOffset = -m_nLayoutBottomOffset;
 	}
+	
+	
+	String type;
+	
+	public void settype(String type)
+	{
+		this.type=type;
+	}
 
 	public void updateContends(List<String> listTitles,
 			List<List<String>> listContends) {
 		if (listTitles == null || listContends == null)  //如果标题或者内容为空 return；
 			return;
+		
+		
+		
 		int column = listTitles.size(); //得到标题的个数
 		int width = (m_nRight - m_nLeft) / column; //得到每个标题的宽度
 		
 		int updatecount = m_bUseTitle ? listContends.size() + 1 : listContends
 				.size();  //如果使用标题  列表行数为内容的数量+1，不然为内容数量。
 		int count = Math.min(m_tableAdapter.getCount(), updatecount); //
+		
+		
+		
+//		
+//		if(type!=null&&type.equals("EventList"))
+//		{
+//			
+//			System.out.println(column+":"+width+":"+updatecount+":"+count);
+//			
+//		}
+		
+		
 		if (m_bUseTitle && count < 1) {//如果使用标题 并且count<1
 
 			

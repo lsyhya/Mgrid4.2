@@ -22,6 +22,7 @@ import com.mgrid.main.R;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.web.TriggerSetterObject;
+import com.sg.web.YTParameterObject;
 import com.sg.web.base.ViewObjectBase;
 import com.sg.web.base.ViewObjectSetCallBack;
 import com.sg.web.utils.ViewObjectColorUtil;
@@ -416,12 +417,37 @@ public class SgTriggerSetter extends TextView implements IObject,ViewObjectSetCa
 		((TriggerSetterObject)base).setContent(m_strContent);
 		((TriggerSetterObject)base).setFontColor(ViewObjectColorUtil.getColor(fontColor));
 		((TriggerSetterObject)base).setFontSize(m_fFontSize);
+		
+		if(!m_strCmdExpression.equals(""))
+		{
+			((TriggerSetterObject) base).setClick(true);
+		}else
+		{
+			((TriggerSetterObject) base).setClick(false);
+		}
 	}
 
 	@Override
 	public void onSetData() {
 	
 		
+		
+	}
+
+	@Override
+	public void onControl(Object obj) {
+	
+		String str=(String)obj;
+		
+		if(!str.equals(""))
+		{
+			
+			synchronized (m_rRenderWindow.m_oShareObject) {
+				m_rRenderWindow.m_oShareObject.m_mapTriggerCommand.put(
+						getUniqueID(), (String)obj);
+			}
+			
+		}
 		
 	}
 }

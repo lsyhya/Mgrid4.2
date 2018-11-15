@@ -3,7 +3,7 @@
     package="com.mgrid.main"
     android:installLocation="preferExternal"
     android:versionCode="13"
-    android:versionName="4.53" >
+    android:versionName="5.1" >
 
     <uses-sdk
         android:minSdkVersion="19"

@@ -509,4 +509,10 @@ public class Dial_C extends View implements IObject, ViewObjectSetCallBack {
 		base.setValue(data_value+"");
 		
 	}
+
+	@Override
+	public void onControl(Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
 }

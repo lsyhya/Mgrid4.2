@@ -14,9 +14,13 @@ import com.mgrid.main.MainWindow;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.SgRealTimeData;
+import com.sg.web.SgISolationSwitchObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
 /** ¿ª¹Ø */
-public class SgIsolationSwitch extends View implements IObject {
+public class SgIsolationSwitch extends View implements IObject ,ViewObjectSetCallBack{
 	public SgIsolationSwitch(Context context) {
 		super(context);
 		this.setOnTouchListener(new OnTouchListener() {
@@ -96,6 +100,7 @@ public class SgIsolationSwitch extends View implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 	}
 
@@ -122,8 +127,11 @@ public class SgIsolationSwitch extends View implements IObject {
 		} else if ("RotateAngle".equals(strName)) {
 			m_fRotateAngle = Float.parseFloat(strValue);
 		} else if ("Foreground".equals(strName)) {
+			fColor=strValue;
+			currColor=fColor;
 			m_cForeground = CFGTLS.parseColor(strValue);
 		} else if ("Background".equals(strName)) {
+			bColor=strValue;
 			m_cBackground = CFGTLS.parseColor(strValue);
 		} else if ("Thickness".equals(strName)) {
 			m_nThickness = Integer.parseInt(strValue);
@@ -142,6 +150,8 @@ public class SgIsolationSwitch extends View implements IObject {
 	@Override
 	public void initFinished() {
 		m_cPaintColor = m_bState ? m_cForeground : m_cBackground;
+		currColor = m_bState ? fColor : bColor;
+		
 	}
 
 	public String getBindingExpression() {
@@ -177,17 +187,21 @@ public class SgIsolationSwitch extends View implements IObject {
 				if (nValue == 0) {
 					bState = false;
 					m_cPaintColor = m_cBackground;
+					currColor=bColor;
 				} else {
 					bState = true;
 					m_cPaintColor = m_cForeground;
+					currColor=fColor;
 				}
 			} else {
 				if (nValue == 1) {
 					bState = false;
 					m_cPaintColor = m_cBackground;
+					currColor=bColor;
 				} else {
 					bState = true;
 					m_cPaintColor = m_cForeground;
+					currColor=fColor;
 				}
 			}
 		}
@@ -262,4 +276,47 @@ public class SgIsolationSwitch extends View implements IObject {
 	Rect m_rBBox = null;
 
 	public boolean m_bneedupdate = true;
+	private String currColor,fColor,bColor;
+
+
+	
+	ViewObjectBase base= new SgISolationSwitchObject();
+	
+	@Override
+	public void onCall() {
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		base.setType(m_strType);
+		
+		((SgISolationSwitchObject)base).setColor(ViewObjectColorUtil.getColor(currColor));
+		((SgISolationSwitchObject)base).setRotateAngle(m_fRotateAngle);
+		((SgISolationSwitchObject)base).setClose(m_bStatess);
+		
+	}
+
+	@Override
+	public void onSetData() {
+		
+		((SgISolationSwitchObject)base).setColor(ViewObjectColorUtil.getColor(currColor));
+		((SgISolationSwitchObject)base).setRotateAngle(m_fRotateAngle);
+		((SgISolationSwitchObject)base).setClose(m_bStatess);
+		
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
 }

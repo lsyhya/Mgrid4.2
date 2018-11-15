@@ -387,6 +387,13 @@ public class tigerLabel extends TextView implements IObject,ViewObjectSetCallBac
 			base.setValue(m_strContent);
 			
 		}
+
+
+		@Override
+		public void onControl(Object obj) {
+			// TODO Auto-generated method stub
+			
+		}
 }
 
 

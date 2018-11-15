@@ -34,6 +34,7 @@ import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtExpressionParser.stExpression;
 import com.sg.common.UtTable;
+import com.sg.common.lsyBase.HisEventTable;
 import com.sg.web.EventListObject;
 import com.sg.web.base.ViewObjectBase;
 import com.sg.web.base.ViewObjectSetCallBack;
@@ -82,6 +83,8 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 			switch (msg.what) {
 			case 1:
 				
+				
+				
 				updateContends(lstTitles, lstContends); // 表格行显示
 				update();
 				break;
@@ -92,17 +95,17 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 			case 3:
 				if (0 != service.send_control_cmd(service.IP, service.PORT,
 						MGridActivity.lstCtrlDo1)) {
-					System.out.println("发送失败");
+					
 				} else {
-					System.out.println("发送成功");
+					
 				}
 				break;
 			case 4:
 				if (0 != service.send_control_cmd(service.IP, service.PORT,
 						MGridActivity.lstCtrlDo2)) {
-					System.out.println("发送失败");
+					
 				} else {
-					System.out.println("发送成功");
+					
 				}
 				break;
 			case 5:
@@ -327,6 +330,7 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 
 	public void setType(String strType) {
 		m_strType = strType;
+		settype(m_strType);
 	}
 
 	public String getUniqueID() {
@@ -497,10 +501,7 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 			}
 		}
 
-		// updateContends(lstTitles, lstContends_two); //表格行显示
-		
-		
-     
+		// updateContends(lstTitles, lstContends_two); //表格行显示    
 		return true;
 	}
 
@@ -517,7 +518,7 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 			return false;
 		if (oldEvenLists == null) { // 第一次判断时 old_eventss为空 如果new_eventss包含这个告警
 			// 就报警.
-			System.out.println("old_eventss为空");
+		
 			oldEvenLists = newEvenLists;
 			return true;
 		} else {
@@ -698,6 +699,11 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 	}
 	@Override
 	public void onSetData() {
+		
+		((EventListObject)base).setData(lstContends);
+	}
+	@Override
+	public void onControl(Object obj) {
 		// TODO Auto-generated method stub
 		
 	}

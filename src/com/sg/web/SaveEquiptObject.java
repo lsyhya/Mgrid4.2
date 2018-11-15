@@ -10,21 +10,43 @@ public class SaveEquiptObject extends ViewObjectBase{
 	List<String> nameList;
 	String foreColor;
 	String backgroundColor;
-	String oddRowBackground;
-	String evenRowBackground;
-	int alpha=1;
+	String evenRowBackground,oddRowBackground;
+
+	
+	
+
+
+	public String getEvenRowBackground() {
+		return evenRowBackground;
+	}
+
+
+
+	public void setEvenRowBackground(String evenRowBackground) {
+		this.evenRowBackground = evenRowBackground;
+	}
+
+
+
+	public String getOddRowBackground() {
+		return oddRowBackground;
+	}
+
+
+
+	public void setOddRowBackground(String oddRowBackground) {
+		this.oddRowBackground = oddRowBackground;
+	}
+
+	int oddalpha;
+	int evenalpha;
+	
 
 	public List<String> getNameList() {
 		return nameList;
 	}
 
-	public int getAlpha() {
-		return alpha;
-	}
 
-	public void setAlpha(int alpha) {
-		this.alpha = alpha;
-	}
 
 	public String getForeColor() {
 		return foreColor;
@@ -42,21 +64,33 @@ public class SaveEquiptObject extends ViewObjectBase{
 		this.backgroundColor = backgroundColor;
 	}
 
-	public String getOddRowBackground() {
-		return oddRowBackground;
+	
+	public int getOddalpha() {
+		return oddalpha;
 	}
 
-	public void setOddRowBackground(String oddRowBackground) {
-		this.oddRowBackground = oddRowBackground;
+
+
+	public void setOddalpha(int oddalpha) {
+		this.oddalpha = oddalpha;
 	}
 
-	public String getEvenRowBackground() {
-		return evenRowBackground;
+
+
+	
+
+	public int getEvenalpha() {
+		return evenalpha;
 	}
 
-	public void setEvenRowBackground(String evenRowBackground) {
-		this.evenRowBackground = evenRowBackground;
+
+
+	public void setEvenalpha(int evenalpha) {
+		this.evenalpha = evenalpha;
 	}
+
+
+
 
 	public void setNameList(List<String> nameList) {
 		this.nameList = nameList;

@@ -374,4 +374,10 @@ public class SgTable extends View implements IObject, ViewObjectSetCallBack {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onControl(Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
 }

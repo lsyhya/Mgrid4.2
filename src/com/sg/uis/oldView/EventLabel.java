@@ -11,6 +11,9 @@ import com.sg.common.IObject;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stIfElseExpression;
 import com.sg.common.UtExpressionParser.stIntervalExpression;
+import com.sg.web.ELabelObject;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
 import android.R;
 import android.animation.ArgbEvaluator;
@@ -27,7 +30,7 @@ import android.widget.TextView;
 
 import com.sg.common.SgRealTimeData;
 /** 设备告警统计标签 */ //fjw0312 fixme: 2016 8 2
-public class EventLabel extends TextView implements IObject {
+public class EventLabel extends TextView implements IObject ,ViewObjectSetCallBack{
 
 	public EventLabel(Context context) { 
 		super(context); 
@@ -164,6 +167,7 @@ public class EventLabel extends TextView implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 	
 	}
@@ -211,8 +215,9 @@ public class EventLabel extends TextView implements IObject {
        	 	m_bIsBold = Boolean.parseBoolean(strValue);
         else if ("FontColor".equals(strName)) {
        	 	m_cFontColor = Color.parseColor(strValue);
-       	 	m_cStartFillColor = m_cFontColor;
-       	 	 	
+       	 	m_cStartFillColor = m_cFontColor;    
+       	    textColor=strValue;
+       	    startColor=strValue;
         }
         else if ("HorizontalContentAlignment".equals(strName))
        	 	m_strHorizontalContentAlignment = strValue;
@@ -305,6 +310,7 @@ public class EventLabel extends TextView implements IObject {
 	public int parseFontcolor(String strValue)
 	{
 		m_cFontColor = m_cStartFillColor;
+		textColor=startColor;
 		if( (m_strColorExpression == null)||("".equals(m_strColorExpression)) ) return -1;
 		if( (strValue == null)||("".equals(strValue)) ) return -1;
 		if("-999999".equals(strValue)) return -1;		
@@ -321,6 +327,7 @@ public class EventLabel extends TextView implements IObject {
 			float value = Float.parseFloat(strValue); //输入值
 			if(value > data){
 				m_cFontColor = Color.parseColor(a[1]);
+				textColor=a[1];
 			}
 		}		
 		return m_cFontColor;
@@ -391,4 +398,42 @@ public class EventLabel extends TextView implements IObject {
 	int jj = 0;
 	
 	public boolean m_bneedupdate = true;
+	
+	ELabelObject base=new ELabelObject();
+	String textColor="",startColor="";
+
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		((ELabelObject)base).setTextSize(m_fFontSize);
+		((ELabelObject)base).setTextColor(textColor);
+		((ELabelObject)base).setText(m_strContent);
+		
+	}
+
+	@Override
+	public void onSetData() {
+		
+		((ELabelObject)base).setTextColor(ViewObjectColorUtil.getColor(textColor));
+		((ELabelObject)base).setText(m_strContent);
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
 }

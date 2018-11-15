@@ -8,8 +8,8 @@ import java.util.List;
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.mgrid.main.NiuberDoorService;
-import com.mgrid.main.R;
 import com.mgrid.main.NiuberDoorService.SokectBind;
+import com.mgrid.main.R;
 import com.mgrid.mysqlbase.SqliteUtil;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
@@ -19,6 +19,9 @@ import com.sg.common.UtExpressionParser.stExpression;
 import com.sg.common.lsyBase.DoorCallBack;
 import com.sg.common.lsyBase.Door_XuNiCallBack;
 import com.sg.common.lsyBase.Door_XuNiUtil;
+import com.sg.web.DoorInventedObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -37,7 +40,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class DoorInvented extends TextView implements IObject, Door_XuNiCallBack {
+public class DoorInvented extends TextView implements IObject, Door_XuNiCallBack,ViewObjectSetCallBack {
 
 	private TextView tv;
 	private String sb = "";
@@ -140,6 +143,11 @@ public class DoorInvented extends TextView implements IObject, Door_XuNiCallBack
 
 		}
 	}
+	
+	
+	
+	
+	
 
 	public void setCallBack(DoorCallBack callBack) {
 		this.callBack = callBack;
@@ -258,6 +266,8 @@ public class DoorInvented extends TextView implements IObject, Door_XuNiCallBack
 
 			case 1:
 
+				
+				Log.e("tag", "ø™√≈√¸¡Ó");
 				sendCmd();
 				Clear();
 				callBackResult(true, "Open");
@@ -502,6 +512,7 @@ public class DoorInvented extends TextView implements IObject, Door_XuNiCallBack
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 		rWin.addView(tv);
 		for (Button btn : btnData) {
@@ -591,7 +602,7 @@ public class DoorInvented extends TextView implements IObject, Door_XuNiCallBack
 	@Override
 	public void onSuccess(int state,String id,String pw,String time) {
 
-		Log.e("≤ª∂Æ", state+"");
+	
 		
 		switch (state) {
 		case 1:
@@ -648,6 +659,47 @@ public class DoorInvented extends TextView implements IObject, Door_XuNiCallBack
 			break;
 		}
 
+	}
+	
+	ViewObjectBase base=new DoorInventedObject();
+	
+
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		
+	
+		
+	}
+
+	@Override
+	public void onSetData() {
+		
+		
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		
+		String value=(String)obj;
+		
+		String id=value.split("-")[0];
+		String pw=value.split("-")[1];
+		
+		Open(null, pw, -1);
 	}
 
 

@@ -38,6 +38,7 @@ import com.sg.common.LanguageStr;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtIniReader;
 import com.sg.uis.LsyNewView.AlarmAction.SgAlarmAction;
+import com.sg.uis.LsyNewView.AlarmAction.SgAlarmChangTime;
 import com.sg.uis.LsyNewView.TimingAndDelayed.TimingAndDelayedView;
 import com.sg.uis.newView.AlarmShieldTime;
 import com.sg.uis.newView.ChangeLabelBtn;
@@ -45,9 +46,9 @@ import com.sg.uis.newView.NBerDoorView;
 import com.sg.uis.newView.SgSplineChart;
 import com.sg.uis.newView.SgVideoView;
 import com.sg.uis.oldView.SaveEquipt;
-import com.sg.uis.oldView.SgAlarmChangTime;
 import com.sg.uis.oldView.SgImage;
 import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -110,6 +111,7 @@ public class MGridActivity extends Activity {
 		m_oPageList = new ArrayList<String>();
 		userManager = new UserManager();
 		ViewJosnObject=new HashMap<>();
+		ViewSetBackObject=new HashMap<>();
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 强制为横屏
 		mImm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);// 输入法窗口
@@ -740,7 +742,7 @@ public class MGridActivity extends Activity {
 		runDataGetter();
 		if(OPENWEB)
 		{
-		initServiceManeger();
+		  initServiceManeger();
 		}
 		
 	}
@@ -1048,7 +1050,7 @@ public class MGridActivity extends Activity {
 	
 	//网页服务管理
 	public ServerManager mServerManager;
-	public static boolean OPENWEB=true;
+	public static boolean OPENWEB=false;
 
 	private int sleepTime = 2 * 60 * 60;// 屏保视频休眠时间
 	private Intent m_oTaskIntent = null;
@@ -1093,7 +1095,7 @@ public class MGridActivity extends Activity {
 	public MainWindow tmp_load_prevpage = null;
 
 	// Params:
-	public String m_sMainPage = null;
+	public static String m_sMainPage = null;
 	public String m_sRootFolder = null;
 	public ArrayList<String> m_oPageList = null;
 
@@ -1121,6 +1123,7 @@ public class MGridActivity extends Activity {
 	public static boolean isNOChangPage = false;
 	public static int saveTime; // 信号数据存储时间
 	public static HashMap<String,List<ViewObjectBase>> ViewJosnObject = null;
+	public static HashMap<String,Map<String,ViewObjectSetCallBack>> ViewSetBackObject = null;
 	//public static HashMap<String,TreeMap<Integer, ViewObjectBase>> ViewJosnObject = null;
 	// 用户名和密码
 	public static String m_UserName;

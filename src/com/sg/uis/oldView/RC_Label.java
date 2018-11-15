@@ -7,11 +7,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.httpcore.HttpResponse;
+import org.apache.httpcore.entity.StringEntity;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.FontMetricsInt;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
@@ -21,13 +25,20 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.fjw.view.Axis;
 import com.mgrid.main.MainWindow;
+import com.mgrid.util.TextUtil;
+import com.mgrid.util.TimeUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtExpressionParser.stExpression;
+import com.sg.web.RC_LabelObject;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.object.RC_LabelOb;
+
 import comm_service.local_rc;
 
 import data_model.rc_value;
@@ -36,7 +47,7 @@ import data_model.rc_value;
 /** made by fjw */
 @SuppressWarnings("rawtypes")
 @SuppressLint({ "SimpleDateFormat", "RtlHardcoded", "HandlerLeak", "UseSparseArrays" })
-public class RC_Label extends TextView implements IObject {
+public class RC_Label extends TextView implements IObject, ViewObjectSetCallBack {
 
 	public RC_Label(Context context) {
 		super(context);
@@ -83,30 +94,9 @@ public class RC_Label extends TextView implements IObject {
 			}
 			ridobuttons[mode].setChecked(true);
 			m_bneedupdate = true;
-			// myThread mythread = new myThread();
-			// mythread.start();
+
 		}
 	};
-
-	// Handler myHandler = new Handler() {
-	// public void handleMessage(Message msg) {
-	// switch (msg.what) {
-	// case 1:
-	// updateWidget();
-	// break;
-	// default:
-	// break;
-	// }
-	// }
-	// };
-	//
-	// private class myThread extends Thread {
-	// public void run() {
-	// updateValue();
-	//
-	// myHandler.sendEmptyMessage(1);
-	// }
-	// }
 
 	@Override
 	public void doLayout(boolean bool, int l, int t, int r, int b) {
@@ -162,7 +152,7 @@ public class RC_Label extends TextView implements IObject {
 					return;
 				}
 
-				//Log.e("绘制", m_num + "::" + value_flag.get(l).size());
+				// Log.e("绘制", m_num + "::" + value_flag.get(l).size());
 				float rc_y = my_Axis.y_start - my_Axis.y_per_unit * ((Float) value_flag.get(l).get(i));
 				float rc_x_end = rc_x + my_Axis.x_unit * moveCount;
 				float rc_y_end = my_Axis.y_start;
@@ -173,15 +163,32 @@ public class RC_Label extends TextView implements IObject {
 					canvas.drawRect(rc_x, rc_y, rc_x_end, rc_y_end, paint);
 				} else if (mode == 2) {
 					canvas.drawRect(rc_x, rc_y, rc_x_end, rc_y_end, paint);
-
 				}
+
+				String text = (int) (float) value_flag.get(l).get(i) + "";
+				if (text.equals("0")) {
+					draw(canvas, text, paint, rc_x, my_Axis.y_start - 20, rc_x + my_Axis.x_unit, my_Axis.y_start);
+				} else {
+					draw(canvas, text, paint, rc_x, rc_y - 20, rc_x + my_Axis.x_unit, rc_y);
+				}
+
 			}
 		}
 
-		//Log.e("绘制", "清除");
+		// Log.e("绘制", "清除");
 		isDelete = true;
 		super.onDraw(canvas);
 
+	}
+
+	public void draw(Canvas canvas, String testString, Paint paint, float rc_x, float rc_y, float rc_x_end,
+			float rc_y_end) {
+		Rect targetRect = new Rect((int) rc_x, (int) rc_y, (int) rc_x_end, (int) rc_y_end);
+		FontMetricsInt fontMetrics = paint.getFontMetricsInt();
+		int baseline = (targetRect.bottom + targetRect.top - fontMetrics.bottom - fontMetrics.top) / 2;
+		// 下面这行是实现水平居中，drawText对应改为传入targetRect.centerX()
+		paint.setTextAlign(Paint.Align.CENTER);
+		canvas.drawText(testString, targetRect.centerX(), baseline, paint);
 	}
 
 	public View getView() {
@@ -195,6 +202,7 @@ public class RC_Label extends TextView implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(my_Axis);
 		rWin.addView(this);
 		for (int i = 0; i < ridobuttons.length; i++)
@@ -321,7 +329,7 @@ public class RC_Label extends TextView implements IObject {
 		List<rc_value> D_lst = new ArrayList<rc_value>();
 		local_rc l_rc = new local_rc();
 
-		//Log.e("数据", "刷新："+EqdSalId.size());
+		// Log.e("数据", "刷新："+EqdSalId.size());
 
 		for (String s : EqdSalId) {
 
@@ -333,7 +341,7 @@ public class RC_Label extends TextView implements IObject {
 
 				m_max_value = 0;
 				value_flag.clear();
-				//value_flag = value_Year;
+				// value_flag = value_Year;
 				ArrayList<Float> YList = new ArrayList<Float>();
 				value_flag.add(YList);
 				m_num = 10;
@@ -344,14 +352,12 @@ public class RC_Label extends TextView implements IObject {
 					YList.add((float) 0);
 				}
 
-				
 				if (D_lst == null || D_lst.size() == 0) {
 					continue;
 				}
 
 				// value_Year.clear();
 
-			
 				Iterator<rc_value> iter = D_lst.iterator();
 
 				while (iter.hasNext()) {
@@ -360,26 +366,24 @@ public class RC_Label extends TextView implements IObject {
 					if (rc_v == null)
 						break;
 					String str_year = rc_v.datetime.substring(0, 4);
-					int label = c_year - Integer.parseInt(str_year);
-					
-					//Log.e(""+label, m_num+"");
-					//Log.e("value", rc_v.value+"");
-					
+					int label = c_year - Integer.parseInt(str_year) + 5;
+
+					// Log.e(""+label, m_num+"");
+					// Log.e("value", rc_v.value+"");
+
 					if (label < m_num && label >= 0)
 						YList.set(m_num - label - 1, Float.parseFloat(rc_v.value));
 
 				}
 				// value_Year.set(0, fl);
 				get_max(YList);
-				
-			
 
 			} else if (mode == 1) {
 
 				m_max_value = 0;
 				value_flag.clear();
-				
-			//	value_flag = value_Mon;				
+
+				// value_flag = value_Mon;
 				ArrayList<Float> MList = new ArrayList<Float>();
 				value_flag.add(MList);
 				mon = 0;
@@ -388,12 +392,11 @@ public class RC_Label extends TextView implements IObject {
 				for (int i = 0; i < m_num; i++) {
 					MList.add((float) 0);
 				}
-				
+
 				if (D_lst == null || D_lst.size() == 0) {
 					continue;
 				}
 
-			
 				Iterator<rc_value> iter = D_lst.iterator();
 				while (iter.hasNext()) {
 					rc_value rc_v = new rc_value();
@@ -402,14 +405,12 @@ public class RC_Label extends TextView implements IObject {
 					MList.set(Integer.parseInt(str_mon) - 1, Float.parseFloat(rc_v.value));
 				}
 				get_max(MList);
-				
-				
 
 			} else if (mode == 2) {
 
 				m_max_value = 0;
 				value_flag.clear();
-			//	value_flag = value_Day;
+				// value_flag = value_Day;
 				ArrayList<Float> DList = new ArrayList<Float>();
 				value_flag.add(DList);
 
@@ -429,7 +430,7 @@ public class RC_Label extends TextView implements IObject {
 				day = 0;
 
 				D_lst = l_rc.getD_Vlaue(equiptID, siganlID, year, mon, day, mode);
-				
+
 				if (D_lst == null || D_lst.size() == 0) {
 					continue;
 				}
@@ -438,17 +439,17 @@ public class RC_Label extends TextView implements IObject {
 				while (iter.hasNext()) {
 					rc_value rc_v = new rc_value();
 					rc_v = iter.next();
+
 					String str_day = rc_v.datetime.substring(8, 10);
 					DList.set(Integer.parseInt(str_day) - 1, Float.parseFloat(rc_v.value));
 				}
 
 				get_max(DList);
-				
-			
+
 			}
 		}
 
-		//Log.e("数据", "刷新:" + value_flag.size() + "::" + value_flag.get(0).size());
+		// Log.e("数据", "刷新:" + value_flag.size() + "::" + value_flag.get(0).size());
 		// isRun=true;
 		return true;
 
@@ -599,11 +600,6 @@ public class RC_Label extends TextView implements IObject {
 			28, 29, 30, 31 }; // x轴的标签数组
 	List<ArrayList> value_flag = new ArrayList<ArrayList>(); // 各个数值 数组
 
-//	List<ArrayList> value_Mon = new ArrayList<ArrayList>(); // 当月 每天各个数值 数组
-//	List<ArrayList> value_Year = new ArrayList<ArrayList>(); // 当月 每天各个数值 数组
-//
-//	List<ArrayList> value_Day = new ArrayList<ArrayList>(); // 当天各个数值
-
 	Axis my_Axis; // 定义坐标轴控件元素view
 	Paint paint;
 	RadioButton[] ridobuttons;
@@ -622,4 +618,133 @@ public class RC_Label extends TextView implements IObject {
 	private float D_max_value = 0;
 	private boolean isDelete = false;
 	// private boolean isRun=false;
+
+	RC_LabelObject base = new RC_LabelObject();
+
+	@Override
+	public void onCall() {
+
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+
+	}
+
+	@Override
+	public void onSetData() {
+
+	}
+
+	@Override
+	public void onControl(Object obj) {
+
+		RC_LabelOb ob = (RC_LabelOb) obj;
+		
+		String value = ob.getValue();
+		HttpResponse response = ob.getResponse();
+		
+			
+		List<rc_value> lst = new ArrayList<rc_value>();		
+		List<Float> listValue = new ArrayList<Float>();
+		local_rc l_rc = new local_rc();
+				
+		ob.setListValue(listValue);
+		
+		
+		year = Integer.parseInt(TimeUtils.getYear());
+		mon = Integer.parseInt(TimeUtils.getMonth());
+		day = Integer.parseInt(TimeUtils.getDay());
+		
+		
+		
+		
+		
+		if (value.equals("year")) {
+
+			lst = l_rc.getD_Vlaue(equiptID, siganlID, 0, mon, day, 0);
+			for (int i = 0; i < 10; i++) {
+				listValue.add((float) 0);
+			}
+
+		
+			if (lst != null) {
+
+			Iterator<rc_value> iter = lst.iterator();
+
+			while (iter.hasNext()) {
+				rc_value rc_v = new rc_value();
+				rc_v = iter.next();
+				if (rc_v == null)
+					break;
+				String str_year = rc_v.datetime.substring(0, 4);
+				int label = year - Integer.parseInt(str_year) + 5;	
+
+				if (label < 10 && label >= 0)
+					listValue.set(10 - label - 1, Float.parseFloat(rc_v.value));
+
+			}
+			}
+			
+			
+
+		} else if (value.equals("mon")) {
+			lst = l_rc.getD_Vlaue(equiptID, siganlID, year, 0, day, 1);
+			for (int i = 0; i < 12; i++) {
+				listValue.add((float) 0);
+			}
+
+			if (lst != null) {
+
+				Iterator<rc_value> iter = lst.iterator();
+				while (iter.hasNext()) {
+					rc_value rc_v = new rc_value();
+					rc_v = iter.next();
+					String str_mon = rc_v.datetime.substring(5, 7);
+					listValue.set(Integer.parseInt(str_mon) - 1, Float.parseFloat(rc_v.value));
+				}
+
+			}
+
+		} else if (value.equals("day")) {
+			lst = l_rc.getD_Vlaue(equiptID, siganlID, year, mon, 0, 2);
+			
+			for (int i = 0; i < 31; i++) {
+				listValue.add((float) 0);
+			}
+
+
+			if (lst != null) {
+
+				Iterator<rc_value> iter = lst.iterator();
+				while (iter.hasNext()) {
+					rc_value rc_v = new rc_value();
+					rc_v = iter.next();
+
+					String str_day = rc_v.datetime.substring(8, 10);
+					listValue.set(Integer.parseInt(str_day) - 1, Float.parseFloat(rc_v.value));
+				}
+			}
+		}
+		
+		
+		String json = JSON.toJSON(ob).toString();
+
+		StringEntity stringEntity = new StringEntity(json, "utf-8");
+
+	
+
+		response.setStatusCode(200);
+		response.setEntity(stringEntity);
+
+
+	}
 }

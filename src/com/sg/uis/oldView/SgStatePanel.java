@@ -3,6 +3,8 @@ package com.sg.uis.oldView;
 import java.io.IOException;
 
 import com.sg.common.SgRealTimeData;
+import com.sg.web.StatePanelObject;
+import com.sg.web.base.ViewObjectSetCallBack;
 
 import java.io.InputStream;
 
@@ -22,7 +24,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 /** ×´Ì¬Ãæ°å */
-public class SgStatePanel extends View implements IObject {
+public class SgStatePanel extends View implements IObject ,ViewObjectSetCallBack{
 	public SgStatePanel(Context context) {  
         super(context); 
         this.setOnTouchListener(new OnTouchListener() {
@@ -95,6 +97,7 @@ public class SgStatePanel extends View implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 	}
 	
@@ -204,12 +207,15 @@ public class SgStatePanel extends View implements IObject {
 		Bitmap m_bitImage = m_bitCurrentImage;
 		switch (nValue) {
 		case 0:
+			value="0";
 			m_bitImage = s_bitNormalImage;
 			break;
 		case 1:
+			value="1";
 			m_bitImage = s_bitErrorImage;
 			break;
 		case 2:
+			value="2";
 			m_bitImage = s_bitWarrningImage;
 			break; 
 		}
@@ -259,6 +265,42 @@ public class SgStatePanel extends View implements IObject {
 	Rect m_rSrcRect = null;
 	Rect m_rDestRect = null;
 	Rect m_rBBox = null;
-	
+	String value="0";
 	public boolean m_bneedupdate = true;
+	
+	StatePanelObject base=new StatePanelObject();
+
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+		
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+		
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+		
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		base.setCmd(m_strStateExpression);
+		base.setValue(value);
+		
+	}
+
+	@Override
+	public void onSetData() {
+		
+		base.setValue(value);
+		
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
 }
