@@ -24,7 +24,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Message;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -585,7 +584,7 @@ public class SgLabel extends TextView implements IObject ,ViewObjectSetCallBack{
 		((LableObject)base).setText(c_Content);
 		((LableObject)base).setTextSize(m_fFontSize);
 		((LableObject)base).setTextColor("#"+currColor.substring(3, currColor.length()));
-		
+		((LableObject)base).setDuiqiWay(m_strHorizontalContentAlignment);
 		
 		
 	}
@@ -593,9 +592,9 @@ public class SgLabel extends TextView implements IObject ,ViewObjectSetCallBack{
 	@Override
 	public void onSetData() {
 		
-		base.setValue(m_strContent);
 		
 		
+		 base.setValue(m_strContent);			
 		((LableObject)base).setTextColor("#"+currColor.substring(3, currColor.length()));
 		
 	

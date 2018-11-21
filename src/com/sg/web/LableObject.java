@@ -7,7 +7,18 @@ public class LableObject extends ViewObjectBase{
 	public String TextColor;//字体颜色
 	public String text;//文本内容 
 	public float  textSize;
+	public String duiqiWay;
 	
+	public String getDuiqiWay() {
+		return duiqiWay;
+	}
+
+
+	public void setDuiqiWay(String duiqiWay) {
+		this.duiqiWay = duiqiWay;
+	}
+
+
 	public float getTextSize() {
 		return textSize;
 	}

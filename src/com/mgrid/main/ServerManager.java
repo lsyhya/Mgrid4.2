@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * Created by Yan Zhenjie on 2017/3/17.
@@ -106,7 +107,7 @@ public class ServerManager extends BroadcastReceiver {
                 }
                 case CMD_VALUE_ERROR: {
                     String error = intent.getStringExtra(MESSAGE_KEY);
-                    //mActivity.serverError(error);
+                    Toast.makeText(context, error, Toast.LENGTH_LONG).show();
                     break;
                 }
                 case CMD_VALUE_STOP: {

@@ -137,6 +137,7 @@ import android.graphics.Rect;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.util.Xml;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -977,9 +978,13 @@ public class MainWindow extends ViewGroup {
 						} else if ("ChangeLabel".equals(strType)) {
 							ChangeLabel CL = new ChangeLabel(this.getContext());
 							m_mapUIs.put(strID, CL);
+							callBackList.put(strID, CL);
+						
 						} else if ("ChangeLabelBtn".equals(strType)) {
 							ChangeLabelBtn CLB = new ChangeLabelBtn(this.getContext());
 							m_mapUIs.put(strID, CLB);
+							callBackList.put(strID, CLB);
+							
 						} else if ("SgHalfCircleChar".equals(strType)) {
 							SgHalfCircleChart SCC = new SgHalfCircleChart(this.getContext());
 							m_mapUIs.put(strID, SCC);
@@ -1996,6 +2001,9 @@ public class MainWindow extends ViewGroup {
 
 						// continue;
 					}
+					
+					
+					
 
 					// System.out.println("SgExpressionXXX:m_bIsRunning开始运行"+Thread.currentThread().getName());
 					if (m_oShareObject.m_listUpdateFromTcpValues.size() > 0) // 主线程是否已经处理完毕
@@ -2003,6 +2011,22 @@ public class MainWindow extends ViewGroup {
 						yield(); // 切出CPU时间片代替死循环等待 -- CharlesChen
 						continue;
 					}
+					
+					
+					
+					
+					if (MGridActivity.OPENWEB) {
+						Iterator<Entry<String, ViewObjectSetCallBack>> it = callBackList.entrySet().iterator();
+						while (it.hasNext()) {
+							Entry<String, ViewObjectSetCallBack> entry = it.next();										
+							entry.getValue().onSetData();
+						}
+					}
+
+					
+					
+				
+					
 
 					boolean hasupdate = false;
 					Iterator<HashMap.Entry<IObject, stExpression>> iter = mapSignals.entrySet().iterator();
@@ -2114,14 +2138,6 @@ public class MainWindow extends ViewGroup {
 					Thread.sleep(200);
 
 				
-					if (MGridActivity.OPENWEB) {
-						Iterator<Entry<String, ViewObjectSetCallBack>> it = callBackList.entrySet().iterator();
-						while (it.hasNext()) {
-							Entry<String, ViewObjectSetCallBack> entry = it.next();
-							entry.getValue().onSetData();
-						}
-					}
-
 				} /* end of while (m_bIsRunning) */
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();

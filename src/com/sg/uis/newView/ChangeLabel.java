@@ -18,6 +18,7 @@ import android.graphics.Rect;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -27,11 +28,15 @@ import com.mgrid.main.MainWindow;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.TotalVariable;
+import com.sg.web.ChangeLabelObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
 /** 按钮 */
 @SuppressLint({ "ShowToast", "InflateParams", "RtlHardcoded",
 		"ClickableViewAccessibility" })
-public class ChangeLabel extends TextView implements IObject {
+public class ChangeLabel extends TextView implements IObject ,ViewObjectSetCallBack{
 
 
 	public ChangeLabel(Context context) {
@@ -77,9 +82,10 @@ public class ChangeLabel extends TextView implements IObject {
 
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
+		
 		m_rRenderWindow = rWin;
-		rWin.addView(this);
-	
+		m_rRenderWindow.viewList.add(base);
+		rWin.addView(this);	
 
 	}
 
@@ -117,6 +123,7 @@ public class ChangeLabel extends TextView implements IObject {
 		} else if ("IsBold".equals(strName))
 			m_bIsBold = Boolean.parseBoolean(strValue);
 		else if ("FontColor".equals(strName)) {
+			textColor=strValue;
 			m_cFontColor = Color.parseColor(strValue);
 			this.setTextColor(m_cFontColor);
 		} else if ("HorizontalContentAlignment".equals(strName))
@@ -150,6 +157,9 @@ public class ChangeLabel extends TextView implements IObject {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
+				
+				
+				text=(String)msg.obj;
 				
 				setText((String)msg.obj);
 				break;
@@ -219,8 +229,9 @@ public class ChangeLabel extends TextView implements IObject {
 	
 	public void updateText(final String text)
 	{
+		this.text=text;
+		
 		setText(text);
-		System.out.println(text);
 		invalidate();
 		//Toast.makeText(getContext(), "修改成功", 200).show();
 		MGridActivity.xianChengChi.execute(new Runnable() {
@@ -332,9 +343,56 @@ public class ChangeLabel extends TextView implements IObject {
 
     String index="";
 	public boolean m_bneedupdate = true;
-	private String mExpression = "";
+	private String mExpression = "Binding{[Value[Equip:1-Temp:175-Signal:1]]}";
 	
 	String filePath=Environment.getExternalStorageDirectory().getPath();
+
+	
+	ViewObjectBase base=new ChangeLabelObject();
+	
+	String textColor;
+	String text;
+	
+
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		((ChangeLabelObject)base).setTextColor(ViewObjectColorUtil.getColor(textColor));
+		((ChangeLabelObject)base).setTextSize(m_fFontSize);		
+				
+		((ChangeLabelObject)base).setText(text);
+	}
+
+
+
+	@Override
+	public void onSetData() {
+		
+	
+		((ChangeLabelObject)base).setText(text);
+		
+	}
+
+
+
+	@Override
+	public void onControl(Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
 

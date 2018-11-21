@@ -12,7 +12,6 @@ import com.sg.web.handler.SendDataHandler;
 import com.yanzhenjie.andserver.AndServer;
 import com.yanzhenjie.andserver.Server;
 import com.yanzhenjie.andserver.filter.HttpCacheFilter;
-import com.yanzhenjie.andserver.website.AssetsWebsite;
 import com.yanzhenjie.andserver.website.StorageWebsite;
 
 import android.app.Service;
@@ -26,6 +25,8 @@ public class MyAndSerVice extends Service{
 	
 	private Server mServer;
 	private String filePath=Environment.getExternalStorageDirectory()+"/vtu_pagelist";
+	private static int index=0;
+	private File file = new File(filePath);
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -37,36 +38,27 @@ public class MyAndSerVice extends Service{
 	public void onCreate() {
 		super.onCreate();
 		
-		//Log.e("MyService", "¿ªÆô");
-		
-//		mServer = AndServer.serverBuilder()
-//                .inetAddress(NetUtils.getLocalIPAddress()) // Bind IP address.
-//                .port(8080)
-//                .timeout(15, TimeUnit.SECONDS)
-//                .website(new AssetsWebsite(getAssets(), "web"))
-//                .registerHandler("/test", new IndexHandler())                
-//                .filter(new HttpCacheFilter())
-//                .listener(mListener)
-//                .build();
-		
-		
-		File file = new File(filePath);
+
+		//File file = new File(filePath);
 		if(file.exists())
 		{
 		
-			mServer = AndServer.serverBuilder()
-	                .inetAddress(NetUtils.getLocalIPAddress()) // Bind IP address.
-	                .port(8080)
-	                .timeout(15, TimeUnit.SECONDS)
-	                .website(new StorageWebsite(file.getAbsolutePath()))
-	                .registerHandler("/test", new IndexHandler())   
-	                .registerHandler("/getdata", new SendDataHandler())
-	                .registerHandler("/onClick", new OnClickHandler())
-	                .registerHandler("/callback", new DataCallBackHandler())
-	                .registerHandler("/login", new LoginHandler())
-	                .filter(new HttpCacheFilter())
-	                .listener(mListener)
-	                .build();
+//			mServer = AndServer.serverBuilder()
+//	                .inetAddress(NetUtils.getLocalIPAddress()) // Bind IP address.
+//	                .port(8080)
+//	                .timeout(15, TimeUnit.SECONDS)
+//	                .website(new StorageWebsite(file.getAbsolutePath()))
+//	                .registerHandler("/test", new IndexHandler())   
+//	                .registerHandler("/getdata", new SendDataHandler())
+//	                .registerHandler("/onClick", new OnClickHandler())
+//	                .registerHandler("/callback", new DataCallBackHandler())
+//	                .registerHandler("/login", new LoginHandler())
+//	                .filter(new HttpCacheFilter())
+//	                .listener(mListener)
+//	                .build();
+			
+			
+			buildServer(8080);
 			
 		}else
 		{
@@ -74,6 +66,26 @@ public class MyAndSerVice extends Service{
 		}
 		
 		
+		
+	}
+	
+	
+	private void buildServer(int port)
+	{
+		
+		mServer = AndServer.serverBuilder()
+                .inetAddress(NetUtils.getLocalIPAddress()) // Bind IP address.
+                .port(port)
+                .timeout(15, TimeUnit.SECONDS)
+                .website(new StorageWebsite(file.getAbsolutePath()))
+                .registerHandler("/test", new IndexHandler())   
+                .registerHandler("/getdata", new SendDataHandler())
+                .registerHandler("/onClick", new OnClickHandler())
+                .registerHandler("/callback", new DataCallBackHandler())
+                .registerHandler("/login", new LoginHandler())
+                .filter(new HttpCacheFilter())
+                .listener(mListener)
+                .build();
 		
 	}
 	
@@ -89,17 +101,39 @@ public class MyAndSerVice extends Service{
         	{
         		Log.e("webService", "Ê§°Ü");
         	}
-            ServerManager.serverStart(MyAndSerVice.this, NetUtils.getLocalIPAddress().getHostAddress());
+        	
+        	String hostAddress = mServer.getInetAddress().getHostAddress();
+        	
+        	if(hostAddress==null)
+        	{
+        		Log.e("webService", "hostAddress=null");
+        		return;
+        	}
+        	
+            ServerManager.serverStart(MyAndSerVice.this, hostAddress);
+            Log.e("webService succ", "succ");
         }
 
         @Override
         public void onStopped() {
+        	Log.e("webService stop", "stop");
             ServerManager.serverStop(MyAndSerVice.this);
         }
 
         @Override
         public void onError(Exception e) {
+        	
+              
+        	Log.e("webService err", e.getMessage());      	
             ServerManager.serverError(MyAndSerVice.this, e.getMessage());
+            
+//            if(mServer!=null)
+//            {
+//            	buildServer(8081);
+//            	startServer();
+//            }
+//            
+            
         }
     };
 
@@ -124,8 +158,15 @@ public class MyAndSerVice extends Service{
     private void startServer() {
         if (mServer != null) {
             if (mServer.isRunning()) {
-               // String hostAddress = mServer.getInetAddress().getHostAddress();
-                ServerManager.serverStart(MyAndSerVice.this, NetUtils.getLocalIPAddress().getHostAddress());
+                String hostAddress = mServer.getInetAddress().getHostAddress();
+                
+                if(hostAddress==null)
+            	{
+            		Log.e("webService", "hostAddress=null");
+            		return;
+            	}
+                
+                ServerManager.serverStart(MyAndSerVice.this, hostAddress);
             } else {
                 mServer.startup();
             }
@@ -137,6 +178,7 @@ public class MyAndSerVice extends Service{
      */
     private void stopServer() {
         if (mServer != null && mServer.isRunning()) {
+        	Log.e("mServer", "close");
             mServer.shutdown();
         }
     }

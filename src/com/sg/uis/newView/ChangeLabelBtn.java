@@ -36,11 +36,14 @@ import com.mgrid.util.XmlUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.TotalVariable;
+import com.sg.web.ChangeLabelBtnObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
 
 @SuppressLint("RtlHardcoded")
 @SuppressWarnings("unused")
 /** 修改序列号 */
-public class ChangeLabelBtn extends TextView implements IObject {
+public class ChangeLabelBtn extends TextView implements IObject,ViewObjectSetCallBack {
 
 	private EditText Et_ChangeValue = null;
 
@@ -79,9 +82,24 @@ public class ChangeLabelBtn extends TextView implements IObject {
 			public void onClick(View v) {
 
 				String text = Et_ChangeValue.getText().toString();
+				onClickCall(text);
 
+			}
+		});
+	}
+	
+	
+	
+	private void onClickCall(final String text)
+	{
+		
+		this.post(new Runnable() {
+			
+			@Override
+			public void run() {
+			
 				if (text == null || text.equals("")) {
-					Toast.makeText(context, "不能为空", 200).show();
+					Toast.makeText(getContext(), "不能为空", 200).show();
 					return;
 				}
 
@@ -96,16 +114,21 @@ public class ChangeLabelBtn extends TextView implements IObject {
 								setLoginPassWord(text);
 
 						} else {
-							Toast.makeText(context, "index配置可能有误", 200).show();
+							Toast.makeText(getContext(), "index配置可能有误", 200).show();
 						}
 					}
 
 				} else {
-					Toast.makeText(context, "没有配置属性或者输入错误", 200).show();
+					Toast.makeText(getContext(), "没有配置属性或者输入错误", 200).show();
 				}
 
+				
+				
 			}
 		});
+
+		
+		
 	}
 
 	private void setLoginPassWord(String text) {
@@ -222,6 +245,7 @@ public class ChangeLabelBtn extends TextView implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 		rWin.addView(Et_ChangeValue);
 	}
@@ -433,4 +457,38 @@ public class ChangeLabelBtn extends TextView implements IObject {
 	String filePath = Environment.getExternalStorageDirectory().getPath();
 	private String index = "";
 	private Map<String, String> loginRandomCode = new HashMap<String, String>();
+
+	ViewObjectBase base=new ChangeLabelBtnObject();
+	
+	@Override
+	public void onCall() {
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+	}
+
+	@Override
+	public void onSetData() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		
+		String str=(String)obj;
+		
+		onClickCall(str);
+	}
 }
