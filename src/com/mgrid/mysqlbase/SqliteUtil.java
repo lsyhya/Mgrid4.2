@@ -212,6 +212,7 @@ public class SqliteUtil {
 			{
 				String exe = "update "+MySqlBase.doorEventTable+" set CheckData = 1 where id = "+id;  
 				//执行SQL  
+				if (sql != null)
 				sql.execSQL(exe);
 			}
 			
@@ -240,6 +241,7 @@ public class SqliteUtil {
 			
 			String exe = "update "+MySqlBase.doorEventTable+" set CheckData = 1 where id = "+id;  
 			//执行SQL  
+			if (sql != null)
 			sql.execSQL(exe);
 			
 			
@@ -320,6 +322,7 @@ public class SqliteUtil {
 			{
 				String exe = "update "+MySqlBase.doorXuNiEventTable+" set CheckData = 1 where id = "+id;  
 				//执行SQL  
+				if (sql != null)
 				sql.execSQL(exe);
 			}
 			
@@ -353,6 +356,7 @@ public class SqliteUtil {
 			
 			String exe = "update "+MySqlBase.doorXuNiEventTable+" set CheckData = 1 where id = "+id;  
 			//执行SQL  
+			if (sql != null)
 			sql.execSQL(exe);
 			
 			
@@ -372,6 +376,7 @@ public class SqliteUtil {
 	public void deleteValue(String str) {
 		// String exe="delete from "+MySqlBase.doorTable+"where CardId="+str;
 		// sql.execSQL(exe);
+		if (sql != null)
 		sql.delete(MySqlBase.doorTable, "CardId=?", new String[] { str });
 
 	}
@@ -381,12 +386,14 @@ public class SqliteUtil {
 	 */
 	public boolean getUserValue(String CID) {
 		
+		Cursor CS=null;
 		
-		Cursor CS=sql.query(MySqlBase.doorTable, null, "CardId=?", new String[] { CID }, null, null, null);
+		if (sql != null)
+		 CS=sql.query(MySqlBase.doorTable, null, "CardId=?", new String[] { CID }, null, null, null);
 		
 		
 		
-		if(CS.getCount()>0)
+		if(CS!=null&&CS.getCount()>0)
 		{
 			return false;
 		}else
@@ -400,11 +407,15 @@ public class SqliteUtil {
 	public MyDoorUser getUser(String cid) {
 		
 		
-		Cursor cursor=sql.query(MySqlBase.doorTable, null, "CardId=?", new String[] { cid }, null, null, null);
+		
+		Cursor cursor=null;
+		
+		if (sql != null)
+		 cursor=sql.query(MySqlBase.doorTable, null, "CardId=?", new String[] { cid }, null, null, null);
 		
 		
 		
-		  while(cursor.moveToNext()){
+		  while(cursor!=null&&cursor.moveToNext()){
 	        	
 	        	
 	            String name = cursor.getString(cursor.getColumnIndex("UserName"));
@@ -428,6 +439,7 @@ public class SqliteUtil {
 	 */
 	public void cleanUserTable() {
 		String exe = "delete from " + MySqlBase.doorTable;
+		if (sql != null)
 		sql.execSQL(exe);
 	}
 	
@@ -436,6 +448,7 @@ public class SqliteUtil {
 	 */
 	public void cleanEventTable() {
 		String exe = "delete from " + MySqlBase.doorEventTable;
+		if (sql != null)
 		sql.execSQL(exe);
 	}
 	
@@ -444,6 +457,7 @@ public class SqliteUtil {
 	 */
 	public void cleanXuniEventTable() {
 		String exe = "delete from " + MySqlBase.doorXuNiEventTable;
+		if (sql != null)
 		sql.execSQL(exe);
 	}
 

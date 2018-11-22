@@ -45,23 +45,21 @@ import comm_service.service;
 import data_model.ipc_control;
 
 /** 事件列表 */
-public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBack {
+public class SgEventList extends UtTable implements IObject, ViewObjectSetCallBack {
 
-	private String DeviceName=LanguageStr.DeviceName;
-	private String AlarmName=LanguageStr.AlarmName;
-	private String AlarmMeaning=LanguageStr.AlarmMeaning;
-	private String AlarmSeverity=LanguageStr.AlarmSeverity;
-	private String StartTime=LanguageStr.StartTime;
-    private Hashtable<String, Hashtable<String, Event>> listEvents = null;
+	private String DeviceName = LanguageStr.DeviceName;
+	private String AlarmName = LanguageStr.AlarmName;
+	private String AlarmMeaning = LanguageStr.AlarmMeaning;
+	private String AlarmSeverity = LanguageStr.AlarmSeverity;
+	private String StartTime = LanguageStr.StartTime;
+	private Hashtable<String, Hashtable<String, Event>> listEvents = null;
 	private List<String> cmd_list = new ArrayList<String>();
-	private ViewObjectBase base=new EventListObject();
+	private ViewObjectBase base = new EventListObject();
 
 	public SgEventList(Context context) {
 		super(context);
-		m_rBBox = new Rect();	
+		m_rBBox = new Rect();
 		m_listTempEvents = new Hashtable<String, Hashtable<String, Event>>();
-
-
 
 		// 表头
 		lstTitles = new ArrayList<String>();
@@ -72,7 +70,7 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 		// lstTitles.add("信号数值");
 		lstTitles.add(AlarmSeverity);
 		lstTitles.add(StartTime);
-		//lstTitles.add("结束时间  ");
+		// lstTitles.add("结束时间 ");
 
 		lstContends = new ArrayList<List<String>>();
 		mythread.start();
@@ -82,30 +80,26 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case 1:
-				
-				
-				
+
 				updateContends(lstTitles, lstContends); // 表格行显示
 				update();
 				break;
 			case 2:
-				
+
 				startSound();
 				break;
 			case 3:
-				if (0 != service.send_control_cmd(service.IP, service.PORT,
-						MGridActivity.lstCtrlDo1)) {
-					
+				if (0 != service.send_control_cmd(service.IP, service.PORT, MGridActivity.lstCtrlDo1)) {
+
 				} else {
-					
+
 				}
 				break;
 			case 4:
-				if (0 != service.send_control_cmd(service.IP, service.PORT,
-						MGridActivity.lstCtrlDo2)) {
-					
+				if (0 != service.send_control_cmd(service.IP, service.PORT, MGridActivity.lstCtrlDo2)) {
+
 				} else {
-					
+
 				}
 				break;
 			case 5:
@@ -118,14 +112,13 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 	};
 
 	private void startSound() {
-		Intent intent = new Intent(m_rRenderWindow.m_oMgridActivity,
-				SoundService.class);
+		Intent intent = new Intent(m_rRenderWindow.m_oMgridActivity, SoundService.class);
 		intent.putExtra("playing", true);
 		m_rRenderWindow.m_oMgridActivity.startService(intent);
 	}
+
 	private void stopSound() {
-		Intent intent = new Intent(m_rRenderWindow.m_oMgridActivity,
-				SoundService.class);
+		Intent intent = new Intent(m_rRenderWindow.m_oMgridActivity, SoundService.class);
 		intent.putExtra("playing", false);
 		m_rRenderWindow.m_oMgridActivity.startService(intent);
 	}
@@ -136,9 +129,7 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 
 			while (true) {
 				try {
-					
-					
-					
+
 					Thread.sleep(500);
 					handler.sendEmptyMessage(1);
 				} catch (Exception e) {
@@ -152,10 +143,8 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 	public void doLayout(boolean bool, int l, int t, int r, int b) {
 		if (m_rRenderWindow == null)
 			return;
-		int nX = l
-				+ (int) (((float) m_nPosX / (float) MainWindow.FORM_WIDTH) * (r - l));
-		int nY = t
-				+ (int) (((float) m_nPosY / (float) MainWindow.FORM_HEIGHT) * (b - t));
+		int nX = l + (int) (((float) m_nPosX / (float) MainWindow.FORM_WIDTH) * (r - l));
+		int nY = t + (int) (((float) m_nPosY / (float) MainWindow.FORM_HEIGHT) * (b - t));
 		int nWidth = (int) (((float) (m_nWidth) / (float) MainWindow.FORM_WIDTH) * (r - l));
 		int nHeight = (int) (((float) (m_nHeight) / (float) MainWindow.FORM_HEIGHT) * (b - t));
 		m_rBBox.left = nX;
@@ -167,8 +156,7 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 
 			for (int i = 0; i < m_title.length; ++i)
 				m_title[i].layout(nX + i * nWidth / m_title.length, nY - 18,
-						nX + i * nWidth / m_title.length + nWidth
-								/ m_title.length, nY);
+						nX + i * nWidth / m_title.length + nWidth / m_title.length, nY);
 		}
 	}
 
@@ -198,12 +186,11 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 	@Override
 	public void removeFromRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = null;
-		
+
 		rWin.removeView(this);
 	}
 
-	public void parseProperties(String strName, String strValue,
-			String strResFolder) {
+	public void parseProperties(String strName, String strValue, String strResFolder) {
 		if ("ZIndex".equals(strName)) {
 			m_nZIndex = Integer.parseInt(strValue);
 			if (MainWindow.MAXZINDEX < m_nZIndex)
@@ -245,22 +232,22 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 			// }
 		} else if ("ForeColor".equals(strName)) {
 			m_cForeColor = Color.parseColor(strValue);
-			foreColor=strValue;
+			foreColor = strValue;
 			this.setFontColor(m_cForeColor);
 		} else if ("BackgroundColor".equals(strName)) {
-			m_cBackgroundColor = Color.parseColor(strValue);		
-			backgroundColor=strValue;
+			m_cBackgroundColor = Color.parseColor(strValue);
+			backgroundColor = strValue;
 			this.setBackgroundColor(m_cBackgroundColor);
 		} else if ("BorderColor".equals(strName)) {
 			m_cBorderColor = Color.parseColor(strValue);
 		} else if ("OddRowBackground".equals(strName)) {
 			m_cOddRowBackground = Color.parseColor(strValue);
-			oddRowBackground=strValue;
-			//ji=strValue;
+			oddRowBackground = strValue;
+			// ji=strValue;
 		} else if ("EvenRowBackground".equals(strName)) {
 			m_cEvenRowBackground = Color.parseColor(strValue);
-			evenRowBackground=strValue;
-			//ou=strValue;
+			evenRowBackground = strValue;
+			// ou=strValue;
 		} else if ("CmdExpression".equals(strName)) {
 			m_strCmdExpression = strValue;
 			parseCmdExpression(m_strCmdExpression);
@@ -271,8 +258,7 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 
 		if (m_strExpression.equals("") || m_strExpression == null)
 			return false;
-		cmd_list = ExpressionUtils.getExpressionUtils().parseOnlyEq(
-				m_strExpression);
+		cmd_list = ExpressionUtils.getExpressionUtils().parseOnlyEq(m_strExpression);
 		return true;
 	}
 
@@ -284,12 +270,11 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 			return false;
 		// Log.e("eventList cmd send->m_strCmdExpression:",strExpression);
 		// 解析出控件表达式，返回控件表达式类
-		stExpression oMathExpress = UtExpressionParser.getInstance()
-				.parseExpression(m_strCmdExpression);
+		stExpression oMathExpress = UtExpressionParser.getInstance().parseExpression(m_strCmdExpression);
 		if (oMathExpress != null) {
 			// 遍历控件表达式各个数据单元表达式类
-			Iterator<HashMap.Entry<String, stBindingExpression>> it = oMathExpress.mapObjectExpress
-					.entrySet().iterator();
+			Iterator<HashMap.Entry<String, stBindingExpression>> it = oMathExpress.mapObjectExpress.entrySet()
+					.iterator();
 			while (it.hasNext()) {
 				stBindingExpression oBindingExpression = it.next().getValue();
 				if (oBindingExpression == null)
@@ -356,8 +341,7 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 
 	@Override
 	public void updateWidget() {
-		
-	
+
 		update();
 	}
 
@@ -365,34 +349,28 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 	@Override
 	public boolean updateValue() {
 
-		
-		
 		m_bneedupdate = false;
 		if (m_rRenderWindow == null)
 			return false;
-		
+
 		if (m_rRenderWindow.m_bHasRandomData == false) { // 是否用随机数据
-			listEvents = m_rRenderWindow.m_oShareObject.m_mapEventListDatas
-					.get(this.getUniqueID());
+			listEvents = m_rRenderWindow.m_oShareObject.m_mapEventListDatas.get(this.getUniqueID());
 
 		} else {
 			listEvents = m_listTempEvents; // 要用随机数据
 		}
-		
 
-		if (listEvents == null) { //
+		if (listEvents == null||listEvents.size()==0) { //
+			
 			lstContends.clear();
-			oldEvenLists=null;
+			oldEvenLists = null;
 			handler.sendEmptyMessage(5);
-			
+
 			return true; //
-			
+
 		}
 
-		
-		
-		if (MGridActivity.alarmWay != null
-				&& !MGridActivity.alarmWay.equals("")) {
+		if (MGridActivity.alarmWay != null && !MGridActivity.alarmWay.equals("")) {
 			MGridActivity.xianChengChi.execute(new Runnable() {
 
 				@Override
@@ -414,17 +392,14 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 		}
 
 		// 表数据
-		Iterator<Hashtable.Entry<String, Hashtable<String, Event>>> equip_it = listEvents
-				.entrySet().iterator();
+		Iterator<Hashtable.Entry<String, Hashtable<String, Event>>> equip_it = listEvents.entrySet().iterator();
 		lstContends.clear();
 		while (equip_it.hasNext()) {
-			Hashtable.Entry<String, Hashtable<String, Event>> entry = equip_it
-					.next();
+			Hashtable.Entry<String, Hashtable<String, Event>> entry = equip_it.next();
 			String id = entry.getKey();
 
 			String equipname = DataGetter.getEquipmentName(id);
-			Iterator<Hashtable.Entry<String, Event>> it = entry.getValue()
-					.entrySet().iterator();
+			Iterator<Hashtable.Entry<String, Event>> it = entry.getValue().entrySet().iterator();
 			for (int i = 0; i < cmd_list.size(); i++) {
 				equiptID = cmd_list.get(i);
 				if ("0".equals(equiptID) || id.equals(equiptID)) {
@@ -437,10 +412,10 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 						lstRow.add(equipname);
 						lstRow.add(event.name);
 						lstRow.add(event.meaning + "");
-						
+
 						// lstRow.add(event.value);
 						try {
-							
+
 							switch (event.grade) {
 							case 1:
 								lstRow.add(one);
@@ -459,13 +434,12 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 						} catch (Exception e) {
 
 						}
-						//lstRow.add(String.valueOf(event.grade));
+						// lstRow.add(String.valueOf(event.grade));
 
 						if (m_needsort)
 							lstRow.add(String.valueOf(event.starttime * 1000));
 						else
-							lstRow.add(getDate(event.starttime * 1000,
-									"yyyy.MM.dd HH:mm:ss"));
+							lstRow.add(getDate(event.starttime * 1000, "yyyy.MM.dd HH:mm:ss"));
 
 						lstContends.add(lstRow);
 					}
@@ -495,13 +469,12 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 			Iterator<List<String>> it = lstContends.iterator();
 			while (it.hasNext()) {
 				List<String> next = it.next();
-				String startime = getDate(Long.valueOf(next.get(4)),
-						"yyyy.MM.dd HH:mm:ss");
+				String startime = getDate(Long.valueOf(next.get(4)), "yyyy.MM.dd HH:mm:ss");
 				next.set(4, startime);
 			}
 		}
 
-		// updateContends(lstTitles, lstContends_two); //表格行显示    
+		// updateContends(lstTitles, lstContends_two); //表格行显示
 		return true;
 	}
 
@@ -513,12 +486,16 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 
 	private boolean needAlarm(Hashtable<String, Hashtable<String, Event>> event) {
 		Hashtable<String, Hashtable<String, Event>> newEvenLists = event;
-		
-		if (newEvenLists == null || newEvenLists.size() == 0)
+
+		if (newEvenLists == null || newEvenLists.size() == 0) {
+
+			//handler.sendEmptyMessage(5);
+
 			return false;
+		}
 		if (oldEvenLists == null) { // 第一次判断时 old_eventss为空 如果new_eventss包含这个告警
 			// 就报警.
-		
+
 			oldEvenLists = newEvenLists;
 			return true;
 		} else {
@@ -531,13 +508,10 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 					String e_equipId = equip_it.next();
 
 					if (oldEvenLists.containsKey(e_equipId)) {
-						Hashtable<String, Event> new_events = newEvenLists
-								.get(e_equipId);
-						Hashtable<String, Event> old_events = oldEvenLists
-								.get(e_equipId);
+						Hashtable<String, Event> new_events = newEvenLists.get(e_equipId);
+						Hashtable<String, Event> old_events = oldEvenLists.get(e_equipId);
 
-						Iterator<String> event_itt = new_events.keySet()
-								.iterator();
+						Iterator<String> event_itt = new_events.keySet().iterator();
 						while (event_itt.hasNext()) {
 							String event_id = event_itt.next();
 
@@ -562,19 +536,18 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 	@Override
 	public void needupdate(boolean bNeedUpdate) {
 
+	    Log.e("TAG","需要更新");	
 		
 		m_bneedupdate = bNeedUpdate;
-		if(TotalVariable.ALARMPIEMAP.size()>0)
-		{
-			Iterator<Entry<String, IObject>> it=TotalVariable.ALARMPIEMAP.entrySet().iterator();
-			while(it.hasNext())
-			{
-				Entry<String, IObject> entry=it.next();
+		if (TotalVariable.ALARMPIEMAP.size() > 0) {
+			Iterator<Entry<String, IObject>> it = TotalVariable.ALARMPIEMAP.entrySet().iterator();
+			while (it.hasNext()) {
+				Entry<String, IObject> entry = it.next();
 				entry.getValue().needupdate(m_bneedupdate);
-				
+
 			}
 		}
-		
+
 		if ("".equals(m_strCmdExpression))
 			return;
 		if (m_strCmdExpression == null)
@@ -582,8 +555,7 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 
 		// 判断有新的告警
 		// 获取新的告警信息
-		Hashtable<String, Hashtable<String, Event>> new_eventss = DataGetter
-				.getRTEventList();
+		Hashtable<String, Hashtable<String, Event>> new_eventss = DataGetter.getRTEventList();
 		if (new_eventss == null)
 			return;
 		if (new_eventss.isEmpty())
@@ -599,10 +571,8 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 			String e_equipId = equip_it.next();
 
 			if (old_eventss.containsKey(e_equipId)) {
-				Hashtable<String, Event> new_events = new_eventss
-						.get(e_equipId);
-				Hashtable<String, Event> old_events = old_eventss
-						.get(e_equipId);
+				Hashtable<String, Event> new_events = new_eventss.get(e_equipId);
+				Hashtable<String, Event> old_events = old_eventss.get(e_equipId);
 
 				Iterator<String> event_itt = new_events.keySet().iterator();
 				while (event_itt.hasNext()) {
@@ -618,7 +588,6 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 				old_eventss = new_eventss;
 			}
 		}
-		
 
 	}
 
@@ -647,10 +616,10 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 	String m_strCmdExpression = "";
 	int m_cForeColor = 0xFF00FF00;
 	int m_cBackgroundColor = 0x00000000;
-	String backgroundColor="";
-	String foreColor="";
-	String evenRowBackground="";
-	String oddRowBackground="";
+	String backgroundColor = "";
+	String foreColor = "";
+	String evenRowBackground = "";
+	String oddRowBackground = "";
 	int m_cBorderColor = 0xFFFFFFFF;
 	MainWindow m_rRenderWindow = null;
 	Rect m_rBBox = null;
@@ -673,11 +642,11 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 	List<String> lstTitles = null;
 	ArrayList<List<String>> lstContends = null;
 	ArrayList<List<String>> lstContends_two = null;
-	String one=LanguageStr.one,two=LanguageStr.two,three=LanguageStr.three,four=LanguageStr.four;
+	String one = LanguageStr.one, two = LanguageStr.two, three = LanguageStr.three, four = LanguageStr.four;
 
 	@Override
 	public void onCall() {
-		
+
 		base.setZIndex(m_nZIndex);
 		base.setFromHeight(MainWindow.FORM_HEIGHT);
 		base.setFromWight(MainWindow.FORM_WIDTH);
@@ -690,23 +659,23 @@ public class SgEventList extends UtTable implements IObject,ViewObjectSetCallBac
 
 		base.setTypeId(m_strID);
 		base.setType(m_strType);
-		
-		
-		((EventListObject)base).setBackgroundColor(ViewObjectColorUtil.getColor(backgroundColor));
-		((EventListObject)base).setForeColor(ViewObjectColorUtil.getColor(foreColor));
-		((EventListObject)base).setEvenRowBackground(ViewObjectColorUtil.getColor(evenRowBackground));
-		((EventListObject)base).setOddRowBackground(ViewObjectColorUtil.getColor(oddRowBackground));
+
+		((EventListObject) base).setBackgroundColor(ViewObjectColorUtil.getColor(backgroundColor));
+		((EventListObject) base).setForeColor(ViewObjectColorUtil.getColor(foreColor));
+		((EventListObject) base).setEvenRowBackground(ViewObjectColorUtil.getColor(evenRowBackground));
+		((EventListObject) base).setOddRowBackground(ViewObjectColorUtil.getColor(oddRowBackground));
 	}
+
 	@Override
 	public void onSetData() {
-		
-		((EventListObject)base).setData(lstContends);
+
+		((EventListObject) base).setData(lstContends);
 	}
+
 	@Override
 	public void onControl(Object obj) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
-

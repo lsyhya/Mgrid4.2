@@ -6,6 +6,15 @@ public class ImageObject extends ViewObjectBase{
 
 	String imagePath;
 	String hrefUrl;
+	String onClickEvent;
+
+	public String getOnClickEvent() {
+		return onClickEvent;
+	}
+
+	public void setOnClickEvent(String onClickEvent) {
+		this.onClickEvent = onClickEvent;
+	}
 
 	public String getHrefUrl() {
 		return hrefUrl;

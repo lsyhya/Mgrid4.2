@@ -31,7 +31,6 @@ import com.sg.common.UtExpressionParser;
 import com.sg.common.lsyBase.HisEventTable;
 import com.sg.common.lsyBase.MyDoorEvent;
 import com.sg.web.HisEventObject;
-import com.sg.web.SaveEquiptObject;
 import com.sg.web.base.ViewObjectBase;
 import com.sg.web.base.ViewObjectSetCallBack;
 import com.sg.web.object.HisEventOb;
@@ -61,7 +60,6 @@ import android.widget.TextView;
 import comm_service.local_file;
 import data_model.local_his_Alarm;
 import data_model.local_his_event;
-import data_model.local_his_signal;
 
 /** 历史告警 */
 // 信号告警数据 HisEvent
@@ -94,12 +92,13 @@ public class HisEvent extends HisEventTable implements IObject, ViewObjectSetCal
 	private MyAdapter myAdapter = null;
 
 	private String logPath = "/mgrid/data/Command/0.log";
-	private String doorEventPath = "/mgrid/log/DoorEvent/DoorEven.dat";
-	private String NiuberEventPath = Environment.getExternalStorageDirectory() + File.separator + "SQL" + File.separator
-			+ "Mgrid.db";
-	private File doorFile = new File(doorEventPath);
+	// private String doorEventPath = "/mgrid/log/DoorEvent/DoorEven.dat";
+	// private String NiuberEventPath = Environment.getExternalStorageDirectory() +
+	// File.separator + "SQL" + File.separator
+	// + "Mgrid.db";
+	// private File doorFile = new File(doorEventPath);
 	private File logFile = new File(logPath);
-	private File NiuberFile = new File(NiuberEventPath);
+	// private File NiuberFile = new File(NiuberEventPath);
 
 	private FileUtil fileUtil;
 	private PopupWindow popupWindow;
@@ -234,33 +233,25 @@ public class HisEvent extends HisEventTable implements IObject, ViewObjectSetCal
 		dialog.getDatePicker().setCalendarViewShown(false);
 		nameList.add(DeviceList);
 		nameList.add(AllDevice);
-
-		if (logFile.exists()) {
-			// adapter.add("二次下电");
-			nameList.add("二次下电");
-			AlarmTitles.add("配置ID");
-			AlarmTitles.add("控制开关");
-			AlarmTitles.add("告警原因");
-			AlarmTitles.add("开始时间");
-			AlarmTitles.add("结束时间");
-			AlarmTitles.add("是否异常");
-			AlarmTitles.add("控制结果");
-		}
-
-		if (VariableConfig.isXUNIDOOR_inHisEvent) {
-			nameList.add("开门事件");
-			DoorEventTitles.add("用户ID");
-			DoorEventTitles.add("操作事件");
-			DoorEventTitles.add("操作时间");
-			DoorEventTitles.add("操作结果");
-		}
-
-		if (VariableConfig.isNIBERDOOR_inHisEvent) {
-			nameList.add("门禁事件");
-			NiuBerEventTitles.add("事件ID");
-			NiuBerEventTitles.add("事件结果");
-			NiuBerEventTitles.add("发生时间");
-		}
+		
+		
+		AlarmTitles.add("配置ID");
+		AlarmTitles.add("控制开关");
+		AlarmTitles.add("告警原因");
+		AlarmTitles.add("开始时间");
+		AlarmTitles.add("结束时间");
+		AlarmTitles.add("是否异常");
+		AlarmTitles.add("控制结果");
+		
+		DoorEventTitles.add("用户ID");
+		DoorEventTitles.add("操作事件");
+		DoorEventTitles.add("操作时间");
+		DoorEventTitles.add("操作结果");
+		
+		NiuBerEventTitles.add("事件ID");
+		NiuBerEventTitles.add("事件结果");
+		NiuBerEventTitles.add("发生时间");
+		
 
 		myAdapter = new MyAdapter(getContext(), nameList);
 		view_text.setOnClickListener(new OnClickListener() {
@@ -1493,7 +1484,21 @@ public class HisEvent extends HisEventTable implements IObject, ViewObjectSetCal
 	@SuppressWarnings("static-access")
 	public boolean get_equiptList() {
 
-		
+		if (VariableConfig.isAlarmAction_inHisEvent) {
+
+			nameList.add("二次下电");
+			
+		}
+
+		if (VariableConfig.isXUNIDOOR_inHisEvent) {
+			nameList.add("开门事件");
+			
+		}
+
+		if (VariableConfig.isNIBERDOOR_inHisEvent) {
+			nameList.add("门禁事件");
+			
+		}
 
 		if ("".equals(m_strExpression)) {
 
@@ -1510,15 +1515,13 @@ public class HisEvent extends HisEventTable implements IObject, ViewObjectSetCal
 				list.add(Integer.parseInt(strResult1[1]));
 			}
 
-			
-
 			for (int id : list) {
 				String str_equiptName = DataGetter.getEquipmentName(id);
 				map_EquiptNameList.put(str_equiptName, String.valueOf(id));
 				// adapter.add(str_equiptName);
 				nameList.add(str_equiptName);
 				ALLDeviceList.add(str_equiptName);
-				
+
 			}
 
 		} else {
@@ -1549,6 +1552,7 @@ public class HisEvent extends HisEventTable implements IObject, ViewObjectSetCal
 			}
 
 		}
+
 		return true;
 	}
 
@@ -1686,7 +1690,7 @@ public class HisEvent extends HisEventTable implements IObject, ViewObjectSetCal
 		base.setType(m_strType);
 
 		if (isFirst) {
-			isFirst=false;
+			isFirst = false;
 			get_equiptList();
 		}
 

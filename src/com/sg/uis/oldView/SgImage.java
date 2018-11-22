@@ -841,6 +841,7 @@ public class SgImage extends View implements IObject ,ViewObjectSetCallBack{
 		
 		 ((ImageObject)base).setHrefUrl(HrefUrl);
 		 ((ImageObject)base).setImagePath(ImagePath);
+		 ((ImageObject)base).setOnClickEvent(m_strClickEvent);
 	}
 
 	@Override

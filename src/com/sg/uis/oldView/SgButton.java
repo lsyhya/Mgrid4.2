@@ -90,8 +90,10 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 					float xslip = Math.abs(event.getX() - m_xscal);
 					float yslip = Math.abs(event.getY() - m_yscal);
 
-					if (xslip < 3 && yslip < 3)
+					if (xslip < 3 && yslip < 3) {
+						isTouch = true;
 						onClicked();
+					}
 					break;
 
 				default:
@@ -214,9 +216,9 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 		} else if ("ImgSrc".equals(strName)) {
 
 			if (strValue != null && !strValue.equals("")) {
-				
-				imgSrc=strResFolder.replace("/vtu_pagelist/", "")+strValue;
-				
+
+				imgSrc = strResFolder.replace("/vtu_pagelist/", "") + strValue;
+
 				String m_strImgSrc = Environment.getExternalStorageDirectory().getPath() + strResFolder + strValue;
 				Drawable able = new BitmapDrawable(getResources(), m_strImgSrc);
 				this.setBackground(able);
@@ -286,41 +288,50 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 			} else if ("显示IP".equals(m_strClickEvent)) {
 				Toast.makeText(m_rRenderWindow.getContext(), MGridActivity.getLocalIP(), Toast.LENGTH_SHORT).show();
 			} else if ("删除历史".equals(m_strClickEvent)) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-				builder.setTitle(Prompt);
-				builder.setMessage(problem);
-				builder.setPositiveButton(OK, new DialogInterface.OnClickListener() {
 
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
+				if (isTouch) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+					builder.setTitle(Prompt);
+					builder.setMessage(problem);
+					builder.setPositiveButton(OK, new DialogInterface.OnClickListener() {
 
-						MGridActivity.xianChengChi.execute(new Runnable() {
-							
-							@Override
-							public void run() {
-								
-								deleteDir(new File("/mgrid/log"));
-								deleteDir(new File("/mgrid/data"));
-								SqliteUtil SQL=new SqliteUtil(getContext());
-								SQL.cleanEventTable();
-								SQL.cleanXuniEventTable();
-								handler.sendEmptyMessage(2);
-							}
-						});										
-					}
-				});
-				builder.setNegativeButton(ON, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
 
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
+							MGridActivity.xianChengChi.execute(new Runnable() {
 
-						// Toast.makeText(getContext(), "You have cancelled ", 1000)
-						// .show();
-					}
-				});
-				builder.create().show();
+								@Override
+								public void run() {
 
-				// restartApplication();
+									deleteDir(new File("/mgrid/log"));
+									deleteDir(new File("/mgrid/data"));
+									SqliteUtil SQL = new SqliteUtil(getContext());
+									SQL.cleanEventTable();
+									SQL.cleanXuniEventTable();
+									handler.sendEmptyMessage(2);
+								}
+							});
+						}
+					});
+					builder.setNegativeButton(ON, new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+
+							// Toast.makeText(getContext(), "You have cancelled ", 1000)
+							// .show();
+						}
+					});
+					builder.create().show();
+
+				} else {
+					deleteDir(new File("/mgrid/log"));
+					deleteDir(new File("/mgrid/data"));
+					SqliteUtil SQL = new SqliteUtil(getContext());
+					SQL.cleanEventTable();
+					SQL.cleanXuniEventTable();
+					handler.sendEmptyMessage(2);
+				}
 
 			} else if ("导出数据".equals(m_strClickEvent)) {
 				//
@@ -358,7 +369,6 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 
 			} else if (m_strClickEvent.equals("关闭告警")) {
 
-				
 				Intent intent = new Intent(m_rRenderWindow.m_oMgridActivity, SoundService.class);
 				intent.putExtra("playing", false);
 				m_rRenderWindow.m_oMgridActivity.startService(intent);
@@ -372,6 +382,44 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 				Intent intent = new Intent(getContext(), MonitorActivity.class);
 				// intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 				getContext().startActivity(intent);
+
+			} else if (m_strClickEvent.equals("重启")) {
+
+				if (isTouch) {
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+					builder.setTitle(Prompt);
+					builder.setMessage(problem);
+					builder.setPositiveButton(OK, new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+
+							MGridActivity.xianChengChi.execute(new Runnable() {
+
+								@Override
+								public void run() {
+
+									String path = Environment.getExternalStorageDirectory().getPath()
+											+ "/tmp/reboot.txt";
+									deleteDir(new File(path));
+
+								}
+							});
+						}
+					});
+					builder.setNegativeButton(ON, new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+
+						}
+					});
+					builder.create().show();
+				} else {
+					String path = Environment.getExternalStorageDirectory().getPath() + "/tmp/reboot.txt";
+					deleteDir(new File(path));
+				}
 
 			} else {
 				String[] arrStr = m_strClickEvent.split("\\(");
@@ -431,6 +479,8 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 				}
 			}
 		}
+
+		isTouch = false;
 
 		// 打开网页
 		if ("".equals(m_strUrl) == false) {
@@ -721,7 +771,7 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 		return m_rBBox;
 	}
 
-	public  Handler handler = new Handler() {
+	public Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			// handler接收到消息后就会执行此方法
 			switch (msg.what) {
@@ -731,13 +781,13 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 				// 关闭ProgressDialog
 
 				break;
-				
+
 			case 2:
-				
+
 				showHint();
-				
+
 				break;
-				
+
 			default:
 				break;
 			}
@@ -769,7 +819,7 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 	boolean m_bPressed = false;
 	MainWindow m_rRenderWindow = null;
 	String cmd_value = "";
-	String imgSrc="";
+	String imgSrc = "";
 
 	Paint m_oPaint = null;
 	Rect m_rBBox = null;
@@ -791,10 +841,11 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 	List<ipc_control> c_control = new ArrayList<ipc_control>();
 	List<ipc_control> o_control = new ArrayList<ipc_control>();
 
+	private boolean isTouch = false;
+
 	@Override
 	public void onCall() {
 
-		
 		base.setZIndex(m_nZIndex);
 		base.setFromHeight(MainWindow.FORM_HEIGHT);
 		base.setFromWight(MainWindow.FORM_WIDTH);
@@ -810,58 +861,50 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 
 		((ButtonObject) base).setText(m_strContent);
 		((ButtonObject) base).setTextColor(textColor);
-		((ButtonObject) base).setTextSize(m_fFontSize);				
+		((ButtonObject) base).setTextSize(m_fFontSize);
 		((ButtonObject) base).setImgSrc(imgSrc);
-		
-		
-	    if(m_strClickEvent.contains("Show"))
-	    {
-	    	
-	    	String[] s=m_strClickEvent.split("\\(");
-	    	String[] ss=s[1].split("\\)");
-	    	((ButtonObject) base).setHrefUrl(ss[0]);
-	    	
-	    }else if(!m_strClickEvent.equals("")||!m_strCmdExpression.equals("")) {
-	    	
-	    	((ButtonObject) base).setClick(true);
-	    	
-	    }else
-	    {
-	    	((ButtonObject) base).setClick(false);
-	    }
-	    
-	    
-	    
+
+		if (m_strClickEvent.contains("Show")) {
+
+			String[] s = m_strClickEvent.split("\\(");
+			String[] ss = s[1].split("\\)");
+			((ButtonObject) base).setHrefUrl(ss[0]);
+
+		} else if (!m_strClickEvent.equals("") || !m_strCmdExpression.equals("")) {
+
+			((ButtonObject) base).setClick(true);
+
+		} else {
+			((ButtonObject) base).setClick(false);
+		}
+
 	}
 
 	@Override
 	public void onSetData() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onControl(Object obj) {
-		
-		if(!m_strClickEvent.equals(""))
-		{
+
+		if (!m_strClickEvent.equals("")) {
 			onClicked();
-			
-		}else if(!m_strCmdExpression.equals(""))
-		{
-			
+
+		} else if (!m_strCmdExpression.equals("")) {
+
 			synchronized (m_rRenderWindow.m_oShareObject) {
 				deal_cmd();
 				if ("".equals(cmd_value) == false) {
 
-					//Log.e("TAG", "发送数据");
+					// Log.e("TAG", "发送数据");
 					m_rRenderWindow.m_oShareObject.m_mapCmdCommand.put(getUniqueID(), cmd_value);
 
 				}
 			}
 
-			
 		}
-	
+
 	}
 }

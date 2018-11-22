@@ -1050,7 +1050,7 @@ public class MGridActivity extends Activity {
 	
 	//网页服务管理
 	public ServerManager mServerManager;
-	public static boolean OPENWEB=true;
+	public static boolean OPENWEB=false;
 
 	private int sleepTime = 2 * 60 * 60;// 屏保视频休眠时间
 	private Intent m_oTaskIntent = null;

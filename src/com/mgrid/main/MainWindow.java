@@ -933,6 +933,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("AlarmAction".equals(strType)) {
 							SgAlarmAction SgAA = new SgAlarmAction(this.getContext());
 							m_mapUIs.put(strID, SgAA);
+							VariableConfig.isAlarmAction_inHisEvent = true;
 						} else if ("ChangExpression".equals(strType)) {
 							LsyChangExpression Lve = new LsyChangExpression(this.getContext());
 							m_mapUIs.put(strID, Lve);
