@@ -120,6 +120,16 @@ public class LanguageStr {
 	public static String OkTime = "有效时间";
 	
 	
+	//TimingAndDelayedView
+	public static String openTime = "开启时间";
+	public static String delayedTime = "延时时间";
+	public static String show = "显示";
+	public static String text21 = "至少需要一个开启时间";
+	public static String text22 = "延时需要填写";
+	
+	//StartAndEndTriggerSet
+	public static String start = "开始:";
+	public static String end = "结束:";
 
 	// 系统语言和配置语言 true为中文 false为英
 	public static boolean systemLanguage = true;
@@ -283,6 +293,17 @@ public class LanguageStr {
 		text20="fail";
 		OkTime="OkTime";
 		
+		
+		
+		openTime = "Open Time";
+		delayedTime = "Delay Time";
+		show = "Show";
+		text21 = "At least one opening time";
+		text22 = "Delay needs to be filled in";
+		
+		
+		start="Start:";
+		end="End:";
 		
 	}
 

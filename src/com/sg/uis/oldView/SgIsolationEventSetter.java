@@ -58,16 +58,6 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject ,Vie
 		super(context);
 
 		
-//		if (MGridActivity.whatLanguage)
-//		{
-//			off="告警屏蔽";
-//			on="告警开启";
-//			
-//		}else
-//		{
-//			off="OFF";
-//			on="ON";
-//		}
 //		
 		dialog=new SelfDialog(context);
 		// 监听 按钮 触控事件
@@ -101,6 +91,7 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject ,Vie
 			public void onClick(View arg0) {
 				
 	
+				dialog.show();
 				sendCmd();
 				
 			}

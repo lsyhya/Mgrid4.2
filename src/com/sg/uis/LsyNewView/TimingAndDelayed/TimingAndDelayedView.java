@@ -20,6 +20,7 @@ import com.mgrid.util.ExpressionUtils;
 import com.mgrid.util.TimeUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -82,6 +83,14 @@ public class TimingAndDelayedView extends Button implements IObject, OnClickList
 
 	private String filePath = "/mgrid/log/timing/";
 
+	private String openTime = LanguageStr.openTime;
+	private String delayedTime = LanguageStr.delayedTime;
+	private String show = LanguageStr.show;
+	private String ok = LanguageStr.OK;
+	private String text9 = LanguageStr.text9;
+	private String text21 = LanguageStr.text21;
+	private String text22 = LanguageStr.text22;
+
 	public TimingAndDelayedView(Context context) {
 
 		super(context);
@@ -134,7 +143,7 @@ public class TimingAndDelayedView extends Button implements IObject, OnClickList
 		btn1.setTextColor(Color.parseColor(color));
 		btn1.setTextSize(size);
 		btn1.setBackgroundResource(android.R.drawable.btn_default);
-		btn1.setText("确认");
+		btn1.setText(ok);
 		btn1.setGravity(Gravity.CENTER);
 		btn1.setOnClickListener(this);
 	}
@@ -156,10 +165,10 @@ public class TimingAndDelayedView extends Button implements IObject, OnClickList
 
 			if (i == 6) {
 
-				tv.setText("延时时间");
+				tv.setText(delayedTime);
 
 			} else {
-				tv.setText("开启时间" + i);
+				tv.setText(openTime + i);
 			}
 
 			tv.setTextColor(Color.parseColor(color));
@@ -168,25 +177,22 @@ public class TimingAndDelayedView extends Button implements IObject, OnClickList
 		}
 
 	}
-	
-	private Handler handler=new Handler() {
-		
+
+	private Handler handler = new Handler() {
+
 		public void handleMessage(android.os.Message msg) {
-			
+
 			switch (msg.what) {
 			case 0:
-				
-				
-				btn1.setText("显示");
-				
-				break;	
+
+				btn1.setText(show);
+
+				break;
 			}
-			
-			
-		}; 
-		
+
+		};
+
 	};
-	
 
 	@Override
 	public void doLayout(boolean bool, int l, int t, int r, int b) {
@@ -410,16 +416,13 @@ public class TimingAndDelayedView extends Button implements IObject, OnClickList
 
 		int hour = Integer.parseInt(TimeUtils.getHour());
 
-	
-
 		if (hour != nowHour) {
 			nowHour = hour;
-			
+
 			for (TimingAndDelayed time : tadList) {
 
-				
 				if (time.getTiming() == nowHour) {
-					//Log.e("time4", "handle");
+					// Log.e("time4", "handle");
 					timingHandle();
 					setTimeTask();
 					break;
@@ -521,7 +524,8 @@ public class TimingAndDelayedView extends Button implements IObject, OnClickList
 				}
 			}
 
-			//Log.e("close", c_control.get(0).equipid+":"+c_control.get(0).ctrlid+":"+c_control.get(0).valuetype+":"+c_control.get(0).value);
+			// Log.e("close",
+			// c_control.get(0).equipid+":"+c_control.get(0).ctrlid+":"+c_control.get(0).valuetype+":"+c_control.get(0).value);
 			service.send_control_cmd(service.IP, service.PORT, c_control);
 
 		}
@@ -538,47 +542,29 @@ public class TimingAndDelayedView extends Button implements IObject, OnClickList
 
 		if (v == btn1) {
 
-			switch (btn1.getText().toString()) {
-
-			case "显示":
-				
+			if (btn1.getText().toString().equals(show)) {
 				showData();
-				
-
-				break;
-
-			case "确认":
-				
-				
+			} else if (btn1.getText().toString().equals(ok)) {
 				setData();
-
-				break;
-
 			}
 
-			
-
 		}
 
 	}
-	
-	
-	private  void  showData()
-	{
-		
-		btn1.setText("确认");
+
+	private void showData() {
+
+		btn1.setText(ok);
 		for (int i = 0; i < tadList.size(); i++) {
-			
-			etList.get(i).setText(tadList.get(i).getTiming()+"");
+
+			etList.get(i).setText(tadList.get(i).getTiming() + "");
 		}
-		
-		et6.setText(delayed+"");
-		
+
+		et6.setText(delayed + "");
+
 	}
-	
-	
-	private  void  setData()
-	{
+
+	private void setData() {
 		String str1 = et1.getText().toString();
 		String str2 = et2.getText().toString();
 		String str3 = et3.getText().toString();
@@ -593,26 +579,24 @@ public class TimingAndDelayedView extends Button implements IObject, OnClickList
 
 			if (!str1.isEmpty()) {
 				addTAD(Integer.parseInt(str1), Integer.parseInt(str6));
-			} 
+			}
 			if (!str2.isEmpty()) {
 				addTAD(Integer.parseInt(str2), Integer.parseInt(str6));
-			} 
+			}
 			if (!str3.isEmpty()) {
 				addTAD(Integer.parseInt(str3), Integer.parseInt(str6));
-			} 
+			}
 			if (!str4.isEmpty()) {
 				addTAD(Integer.parseInt(str4), Integer.parseInt(str6));
-			} 
+			}
 			if (!str5.isEmpty()) {
 				addTAD(Integer.parseInt(str5), Integer.parseInt(str6));
-			} 
-			
-			if(tadList.size()==0)
-			{
-				Toast.makeText(getContext(), "至少需要一个开启时间", Toast.LENGTH_SHORT).show();
+			}
+
+			if (tadList.size() == 0) {
+				Toast.makeText(getContext(), text21, Toast.LENGTH_SHORT).show();
 				return;
 			}
-			
 
 			m_bneedupdate = true;
 
@@ -626,16 +610,14 @@ public class TimingAndDelayedView extends Button implements IObject, OnClickList
 				}
 			});
 
-			Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getContext(), text9, Toast.LENGTH_SHORT).show();
 
 		} else {
 
-			Toast.makeText(getContext(), "延时需要填写", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getContext(), text22, Toast.LENGTH_SHORT).show();
 
 		}
 	}
-	
-	
 
 	private void saveData() {
 
@@ -665,7 +647,7 @@ public class TimingAndDelayedView extends Button implements IObject, OnClickList
 
 			}
 		} catch (IOException e) {
-			
+
 			e.printStackTrace();
 		}
 	}
@@ -698,12 +680,11 @@ public class TimingAndDelayedView extends Button implements IObject, OnClickList
 						tadList.add(tim);
 					}
 				}
-				
+
 				br.close();
-				
+
 				handler.sendEmptyMessage(0);
-				
-				
+
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -732,7 +713,6 @@ public class TimingAndDelayedView extends Button implements IObject, OnClickList
 	@Override
 	public void timingHandle() {
 
-		
 		sendOpenCmd();
 
 	}
@@ -740,7 +720,6 @@ public class TimingAndDelayedView extends Button implements IObject, OnClickList
 	@Override
 	public void delayedHandle() {
 
-		
 		sendCloseCmd();
 
 	}

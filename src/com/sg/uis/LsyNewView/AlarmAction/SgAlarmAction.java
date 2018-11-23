@@ -2138,6 +2138,8 @@ public class SgAlarmAction extends TextView implements IObject {
 		isDetectionLose = false;
 		isChengli = true;
 		isHuiFu = false;
+		
+		
 		return true;
 
 	}
@@ -2263,6 +2265,8 @@ public class SgAlarmAction extends TextView implements IObject {
 
 	private void writeAllEvent() {
 
+		
+		
 		File file = new File(dialog_path);
 		if (!file.exists())
 			file.mkdir();
@@ -2295,6 +2299,8 @@ public class SgAlarmAction extends TextView implements IObject {
 			}
 			System.out.println("Œ“±£¥Ê¡À");
 		}
+		
+		isYiChang=false;
 
 	}
 

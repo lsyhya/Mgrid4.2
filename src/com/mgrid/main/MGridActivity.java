@@ -209,8 +209,7 @@ public class MGridActivity extends Activity {
 		}
 
 		LanguageStr.iniLanguage = iniReader.getValue("SysConf", "Language");
-		LanguageStr.whatLanguageSystem(context);
-		;
+		LanguageStr.whatLanguageSystem(context);		
 		LanguageStr.setLanguage();
 		Load = LanguageStr.Load;
 		PSS = LanguageStr.PSS;

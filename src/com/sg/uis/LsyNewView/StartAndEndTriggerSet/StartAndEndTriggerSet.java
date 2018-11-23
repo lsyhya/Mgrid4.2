@@ -8,6 +8,7 @@ import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtExpressionParser.stExpression;
@@ -34,6 +35,21 @@ import comm_service.service;
 import data_model.ipc_cfg_trigger_value;
 
 public class StartAndEndTriggerSet extends TextView implements IObject ,ViewObjectSetCallBack{
+	
+	
+	
+	
+	
+	private String start=LanguageStr.start;
+	private String end=LanguageStr.end;
+	
+	
+	
+	
+	
+	
+	
+	
 	public StartAndEndTriggerSet(Context context) {
 		super(context);
 		this.setClickable(true);
@@ -90,8 +106,8 @@ public class StartAndEndTriggerSet extends TextView implements IObject ,ViewObje
 
 		initTv(start_Textview, "0");
 		initTv(end_Textview, "0");
-		initTv(sTextview, "¿ªÊ¼:");
-		initTv(eTextview, "½áÊø:");
+		initTv(sTextview, start);
+		initTv(eTextview, end);
 
 
 
