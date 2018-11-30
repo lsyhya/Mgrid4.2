@@ -6,6 +6,10 @@ import com.sg.common.IObject;
 import com.sg.common.MutiThreadShareObject;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stIntervalExpression;
+import com.sg.web.PilarObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -25,7 +29,7 @@ import android.view.View;
  * 
  * */
 /** 柱子-单信号能量块 */
-public class Pilar extends View implements IObject {
+public class Pilar extends View implements IObject,ViewObjectSetCallBack{
 	public Pilar(Context context) {  
         super(context);
         this.setOnTouchListener(new OnTouchListener() {
@@ -102,6 +106,7 @@ public class Pilar extends View implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 	}
 	
@@ -139,6 +144,7 @@ public class Pilar extends View implements IObject {
         else if ("BorderWidth".equals(strName))
         	m_nBorderWidth = Integer.parseInt(strValue);
         else if ("FillColor".equals(strName)) {
+        	    NormColor=strValue;
         		m_cSingleFillColor = Color.parseColor(strValue);
         		m_cStartFillColor = m_cSingleFillColor; 
         }
@@ -305,7 +311,46 @@ public class Pilar extends View implements IObject {
 	float f_data=1;
 	
 	float WarmPer;
-	String WarmPerColor;
+	String WarmPerColor,NormColor;
 	
 	public boolean m_bneedupdate = true;
+
+	ViewObjectBase base=new PilarObject();
+	
+	@Override
+	public void onCall() {
+		
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		((PilarObject)base).setMaxValue(f_maxValue);
+		((PilarObject)base).setDatas(f_data);
+		((PilarObject)base).setWarmPer(WarmPer);
+		((PilarObject)base).setWarmColor(ViewObjectColorUtil.getColor(WarmPerColor));
+		((PilarObject)base).setNormColor(ViewObjectColorUtil.getColor(NormColor));
+		
+	}
+
+	@Override
+	public void onSetData() {
+		
+		((PilarObject)base).setDatas(f_data);
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		
+		
+	}
 }

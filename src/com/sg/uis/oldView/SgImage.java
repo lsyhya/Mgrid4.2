@@ -284,6 +284,9 @@ public class SgImage extends View implements IObject ,ViewObjectSetCallBack{
 	}
 
 	public void parseProperties(String strName, String strValue, String strResFolder) throws Exception {
+		
+		
+		
 		if ("ZIndex".equals(strName)) {
 			m_nZIndex = Integer.parseInt(strValue);
 			
@@ -318,6 +321,8 @@ public class SgImage extends View implements IObject ,ViewObjectSetCallBack{
 		} else if ("Strtch".equals(strName))
 			m_strStrtch = strValue;
 		else if ("ImgSrc".equals(strName)) {
+			
+			this.strResFolder=strResFolder;
 			
 			if (isValue(strValue)) {
 				
@@ -710,6 +715,8 @@ public class SgImage extends View implements IObject ,ViewObjectSetCallBack{
 			}
 
 
+			ImagePath=strResFolder.replace("/vtu_pagelist/", "")+currentImg;
+			
 			return true;
 		}
 
@@ -788,6 +795,7 @@ public class SgImage extends View implements IObject ,ViewObjectSetCallBack{
 	String Img2 = "";
 	String Img3 = "";
 	String HrefUrl,ImagePath;
+	String strResFolder;
 
 	public boolean m_bneedupdate = true;
 	public static boolean isChangColor = true;
@@ -846,7 +854,8 @@ public class SgImage extends View implements IObject ,ViewObjectSetCallBack{
 
 	@Override
 	public void onSetData() {
-		// TODO Auto-generated method stub
+		
+		 ((ImageObject)base).setImagePath(ImagePath);
 		
 	}
 

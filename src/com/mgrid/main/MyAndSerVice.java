@@ -100,6 +100,7 @@ public class MyAndSerVice extends Service{
         	if(mServer==null)
         	{
         		Log.e("webService", "Ê§°Ü");
+        		return;
         	}
         	
         	String hostAddress = mServer.getInetAddress().getHostAddress();
@@ -158,6 +159,7 @@ public class MyAndSerVice extends Service{
     private void startServer() {
         if (mServer != null) {
             if (mServer.isRunning()) {
+            	
                 String hostAddress = mServer.getInetAddress().getHostAddress();
                 
                 if(hostAddress==null)

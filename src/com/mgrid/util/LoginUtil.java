@@ -28,104 +28,42 @@ public class LoginUtil {
 
 	public LoginUtil(Context context) {
 		this.context = context;
-//		if (MGridActivity.whatLanguage) {
-//
-//			yes = "进入";
-//			no = "退出";
-//			systemExit = "登陆";
-//
-//			Text1 = "请输入正确";
-//			Text2 = "用户名或密码错误";
-//
-//		} else {
-//
-//			yes = "ok";
-//			no = "cancel";
-//			systemExit = "LOGIN";
-//
-//			Text1 = "Please enter sure！！";
-//			Text2 = "Password or user name error";
-//
-//		}
+
+	}	
+	
+	
+
+	public void showListDialog()
+	{
+		final String[] item= {"密码登陆","人脸识别"};
+		AlertDialog.Builder   dialog=new  AlertDialog.Builder(context);
+		dialog.setTitle("登陆方式");
+		dialog.setItems(item, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				
+				switch (which) {
+				case 0:
+					
+					Toast.makeText(context, "选择了密码登陆", Toast.LENGTH_LONG).show();
+					
+					break;
+	            case 1:
+					
+	            	Toast.makeText(context, "选择了人脸识别", Toast.LENGTH_LONG).show();
+	            	
+					break;
+				}
+				
+				
+			}
+		});
+		dialog.show();
+		
 	}
+	
 
-//	private void saveLogin(String text) {
-//		File f = new File(filePath + "/login" + ".login");
-//		if (!f.exists()) {
-//			try {
-//				f.createNewFile();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		try {
-//			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-//					new FileOutputStream(f), "gb2312"));
-//			writer.write(text);
-//			writer.flush();
-//			writer.close();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//
-//	}
-
-//	public void setPasswordDialog() {
-//
-//		LayoutInflater factory = LayoutInflater.from(context);
-//
-//		final View textEntryView = factory.inflate(R.layout.page_xml, null);
-//
-//		final AlertDialog alertDialog = new AlertDialog.Builder(context)
-//				.setTitle(systemExit)
-//
-//				.setView(textEntryView)
-//
-//				.setPositiveButton(yes, null)
-//
-//				.setNegativeButton(no, new DialogInterface.OnClickListener() {
-//					public void onClick(DialogInterface dialog, int whichButton) {
-//
-//						MGridActivity activity = (MGridActivity) context;
-//						activity.finish();
-//					}
-//				}).create();
-//
-//		alertDialog.setCancelable(false);
-//
-//		alertDialog.show();
-//
-//		alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(
-//				new OnClickListener() {
-//
-//					@Override
-//					public void onClick(View arg0) {
-//
-//						final EditText etPassword = (EditText) textEntryView
-//								.findViewById(R.id.pageet);
-//
-//						final String password = etPassword.getText().toString()
-//								.trim();
-//
-//						if (password != null && !password.equals("")) {
-//
-//							alertDialog.dismiss();
-//							MGridActivity.xianChengChi.execute(new Runnable() {
-//
-//								@Override
-//								public void run() {
-//									saveLogin(password);
-//								}
-//							});
-//
-//						} else {
-//							Toast.makeText(context, Text1, Toast.LENGTH_SHORT)
-//									.show();
-//
-//						}
-//					}
-//				});
-//	}
 
 	public void showWaiterAuthorizationDialog() {
 

@@ -31,6 +31,7 @@ import com.mgrid.data.DataGetter;
 import com.mgrid.main.user.User;
 import com.mgrid.main.user.UserManager;
 import com.mgrid.util.FileUtil;
+import com.mgrid.util.LoginUtil;
 import com.mgrid.util.XmlUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
@@ -631,6 +632,11 @@ public class MGridActivity extends Activity {
 			setProgressBarIndeterminateVisibility(true);
 			return false;
 		}
+		
+		
+		LoginUtil loginUtil=new LoginUtil(this);
+		loginUtil.showListDialog();
+		
 
 		return true;
 	}
@@ -1049,7 +1055,7 @@ public class MGridActivity extends Activity {
 	
 	//网页服务管理
 	public ServerManager mServerManager;
-	public static boolean OPENWEB=false;
+	public static boolean OPENWEB=true;
 
 	private int sleepTime = 2 * 60 * 60;// 屏保视频休眠时间
 	private Intent m_oTaskIntent = null;

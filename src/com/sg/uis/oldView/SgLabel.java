@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
+import com.mgrid.util.MathUtil;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.SgRealTimeData;
@@ -594,7 +595,15 @@ public class SgLabel extends TextView implements IObject ,ViewObjectSetCallBack{
 		
 		
 		
-		 base.setValue(m_strContent);			
+		if(MathUtil.getMathUtil().isNumber(m_strContent))
+		{
+			base.setValue(String.format("%.2f", Float.parseFloat(m_strContent)));
+		}else
+		{
+			base.setValue(m_strContent);
+		}
+		
+		 			
 		((LableObject)base).setTextColor("#"+currColor.substring(3, currColor.length()));
 		
 	

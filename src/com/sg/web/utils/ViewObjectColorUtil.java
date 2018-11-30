@@ -5,18 +5,15 @@ import android.util.Log;
 public class ViewObjectColorUtil {
 
 	public static String getColor(String color) {
-		
-		
+
 		try {
-			
+
 			if (color == null || !color.startsWith("#") || color.length() != 9 || color.substring(1, 3).equals("00")) {
 
-				if(color==null)
-				{
+				if (color == null) {
 					return "transparent";
 				}
-				
-				
+
 				switch (color) {
 				case "Red":
 
@@ -27,29 +24,28 @@ public class ViewObjectColorUtil {
 					return "#00FF00";
 					
 					
-				default :
-					
-					return "transparent";
-					
-				}
+				case "Green":
 
-				
+					return "#00FF00";
+
+				default:
+
+					return "transparent";
+
+				}	
+
 			}
 
-			
 			return "#" + color.substring(3, color.length());
-			
-			
+
 		} catch (Exception e) {
-		
-			
+
 			e.printStackTrace();
 			Log.e("TAG", color);
 			return "transparent";
-			
+
 		}
-		
-		
+
 	}
 
 	public static int getArgb(int color) {
@@ -78,6 +74,12 @@ public class ViewObjectColorUtil {
 		int blue = (color & 0x000000ff);
 
 		return blue;
+	}
+
+	public static String getStringColor(int color)
+	{
+		return  String.format("#%06X", (0xFFFFFFFF & color));
+
 	}
 
 }

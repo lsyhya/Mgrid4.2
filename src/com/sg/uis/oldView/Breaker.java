@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -134,7 +135,7 @@ public class Breaker extends View implements IObject ,ViewObjectSetCallBack{
          }
          else if ("Foreground".equals(strName)) {
         	 fColor=strValue;
- 			currColor=fColor;
+ 			 currColor=fColor;
         	 m_cForeground = CFGTLS.parseColor(strValue);
          }
          else if ("Background".equals(strName)) {
@@ -310,16 +311,17 @@ public class Breaker extends View implements IObject ,ViewObjectSetCallBack{
 		
 		((BreakerObject)base).setColor(ViewObjectColorUtil.getColor(currColor));
 		((BreakerObject)base).setRotateAngle(m_fRotateAngle);
-		((BreakerObject)base).setClose(m_bStatess);
+		((BreakerObject)base).setClose(m_bState);
 		
 	}
 
 	@Override
 	public void onSetData() {
 		
+		Log.e("tag", currColor);
 		((BreakerObject)base).setColor(ViewObjectColorUtil.getColor(currColor));
 		((BreakerObject)base).setRotateAngle(m_fRotateAngle);
-		((BreakerObject)base).setClose(m_bStatess);
+		((BreakerObject)base).setClose(m_bState);
 		
 	}
 

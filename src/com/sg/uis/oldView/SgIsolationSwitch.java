@@ -301,7 +301,7 @@ public class SgIsolationSwitch extends View implements IObject ,ViewObjectSetCal
 		
 		((SgISolationSwitchObject)base).setColor(ViewObjectColorUtil.getColor(currColor));
 		((SgISolationSwitchObject)base).setRotateAngle(m_fRotateAngle);
-		((SgISolationSwitchObject)base).setClose(m_bStatess);
+		((SgISolationSwitchObject)base).setClose(m_bState);
 		
 	}
 
@@ -310,7 +310,7 @@ public class SgIsolationSwitch extends View implements IObject ,ViewObjectSetCal
 		
 		((SgISolationSwitchObject)base).setColor(ViewObjectColorUtil.getColor(currColor));
 		((SgISolationSwitchObject)base).setRotateAngle(m_fRotateAngle);
-		((SgISolationSwitchObject)base).setClose(m_bStatess);
+		((SgISolationSwitchObject)base).setClose(m_bState);
 		
 	}
 

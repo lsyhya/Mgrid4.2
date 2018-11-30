@@ -75,8 +75,10 @@ public class SgRectangle extends View implements IObject, ViewObjectSetCallBack 
 			}
 			m_oPaint.setColor(Color.BLACK);
 			m_oPaint.setShader(lg);
-		} else
+		} else {
 			m_oPaint.setColor(m_cSingleFillColor); // 仅填充单色
+			BgColor = ViewObjectColorUtil.getColor(ViewObjectColorUtil.getStringColor(m_cSingleFillColor));
+		}
 		m_oPaint.setStyle(Paint.Style.FILL);
 		canvas.drawRect(0, 0, nWidth, nHeight, m_oPaint);
 	}
@@ -110,7 +112,7 @@ public class SgRectangle extends View implements IObject, ViewObjectSetCallBack 
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
-		m_rRenderWindow.viewList.add(base);		
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 	}
 
@@ -151,11 +153,11 @@ public class SgRectangle extends View implements IObject, ViewObjectSetCallBack 
 			m_fRotateAngle = Float.parseFloat(strValue);
 		} else if ("BorderColor".equals(strName)) {
 			m_cBorderColor = Color.parseColor(strValue);
-//			if (strValue.substring(1, 3).equals("00")) {
-//				BorderColor="#FFFFFFFF";
-//			} else {
-//				BorderColor="#" + strValue.substring(3, strValue.length());
-//			}
+			// if (strValue.substring(1, 3).equals("00")) {
+			// BorderColor="#FFFFFFFF";
+			// } else {
+			// BorderColor="#" + strValue.substring(3, strValue.length());
+			// }
 			BorderColor = strValue;
 			// ((RectangleObject)base).setBorderColor("#"+strValue.substring(3,
 			// strValue.length()));
@@ -164,15 +166,14 @@ public class SgRectangle extends View implements IObject, ViewObjectSetCallBack 
 			// ((RectangleObject)base).setBorderWidth(m_nBorderWidth);
 		} else if ("FillColor".equals(strName)) {
 			String[] arrStr = strValue.split(",");
-			
+
 			if (arrStr.length == 1) { // 判断是纯色还是渐变色
 				m_cSingleFillColor = Color.parseColor(strValue);
 				m_cStartFillColor = m_cSingleFillColor;
-
 				if (strValue.substring(1, 3).equals("00")) {
-					BgColor="#FFFFFFFF";
+					BgColor = "#FFFFFFFF";
 				} else {
-					BgColor="#" + strValue.substring(3, strValue.length());
+					BgColor = "#" + strValue.substring(3, strValue.length());
 				}
 
 			} else {
@@ -187,7 +188,7 @@ public class SgRectangle extends View implements IObject, ViewObjectSetCallBack 
 				m_arrGradientFillColor = new int[nCount];
 				int nIndex = 0;
 				for (int i = 2; i < arrStr.length; i += 2) {
-					BgColor="#" + arrStr[2].substring(3, arrStr[2].length());
+					BgColor = "#" + arrStr[2].substring(3, arrStr[2].length());
 					int color = Color.parseColor(arrStr[i]);
 					m_arrGradientFillColor[nIndex] = Color.argb((int) (Color.alpha(color) * m_fAlpha), Color.red(color),
 							Color.green(color), Color.blue(color));
@@ -364,7 +365,6 @@ public class SgRectangle extends View implements IObject, ViewObjectSetCallBack 
 	@Override
 	public void onCall() {
 
-		
 		base.setZIndex(m_nZIndex);
 		base.setFromHeight(MainWindow.FORM_HEIGHT);
 		base.setFromWight(MainWindow.FORM_WIDTH);
@@ -380,23 +380,24 @@ public class SgRectangle extends View implements IObject, ViewObjectSetCallBack 
 
 		((RectangleObject) base).setBorderWidth(m_nBorderWidth);
 		((RectangleObject) base).setBorderColor(ViewObjectColorUtil.getColor(BorderColor));
-        ((RectangleObject) base).setBgColor(BgColor);
-        ((RectangleObject) base).setAlpha(ViewObjectColorUtil.getArgb(m_cSingleFillColor));
-        ((RectangleObject) base).setRed(ViewObjectColorUtil.getRed(m_cSingleFillColor));
-        ((RectangleObject) base).setGreen(ViewObjectColorUtil.getGreen(m_cSingleFillColor));
-        ((RectangleObject) base).setBlue(ViewObjectColorUtil.getBlue(m_cSingleFillColor));
+		((RectangleObject) base).setBgColor(BgColor);
+		((RectangleObject) base).setAlpha(ViewObjectColorUtil.getArgb(m_cSingleFillColor));
+		((RectangleObject) base).setRed(ViewObjectColorUtil.getRed(m_cSingleFillColor));
+		((RectangleObject) base).setGreen(ViewObjectColorUtil.getGreen(m_cSingleFillColor));
+		((RectangleObject) base).setBlue(ViewObjectColorUtil.getBlue(m_cSingleFillColor));
 
 	}
 
 	@Override
 	public void onSetData() {
-		// TODO Auto-generated method stub
-		
+
+		((RectangleObject) base).setBgColor(BgColor);
+
 	}
 
 	@Override
 	public void onControl(Object obj) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

@@ -98,6 +98,7 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 	}
 
 	private void setData() {
+		nameList.clear();
 		nameList.add((Integer.parseInt(TimeUtils.getYear()) - 1) + " " + y);
 		nameList.add(TimeUtils.getYear() + " " + y);
 	}
@@ -449,15 +450,15 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 
 		for (int i = 1; i <= 4; i++) {
 			List<LinkedHashMap<Double, Double>> linePointData = new ArrayList<LinkedHashMap<Double, Double>>();
-			List<Map<Double, Double>> data= new ArrayList<>();
+			List<Map<Double, Double>> data = new ArrayList<>();
 			for (int j = 0; j < sizeMath; j++) {
 				LinkedHashMap<Double, Double> linePoint = new LinkedHashMap<Double, Double>();
 				linePointData.add(linePoint);
-				Map<Double, Double> map=new HashMap<>();
+				Map<Double, Double> map = new HashMap<>();
 				data.add(map);
 			}
 			linePointMapData.put(i, linePointData);
-			//mapData.put(i, data);
+			// mapData.put(i, data);
 		}
 		// 初始化去年数据的容器
 		for (int j = 0; j < sizeMath; j++) {
@@ -615,7 +616,7 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 					List<LinkedHashMap<Double, Double>> linePointData = linePointMapData.get(j);
 
 					readData(linePointData.get(i), "PUE", "", j);
-					//readData(mapData.get(j).get(i), "PUE", "", j);
+					// readData(mapData.get(j).get(i), "PUE", "", j);
 				}
 				readData(oldYearData.get(i), "PUE", "", -1);
 			}
@@ -625,7 +626,7 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 				time = Double.parseDouble(Mintime) + (Double.parseDouble(Sintime) / 60);
 				Double H = Double.parseDouble(HourTime);
 				linePointMapData.get(1).get(i).put(time, Double.parseDouble(value));
-				//mapData.get(1).get(i).put(time, Double.parseDouble(value));
+				// mapData.get(1).get(i).put(time, Double.parseDouble(value));
 				if (H != currentHour) {
 					currentHour = H;
 					cleanData(1);
@@ -636,7 +637,7 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 						+ (Double.parseDouble(Sintime) / 60 / 60);
 				Double D = Double.parseDouble(Daytime);
 				linePointMapData.get(2).get(i).put(time, Double.parseDouble(value));
-			//	mapData.get(2).get(i).put(time, Double.parseDouble(value));
+				// mapData.get(2).get(i).put(time, Double.parseDouble(value));
 				if (D != currentDay || isFirstIN) {
 
 					if (D != currentDay)
@@ -651,7 +652,7 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 						+ (Double.parseDouble(Mintime) / 24 / 60) + (Double.parseDouble(Sintime) / 24 / 60 / 60);
 				Double M = Double.parseDouble(Monthtime);
 				linePointMapData.get(3).get(i).put(time - 1, Double.parseDouble(value));
-				//mapData.get(3).get(i).put(time - 1, Double.parseDouble(value));
+				// mapData.get(3).get(i).put(time - 1, Double.parseDouble(value));
 				if (M != currentMonth || isFirstIN) {
 
 					if (M != currentMonth)
@@ -661,22 +662,43 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 					currentMonth = M;
 				}
 			}
+			// if (isYear) {
+			// time = Double.parseDouble(Monthtime) + (Double.parseDouble(Daytime) / 31)
+			// + (Double.parseDouble(HourTime) / 31 / 24) + (Double.parseDouble(Mintime) /
+			// 31 / 24 / 60)
+			// + (Double.parseDouble(Sintime) / 31 / 24 / 60 / 60);
+			// Double Y = Double.parseDouble(Yeartime);
+			// linePointMapData.get(4).get(i).put(time - 1, Double.parseDouble(value));
+			// if (Y != currentYear) {
+			// currentYear = Y;
+			// cleanData(4);
+			// setData();//重新定位年。
+			// readData(oldYearData.get(i), equail, signal, -1);
+			// }
+			// }
+
 			if (isYear) {
 				time = Double.parseDouble(Monthtime) + (Double.parseDouble(Daytime) / 31)
 						+ (Double.parseDouble(HourTime) / 31 / 24) + (Double.parseDouble(Mintime) / 31 / 24 / 60)
-						+ (Double.parseDouble(Sintime) / 31 / 24 / 60 / 60);
-				Double Y = Double.parseDouble(Yeartime);
+						+ (Double.parseDouble(Sintime) / 31 / 24 / 60 / 60);		
 				linePointMapData.get(4).get(i).put(time - 1, Double.parseDouble(value));
-			//	mapData.get(4).get(i).put(time - 1, Double.parseDouble(value));
-				if (Y != currentYear) {
-					currentYear = Y;
-					cleanData(4);
+			}
+			
+			Double Y = Double.parseDouble(Yeartime);
+			if (Y != currentYear) {
+				currentYear = Y;
+				cleanData(4);
+				setData();// 重新定位年。
+				readData(oldYearData.get(i), equail, signal, -1);
+				if(mode==4)
+				{
+					rButton.get(mode - 1).setText((int)currentYear + " " + y);
 				}
+				
 			}
 
-			// String name = DataGetter.getSignalName(equail, signal);
+		
 			SplineData dataSeries = null;
-
 			String year = rButton.get(mode - 1).getText().toString().replace("年", "").trim();
 			String currentYear = Integer.parseInt(Yeartime) - 1 + "";
 			// 绑定数据 （名字 颜色 内容 有多种不同的 情况）
@@ -751,9 +773,9 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 
 				for (int j = 1; j <= 4; j++) {
 					List<LinkedHashMap<Double, Double>> linePointData = linePointMapData.get(j);
-					
+
 					readData(linePointData.get(i), equail, signal, j);
-					//readData(mapData.get(j).get(i), equail, signal, j);
+					// readData(mapData.get(j).get(i), equail, signal, j);
 				}
 				readData(oldYearData.get(i), equail, signal, -1);
 			}
@@ -764,7 +786,7 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 				Double H = Double.parseDouble(HourTime);
 
 				linePointMapData.get(1).get(i).put(time, Double.parseDouble(value));
-				//mapData.get(1).get(i).put(time, Double.parseDouble(value));
+				// mapData.get(1).get(i).put(time, Double.parseDouble(value));
 				if (H != currentHour) {
 					currentHour = H;
 					cleanData(1);
@@ -775,7 +797,7 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 						+ (Double.parseDouble(Sintime) / 60 / 60);
 				Double D = Double.parseDouble(Daytime);
 				linePointMapData.get(2).get(i).put(time, Double.parseDouble(value));
-				//mapData.get(2).get(i).put(time, Double.parseDouble(value));
+				// mapData.get(2).get(i).put(time, Double.parseDouble(value));
 				if (D != currentDay || isFirstIN) {
 
 					if (D != currentDay)
@@ -790,7 +812,7 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 						+ (Double.parseDouble(Mintime) / 24 / 60) + (Double.parseDouble(Sintime) / 24 / 60 / 60);
 				Double M = Double.parseDouble(Monthtime);
 				linePointMapData.get(3).get(i).put(time - 1, Double.parseDouble(value));
-				//mapData.get(3).get(i).put(time - 1, Double.parseDouble(value));
+				// mapData.get(3).get(i).put(time - 1, Double.parseDouble(value));
 				if (M != currentMonth || isFirstIN) {
 
 					if (M != currentMonth)
@@ -800,17 +822,50 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 					currentMonth = M;
 				}
 			}
+//			if (isYear) {
+//				time = Double.parseDouble(Monthtime) + (Double.parseDouble(Daytime) / 31)
+//						+ (Double.parseDouble(HourTime) / 31 / 24) + (Double.parseDouble(Mintime) / 31 / 24 / 60)
+//						+ (Double.parseDouble(Sintime) / 31 / 24 / 60 / 60);
+//				Double Y = Double.parseDouble(Yeartime);
+//				linePointMapData.get(4).get(i).put(time - 1, Double.parseDouble(value));
+//				// mapData.get(4).get(i).put(time - 1, Double.parseDouble(value));
+//				if (Y != currentYear) {
+//					currentYear = Y;
+//					cleanData(4);
+//					setData();// 重新定位年。
+//					readData(oldYearData.get(i), equail, signal, -1);
+//
+//				}
+//			}
+			
+			
 			if (isYear) {
 				time = Double.parseDouble(Monthtime) + (Double.parseDouble(Daytime) / 31)
 						+ (Double.parseDouble(HourTime) / 31 / 24) + (Double.parseDouble(Mintime) / 31 / 24 / 60)
-						+ (Double.parseDouble(Sintime) / 31 / 24 / 60 / 60);
-				Double Y = Double.parseDouble(Yeartime);
+						+ (Double.parseDouble(Sintime) / 31 / 24 / 60 / 60);		
 				linePointMapData.get(4).get(i).put(time - 1, Double.parseDouble(value));
-				//mapData.get(4).get(i).put(time - 1, Double.parseDouble(value));
-				if (Y != currentYear) {
-					currentYear = Y;
-					cleanData(4);
+			}
+			
+			Double Y = Double.parseDouble(Yeartime);
+			if (Y != currentYear) {
+				currentYear = Y;
+				cleanData(4);
+				setData();// 重新定位年。
+				readData(oldYearData.get(i), equail, signal, -1);
+				if(mode==4)
+				{
+					rButton.get(mode - 1).post(new Runnable() {
+						
+						@Override
+						public void run() {
+							
+							rButton.get(mode - 1).setText((int)currentYear + " " + y);
+							
+						}
+					});
+					
 				}
+				
 			}
 
 			String name = DataGetter.getSignalName(equail, signal);
@@ -950,6 +1005,9 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 		String Daytime = TimeUtils.getDay();
 		String Hourtime = TimeUtils.getHour();
 		String fileName = "";
+
+		data.clear();
+
 		try {
 			switch (index) {
 			// 去年
@@ -1008,10 +1066,10 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 
 	private void cleanData(int index) {
 		List<LinkedHashMap<Double, Double>> linePointData = linePointMapData.get(index);
-		//List<Map<Double, Double>> data = mapData.get(index);
+		// List<Map<Double, Double>> data = mapData.get(index);
 		for (int j = 0; j < linePointData.size(); j++) {
 			linePointData.get(j).clear();
-			//data.get(j).clear();
+			// data.get(j).clear();
 		}
 	}
 
@@ -1123,10 +1181,8 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 	private ViewObjectBase base = new SplineChartObject();
 	private String fontColor, xColor, scaleColor;
 
+	// private Map<Integer,List<Map<Double, Double>>> mapData = new HashMap<>();
 
-	//private Map<Integer,List<Map<Double, Double>>> mapData = new HashMap<>();
-	
-	
 	@Override
 	public void onCall() {
 
@@ -1143,9 +1199,7 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 		base.setTypeId(m_strID);
 		base.setType(m_strType);
 
-
-	
-		//((SplineChartObject) base).setMapData(mapData);
+		// ((SplineChartObject) base).setMapData(mapData);
 		((SplineChartObject) base).setLdata(linePointMapData);
 		((SplineChartObject) base).setLableList(label_data);
 		((SplineChartObject) base).setColorData(colorDatas);
@@ -1154,14 +1208,11 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 		((SplineChartObject) base).setScaleColor(ViewObjectColorUtil.getColor(scaleColor));
 		((SplineChartObject) base).setxColor(ViewObjectColorUtil.getColor(xColor));
 
-		
-		
 	}
 
 	@Override
 	public void onSetData() {
 
-		
 	}
 
 	@Override

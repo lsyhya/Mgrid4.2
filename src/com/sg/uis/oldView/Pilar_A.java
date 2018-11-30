@@ -6,6 +6,9 @@ import com.sg.common.IObject;
 import com.sg.common.MutiThreadShareObject;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stIntervalExpression;
+import com.sg.web.Pilar_AObject;
+import com.sg.web.base.ViewObjectBase;
+import com.sg.web.base.ViewObjectSetCallBack;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -26,7 +29,7 @@ import android.view.View;
  * 
  * */
 /** 温度-单信号温度仪 */
-public class Pilar_A extends View implements IObject {
+public class Pilar_A extends View implements IObject,ViewObjectSetCallBack {
 	public Pilar_A(Context context) {  
         super(context);
         this.setOnTouchListener(new OnTouchListener() {
@@ -164,6 +167,7 @@ public class Pilar_A extends View implements IObject {
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
 		m_rRenderWindow = rWin;
+		m_rRenderWindow.viewList.add(base);
 		rWin.addView(this);
 	}
 	
@@ -376,4 +380,43 @@ public class Pilar_A extends View implements IObject {
 	String WarmPerColor;
 	
 	public boolean m_bneedupdate = true;
+	ViewObjectBase base=new Pilar_AObject();
+	
+
+	@Override
+	public void onCall() {
+		
+		
+		base.setZIndex(m_nZIndex);
+		base.setFromHeight(MainWindow.FORM_HEIGHT);
+		base.setFromWight(MainWindow.FORM_WIDTH);
+
+		base.setWight(m_nWidth);
+		base.setHeght(m_nHeight);
+
+		base.setLeft(m_nPosX);
+		base.setTop(m_nPosY);
+
+		base.setTypeId(m_strID);
+		base.setType(m_strType);
+		
+		
+		
+		
+		((Pilar_AObject)base).setDatas(String.format("%.2f", f_data));
+		
+	}
+
+	@Override
+	public void onSetData() {
+		
+		((Pilar_AObject)base).setDatas(String.format("%.2f", f_data));
+		
+	}
+
+	@Override
+	public void onControl(Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
 }

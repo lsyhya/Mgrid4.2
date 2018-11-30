@@ -901,9 +901,11 @@ public class MainWindow extends ViewGroup {
 						} else if ("Pilar".equals(strType)) {
 							Pilar pilar = new Pilar(this.getContext());
 							m_mapUIs.put(strID, pilar);
+							callBackList.put(strID, pilar);
 						} else if ("Pilar_A".equals(strType)) {
 							Pilar_A pilar_a = new Pilar_A(this.getContext());
 							m_mapUIs.put(strID, pilar_a);
+							callBackList.put(strID, pilar_a);
 						} else if ("test_quxian".equals(strType)) {
 							test_quxian autosiglist = new test_quxian(this.getContext());
 							m_mapUIs.put(strID, autosiglist);
