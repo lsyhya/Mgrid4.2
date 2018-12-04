@@ -1,5 +1,6 @@
 package com.mgrid.util;
 
+import com.mgrid.main.FaceActivity;
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.R;
 import com.sg.common.LanguageStr;
@@ -7,6 +8,7 @@ import com.sg.common.LanguageStr;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,12 +48,14 @@ public class LoginUtil {
 				switch (which) {
 				case 0:
 					
-					Toast.makeText(context, "选择了密码登陆", Toast.LENGTH_LONG).show();
+					showWaiterAuthorizationDialog();
 					
 					break;
 	            case 1:
 					
-	            	Toast.makeText(context, "选择了人脸识别", Toast.LENGTH_LONG).show();
+	            	Intent  intent =new Intent(context,FaceActivity.class);
+	            	
+	            	((MGridActivity)context).startActivityForResult(intent, 222);
 	            	
 					break;
 				}
@@ -59,6 +63,7 @@ public class LoginUtil {
 				
 			}
 		});
+		dialog.setCancelable(false);
 		dialog.show();
 		
 	}

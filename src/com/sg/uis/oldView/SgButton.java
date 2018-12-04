@@ -30,6 +30,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,6 +46,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -55,6 +57,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import comm_service.service;
 import data_model.ipc_control;
+import com.mgrid.uncaughtexceptionhandler.MyApplication;
 
 /** ∞¥≈• */
 public class SgButton extends TextView implements IObject, ViewObjectSetCallBack {
@@ -65,9 +68,10 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 	private String ON = LanguageStr.ON;
 	private String text = LanguageStr.text;
 	public ViewObjectBase base = new ButtonObject();
-
+	
 	public SgButton(Context context) {
 		super(context);
+		
 		this.setClickable(true);
 		this.setGravity(Gravity.CENTER);
 
@@ -420,6 +424,18 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 					String path = Environment.getExternalStorageDirectory().getPath() + "/tmp/reboot.txt";
 					deleteDir(new File(path));
 				}
+
+			} else if (m_strClickEvent.equals("◊¢≤·»À¡≥")) {
+
+				Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");				
+				ContentValues values = new ContentValues(1);
+				values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+				Uri uri = m_rRenderWindow.m_oMgridActivity.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+				MyApplication.setUri(uri);
+				intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+				MGridActivity.ISFACEACTIVITY=true;
+				m_rRenderWindow.m_oMgridActivity.startActivityForResult(intent, 111);				
+
 
 			} else {
 				String[] arrStr = m_strClickEvent.split("\\(");

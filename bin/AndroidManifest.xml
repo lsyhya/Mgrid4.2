@@ -3,7 +3,7 @@
     package="com.mgrid.main"
     android:installLocation="preferExternal"
     android:versionCode="14"
-    android:versionName="5.214" >
+    android:versionName="5.22" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -45,7 +45,7 @@
         android:icon="@drawable/ic_jiqiren"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:vmSafeMode="false" android:allowTaskReparenting="false">
+        android:vmSafeMode="false" android:allowTaskReparenting="false" android:supportsRtl="false" android:restoreAnyVersion="false" >
 
         <activity
             android:name="com.mgrid.main.MGridActivity"
@@ -85,6 +85,7 @@
         
 
         <activity android:name="MonitorActivity" > </activity>
+   
         
         <service android:name="com.mgrid.main.NiuberDoorService"></service>
         <service android:name="com.mgrid.main.SoundService"></service>
@@ -92,6 +93,7 @@
         <receiver android:name="com.mgrid.main.ServerManager"></receiver>
         <activity android:name=".cameraphoto.PhotoActivity"></activity>
         <service android:name="com.lsy.Service.TilmePlush.TimePlushService"></service>
+        <activity android:name="FaceActivity"></activity>
    
       
        

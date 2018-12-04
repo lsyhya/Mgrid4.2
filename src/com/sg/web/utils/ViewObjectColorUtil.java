@@ -1,7 +1,5 @@
 package com.sg.web.utils;
 
-import android.util.Log;
-
 public class ViewObjectColorUtil {
 
 	public static String getColor(String color) {
@@ -41,7 +39,6 @@ public class ViewObjectColorUtil {
 		} catch (Exception e) {
 
 			e.printStackTrace();
-			Log.e("TAG", color);
 			return "transparent";
 
 		}

@@ -18,19 +18,26 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.arcsoft.facedetection.AFD_FSDKEngine;
+import com.arcsoft.facedetection.AFD_FSDKError;
+import com.arcsoft.facedetection.AFD_FSDKFace;
+import com.arcsoft.facedetection.AFD_FSDKVersion;
+import com.arcsoft.facerecognition.AFR_FSDKEngine;
+import com.arcsoft.facerecognition.AFR_FSDKError;
+import com.arcsoft.facerecognition.AFR_FSDKFace;
 import com.lsy.Service.TilmePlush.TimePlushService;
-import com.mgrid.VariableConfig.VariableConfig;
 import com.mgrid.data.DataGetter;
 import com.mgrid.main.user.User;
 import com.mgrid.main.user.UserManager;
+import com.mgrid.uncaughtexceptionhandler.MyApplication;
 import com.mgrid.util.FileUtil;
+import com.mgrid.util.ImageUtil;
 import com.mgrid.util.LoginUtil;
 import com.mgrid.util.XmlUtils;
 import com.sg.common.CFGTLS;
@@ -40,7 +47,6 @@ import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtIniReader;
 import com.sg.uis.LsyNewView.AlarmAction.SgAlarmAction;
 import com.sg.uis.LsyNewView.AlarmAction.SgAlarmChangTime;
-import com.sg.uis.LsyNewView.TimingAndDelayed.TimingAndDelayedView;
 import com.sg.uis.newView.AlarmShieldTime;
 import com.sg.uis.newView.ChangeLabelBtn;
 import com.sg.uis.newView.NBerDoorView;
@@ -61,8 +67,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -111,8 +118,8 @@ public class MGridActivity extends Activity {
 		m_oViewGroups = new HashMap<String, MainWindow>();
 		m_oPageList = new ArrayList<String>();
 		userManager = new UserManager();
-		ViewJosnObject=new HashMap<>();
-		ViewSetBackObject=new HashMap<>();
+		ViewJosnObject = new HashMap<>();
+		ViewSetBackObject = new HashMap<>();
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 强制为横屏
 		mImm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);// 输入法窗口
@@ -133,9 +140,6 @@ public class MGridActivity extends Activity {
 		} else {
 			showTaskUI(true);
 		}
-		
-		
-		
 
 	}
 
@@ -210,7 +214,7 @@ public class MGridActivity extends Activity {
 		}
 
 		LanguageStr.iniLanguage = iniReader.getValue("SysConf", "Language");
-		LanguageStr.whatLanguageSystem(context);		
+		LanguageStr.whatLanguageSystem(context);
 		LanguageStr.setLanguage();
 		Load = LanguageStr.Load;
 		PSS = LanguageStr.PSS;
@@ -365,12 +369,12 @@ public class MGridActivity extends Activity {
 
 				String id = iniReader.getValue("SysConf", "User" + i);
 				String pw = iniReader.getValue("SysConf", "PassWord" + i);
-				String te = iniReader.getValue("SysConf", "Time" + i,"20991230");
+				String te = iniReader.getValue("SysConf", "Time" + i, "20991230");
 				if (id == null || pw == null) {
 					continue;
 				}
 
-				User user = new User(id, pw, i + "",te);
+				User user = new User(id, pw, i + "", te);
 				userManager.addUser(i, user);
 
 			}
@@ -535,14 +539,12 @@ public class MGridActivity extends Activity {
 		mDataGetter.setPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
 		mDataGetter.start();
 	}
-	
-	private void initServiceManeger()
-	{
-		mServerManager=new ServerManager(this);
+
+	private void initServiceManeger() {
+		mServerManager = new ServerManager(this);
 		mServerManager.register();
 		mServerManager.startService();
 	}
-	
 
 	private boolean parsePageList() // 解析Pagelist
 	{
@@ -632,11 +634,9 @@ public class MGridActivity extends Activity {
 			setProgressBarIndeterminateVisibility(true);
 			return false;
 		}
-		
-		
-		LoginUtil loginUtil=new LoginUtil(this);
+
+	    loginUtil = new LoginUtil(this);
 		loginUtil.showListDialog();
-		
 
 		return true;
 	}
@@ -690,7 +690,6 @@ public class MGridActivity extends Activity {
 						isNOChangPage = true;
 						isLoading = false;
 
-						
 						System.out.println("所用时间：" + (System.currentTimeMillis() - starttime));
 
 						return;
@@ -736,7 +735,7 @@ public class MGridActivity extends Activity {
 						Toast.makeText(MGridActivity.this, Load, Toast.LENGTH_LONG).show();
 						isLoading = false;
 						isNOChangPage = true;
-						
+
 						System.out.println("所用时间：" + (System.currentTimeMillis() - starttime));
 					}
 				}
@@ -745,11 +744,10 @@ public class MGridActivity extends Activity {
 
 		handler.postDelayed(runnable, tmp_load_int_time);
 		runDataGetter();
-		if (OPENWEB)
-		{
-		  initServiceManeger();
+		if (OPENWEB) {
+			initServiceManeger();
 		}
-		
+
 	}
 
 	// 得到机器的IP地址
@@ -909,7 +907,6 @@ public class MGridActivity extends Activity {
 
 						if (sc.m_rRenderWindow != null && sc.m_rRenderWindow.m_bIsActive) {
 
-							
 							sc.setUpdata(true);
 						}
 
@@ -956,7 +953,7 @@ public class MGridActivity extends Activity {
 	protected void onRestart() {
 		// TODO Auto-generated method stub
 		super.onRestart();
-	
+
 	}
 
 	/** 消息提示显示 **/
@@ -977,12 +974,10 @@ public class MGridActivity extends Activity {
 		super.onDestroy();
 		// restartApplication();
 		releaseWakeLock();
-		
-		if(mServerManager!=null)
-		{
+
+		if (mServerManager != null) {
 			mServerManager.stopService();
 		}
-		
 
 	}
 
@@ -990,8 +985,8 @@ public class MGridActivity extends Activity {
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-		System.out.println("onStop");
-		if (!isAppOnForeground()) {
+
+		if (!isAppOnForeground()&&!ISFACEACTIVITY) {
 
 			showTaskUI(true);
 		}
@@ -1002,8 +997,93 @@ public class MGridActivity extends Activity {
 	protected void onPause() {
 		super.onPause();
 
-		System.out.println("onpause");
-		// mWakeLock.acquire();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		MGridActivity.ISFACEACTIVITY=false;
+		
+		if (requestCode == 111) {
+
+			if (MyApplication.getUri() != null) {
+
+				imageUtil = new ImageUtil(this);
+				String file = imageUtil.getPath(MyApplication.getUri());
+				bitMap = MyApplication.decodeImage(file);
+				
+				if(bitMap==null)
+				{
+					return;
+				}
+				
+				engine=new AFR_FSDKEngine();
+				face1= new AFR_FSDKFace();
+
+				MGridActivity.xianChengChi.execute(new Runnable() {
+
+					@Override
+					public void run() {
+
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+
+								byte[] msgData = imageUtil.getNV21(bitMap.getWidth(), bitMap.getHeight(), bitMap);
+
+								face1 = new AFR_FSDKFace();
+								AFD_FSDKEngine engine_F = new AFD_FSDKEngine();
+								AFD_FSDKVersion version = new AFD_FSDKVersion();
+								List<AFD_FSDKFace> result = new ArrayList<AFD_FSDKFace>();
+								AFD_FSDKError err = engine_F.AFD_FSDK_InitialFaceEngine(appid, fd_key,
+										AFD_FSDKEngine.AFD_OPF_0_HIGHER_EXT, 16, 5);
+								Log.d("TAG", "," + err.getCode());
+								err = engine_F.AFD_FSDK_GetVersion(version);
+								Log.d("TAG", ", " + err.getCode());
+								err = engine_F.AFD_FSDK_StillImageFaceDetection(msgData, bitMap.getWidth(),
+										bitMap.getHeight(), AFD_FSDKEngine.CP_PAF_NV21, result);
+								Log.d("TAG", ", " + err.getCode() + "<" + result.size());
+
+								if (result.size() <= 0) {
+								
+									
+									Log.e("MGRID", "no faces");
+									MGridActivity.handler.sendEmptyMessage(FACE_ERR);
+									
+									return;
+								}
+
+								AFR_FSDKError errs = engine.AFR_FSDK_InitialEngine(appid, fr_key);
+								errs = engine.AFR_FSDK_ExtractFRFeature(msgData, bitMap.getWidth(),
+										bitMap.getHeight(), AFR_FSDKEngine.CP_PAF_NV21,
+										new Rect(result.get(0).getRect()), result.get(0).getDegree(), face1);
+								Log.e("AFR_FSDK", err.getCode() + "");
+								
+							    MyApplication.mFaceDB.addFace("lsy", face1, bitMap);																
+								faceList.add(face1);
+								MGridActivity.handler.sendEmptyMessage(FACE_SUCC);
+
+							}
+						}).start();
+
+					}
+				});
+
+			}
+
+		}else if(requestCode == 222)
+		{
+			if(data!=null)
+			{
+				String str=data.getStringExtra("Type");
+				if(str!="false")
+				{
+					loginUtil.showListDialog();
+				}
+			}
+			
+		}
 
 	}
 
@@ -1045,6 +1125,17 @@ public class MGridActivity extends Activity {
 
 				Toast.makeText(context, PSF, Toast.LENGTH_LONG).show();
 				break;
+				
+			case FACE_ERR:
+
+				Toast.makeText(context, "未找到人脸，注册失败，请重试", Toast.LENGTH_LONG).show();
+				break;
+				
+				
+			case FACE_SUCC:
+
+				Toast.makeText(context, "注册成功", Toast.LENGTH_LONG).show();
+				break;
 			}
 			super.handleMessage(msg);
 		}
@@ -1052,10 +1143,10 @@ public class MGridActivity extends Activity {
 
 	// 解析Mgrid.ini
 	public UtIniReader iniReader = null;
-	
-	//网页服务管理
+
+	// 网页服务管理
 	public ServerManager mServerManager;
-	public static boolean OPENWEB=true;
+	public static boolean OPENWEB = true;
 
 	private int sleepTime = 2 * 60 * 60;// 屏保视频休眠时间
 	private Intent m_oTaskIntent = null;
@@ -1127,9 +1218,10 @@ public class MGridActivity extends Activity {
 	public static ExecutorService ecOneService = Executors.newSingleThreadExecutor();
 	public static boolean isNOChangPage = false;
 	public static int saveTime; // 信号数据存储时间
-	public static HashMap<String,List<ViewObjectBase>> ViewJosnObject = null;
-	public static HashMap<String,Map<String,ViewObjectSetCallBack>> ViewSetBackObject = null;
-	//public static HashMap<String,TreeMap<Integer, ViewObjectBase>> ViewJosnObject = null;
+	public static HashMap<String, List<ViewObjectBase>> ViewJosnObject = null;
+	public static HashMap<String, Map<String, ViewObjectSetCallBack>> ViewSetBackObject = null;
+	// public static HashMap<String,TreeMap<Integer, ViewObjectBase>> ViewJosnObject
+	// = null;
 	// 用户名和密码
 	public static String m_UserName;
 	public static String m_PassWord;
@@ -1160,8 +1252,28 @@ public class MGridActivity extends Activity {
 	public static List<ipc_control> lstCtrlDo1 = null;
 	public static List<ipc_control> lstCtrlDo2 = null;
 
+	public static String appid = "9RJnJmPrCEbK6ie6CC6CQnti1Hs2J5iBpe8vwVL9ESnf";
+	public static String ft_key = "9jsBZdSCqsEo21Uo7a9rvUHonVCB8Cz8yweMF1WNrAgK";
+	public static String fd_key = "9jsBZdSCqsEo21Uo7a9rvUHvwtTQmZJ7ioFFErJYjNRQ";
+	public static String fr_key = "9jsBZdSCqsEo21Uo7a9rvUJRbVW2WJxAMswBrHm4iPxG";
+	public static String age_key = "9jsBZdSCqsEo21Uo7a9rvUJfvJ2QJJTrQNxr9siQke4C";
+	public static String gender_key = "9jsBZdSCqsEo21Uo7a9rvUJo5hHb2i566abL6cePLmsP";
+
+	public static List<AFR_FSDKFace> faceList = new ArrayList<>();
+
 	// 告警屏蔽时间保存
 	public static HashMap<String, HashMap<Long, String>> AlarmShieldTimer = new HashMap<String, HashMap<Long, String>>();
+	
+	
+	//人脸识别
+	private LoginUtil loginUtil;
+	private ImageUtil imageUtil;
+	private Bitmap bitMap;
+	private AFR_FSDKFace face1 ;
+    private AFR_FSDKEngine engine;
+    public static final int FACE_ERR=6;
+    public static final int FACE_SUCC=7;
+    public static boolean ISFACEACTIVITY=false;
 
 	/**
 	 * 以下代码为内部类 This class listens for the end of the first half of the animation.
@@ -1224,12 +1336,5 @@ public class MGridActivity extends Activity {
 			mContainer.startAnimation(rotation);
 		}
 	} /* end of class SwapViews */
-
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-		if (resultCode == 1) {
-
-		}
-	}
 
 }

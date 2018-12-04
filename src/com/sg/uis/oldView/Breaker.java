@@ -318,7 +318,7 @@ public class Breaker extends View implements IObject ,ViewObjectSetCallBack{
 	@Override
 	public void onSetData() {
 		
-		Log.e("tag", currColor);
+		//Log.e("tag", currColor);
 		((BreakerObject)base).setColor(ViewObjectColorUtil.getColor(currColor));
 		((BreakerObject)base).setRotateAngle(m_fRotateAngle);
 		((BreakerObject)base).setClose(m_bState);
