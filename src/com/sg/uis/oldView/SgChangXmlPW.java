@@ -25,6 +25,7 @@ import com.sg.common.LanguageStr;
 import com.sg.web.SgChangXmlPWObject;
 import com.sg.web.base.ViewObjectBase;
 import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
 /**
  * ¸ÄÃÜÂë
@@ -360,6 +361,7 @@ public class SgChangXmlPW extends TextView implements IObject,ViewObjectSetCallB
 				m_cBackgroundColor = Color.parseColor(strValue);
 			}
 		else if ("FontColor".equals(strName)) {
+			fontColor=strValue;
 			m_cFontColor = Color.parseColor(strValue);
 			this.setTextColor(m_cFontColor);
 			tvNew.setTextColor(m_cFontColor);
@@ -505,6 +507,8 @@ public class SgChangXmlPW extends TextView implements IObject,ViewObjectSetCallB
 	public float m_xscal = 0;
 	public float m_yscal = 0;
 	
+	String fontColor;
+	
 	
 	ViewObjectBase base=new SgChangXmlPWObject();
 	
@@ -525,7 +529,7 @@ public class SgChangXmlPW extends TextView implements IObject,ViewObjectSetCallB
 		base.setTypeId(m_strID);
 		base.setType(m_strType);
 
-		
+		((SgChangXmlPWObject)base).setFontColor(ViewObjectColorUtil.getColor(fontColor));
 	}
 
 	@Override

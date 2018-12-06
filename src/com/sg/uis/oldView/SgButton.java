@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import com.mgrid.MyDialog.SelfDialog;
 import com.mgrid.data.DataGetter;
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
@@ -14,6 +15,7 @@ import com.mgrid.main.MonitorActivity;
 import com.mgrid.main.R;
 import com.mgrid.main.SoundService;
 import com.mgrid.mysqlbase.SqliteUtil;
+import com.mgrid.util.LoginUtil;
 import com.mgrid.util.ShellUtils;
 import com.mgrid.util.ShellUtils.CommandResult;
 import com.sg.common.CFGTLS;
@@ -427,15 +429,11 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 
 			} else if (m_strClickEvent.equals("◊¢≤·»À¡≥")) {
 
-				Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");				
-				ContentValues values = new ContentValues(1);
-				values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-				Uri uri = m_rRenderWindow.m_oMgridActivity.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-				MyApplication.setUri(uri);
-				intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-				MGridActivity.ISFACEACTIVITY=true;
-				m_rRenderWindow.m_oMgridActivity.startActivityForResult(intent, 111);				
-
+				//registerFace();
+				LoginUtil login=new LoginUtil(getContext());
+				login.showFaceDialog();
+				
+					
 
 			} else {
 				String[] arrStr = m_strClickEvent.split("\\(");
@@ -858,6 +856,8 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 	List<ipc_control> o_control = new ArrayList<ipc_control>();
 
 	private boolean isTouch = false;
+		
+	
 
 	@Override
 	public void onCall() {
@@ -923,4 +923,7 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 		}
 
 	}
+	
+	
+	
 }

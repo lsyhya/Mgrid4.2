@@ -30,6 +30,7 @@ import com.sg.common.LanguageStr;
 import com.sg.web.BarChartViewObject;
 import com.sg.web.base.ViewObjectBase;
 import com.sg.web.base.ViewObjectSetCallBack;
+import com.sg.web.utils.ViewObjectColorUtil;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -203,6 +204,7 @@ public class SgBarChartView extends TextView implements IObject, ViewObjectSetCa
 			m_fAlpha = Float.parseFloat(strValue);
 		} else if ("ScaleColor".equals(strName)) {
 			if (!strValue.isEmpty()) {
+				scaleColor=strValue;
 				Bchart.getDataAxis().getAxisPaint().setColor(Color.parseColor(strValue));
 				Bchart.getCategoryAxis().getAxisPaint().setColor(Color.parseColor(strValue));
 				Bchart.getDataAxis().getTickMarksPaint().setColor(Color.parseColor(strValue));
@@ -230,6 +232,8 @@ public class SgBarChartView extends TextView implements IObject, ViewObjectSetCa
 			}
 		} else if ("FontColor".equals(strName)) {
 			if (!strValue.isEmpty()) {
+				
+				fontColor=strValue;
 				// xÖá¿Ì¶ÈÎÄ×Ö»­±Ê
 				Bchart.getCategoryAxis().getTickLabelPaint().setColor(Color.parseColor(strValue));
 				// yÖá¿Ì¶ÈÎÄ×Ö»­±Ê
@@ -795,6 +799,8 @@ public class SgBarChartView extends TextView implements IObject, ViewObjectSetCa
 	private boolean isUpdate = true;
 	private int startYear = -1;
 
+	String fontColor,scaleColor;
+	
 	ViewObjectBase base = new BarChartViewObject();
 
 	private List<Double> setSendData(Map<Double, Double> map, int modes) {
@@ -841,7 +847,10 @@ public class SgBarChartView extends TextView implements IObject, ViewObjectSetCa
 		base.setTypeId(m_strID);
 		base.setType(m_strType);
 		
-		 ((BarChartViewObject)base).setMath(isNenghao);	
+		((BarChartViewObject)base).setMath(isNenghao);	
+		((BarChartViewObject)base).setFontColor(ViewObjectColorUtil.getColor(fontColor));
+		((BarChartViewObject)base).setScaleColor(ViewObjectColorUtil.getColor(scaleColor));
+		
 		
 		if(isNenghao)
 		{
@@ -850,13 +859,6 @@ public class SgBarChartView extends TextView implements IObject, ViewObjectSetCa
 		 ((BarChartViewObject)base).setmList(setSendData(linePointListData.get(2).get(0),2));
 		 ((BarChartViewObject)base).setdList(setSendData(linePointListData.get(1).get(0),1));
 		}
-		
-		
-		
-			
-			
-		
-		
 		
 		
 	}

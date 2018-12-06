@@ -14,6 +14,7 @@ import com.mgrid.main.FaceActivity;
 import com.mgrid.main.MGridActivity;
 import com.mgrid.main.face.FaceDB;
 import com.mgrid.uncaughtexceptionhandler.MyApplication;
+import com.mgrid.util.AllUtilS;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -42,6 +43,9 @@ public class FaceView extends SurfaceView implements SurfaceHolder.Callback, Cam
 	List<AFT_FSDKFace> result = new ArrayList<>();
 	private byte[] datas = null;
 	AFT_FSDKFace mAFT_FSDKFace = null;
+	
+	private String name;
+	private Thread th;
 
 	public FaceView(Context context, Camera camera) {
 
@@ -65,7 +69,8 @@ public class FaceView extends SurfaceView implements SurfaceHolder.Callback, Cam
 		AFR_FSDKError error = engineR.AFR_FSDK_InitialEngine(MGridActivity.appid, MGridActivity.fr_key);
 		Log.e(Tag, "AFR_FSDKError:" + error.getCode());
 
-		new Thread(this).start();
+		th=new Thread(this);
+		th.start();
 
 	}
 
@@ -74,22 +79,30 @@ public class FaceView extends SurfaceView implements SurfaceHolder.Callback, Cam
 
 		while (!Thread.currentThread().isInterrupted()) {
 
-			try {
+			synchronized (FaceView.this) {
+				
+				
+				try {
 
-				if (camera != null && isPreview) {
-					isPreview = false;
-					camera.setOneShotPreviewCallback(FaceView.this);
-					Log.e(Tag, "setOneShotPreview...");
+					Thread.sleep(1500);
+					
+					if (camera != null && isPreview) {
+						isPreview = false;
+						camera.setOneShotPreviewCallback(FaceView.this);
+						Log.e(Tag, "setOneShotPreview...");
+					}
+
+					
+					wait();
+
+				} catch (Exception e) {
+
+					e.printStackTrace();
+					Thread.currentThread().interrupt();
+
 				}
-
-				Thread.sleep(1500);
-
-			} catch (Exception e) {
-
-				e.printStackTrace();
-				Thread.currentThread().interrupt();
-
-			}
+				
+			}	
 
 		}
 
@@ -145,66 +158,81 @@ public class FaceView extends SurfaceView implements SurfaceHolder.Callback, Cam
 
 		@Override
 		protected Void doInBackground(byte[]... bytes) {
-
-			result.clear();
-			AFT_FSDKError err = engine.AFT_FSDK_FaceFeatureDetect(bytes[0], width, height, AFT_FSDKEngine.CP_PAF_NV21,
-					result);
-			Log.e(Tag, err.getCode() + "::" + width + "::" + height);
-
-			for (AFT_FSDKFace face : result) {
-				Log.d(Tag, "Face:" + face.toString());
-				Log.e(Tag, "找到人脸");
-			}
-
-			if (!result.isEmpty()) {
-				datas = bytes[0].clone();
-				mAFT_FSDKFace = result.get(0).clone();
-
-				AFR_FSDKFace face = new AFR_FSDKFace();
-				AFR_FSDKError errR = engineR.AFR_FSDK_ExtractFRFeature(datas, width, height, AFR_FSDKEngine.CP_PAF_NV21,
-						new Rect(mAFT_FSDKFace.getRect()), mAFT_FSDKFace.getDegree(), face);
-				Log.e(Tag, "" + errR.getCode());
-
-//				for (AFR_FSDKFace fr : MGridActivity.faceList) {
-//
-//					errR = engineR.AFR_FSDK_FacePairMatching(face, fr, score);
-//					Log.d(Tag, "Score:" + score.getScore() + ", AFR_FSDK_FacePairMatching=" + errR.getCode());
-//				}
 				
-				Log.e(Tag,  MyApplication.mFaceDB.mRegister.size()+"：：；大小");
 				
-				for (FaceDB.FaceRegist fr : MyApplication.mFaceDB.mRegister) {
-					for (AFR_FSDKFace faces : fr.mFaceList.values()) {
-						errR = engineR.AFR_FSDK_FacePairMatching(face, faces, score);												
-					
-					}
+				result.clear();
+				AFT_FSDKError err = engine.AFT_FSDK_FaceFeatureDetect(bytes[0], width, height, AFT_FSDKEngine.CP_PAF_NV21,
+						result);
+				Log.e(Tag, err.getCode() + "::" + width + "::" + height);
+
+				for (AFT_FSDKFace face : result) {
+					Log.d(Tag, "Face:" + face.toString());
+					Log.e(Tag, "找到人脸");
 				}
-				
-			} else {
-				// Log.e(Tag,"找不到人脸");
-			}
 
-			return null;
+				if (!result.isEmpty()) {
+					datas = bytes[0].clone();
+					mAFT_FSDKFace = result.get(0).clone();
+
+					AFR_FSDKFace face = new AFR_FSDKFace();
+					AFR_FSDKError errR = engineR.AFR_FSDK_ExtractFRFeature(datas, width, height, AFR_FSDKEngine.CP_PAF_NV21,
+							new Rect(mAFT_FSDKFace.getRect()), mAFT_FSDKFace.getDegree(), face);
+					Log.e(Tag, "" + errR.getCode());
+
+					
+					for (FaceDB.FaceRegist fr : MyApplication.mFaceDB.mRegister) {
+						for (AFR_FSDKFace faces : fr.mFaceList.values()) {
+							errR = engineR.AFR_FSDK_FacePairMatching(face, faces, score);												
+						    if(score.getScore()>0.6)
+						    {
+						    	name=fr.mName;
+						    	return null;
+						    }
+						}
+					}
+					
+				} else {
+					
+				}
+
+					
+				return null;
+				
+			
+	
 		}
 
 		@Override
 		protected void onPostExecute(Void results) {
 			super.onPostExecute(results);
 
-			if (!result.isEmpty()) {
+			
+			synchronized (FaceView.this) {
 				
-				if(score.getScore()>0.6)
+				if (!result.isEmpty()) {
+					
+					if(score.getScore()>0.6)
+					{
+						//Toast.makeText(context, "人脸识别成功,当前用户:"+name+",相似度:"+score.getScore(), Toast.LENGTH_LONG).show();
+						AllUtilS.showToast(context, "人脸识别成功,当前用户:"+name+",相似度:"+score.getScore());
+						th.interrupt();
+						((FaceActivity)context).finish();
+					}else {
+						//Toast.makeText(context,  score.getScore()+"：：人脸识别失败", Toast.LENGTH_SHORT).show();
+						AllUtilS.showToast(context, score.getScore()+"：：人脸识别失败");
+					}
+				}else
 				{
-					Toast.makeText(context, score.getScore()+"：：人脸识别成功", Toast.LENGTH_SHORT).show();
-					((FaceActivity)context).finish();
-				}else {
-					Toast.makeText(context,  score.getScore()+"：：人脸识别失败", Toast.LENGTH_SHORT).show();
+					//Toast.makeText(context, "未找到人脸", Toast.LENGTH_SHORT).show();
+					AllUtilS.showToast(context, "未找到人脸");
 				}
-			}else
-			{
-				Toast.makeText(context, "未找到人脸", Toast.LENGTH_SHORT).show();
+				
+				isPreview = true;
+				FaceView.this.notifyAll();
+				
 			}
-			isPreview = true;
+			
+	
 		}
 
 	}

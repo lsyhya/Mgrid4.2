@@ -32,7 +32,9 @@ import com.arcsoft.facerecognition.AFR_FSDKEngine;
 import com.arcsoft.facerecognition.AFR_FSDKError;
 import com.arcsoft.facerecognition.AFR_FSDKFace;
 import com.lsy.Service.TilmePlush.TimePlushService;
+import com.mgrid.MyDialog.SelfDialog;
 import com.mgrid.data.DataGetter;
+import com.mgrid.main.face.FaceBase;
 import com.mgrid.main.user.User;
 import com.mgrid.main.user.UserManager;
 import com.mgrid.uncaughtexceptionhandler.MyApplication;
@@ -1009,12 +1011,23 @@ public class MGridActivity extends Activity {
 
 			if (MyApplication.getUri() != null) {
 
+				if(selfDialog==null)
+				{
+					selfDialog=new SelfDialog(context);
+					
+				}
+				
+				
+				selfDialog.show();
+				selfDialog.settext("注册中...");
+				
 				imageUtil = new ImageUtil(this);
 				String file = imageUtil.getPath(MyApplication.getUri());
 				bitMap = MyApplication.decodeImage(file);
 				
 				if(bitMap==null)
 				{
+					selfDialog.dismiss();
 					return;
 				}
 				
@@ -1060,9 +1073,13 @@ public class MGridActivity extends Activity {
 										new Rect(result.get(0).getRect()), result.get(0).getDegree(), face1);
 								Log.e("AFR_FSDK", err.getCode() + "");
 								
-							    MyApplication.mFaceDB.addFace("lsy", face1, bitMap);																
-								faceList.add(face1);
-								MGridActivity.handler.sendEmptyMessage(FACE_SUCC);
+								FaceBase facebase=new FaceBase(face1, bitMap);
+								Message msg=new Message();
+								msg.obj=facebase;
+								msg.what=FACE_SUCC;
+								MGridActivity.handler.sendMessage(msg);
+								
+
 
 							}
 						}).start();
@@ -1128,13 +1145,30 @@ public class MGridActivity extends Activity {
 				
 			case FACE_ERR:
 
+				selfDialog.dismiss();
 				Toast.makeText(context, "未找到人脸，注册失败，请重试", Toast.LENGTH_LONG).show();
 				break;
 				
 				
 			case FACE_SUCC:
 
-				Toast.makeText(context, "注册成功", Toast.LENGTH_LONG).show();
+				
+				
+				
+				selfDialog.dismiss();
+				
+				Toast.makeText(context, "识别成功", Toast.LENGTH_LONG).show();
+				FaceBase face=(FaceBase)obj;				
+				loginUtil.showAddFaceName(face);
+				
+				
+//			    MyApplication.mFaceDB.addFace("lsy", face1, bitMap);																
+//				faceList.add(face1);
+//				MGridActivity.handler.sendEmptyMessage(FACE_SUCC);
+				
+				
+				
+				
 				break;
 			}
 			super.handleMessage(msg);
@@ -1266,14 +1300,17 @@ public class MGridActivity extends Activity {
 	
 	
 	//人脸识别
-	private LoginUtil loginUtil;
+	private static LoginUtil loginUtil;
 	private ImageUtil imageUtil;
 	private Bitmap bitMap;
 	private AFR_FSDKFace face1 ;
     private AFR_FSDKEngine engine;
+    private static SelfDialog selfDialog=null;
+    
     public static final int FACE_ERR=6;
     public static final int FACE_SUCC=7;
     public static boolean ISFACEACTIVITY=false;
+    
 
 	/**
 	 * 以下代码为内部类 This class listens for the end of the first half of the animation.

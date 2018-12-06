@@ -9,6 +9,7 @@ public class BarChartViewObject extends ViewObjectBase{
 	
 	int startYear;
 	boolean math;
+	String scaleColor,fontColor;
 
 	List<Double> dList= new LinkedList<Double>();
 	List<Double> mList= new LinkedList<Double>();	
@@ -16,6 +17,24 @@ public class BarChartViewObject extends ViewObjectBase{
 	
 	
 	
+	public String getScaleColor() {
+		return scaleColor;
+	}
+
+	public void setScaleColor(String scaleColor) {
+		this.scaleColor = scaleColor;
+	}
+
+
+
+	public String getFontColor() {
+		return fontColor;
+	}
+
+	public void setFontColor(String fontColor) {
+		this.fontColor = fontColor;
+	}
+
 	public List<Double> getdList() {
 		return dList;
 	}

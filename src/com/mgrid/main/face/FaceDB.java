@@ -32,7 +32,7 @@ public class FaceDB {
 	
 	
 	public class FaceRegist {
-		String mName;
+		public String mName;
 		public Map<String, AFR_FSDKFace> mFaceList;
 
 		public FaceRegist(String name) {
