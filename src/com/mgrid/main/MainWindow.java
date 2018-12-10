@@ -1997,18 +1997,10 @@ public class MainWindow extends ViewGroup {
 					if (!m_bIsActive) {
 
 						synchronized (MainWindow.this) {
-							MainWindow.this.wait(5 * 1000);
-							// waitTime++;
-							// if(waitTime>=8) waitTime=3;
-						}
-
-						// continue;
+							MainWindow.this.wait(5*1000);							
+						}			
 					}
 					
-					
-					
-
-					// System.out.println("SgExpressionXXX:m_bIsRunning开始运行"+Thread.currentThread().getName());
 					if (m_oShareObject.m_listUpdateFromTcpValues.size() > 0) // 主线程是否已经处理完毕
 					{
 						yield(); // 切出CPU时间片代替死循环等待 -- CharlesChen
@@ -2016,7 +2008,7 @@ public class MainWindow extends ViewGroup {
 					}
 					
 					
-					
+			
 					
 					if (MGridActivity.OPENWEB) {
 						Iterator<Entry<String, ViewObjectSetCallBack>> it = callBackList.entrySet().iterator();
@@ -2026,10 +2018,7 @@ public class MainWindow extends ViewGroup {
 						}
 					}
 
-					
-					
-				
-					
+		
 
 					boolean hasupdate = false;
 					Iterator<HashMap.Entry<IObject, stExpression>> iter = mapSignals.entrySet().iterator();
@@ -2056,7 +2045,7 @@ public class MainWindow extends ViewGroup {
 									listneedupdate = 10;
 
 								m_oShareObject.m_mapSignalListDatas.put(strKey, getActiveSignals(oExpression));
-							}
+							} 
 
 							if ("EventList".equals(oExpression.strUiType)) {
 
@@ -2188,7 +2177,7 @@ public class MainWindow extends ViewGroup {
 			return "-999999";
 		}
 
-		public HashMap<String, stExpression> m_mapExpression = null; // <IObject
+		public HashMap<String, stExpression> m_mapExpression = null;  //<IObject
 																		// UniqueID,
 																		// stExpression>
 		HashMap<String, String> m_mapCaculateValues = null;
@@ -2199,7 +2188,7 @@ public class MainWindow extends ViewGroup {
 		public List<local_his_signal> local_data_list = new ArrayList<local_his_signal>();
 		public List<local_his_signal> his_equipt_list = new ArrayList<local_his_signal>();
 		public List<local_his_signal> his_signal_list = new ArrayList<local_his_signal>();
-		public List<local_his_event> his_event_list = new ArrayList<local_his_event>();
+		public List<local_his_event>  his_event_list  = new ArrayList<local_his_event>();
 
 	}
 }

@@ -1,6 +1,7 @@
 package com.mgrid.main;
 
 import java.io.File;
+import java.net.InetAddress;
 import java.util.concurrent.TimeUnit;
 
 import com.mgrid.util.NetUtils;
@@ -99,11 +100,19 @@ public class MyAndSerVice extends Service{
           
         	if(mServer==null)
         	{
-        		Log.e("webService", "Ê§°Ü");
+        		Log.e("webService", " mServer==null");
+        		return;
+        	}
+
+        	InetAddress inet=mServer.getInetAddress();
+        	
+        	if(inet==null)
+        	{
+        		Log.e("webService", " inet==null");
         		return;
         	}
         	
-        	String hostAddress = mServer.getInetAddress().getHostAddress();
+        	String hostAddress = inet.getHostAddress();
         	
         	if(hostAddress==null)
         	{
@@ -117,8 +126,10 @@ public class MyAndSerVice extends Service{
 
         @Override
         public void onStopped() {
+        	
         	Log.e("webService stop", "stop");
             ServerManager.serverStop(MyAndSerVice.this);
+            
         }
 
         @Override
@@ -128,13 +139,8 @@ public class MyAndSerVice extends Service{
         	Log.e("webService err", e.getMessage());      	
             ServerManager.serverError(MyAndSerVice.this, e.getMessage());
             
-//            if(mServer!=null)
-//            {
-//            	buildServer(8081);
-//            	startServer();
-//            }
-//            
-            
+           
+                       
         }
     };
 
@@ -160,9 +166,17 @@ public class MyAndSerVice extends Service{
         if (mServer != null) {
             if (mServer.isRunning()) {
             	
-                String hostAddress = mServer.getInetAddress().getHostAddress();
-                
-                if(hostAddress==null)
+            	InetAddress inet=mServer.getInetAddress();
+            	
+            	if(inet==null)
+            	{
+            		Log.e("webService", " inet==null");
+            		return;
+            	}
+            	
+            	String hostAddress = inet.getHostAddress();
+            	
+            	if(hostAddress==null)
             	{
             		Log.e("webService", "hostAddress=null");
             		return;

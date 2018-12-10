@@ -111,7 +111,7 @@ public class ServerManager extends BroadcastReceiver {
                     break;
                 }
                 case CMD_VALUE_STOP: {
-                    //mActivity.serverStop();
+                	unRegister();
                     break;
                 }
             }
