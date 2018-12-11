@@ -70,10 +70,10 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 	private String ON = LanguageStr.ON;
 	private String text = LanguageStr.text;
 	public ViewObjectBase base = new ButtonObject();
-	
+
 	public SgButton(Context context) {
 		super(context);
-		
+
 		this.setClickable(true);
 		this.setGravity(Gravity.CENTER);
 
@@ -429,11 +429,11 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 
 			} else if (m_strClickEvent.equals("◊¢≤·»À¡≥")) {
 
-				//registerFace();
-				LoginUtil login=new LoginUtil(getContext());
-				login.showFaceDialog();
-				
-					
+				if (MGridActivity.ISOPENFACE) {
+
+					LoginUtil login = new LoginUtil(getContext());
+					login.showFaceDialog();
+				}
 
 			} else {
 				String[] arrStr = m_strClickEvent.split("\\(");
@@ -856,8 +856,7 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 	List<ipc_control> o_control = new ArrayList<ipc_control>();
 
 	private boolean isTouch = false;
-		
-	
+	private String bgImg;
 
 	@Override
 	public void onCall() {
@@ -923,7 +922,5 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 		}
 
 	}
-	
-	
-	
+
 }

@@ -67,8 +67,8 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 	private Map<Integer, List<LinkedHashMap<Double, Double>>> linePointMapData = new HashMap<Integer, List<LinkedHashMap<Double, Double>>>();
 	private List<LinkedHashMap<Double, Double>> oldYearData = new ArrayList<LinkedHashMap<Double, Double>>();
 	private List<RadioButton> rButton = new ArrayList<RadioButton>();
-	private CustomPopWindow popupWindow = null;
-	private ArrayList<String> nameList = new ArrayList<String>();
+	private CustomPopWindow   popupWindow = null;
+	private ArrayList<String> nameList    = new ArrayList<String>();
 	private MyAdapter myAdapter = null;
 	private boolean isFristUpdate = true;
 
@@ -662,20 +662,7 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 					currentMonth = M;
 				}
 			}
-			// if (isYear) {
-			// time = Double.parseDouble(Monthtime) + (Double.parseDouble(Daytime) / 31)
-			// + (Double.parseDouble(HourTime) / 31 / 24) + (Double.parseDouble(Mintime) /
-			// 31 / 24 / 60)
-			// + (Double.parseDouble(Sintime) / 31 / 24 / 60 / 60);
-			// Double Y = Double.parseDouble(Yeartime);
-			// linePointMapData.get(4).get(i).put(time - 1, Double.parseDouble(value));
-			// if (Y != currentYear) {
-			// currentYear = Y;
-			// cleanData(4);
-			// setData();//重新定位年。
-			// readData(oldYearData.get(i), equail, signal, -1);
-			// }
-			// }
+
 
 			if (isYear) {
 				time = Double.parseDouble(Monthtime) + (Double.parseDouble(Daytime) / 31)
@@ -811,7 +798,7 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 				time = Double.parseDouble(Daytime) + (Double.parseDouble(HourTime) / 24)
 						+ (Double.parseDouble(Mintime) / 24 / 60) + (Double.parseDouble(Sintime) / 24 / 60 / 60);
 				Double M = Double.parseDouble(Monthtime);
-				linePointMapData.get(3).get(i).put(time - 1, Double.parseDouble(value));
+				linePointMapData.get(3).get(i).put(time, Double.parseDouble(value));
 				// mapData.get(3).get(i).put(time - 1, Double.parseDouble(value));
 				if (M != currentMonth || isFirstIN) {
 
@@ -822,28 +809,14 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 					currentMonth = M;
 				}
 			}
-//			if (isYear) {
-//				time = Double.parseDouble(Monthtime) + (Double.parseDouble(Daytime) / 31)
-//						+ (Double.parseDouble(HourTime) / 31 / 24) + (Double.parseDouble(Mintime) / 31 / 24 / 60)
-//						+ (Double.parseDouble(Sintime) / 31 / 24 / 60 / 60);
-//				Double Y = Double.parseDouble(Yeartime);
-//				linePointMapData.get(4).get(i).put(time - 1, Double.parseDouble(value));
-//				// mapData.get(4).get(i).put(time - 1, Double.parseDouble(value));
-//				if (Y != currentYear) {
-//					currentYear = Y;
-//					cleanData(4);
-//					setData();// 重新定位年。
-//					readData(oldYearData.get(i), equail, signal, -1);
-//
-//				}
-//			}
+
 			
 			
 			if (isYear) {
 				time = Double.parseDouble(Monthtime) + (Double.parseDouble(Daytime) / 31)
 						+ (Double.parseDouble(HourTime) / 31 / 24) + (Double.parseDouble(Mintime) / 31 / 24 / 60)
 						+ (Double.parseDouble(Sintime) / 31 / 24 / 60 / 60);		
-				linePointMapData.get(4).get(i).put(time - 1, Double.parseDouble(value));
+				linePointMapData.get(4).get(i).put(time, Double.parseDouble(value));
 			}
 			
 			Double Y = Double.parseDouble(Yeartime);
@@ -986,9 +959,9 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 				Entry<Double, Double> entry = iterator.next();
 				double d1 = entry.getKey();
 				double d2 = entry.getValue();
-				if (index == 3 || index == 4)
-					bw.write((d1 + 1) + "-" + d2);
-				else
+//				if (index == 3 || index == 4)
+//					bw.write((d1 + 1) + "-" + d2);
+//				else
 					bw.write(d1 + "-" + d2);
 				bw.newLine();
 			}
@@ -1041,9 +1014,9 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 				String str = "";
 				while ((str = br.readLine()) != null) {
 					String[] s = str.split("-");
-					if (index == 3 || index == 4)
-						data.put(Double.parseDouble(s[0]) - 1, Double.parseDouble(s[1]));
-					else
+//					if (index == 3)
+//						data.put(Double.parseDouble(s[0]) - 1, Double.parseDouble(s[1]));       //发现坐标像前偏移了一位
+//					else
 						data.put(Double.parseDouble(s[0]), Double.parseDouble(s[1]));
 				}
 				br.close();
@@ -1217,7 +1190,7 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 
 	@Override
 	public void onControl(Object obj) {
-		// TODO Auto-generated method stub
+		
 
 	}
 

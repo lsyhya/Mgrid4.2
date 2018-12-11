@@ -11,6 +11,7 @@ public class ButtonObject extends ViewObjectBase{
 	String  hrefUrl;
 	boolean click;
 	String  titleName;
+
 	
 	
 	public String getTitleName() {

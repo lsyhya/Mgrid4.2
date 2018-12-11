@@ -169,6 +169,10 @@ public class MGridActivity extends Activity {
 						startActivity(intent);
 
 					}
+					if (!LoginUtil.isPlay && loginUtil != null&&ISOPENFACE) {
+						loginUtil.showListDialog();
+					}
+
 				}
 
 				if (arg1.getAction().equals(Intent.ACTION_SCREEN_OFF)) {// 监听屏幕熄灭
@@ -227,6 +231,8 @@ public class MGridActivity extends Activity {
 		m_UserName = iniReader.getValue("SysConf", "UserName", "admin");
 		m_PassWord = iniReader.getValue("SysConf", "PassWord", "12348765");
 		alarmWay = iniReader.getValue("SysConf", "ControlAlarmWay");
+	    OPENWEB = Boolean.parseBoolean(iniReader.getValue("SysConf", "OpenWeb","false"));
+		
 		if (alarmWay != null && alarmWay.equals("wav")) {
 			xianChengChi.execute(new Runnable() {
 
@@ -637,8 +643,10 @@ public class MGridActivity extends Activity {
 			return false;
 		}
 
-	    loginUtil = new LoginUtil(this);
-		loginUtil.showListDialog();
+		if (ISOPENFACE) {
+			loginUtil = new LoginUtil(this);
+			loginUtil.showListDialog();
+		}
 
 		return true;
 	}
@@ -988,7 +996,7 @@ public class MGridActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onStop();
 
-		if (!isAppOnForeground()&&!ISFACEACTIVITY) {
+		if (!isAppOnForeground() && !ISFACEACTIVITY) {
 
 			showTaskUI(true);
 		}
@@ -1005,34 +1013,32 @@ public class MGridActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		MGridActivity.ISFACEACTIVITY=false;
-		
+		MGridActivity.ISFACEACTIVITY = false;
+		LoginUtil.isPlay = false;
+
 		if (requestCode == 111) {
 
 			if (MyApplication.getUri() != null) {
 
-				if(selfDialog==null)
-				{
-					selfDialog=new SelfDialog(context);
-					
+				if (selfDialog == null) {
+					selfDialog = new SelfDialog(context);
+
 				}
-				
-				
+
 				selfDialog.show();
 				selfDialog.settext("注册中...");
-				
+
 				imageUtil = new ImageUtil(this);
 				String file = imageUtil.getPath(MyApplication.getUri());
 				bitMap = MyApplication.decodeImage(file);
-				
-				if(bitMap==null)
-				{
+
+				if (bitMap == null) {
 					selfDialog.dismiss();
 					return;
 				}
-				
-				engine=new AFR_FSDKEngine();
-				face1= new AFR_FSDKFace();
+
+				engine = new AFR_FSDKEngine();
+				face1 = new AFR_FSDKFace();
 
 				MGridActivity.xianChengChi.execute(new Runnable() {
 
@@ -1059,27 +1065,24 @@ public class MGridActivity extends Activity {
 								Log.d("TAG", ", " + err.getCode() + "<" + result.size());
 
 								if (result.size() <= 0) {
-								
-									
+
 									Log.e("MGRID", "no faces");
 									MGridActivity.handler.sendEmptyMessage(FACE_ERR);
-									
+
 									return;
 								}
 
 								AFR_FSDKError errs = engine.AFR_FSDK_InitialEngine(appid, fr_key);
-								errs = engine.AFR_FSDK_ExtractFRFeature(msgData, bitMap.getWidth(),
-										bitMap.getHeight(), AFR_FSDKEngine.CP_PAF_NV21,
-										new Rect(result.get(0).getRect()), result.get(0).getDegree(), face1);
+								errs = engine.AFR_FSDK_ExtractFRFeature(msgData, bitMap.getWidth(), bitMap.getHeight(),
+										AFR_FSDKEngine.CP_PAF_NV21, new Rect(result.get(0).getRect()),
+										result.get(0).getDegree(), face1);
 								Log.e("AFR_FSDK", err.getCode() + "");
-								
-								FaceBase facebase=new FaceBase(face1, bitMap);
-								Message msg=new Message();
-								msg.obj=facebase;
-								msg.what=FACE_SUCC;
-								MGridActivity.handler.sendMessage(msg);
-								
 
+								FaceBase facebase = new FaceBase(face1, bitMap);
+								Message msg = new Message();
+								msg.obj = facebase;
+								msg.what = FACE_SUCC;
+								MGridActivity.handler.sendMessage(msg);
 
 							}
 						}).start();
@@ -1089,17 +1092,14 @@ public class MGridActivity extends Activity {
 
 			}
 
-		}else if(requestCode == 222)
-		{
-			if(data!=null)
-			{
-				String str=data.getStringExtra("Type");
-				if(str!="false")
-				{
+		} else if (requestCode == 222) {
+			if (data != null) {
+				String str = data.getStringExtra("Type");
+				if (str != "false") {
 					loginUtil.showListDialog();
 				}
 			}
-			
+
 		}
 
 	}
@@ -1142,33 +1142,25 @@ public class MGridActivity extends Activity {
 
 				Toast.makeText(context, PSF, Toast.LENGTH_LONG).show();
 				break;
-				
+
 			case FACE_ERR:
 
 				selfDialog.dismiss();
 				Toast.makeText(context, "未找到人脸，注册失败，请重试", Toast.LENGTH_LONG).show();
 				break;
-				
-				
+
 			case FACE_SUCC:
 
-				
-				
-				
 				selfDialog.dismiss();
-				
+
 				Toast.makeText(context, "识别成功", Toast.LENGTH_LONG).show();
-				FaceBase face=(FaceBase)obj;				
+				FaceBase face = (FaceBase) obj;
 				loginUtil.showAddFaceName(face);
-				
-				
-//			    MyApplication.mFaceDB.addFace("lsy", face1, bitMap);																
-//				faceList.add(face1);
-//				MGridActivity.handler.sendEmptyMessage(FACE_SUCC);
-				
-				
-				
-				
+
+				// MyApplication.mFaceDB.addFace("lsy", face1, bitMap);
+				// faceList.add(face1);
+				// MGridActivity.handler.sendEmptyMessage(FACE_SUCC);
+
 				break;
 			}
 			super.handleMessage(msg);
@@ -1297,20 +1289,19 @@ public class MGridActivity extends Activity {
 
 	// 告警屏蔽时间保存
 	public static HashMap<String, HashMap<Long, String>> AlarmShieldTimer = new HashMap<String, HashMap<Long, String>>();
-	
-	
-	//人脸识别
+
+	// 人脸识别
 	private static LoginUtil loginUtil;
 	private ImageUtil imageUtil;
 	private Bitmap bitMap;
-	private AFR_FSDKFace face1 ;
-    private AFR_FSDKEngine engine;
-    private static SelfDialog selfDialog=null;
-    
-    public static final int FACE_ERR=6;
-    public static final int FACE_SUCC=7;
-    public static boolean ISFACEACTIVITY=false;
-    
+	private AFR_FSDKFace face1;
+	private AFR_FSDKEngine engine;
+	private static SelfDialog selfDialog = null;
+
+	public static final int FACE_ERR = 6;
+	public static final int FACE_SUCC = 7;
+	public static boolean ISFACEACTIVITY = false;
+	public static boolean ISOPENFACE = false;
 
 	/**
 	 * 以下代码为内部类 This class listens for the end of the first half of the animation.

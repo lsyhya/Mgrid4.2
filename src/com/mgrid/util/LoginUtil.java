@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.nfc.tech.IsoDep;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -42,7 +43,7 @@ public class LoginUtil {
 	private String Text1 = LanguageStr.Text1;
 	private String Text2 = LanguageStr.Text2;
 	
-	
+	public static boolean isPlay=false;
 
 	Context context;
 	String filePath = Environment.getExternalStorageDirectory().getPath();
@@ -54,6 +55,8 @@ public class LoginUtil {
 
 	public void showListDialog()
 	{
+		
+		isPlay=true;
 		final String[] item= {"密码登陆","人脸识别"};
 		AlertDialog.Builder   dialog=new  AlertDialog.Builder(context);
 		dialog.setTitle("登陆方式");
@@ -226,6 +229,7 @@ public class LoginUtil {
 
 						MGridActivity activity = (MGridActivity) context;
 						activity.finish();
+						isPlay=false;
 					}
 				}).create();
 
@@ -248,12 +252,14 @@ public class LoginUtil {
 						if (password.equals(MGridActivity.loginPassWord)) {
 
 							alertDialog.dismiss();
+							isPlay=false;							
 
 						} else {
 							Toast.makeText(context, Text2, Toast.LENGTH_SHORT)
 									.show();
 
 						}
+						
 					}
 				});
 	}

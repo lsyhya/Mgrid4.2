@@ -1,5 +1,6 @@
 package com.mgrid.uncaughtexceptionhandler;
 
+import com.mgrid.main.MGridActivity;
 import com.mgrid.main.face.FaceDB;
 
 import android.app.Application;
@@ -26,18 +27,22 @@ public class MyApplication extends Application {
 		CrashHandler crashHandler = CrashHandler.getInstance();
 		crashHandler.init(getApplicationContext());
 		
-		mFaceDB=new FaceDB(this.getExternalCacheDir().getPath());
-		image=null;
-		
-		new Thread(new Runnable() {
+		if(MGridActivity.ISOPENFACE)
+		{
+			mFaceDB=new FaceDB(this.getExternalCacheDir().getPath());
+			image=null;
 			
-			@Override
-			public void run() {
-			
-				mFaceDB.loadFaces();
+			new Thread(new Runnable() {
 				
-			}
-		}).start();
+				@Override
+				public void run() {
+				
+					mFaceDB.loadFaces();
+					
+				}
+			}).start();
+		}
+		
 	}
 	
 	public static void  setUri(Uri images)
