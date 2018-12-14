@@ -779,6 +779,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("Ammeter".equals(strType)) {
 							SgAmmeter sgAmmeter = new SgAmmeter(this.getContext());
 							m_mapUIs.put(strID, sgAmmeter);
+							callBackList.put(strID, sgAmmeter);
 						} else if ("SignalList".equals(strType)) {
 							SgSignalList sgSignalList = new SgSignalList(this.getContext());
 							m_mapUIs.put(strID, sgSignalList);

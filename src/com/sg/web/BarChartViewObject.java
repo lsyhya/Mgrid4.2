@@ -1,5 +1,6 @@
 package com.sg.web;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,9 +15,34 @@ public class BarChartViewObject extends ViewObjectBase{
 	List<Double> dList= new LinkedList<Double>();
 	List<Double> mList= new LinkedList<Double>();	
 	List<Double> yList= new LinkedList<Double>();
+	List<Double> cList= new LinkedList<Double>();
+	List<String> strList= new LinkedList<String>();
+	List<String> colorList= new ArrayList<String>();
 	
-	
-	
+	public List<String> getColorList() {
+		return colorList;
+	}
+
+	public void setColorList(List<String> colorList) {
+		this.colorList = colorList;
+	}
+
+	public List<String> getStrList() {
+		return strList;
+	}
+
+	public void setStrList(List<String> strList) {
+		this.strList = strList;
+	}
+
+	public List<Double> getcList() {
+		return cList;
+	}
+
+	public void setcList(List<Double> cList) {
+		this.cList = cList;
+	}
+
 	public String getScaleColor() {
 		return scaleColor;
 	}

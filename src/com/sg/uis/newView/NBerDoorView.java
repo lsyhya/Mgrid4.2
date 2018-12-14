@@ -1590,7 +1590,7 @@ public class NBerDoorView extends TextView implements IObject, OnClickListener, 
 
 	private void open() {
 
-		if (devicesPath.equals("") || devicesPath.equals("串口") || portsPath.equals("")) {
+		if (devicesPath==null||devicesPath.equals("") || devicesPath.equals("串口") ||portsPath==null|| portsPath.equals("")) {
 			Toast.makeText(getContext(), "选择出错", Toast.LENGTH_SHORT).show();
 			return;
 		}

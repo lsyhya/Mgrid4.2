@@ -200,9 +200,10 @@ public class Dial extends View implements IObject,ViewObjectSetCallBack {
 				m_nfillWidth = Integer.parseInt(strValue);
 			}
 		} else if ("WarmPer".equals(strName)) {
-		    warmPerColor=strValue;
+		   
 			WarmPer = Float.parseFloat(strValue);
 		} else if ("WarmPerColor".equals(strName)) {
+			warmPerColor=strValue;
 			WarmPerColor = Color.parseColor(strValue);
 		} else if ("Expression".equals(strName))
 			m_strExpression = strValue;

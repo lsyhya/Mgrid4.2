@@ -231,7 +231,7 @@ public class MGridActivity extends Activity {
 		m_UserName = iniReader.getValue("SysConf", "UserName", "admin");
 		m_PassWord = iniReader.getValue("SysConf", "PassWord", "12348765");
 		alarmWay = iniReader.getValue("SysConf", "ControlAlarmWay");
-	    OPENWEB = Boolean.parseBoolean(iniReader.getValue("SysConf", "OpenWeb","false"));
+	    OPENWEB = Boolean.parseBoolean(iniReader.getValue("SysConf", "OpenWeb","true"));
 		
 		if (alarmWay != null && alarmWay.equals("wav")) {
 			xianChengChi.execute(new Runnable() {

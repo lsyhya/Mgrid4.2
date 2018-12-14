@@ -56,6 +56,7 @@ public class SgBarChartView extends TextView implements IObject, ViewObjectSetCa
 	private List<String> chartLabels = new LinkedList<String>();
 	private List<BarData> chartData = new LinkedList<BarData>();
 	private Map<Integer, List<Map<Double, Double>>> linePointListData = new HashMap<Integer, List<Map<Double, Double>>>();
+	private List<Double> cList= new LinkedList<Double>();
 	private List<RadioButton> rButton = new ArrayList<RadioButton>();
 	private int mode = 1;
 
@@ -345,9 +346,15 @@ public class SgBarChartView extends TextView implements IObject, ViewObjectSetCa
 		String[] str = color_data.split("\\|");
 		for (int i = 0; i < data_cmd.size(); i++) {
 			if (i < str.length)
+			{
 				data_color.add(str[i]);
+				colorList.add(ViewObjectColorUtil.getColor(str[i]));
+			}
 			else
+			{
 				data_color.add(str[str.length - 1]);
+				colorList.add(ViewObjectColorUtil.getColor(str[str.length - 1]));
+			}
 		}
 	}
 
@@ -690,6 +697,7 @@ public class SgBarChartView extends TextView implements IObject, ViewObjectSetCa
 				value = Float.parseFloat(newValue);
 				dataSeriesA.add((double) value);
 			}
+			cList=dataSeriesA;			
 			compareMax(dataSeriesA);
 			BarData BarDataA = new BarData(data_label.get(i), dataSeriesA, Color.parseColor(data_color.get(i)));
 			chartData.add(BarDataA);
@@ -800,6 +808,7 @@ public class SgBarChartView extends TextView implements IObject, ViewObjectSetCa
 	private int startYear = -1;
 
 	String fontColor,scaleColor;
+	List<String> colorList= new ArrayList<String>();
 	
 	ViewObjectBase base = new BarChartViewObject();
 
@@ -850,7 +859,7 @@ public class SgBarChartView extends TextView implements IObject, ViewObjectSetCa
 		((BarChartViewObject)base).setMath(isNenghao);	
 		((BarChartViewObject)base).setFontColor(ViewObjectColorUtil.getColor(fontColor));
 		((BarChartViewObject)base).setScaleColor(ViewObjectColorUtil.getColor(scaleColor));
-		
+		((BarChartViewObject)base).setColorList(colorList);
 		
 		if(isNenghao)
 		{
@@ -858,6 +867,10 @@ public class SgBarChartView extends TextView implements IObject, ViewObjectSetCa
 		 ((BarChartViewObject)base).setyList(setSendData(linePointListData.get(3).get(0),3));
 		 ((BarChartViewObject)base).setmList(setSendData(linePointListData.get(2).get(0),2));
 		 ((BarChartViewObject)base).setdList(setSendData(linePointListData.get(1).get(0),1));
+		}else
+		{
+			((BarChartViewObject)base).setcList(cList);
+			((BarChartViewObject)base).setStrList(chartLabels);
 		}
 		
 		
@@ -872,6 +885,9 @@ public class SgBarChartView extends TextView implements IObject, ViewObjectSetCa
 		 ((BarChartViewObject)base).setyList(setSendData(linePointListData.get(3).get(0),3));
 		 ((BarChartViewObject)base).setmList(setSendData(linePointListData.get(2).get(0),2));
 		 ((BarChartViewObject)base).setdList(setSendData(linePointListData.get(1).get(0),1));
+		}else
+		{
+			((BarChartViewObject)base).setcList(cList);
 		}
 
 	}
