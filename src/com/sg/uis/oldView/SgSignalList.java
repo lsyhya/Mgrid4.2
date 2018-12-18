@@ -400,7 +400,7 @@ public class SgSignalList extends UtTable implements IObject,ViewObjectSetCallBa
 		((SignalListObject)base).setForeColor(ViewObjectColorUtil.getColor(foreColor));
 		((SignalListObject)base).setEvenRowBackground(ViewObjectColorUtil.getColor(evenRowBackground));
 		((SignalListObject)base).setOddRowBackground(ViewObjectColorUtil.getColor(oddRowBackground));
-		
+		((SignalListObject)base).setLstTitles(lstTitles);
 	}
 
 	@Override

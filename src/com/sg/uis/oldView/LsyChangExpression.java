@@ -388,6 +388,8 @@ public class LsyChangExpression extends TextView implements IObject,ViewObjectSe
 		base.setTypeId(m_strID);
 		base.setType(m_strType);
 		
+		base.setValue(m_strContent);
+		
 	}
 
 	@Override

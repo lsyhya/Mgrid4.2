@@ -937,6 +937,7 @@ public class MainWindow extends ViewGroup {
 							SgAlarmAction SgAA = new SgAlarmAction(this.getContext());
 							m_mapUIs.put(strID, SgAA);
 							VariableConfig.isAlarmAction_inHisEvent = true;
+							HisEvent.isFirst=true;
 						} else if ("ChangExpression".equals(strType)) {
 							LsyChangExpression Lve = new LsyChangExpression(this.getContext());
 							m_mapUIs.put(strID, Lve);
@@ -983,12 +984,12 @@ public class MainWindow extends ViewGroup {
 							ChangeLabel CL = new ChangeLabel(this.getContext());
 							m_mapUIs.put(strID, CL);
 							callBackList.put(strID, CL);
-						
+
 						} else if ("ChangeLabelBtn".equals(strType)) {
 							ChangeLabelBtn CLB = new ChangeLabelBtn(this.getContext());
 							m_mapUIs.put(strID, CLB);
 							callBackList.put(strID, CLB);
-							
+
 						} else if ("SgHalfCircleChar".equals(strType)) {
 							SgHalfCircleChart SCC = new SgHalfCircleChart(this.getContext());
 							m_mapUIs.put(strID, SCC);
@@ -1043,16 +1044,18 @@ public class MainWindow extends ViewGroup {
 							m_mapUIs.put(strID, DI);
 							VariableConfig.isXUNIDOOR_inHisEvent = true;
 							callBackList.put(strID, DI);
+							HisEvent.isFirst=true;
 						} else if ("ChangeUserInfo".equals(strType)) {
 							ChangeUserInfo CUI = new ChangeUserInfo(this.getContext());
 							m_mapUIs.put(strID, CUI);
 							UISManager.ChangeUserInfoList.add(CUI);
 							callBackList.put(strID, CUI);
+							HisEvent.isFirst=true;
 						} else if ("NBerDoorView".equals(strType)) {
 							NBerDoorView NBDV = new NBerDoorView(this.getContext());
 							m_mapUIs.put(strID, NBDV);
 							VariableConfig.isNIBERDOOR_inHisEvent = true;
-
+							
 						} else if ("StateButton".equals(strType)) {
 							StateButton SB = new StateButton(this.getContext());
 							m_mapUIs.put(strID, SB);
@@ -1998,28 +2001,23 @@ public class MainWindow extends ViewGroup {
 					if (!m_bIsActive) {
 
 						synchronized (MainWindow.this) {
-							MainWindow.this.wait(5*1000);							
-						}			
+							MainWindow.this.wait(5 * 1000);
+						}
 					}
-					
+
 					if (m_oShareObject.m_listUpdateFromTcpValues.size() > 0) // 主线程是否已经处理完毕
 					{
 						yield(); // 切出CPU时间片代替死循环等待 -- CharlesChen
 						continue;
 					}
-					
-					
-			
-					
+
 					if (MGridActivity.OPENWEB) {
 						Iterator<Entry<String, ViewObjectSetCallBack>> it = callBackList.entrySet().iterator();
 						while (it.hasNext()) {
-							Entry<String, ViewObjectSetCallBack> entry = it.next();										
+							Entry<String, ViewObjectSetCallBack> entry = it.next();
 							entry.getValue().onSetData();
 						}
 					}
-
-		
 
 					boolean hasupdate = false;
 					Iterator<HashMap.Entry<IObject, stExpression>> iter = mapSignals.entrySet().iterator();
@@ -2046,7 +2044,7 @@ public class MainWindow extends ViewGroup {
 									listneedupdate = 10;
 
 								m_oShareObject.m_mapSignalListDatas.put(strKey, getActiveSignals(oExpression));
-							} 
+							}
 
 							if ("EventList".equals(oExpression.strUiType)) {
 
@@ -2130,7 +2128,6 @@ public class MainWindow extends ViewGroup {
 
 					Thread.sleep(200);
 
-				
 				} /* end of while (m_bIsRunning) */
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
@@ -2178,7 +2175,7 @@ public class MainWindow extends ViewGroup {
 			return "-999999";
 		}
 
-		public HashMap<String, stExpression> m_mapExpression = null;  //<IObject
+		public HashMap<String, stExpression> m_mapExpression = null; // <IObject
 																		// UniqueID,
 																		// stExpression>
 		HashMap<String, String> m_mapCaculateValues = null;
@@ -2189,7 +2186,7 @@ public class MainWindow extends ViewGroup {
 		public List<local_his_signal> local_data_list = new ArrayList<local_his_signal>();
 		public List<local_his_signal> his_equipt_list = new ArrayList<local_his_signal>();
 		public List<local_his_signal> his_signal_list = new ArrayList<local_his_signal>();
-		public List<local_his_event>  his_event_list  = new ArrayList<local_his_event>();
+		public List<local_his_event> his_event_list = new ArrayList<local_his_event>();
 
 	}
 }

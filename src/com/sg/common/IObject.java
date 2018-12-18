@@ -4,7 +4,7 @@ import com.mgrid.main.MainWindow;
 
 import android.view.View;
 /** IObject */
-public interface IObject {
+public interface IObject{
 	
 	/** 用于布局UI在屏幕的显示位置l,t,r,b分别对应矩形的左、上、右、上 */
 	public void doLayout(boolean bool, int l, int t, int r, int b);

@@ -664,6 +664,7 @@ public class SgEventList extends UtTable implements IObject, ViewObjectSetCallBa
 		((EventListObject) base).setForeColor(ViewObjectColorUtil.getColor(foreColor));
 		((EventListObject) base).setEvenRowBackground(ViewObjectColorUtil.getColor(evenRowBackground));
 		((EventListObject) base).setOddRowBackground(ViewObjectColorUtil.getColor(oddRowBackground));
+		((EventListObject) base).setLstTitles(lstTitles);
 	}
 
 	@Override

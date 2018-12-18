@@ -1058,7 +1058,8 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject, View
 
 		base.setTypeId(m_strID);
 		base.setType(m_strType);
-
+        base.setValue(delete);
+		
 		show();
 		((ChangeNPTSObject) base).setFontColor(ViewObjectColorUtil.getColor(fontColor));
 		((ChangeNPTSObject) base).setLabelOrder(label);

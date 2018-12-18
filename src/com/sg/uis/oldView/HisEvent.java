@@ -231,8 +231,7 @@ public class HisEvent extends HisEventTable implements IObject, ViewObjectSetCal
 		});
 		dialog.setTitle("");
 		dialog.getDatePicker().setCalendarViewShown(false);
-		nameList.add(DeviceList);
-		nameList.add(AllDevice);
+
 		
 		
 		AlarmTitles.add("配置ID");
@@ -1484,6 +1483,11 @@ public class HisEvent extends HisEventTable implements IObject, ViewObjectSetCal
 	@SuppressWarnings("static-access")
 	public boolean get_equiptList() {
 
+		nameList.clear();
+		
+		nameList.add(DeviceList);
+		nameList.add(AllDevice);
+		
 		if (VariableConfig.isAlarmAction_inHisEvent) {
 
 			nameList.add("二次下电");
@@ -1663,8 +1667,8 @@ public class HisEvent extends HisEventTable implements IObject, ViewObjectSetCal
 	@SuppressWarnings("unused")
 	private Paint mPaint = new Paint(); // 注意以后变量的定义一定要赋予空间
 	// List<String> fjw_signal = null;
-	private boolean isFirst = true;// 判断是否第一次点击
-	private ArrayList<String> nameList = new ArrayList<String>();
+	public static boolean isFirst = true;// 判断是否第一次点击
+	public static  ArrayList<String> nameList = new ArrayList<String>();
 
 	private int X, Y, mY;
 	private int index = 1;
@@ -1708,8 +1712,13 @@ public class HisEvent extends HisEventTable implements IObject, ViewObjectSetCal
 
 	@Override
 	public void onSetData() {
-		// TODO Auto-generated method stub
-
+		
+		if (isFirst) {
+			isFirst = false;
+			get_equiptList();
+		}
+		((HisEventObject) base).setNameList(nameList);
+	
 	}
 
 	@Override

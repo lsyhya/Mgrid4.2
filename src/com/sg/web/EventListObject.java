@@ -12,6 +12,16 @@ public class EventListObject extends ViewObjectBase
 	String oddRowBackground;
 	String evenRowBackground;
 	List<List<String>> data;
+	List<String> lstTitles;
+	
+	
+	
+	public List<String> getLstTitles() {
+		return lstTitles;
+	}
+	public void setLstTitles(List<String> lstTitles) {
+		this.lstTitles = lstTitles;
+	}
 	public List<List<String>> getData() {
 		return data;
 	}

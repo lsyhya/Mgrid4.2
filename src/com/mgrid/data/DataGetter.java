@@ -1450,20 +1450,18 @@ public class DataGetter extends Thread {
 			if (equipObj.strSampleUpdateTime.equals(items[2])) {
 
 				String[] f_items = blocks[sig_no - 1].split("`");
-				signal = equipObj.htSignalData.get(f_items[1]);
-				// String str_signal = signal.value;
+				signal = equipObj.htSignalData.get(f_items[1]);			
 				equipObj.oldSameUpdateTime = Integer.parseInt(equipObj.strSampleUpdateTime);
-				// String str_lastSignalValue = str_signal.substring(0,6);
+				
 
 				if (equipObj.lUpdateTime / 1000 - equipObj.oldSameUpdateTime > 180) {
 
-					// System.out.println("我是线程清零");
+					
 					deal_clearEquip(equipObj, sig_no, signal, blocks);
-
 					return false;
 				}
 				f_items = null;
-				// System.out.println("XXXXXXXXXXXX：4");
+			
 				return true;
 			} else {
 				equipObj.strSampleUpdateTime = new String(items[2]);
@@ -1475,7 +1473,7 @@ public class DataGetter extends Thread {
 
 		}
 
-		// System.out.println("我是线程3");
+		
 		boolean equipupdated = false;
 		boolean haseveritychanged = false;
 		for (i = 0; i < sig_no; ++i) {
@@ -1546,6 +1544,19 @@ public class DataGetter extends Thread {
 						}
 
 					}
+				}else
+				{
+					
+					if (MGridActivity.LabelList.contains(equipObj.m_equipid)) {
+
+						Iterator<IObject> regobj_it = signal.registedObj.iterator();
+						while (regobj_it.hasNext()) {
+
+							regobj_it.next().needupdate(true);
+							sleep(200);
+						}
+					}
+					
 				}
 
 			} catch (Exception e) {

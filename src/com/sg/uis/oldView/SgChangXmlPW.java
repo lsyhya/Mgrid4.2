@@ -528,6 +528,7 @@ public class SgChangXmlPW extends TextView implements IObject,ViewObjectSetCallB
 
 		base.setTypeId(m_strID);
 		base.setType(m_strType);
+		base.setValue(m_strContent);
 
 		((SgChangXmlPWObject)base).setFontColor(ViewObjectColorUtil.getColor(fontColor));
 	}
