@@ -34,6 +34,7 @@ import com.arcsoft.facerecognition.AFR_FSDKFace;
 import com.lsy.Service.TilmePlush.TimePlushService;
 import com.mgrid.MyDialog.SelfDialog;
 import com.mgrid.data.DataGetter;
+import com.mgrid.main.broadcastreceiver.ScreenBroadcaseReceiver;
 import com.mgrid.main.face.FaceBase;
 import com.mgrid.main.user.User;
 import com.mgrid.main.user.UserManager;
@@ -145,63 +146,14 @@ public class MGridActivity extends Activity {
 
 	}
 
-	// 广播注册
+	/**
+	 * 广播注册  监听屏幕亮 熄
+	 */
 	private void setBroadcastReceiver() {
-		final IntentFilter filter = new IntentFilter();
-		filter.addAction(Intent.ACTION_SCREEN_ON);// 监听屏幕 开
-		filter.addAction(Intent.ACTION_SCREEN_OFF);// 监听屏幕 关
-		// 通过广播来发送消息
-		BroadcastReceiver BroastcastScreenOn = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context arg0, Intent arg1) {
-
-				if (arg1.getAction().equals(Intent.ACTION_SCREEN_ON)) { // 监听屏幕亮
-
-					// 拍照功能是否开启
-					if (m_bTakePhoto) {
-						// 打开拍照工具
-						// final CameraUtils cameraUtils = new CameraUtils(getApplicationContext());
-						// cameraUtils.openCamera();
-						// 启动拍照页面
-						isNOChangPage = false;
-						Intent intent = new Intent(MGridActivity.this, CameraActivity.class);
-						intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-						startActivity(intent);
-
-					}
-					if (!LoginUtil.isPlay && loginUtil != null&&ISOPENFACE) {
-						loginUtil.showListDialog();
-					}
-
-				}
-
-				if (arg1.getAction().equals(Intent.ACTION_SCREEN_OFF)) {// 监听屏幕熄灭
-
-					if (!isLoading && isPlaygif) {// 判断是否加载完成并且开启屏保gif功能
-						onPageChange("gif.xml");
-						if (isChangGif) {
-							SgImage.isChangColor = false;
-							acquireWakeLock();
-						}
-					} else if (!isLoading && isPlaymv) {// 判断是否加载完成并且开启屏保mv功能
-						if (isChangGif) {
-							if (isSleep) {
-								SgImage.isChangColor = true;
-								onPageChange(m_sMainPage);
-							} else {
-								onPageChange("mv.xml");
-								SgImage.isChangColor = false;
-								acquireWakeLock();
-								mTimeHandler.postDelayed(runTime, sleepTime * 1000);
-							}
-						}
-					} else if (!isLoading) {
-						onPageChange(m_sMainPage);
-					}
-				}
-			}
-		};
-		getApplicationContext().registerReceiver(BroastcastScreenOn, filter);
+		
+		sBroadcaseReceiver=new ScreenBroadcaseReceiver(MGridActivity.this);
+		sBroadcaseReceiver.startReceiver();
+		
 	}
 
 	private boolean parseMgridIni() {
@@ -503,31 +455,9 @@ public class MGridActivity extends Activity {
 
 	}
 
-	public Runnable runTime = new Runnable() {
-		public void run() {
-			if (svv != null) {
-				svv.pauseMv();
-				releaseWakeLock();
-				isSleep = true;
-			}
-		}
-	};
+	
 
-	public void acquireWakeLock() {
-		if (mWakeLock == null) {
-			PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-			mWakeLock = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK
-					| PowerManager.ON_AFTER_RELEASE, "SimpleTimer");
-			mWakeLock.acquire();
-		}
-	}
-
-	public void releaseWakeLock() {
-		if (mWakeLock != null && mWakeLock.isHeld()) {
-			mWakeLock.release();
-			mWakeLock = null;
-		}
-	}
+	
 
 	private void parseView() {
 
@@ -982,8 +912,11 @@ public class MGridActivity extends Activity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		// restartApplication();
-		releaseWakeLock();
+		
+		if(sBroadcaseReceiver!=null)
+		{
+			sBroadcaseReceiver.stopReceiver();
+		}
 
 		if (mServerManager != null) {
 			mServerManager.stopService();
@@ -1167,6 +1100,9 @@ public class MGridActivity extends Activity {
 		}
 	};
 
+	
+	private ScreenBroadcaseReceiver sBroadcaseReceiver;
+	
 	// 解析Mgrid.ini
 	public UtIniReader iniReader = null;
 
@@ -1174,7 +1110,7 @@ public class MGridActivity extends Activity {
 	public ServerManager mServerManager;
 	public static boolean OPENWEB = true;
 
-	private int sleepTime = 2 * 60 * 60;// 屏保视频休眠时间
+	public static int sleepTime = 2 * 60 * 60;// 屏保视频休眠时间
 	private Intent m_oTaskIntent = null;
 	private MainWindow m_oSgSgRenderManager = null;
 	private HashMap<String, MainWindow> m_oViewGroups = null;
@@ -1190,7 +1126,7 @@ public class MGridActivity extends Activity {
 	public static String mgridIniPath = Environment.getExternalStorageDirectory().getPath() + "/MGrid.ini";
 	public static String logeFilePath = Environment.getExternalStorageDirectory().getPath() + "/login" + ".login";
 	public WakeLock mWakeLock;// 锁屏类
-	public SgVideoView svv = null; // 播放视频
+	public static SgVideoView svv = null; // 播放视频
 	public Handler mTimeHandler = new Handler();
 
 	/**
@@ -1291,7 +1227,7 @@ public class MGridActivity extends Activity {
 	public static HashMap<String, HashMap<Long, String>> AlarmShieldTimer = new HashMap<String, HashMap<Long, String>>();
 
 	// 人脸识别
-	private static LoginUtil loginUtil;
+	public static LoginUtil loginUtil;
 	private ImageUtil imageUtil;
 	private Bitmap bitMap;
 	private AFR_FSDKFace face1;

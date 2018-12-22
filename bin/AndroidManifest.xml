@@ -3,7 +3,7 @@
     package="com.mgrid.main"
     android:installLocation="preferExternal"
     android:versionCode="14"
-    android:versionName="5.283" >
+    android:versionName="5.284" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -94,6 +94,7 @@
         <activity android:name=".cameraphoto.PhotoActivity"></activity>
         <service android:name="com.lsy.Service.TilmePlush.TimePlushService"></service>
         <activity android:name="FaceActivity"></activity>
+        <receiver android:name=".broadcastreceiver.ScreenBroadcaseReceiver"></receiver>
    
       
        
