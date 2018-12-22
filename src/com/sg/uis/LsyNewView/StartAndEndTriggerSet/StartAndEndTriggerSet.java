@@ -37,19 +37,9 @@ import data_model.ipc_cfg_trigger_value;
 public class StartAndEndTriggerSet extends TextView implements IObject ,ViewObjectSetCallBack{
 	
 	
-	
-	
-	
 	private String start=LanguageStr.start;
 	private String end=LanguageStr.end;
-	
-	
-	
-	
-	
-	
-	
-	
+		
 	public StartAndEndTriggerSet(Context context) {
 		super(context);
 		this.setClickable(true);
@@ -234,6 +224,7 @@ public class StartAndEndTriggerSet extends TextView implements IObject ,ViewObje
 			m_bIsBold = Boolean.parseBoolean(strValue);
 		else if ("BackgroundColor".equals(strName)) {
 
+			
 			if ("#FF000000".equals(strValue)) {
 				m_oEditText.setBackgroundResource(R.drawable.et_select);
 				// setBackgroundResource(R.drawable.bg_shadow);
@@ -484,6 +475,7 @@ public class StartAndEndTriggerSet extends TextView implements IObject ,ViewObje
 
 		base.setTypeId(m_strID);
 		base.setType(m_strType);
+		base.setValue(start);
 		
 		((StartAndEndTriggerSetObject)base).setStartValue(start_Textview.getText().toString());
 		((StartAndEndTriggerSetObject)base).setStopValue(end_Textview.getText().toString());

@@ -1105,8 +1105,6 @@ public class SgChangNamePhoneTypeState extends TextView implements IObject, View
 					alter(name, phone, level);
 				}				
 				
-			
-
 		}
 
 	}

@@ -11,9 +11,22 @@ public class SaveEquiptObject extends ViewObjectBase{
 	String foreColor;
 	String backgroundColor;
 	String evenRowBackground,oddRowBackground;
+	List<String> lstTitles;
 
 	
 	
+
+
+	public List<String> getLstTitles() {
+		return lstTitles;
+	}
+
+
+
+	public void setLstTitles(List<String> lstTitles) {
+		this.lstTitles = lstTitles;
+	}
+
 
 
 	public String getEvenRowBackground() {

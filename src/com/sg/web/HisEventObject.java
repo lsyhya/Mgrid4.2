@@ -12,6 +12,14 @@ public class HisEventObject extends ViewObjectBase{
 	String backgroundColor;
 	String oddRowBackground;
 	String evenRowBackground;
+	List<String> lstTitles;
+	
+	public List<String> getLstTitles() {
+		return lstTitles;
+	}
+	public void setLstTitles(List<String> lstTitles) {
+		this.lstTitles = lstTitles;
+	}
 	int alpha=1;
 	public String getTitleColr() {
 		return titleColr;

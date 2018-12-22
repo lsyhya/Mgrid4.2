@@ -796,6 +796,7 @@ public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack
 	private boolean isFirst = true;
 	private ViewObjectBase base=new SaveEquiptObject();
 	
+	
 	String foreColor,backgroundColor,oddRowBackground,evenRowBackground;
 
 	@Override
@@ -818,11 +819,14 @@ public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack
 		parse_expression();
 		
 		
+		base.setValue(Receive.trim());
+		
+		
 		((SaveEquiptObject)base).setBtnColor(ViewObjectColorUtil.getColor(btnColor));
 		((SaveEquiptObject)base).setTextColor(ViewObjectColorUtil.getColor(textColor));
 		((SaveEquiptObject)base).setTitleColr(ViewObjectColorUtil.getColor(titleColor));
 		((SaveEquiptObject)base).setNameList(nameList);
-		
+		((SaveEquiptObject)base).setLstTitles(lstTitles);
 		
 		
 		

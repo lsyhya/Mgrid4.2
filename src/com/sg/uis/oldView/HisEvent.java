@@ -1571,7 +1571,7 @@ public class HisEvent extends HisEventTable implements IObject, ViewObjectSetCal
 	}
 
 	private void updateList(List<String> items, List<List<String>> data) {
-		System.out.println(data.size());
+		Log.e("HisEvent",data.size()+"");
 		updateContends(items, data);
 	}
 
@@ -1697,12 +1697,15 @@ public class HisEvent extends HisEventTable implements IObject, ViewObjectSetCal
 			isFirst = false;
 			get_equiptList();
 		}
+		
+		base.setValue(Receive.trim());
 
 		((HisEventObject) base).setBtnColor(ViewObjectColorUtil.getColor(btnColor));
 		((HisEventObject) base).setTextColor(ViewObjectColorUtil.getColor(textColor));
 		((HisEventObject) base).setTitleColr(ViewObjectColorUtil.getColor(titleColor));
 		((HisEventObject) base).setNameList(nameList);
-
+		((HisEventObject) base).setLstTitles(lstTitles);
+		
 		((HisEventObject) base).setBackgroundColor(ViewObjectColorUtil.getColor(backgroundColor));
 		((HisEventObject) base).setForeColor(ViewObjectColorUtil.getColor(foreColor));
 		((HisEventObject) base).setEvenRowBackground(ViewObjectColorUtil.getColor(evenRowBackground));

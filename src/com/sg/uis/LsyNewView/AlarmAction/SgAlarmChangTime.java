@@ -97,7 +97,7 @@ public class SgAlarmChangTime extends TextView implements IObject ,ViewObjectSet
 		if (m_rRenderWindow == null)
 			return;
 		int nX = l
-				+ (int) (((float) m_nPosX / (float) MainWindow.FORM_WIDTH) * (r - l));
+				+ (int) (((float) m_nPosX / (float) MainWindow.FORM_WIDTH) * (r - l)); 
 		int nY = t
 				+ (int) (((float) m_nPosY / (float) MainWindow.FORM_HEIGHT) * (b - t));
 		int nWidth = (int) (((float) m_nWidth / (float) MainWindow.FORM_WIDTH) * (r - l));
@@ -337,13 +337,13 @@ public class SgAlarmChangTime extends TextView implements IObject ,ViewObjectSet
 
 	@Override
 	public void onSetData() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	@Override
 	public void onControl(Object obj) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 

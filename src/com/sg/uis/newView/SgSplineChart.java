@@ -1202,6 +1202,9 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 
 		base.setTypeId(m_strID);
 		base.setType(m_strType);
+		
+		
+		base.setValue(h);
 
 		// ((SplineChartObject) base).setMapData(mapData);
 		((SplineChartObject) base).setLdata(linePointMapData);

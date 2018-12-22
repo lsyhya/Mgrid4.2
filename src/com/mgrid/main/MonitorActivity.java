@@ -57,7 +57,6 @@ public class MonitorActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		System.out.println("oncreate");
 		
 		setContentView(R.layout.monitor);
 		FragmentManager manager=getFragmentManager();
