@@ -32,6 +32,7 @@ import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.mgrid.main.R;
 import com.mgrid.main.SoundService;
+import com.mgrid.util.AllUtilS;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
@@ -320,7 +321,7 @@ public class CoolButton extends TextView implements IObject {
 					m_rRenderWindow.showTaskUI(true);
 			} else if ("ÏÔÊ¾IP".equals(m_strClickEvent)) {
 				Toast.makeText(m_rRenderWindow.getContext(),
-						MGridActivity.getLocalIP(), Toast.LENGTH_SHORT).show();
+						AllUtilS.getLocalIP(), Toast.LENGTH_SHORT).show();
 			} else if ("É¾³ýÀúÊ·".equals(m_strClickEvent)) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getContext());

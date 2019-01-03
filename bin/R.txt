@@ -78,6 +78,7 @@ int id btn3 0x7f0b0014
 int id btn_back 0x7f0b0037
 int id btn_login 0x7f0b0036
 int id btn_play_back 0x7f0b0043
+int id btn_video3 0x7f0b0051
 int id camera_surfaceview 0x7f0b000e
 int id center 0x7f0b0004
 int id center_horizontal 0x7f0b0005
@@ -113,11 +114,11 @@ int id lastpagebtn 0x7f0b003d
 int id layout_pageID 0x7f0b003f
 int id left 0x7f0b0001
 int id lin 0x7f0b0027
-int id linLayout 0x7f0b004d
+int id linLayout 0x7f0b0054
 int id lin_door 0x7f0b0020
 int id lin_login 0x7f0b0031
-int id list_info 0x7f0b004f
-int id list_title 0x7f0b004e
+int id list_info 0x7f0b0056
+int id list_title 0x7f0b0055
 int id lv_list 0x7f0b0044
 int id monitor 0x7f0b003b
 int id nextbtn 0x7f0b003e
@@ -126,6 +127,8 @@ int id pageet 0x7f0b0041
 int id pagetv 0x7f0b0040
 int id photoBtn 0x7f0b0016
 int id photoList 0x7f0b0015
+int id play_btn 0x7f0b0053
+int id play_surface 0x7f0b0052
 int id pro1 0x7f0b0045
 int id progressBar1 0x7f0b001e
 int id progress_horizontal 0x7f0b0039
@@ -135,6 +138,7 @@ int id selfCheckBtn 0x7f0b001c
 int id selfCheckTv 0x7f0b001b
 int id start 0x7f0b000d
 int id surface 0x7f0b0042
+int id surfaceView_video3 0x7f0b0050
 int id tab1 0x7f0b0048
 int id text 0x7f0b0038
 int id textView1 0x7f0b0017
@@ -143,6 +147,7 @@ int id textView3 0x7f0b0019
 int id tipTextView 0x7f0b001f
 int id title 0x7f0b0025
 int id top 0x7f0b0003
+int id ttv 0x7f0b004f
 int id tv 0x7f0b0046
 int id tv1 0x7f0b0049
 int id tvPWD 0x7f0b0011
@@ -150,6 +155,8 @@ int id tv_Cid 0x7f0b0022
 int id tv_doorID 0x7f0b0021
 int id tv_time 0x7f0b0023
 int id tvuserName 0x7f0b000f
+int id video 0x7f0b004d
+int id video_btn 0x7f0b004e
 int layout activity_camera 0x7f040000
 int layout activity_main 0x7f040001
 int layout auth_dialog 0x7f040002
@@ -183,7 +190,11 @@ int layout tab1 0x7f04001d
 int layout test 0x7f04001e
 int layout thridlogin_dialog_loading 0x7f04001f
 int layout timage_listactivity_listview_item 0x7f040020
-int layout vlist 0x7f040021
+int layout videomonitor 0x7f040021
+int layout videomonitor2 0x7f040022
+int layout videomonitor3 0x7f040023
+int layout videomonitor4 0x7f040024
+int layout vlist 0x7f040025
 int menu main 0x7f0a0000
 int mipmap beauty 0x7f030000
 int mipmap glenceluanch 0x7f030001

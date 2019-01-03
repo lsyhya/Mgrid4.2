@@ -15,17 +15,24 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.mgrid.data.EquipmentDataModel.CommandCfg;
 import com.mgrid.data.EquipmentDataModel.CommandCfg.CmdParameaningCfg;
+import com.mgrid.data.oid.MyAgent;
+import com.mgrid.data.oid.MyOID;
 import com.mgrid.data.EquipmentDataModel.Equipment;
 import com.mgrid.data.EquipmentDataModel.Event;
 import com.mgrid.data.EquipmentDataModel.EventCfg;
 import com.mgrid.data.EquipmentDataModel.EventConditionCfg;
 import com.mgrid.data.EquipmentDataModel.Signal;
 import com.mgrid.main.MGridActivity;
+import com.mgrid.mysqlbase.MySqlBase;
+import com.mgrid.mysqlbase.SqliteUtil;
+import com.mgrid.util.AllUtilS;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
 import com.sg.uis.oldView.SaveEquipt;
@@ -52,7 +59,13 @@ import data_model.save_multipoint_signal;
 @SuppressWarnings("unused")
 @SuppressLint("SimpleDateFormat")
 public class DataGetter extends Thread {
-	public DataGetter() {
+	
+	//sql
+	private static SqliteUtil sqliteUtil=null;
+	private static String ip;
+	private static MyAgent myAgent;
+	
+	public DataGetter(Context context) {
 		// fjw add
 		// flag1_map = new HashMap<String,Long>();
 		// flag2_map = new HashMap<String,Long>();
@@ -60,6 +73,19 @@ public class DataGetter extends Thread {
 		flag4_map = new HashMap<String, Long>();
 		trigger_list = new HashMap<String, List<ipc_cfg_trigger_value>>();
 
+		if(sqliteUtil==null&&MGridActivity.OPENSNMP)
+		{
+			sqliteUtil=new SqliteUtil(context);
+
+			if(sqliteUtil.tabbleIsExist(sqliteUtil.openorgetSql(),MySqlBase.EQUIP_SIGNAL_OID))
+			{
+				sqliteUtil.cleanTable(MySqlBase.EQUIP_SIGNAL_OID);
+			}
+		
+		}
+		
+		ip=AllUtilS.getLocalIP();
+	
 		if (equipment.myThread.isAlive()) {
 
 		} else {
@@ -170,11 +196,36 @@ public class DataGetter extends Thread {
 
 					}
 
+					
+					
 					signal.id = String.valueOf(ipc_signalcfg.id);
 					signal.name = ipc_signalcfg.name;
 					signal.unit = ipc_signalcfg.unit;
 					signal.precision = ipc_signalcfg.precision;
 					signal.description = ipc_signalcfg.description;
+					
+					
+					/**
+					 * lsy
+					 * 2019/1/3
+					 * SNMP:生存OID对应名称 实时值的数据库
+					 */
+					if(!ip.isEmpty()&&MGridActivity.OPENSNMP)
+					{
+					
+						MyOID my=new MyOID(EQUIP_SIGNAL_VALUE+"."+ip+"."+equip.id+"."+signal.id, equip.name+"_"+signal.name, "0");
+						sqliteUtil.addOIDValue(my);
+						
+						if(myAgent==null)
+						{
+							myAgent=new MyAgent(sqliteUtil);
+							myAgent.openAgent();
+						}
+						
+						
+					}
+					
+					
 				}
 
 				List<ipc_cfg_control> command_cfg = service.get_control_cfg_list(service.IP, service.PORT, equip.id);
@@ -208,7 +259,6 @@ public class DataGetter extends Thread {
 					CmdParameaningCfg cmdparam = command.new CmdParameaningCfg();
 					cmdparam.value = ipc_cmdparamcfg.paramvalue;
 					cmdparam.meaning = ipc_cmdparamcfg.parameaning;
-
 					command.meanings.add(cmdparam);
 				}
 
@@ -1331,7 +1381,21 @@ public class DataGetter extends Thread {
 
 					signal.meaning = LanguageStr.meaning;
 					signal.value = "0.00000";
+					
 				}
+				
+				
+				
+				if(!ip.isEmpty()&&MGridActivity.OPENSNMP)
+				{
+					
+					String oid=EQUIP_SIGNAL_VALUE+"."+ip+"."+equipObj.m_equipid+"."+signal.id;
+				
+					
+					sqliteUtil.setOIDValue(oid, signal.value);
+				}
+				
+				
 
 				if (signal.severity != 4) {
 					signal.severity = 4;
@@ -1524,6 +1588,21 @@ public class DataGetter extends Thread {
 				if (!meaning.equals(signal.meaning)) {
 
 					signal.meaning = new String(meaning);
+					
+					
+					
+				
+					
+					if(MGridActivity.OPENSNMP)
+					{
+						String oid=EQUIP_SIGNAL_VALUE+"."+ip+"."+equipObj.m_equipid+"."+signal.id;
+					
+				
+						sqliteUtil.setOIDValue(oid, signal.value);
+					}
+					
+				
+					
 
 					Iterator<IObject> regobj_it = signal.registedObj.iterator();
 					while (regobj_it.hasNext()) {
@@ -2225,6 +2304,14 @@ public class DataGetter extends Thread {
 		}
 	}
 
+	//SNMP_OID
+	
+	public static final String EQUIP_SIGNAL_VALUE=".1.3.38764";
+	public static final String EQUIP_EVENT=".1.3.38764";
+	
+	
+	
+	
 	// 成员数据 ===========================================================
 	public static EquipmentDataModel equipment = new EquipmentDataModel();
 	public static String currentPage = "";

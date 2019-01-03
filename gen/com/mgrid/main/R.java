@@ -382,6 +382,12 @@ containing a value of this type.
          (such as screen margins) for screens with more than 820dp of available width. This
          would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively).
     
+ Default screen margins, per the Android Design guidelines. 
+
+         Example customization of dimensions originally defined in res/values/dimens.xml
+         (such as screen margins) for screens with more than 820dp of available width. This
+         would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively).
+    
          */
         public static final int activity_horizontal_margin=0x7f060000;
         public static final int activity_vertical_margin=0x7f060001;
@@ -422,6 +428,7 @@ containing a value of this type.
         public static final int btn_back=0x7f0b0037;
         public static final int btn_login=0x7f0b0036;
         public static final int btn_play_back=0x7f0b0043;
+        public static final int btn_video3=0x7f0b0051;
         public static final int camera_surfaceview=0x7f0b000e;
         public static final int center=0x7f0b0004;
         public static final int center_horizontal=0x7f0b0005;
@@ -457,11 +464,11 @@ containing a value of this type.
         public static final int layout_pageID=0x7f0b003f;
         public static final int left=0x7f0b0001;
         public static final int lin=0x7f0b0027;
-        public static final int linLayout=0x7f0b004d;
+        public static final int linLayout=0x7f0b0054;
         public static final int lin_door=0x7f0b0020;
         public static final int lin_login=0x7f0b0031;
-        public static final int list_info=0x7f0b004f;
-        public static final int list_title=0x7f0b004e;
+        public static final int list_info=0x7f0b0056;
+        public static final int list_title=0x7f0b0055;
         public static final int lv_list=0x7f0b0044;
         public static final int monitor=0x7f0b003b;
         public static final int nextbtn=0x7f0b003e;
@@ -470,6 +477,8 @@ containing a value of this type.
         public static final int pagetv=0x7f0b0040;
         public static final int photoBtn=0x7f0b0016;
         public static final int photoList=0x7f0b0015;
+        public static final int play_btn=0x7f0b0053;
+        public static final int play_surface=0x7f0b0052;
         public static final int pro1=0x7f0b0045;
         public static final int progressBar1=0x7f0b001e;
         public static final int progress_horizontal=0x7f0b0039;
@@ -479,6 +488,7 @@ containing a value of this type.
         public static final int selfCheckTv=0x7f0b001b;
         public static final int start=0x7f0b000d;
         public static final int surface=0x7f0b0042;
+        public static final int surfaceView_video3=0x7f0b0050;
         public static final int tab1=0x7f0b0048;
         public static final int text=0x7f0b0038;
         public static final int textView1=0x7f0b0017;
@@ -487,6 +497,7 @@ containing a value of this type.
         public static final int tipTextView=0x7f0b001f;
         public static final int title=0x7f0b0025;
         public static final int top=0x7f0b0003;
+        public static final int ttv=0x7f0b004f;
         public static final int tv=0x7f0b0046;
         public static final int tv1=0x7f0b0049;
         public static final int tvPWD=0x7f0b0011;
@@ -494,6 +505,8 @@ containing a value of this type.
         public static final int tv_doorID=0x7f0b0021;
         public static final int tv_time=0x7f0b0023;
         public static final int tvuserName=0x7f0b000f;
+        public static final int video=0x7f0b004d;
+        public static final int video_btn=0x7f0b004e;
     }
     public static final class layout {
         public static final int activity_camera=0x7f040000;
@@ -529,7 +542,11 @@ containing a value of this type.
         public static final int test=0x7f04001e;
         public static final int thridlogin_dialog_loading=0x7f04001f;
         public static final int timage_listactivity_listview_item=0x7f040020;
-        public static final int vlist=0x7f040021;
+        public static final int videomonitor=0x7f040021;
+        public static final int videomonitor2=0x7f040022;
+        public static final int videomonitor3=0x7f040023;
+        public static final int videomonitor4=0x7f040024;
+        public static final int vlist=0x7f040025;
     }
     public static final class menu {
         public static final int main=0x7f0a0000;
@@ -586,9 +603,31 @@ containing a value of this type.
         res/values-v11/styles.xml on API 14+ devices.
     
  API 14 theme customizations can go here. 
+
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    
+
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        
+
+        Base application theme for API 11+. This theme completely replaces
+        AppBaseTheme from res/values/styles.xml on API 11+ devices.
+    
+ API 11 theme customizations can go here. 
+
+        Base application theme for API 14+. This theme completely replaces
+        AppBaseTheme from BOTH res/values/styles.xml and
+        res/values-v11/styles.xml on API 14+ devices.
+    
+ API 14 theme customizations can go here. 
          */
         public static final int AppBaseTheme=0x7f080000;
         /**  Application theme. 
+ All customizations that are NOT specific to a particular API-level can go here. 
+ Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 

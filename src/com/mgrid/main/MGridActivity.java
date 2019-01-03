@@ -134,6 +134,7 @@ public class MGridActivity extends Activity {
 		MainWindow.SCREEN_HEIGHT = 768;
 
 		setBroadcastReceiver(); // 注册广播
+		
 		if (parseMgridIni()) {
 			// setProgressDialog();
 			if (!SIP.equals("")) {
@@ -473,7 +474,7 @@ public class MGridActivity extends Activity {
 		mContainer.setPersistentDrawingCache(ViewGroup.PERSISTENT_ANIMATION_CACHE);
 
 		DataGetter.currentPage = m_sMainPage;
-		mDataGetter = new DataGetter();
+		mDataGetter = new DataGetter(this);
 		mDataGetter.setPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
 		mDataGetter.start();
 	}
@@ -690,31 +691,7 @@ public class MGridActivity extends Activity {
 
 	}
 
-	// 得到机器的IP地址
-	public static String getLocalIP() {
-		String IP = null;
-		StringBuilder IPStringBuilder = new StringBuilder();
-		try {
-			// NetworkInterface表示物理硬件和虚拟地址
-			Enumeration<NetworkInterface> networkInterfaceEnumeration = NetworkInterface.getNetworkInterfaces();
-			while (networkInterfaceEnumeration.hasMoreElements()) {
-				NetworkInterface networkInterface = networkInterfaceEnumeration.nextElement();
-				Enumeration<InetAddress> inetAddressEnumeration = networkInterface.getInetAddresses();
-				while (inetAddressEnumeration.hasMoreElements()) {
-					InetAddress inetAddress = inetAddressEnumeration.nextElement();
-					if (!inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress()
-							&& inetAddress.isSiteLocalAddress()) {
-						IPStringBuilder.append(inetAddress.getHostAddress().toString() + "\n");
-					}
-				}
-			}
-		} catch (SocketException ex) {
-
-		}
-
-		IP = IPStringBuilder.toString();
-		return IP;
-	}
+	
 
 	// 修改密码
 	public static void changPassWord(String type, String newPassWord) {
@@ -1108,7 +1085,13 @@ public class MGridActivity extends Activity {
 
 	// 网页服务管理
 	public ServerManager mServerManager;
-	public static boolean OPENWEB = true;
+	public static boolean OPENWEB  = true;
+	
+	
+	// SNMP功能
+	public static boolean OPENSNMP = true;	
+	
+	
 
 	public static int sleepTime = 2 * 60 * 60;// 屏保视频休眠时间
 	private Intent m_oTaskIntent = null;

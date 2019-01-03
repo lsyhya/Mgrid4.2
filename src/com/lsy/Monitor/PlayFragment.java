@@ -238,14 +238,14 @@ public class PlayFragment extends Fragment implements OnClickListener, Callback 
 					return;
 				}
 				
-				if (!Player.getInstance().openStream(m_iPort, pDataBuffer, iDataSize, 600 * 1024)) // open stream
+				if (!Player.getInstance().openStream(m_iPort, pDataBuffer, iDataSize, 250 * 1024)) // open stream
 				{
 					Log.e(TAG, "openStream failed");
 					return;
 				}
 				
 				if (!Player.getInstance().setDisplayBuf(m_iPort, 1)) {
-					Log.e(TAG, "play failed");
+					Log.e(TAG, "setDisplayBuf failed");
 					return;
 				}
 				

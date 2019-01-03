@@ -14,7 +14,11 @@ import com.mgrid.main.MonitorActivity;
 //import com.mgrid.main.MonitorActivity;
 import com.mgrid.main.R;
 import com.mgrid.main.SoundService;
+import com.mgrid.main.VideoMonitor3;
+import com.mgrid.main.VideoMonitorActivity;
+import com.mgrid.main.VideoMonitorActivity2;
 import com.mgrid.mysqlbase.SqliteUtil;
+import com.mgrid.util.AllUtilS;
 import com.mgrid.util.LoginUtil;
 import com.mgrid.util.ShellUtils;
 import com.mgrid.util.ShellUtils.CommandResult;
@@ -153,6 +157,8 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 			layout(nX, nY, nX + nWidth, nY + nHeight);
 		}
 	}
+	
+  
 
 	@Override
 	public void addToRenderWindow(MainWindow rWin) {
@@ -292,7 +298,7 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 				if (m_rRenderWindow != null)
 					m_rRenderWindow.showTaskUI(true);
 			} else if ("显示IP".equals(m_strClickEvent)) {
-				Toast.makeText(m_rRenderWindow.getContext(), MGridActivity.getLocalIP(), Toast.LENGTH_SHORT).show();
+				Toast.makeText(m_rRenderWindow.getContext(), AllUtilS.getLocalIP(), Toast.LENGTH_SHORT).show();
 			} else if ("删除历史".equals(m_strClickEvent)) {
 
 				if (isTouch) {
@@ -385,9 +391,18 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 
 			} else if (m_strClickEvent.equals("视频")) {
 
-				Intent intent = new Intent(getContext(), MonitorActivity.class);
-				// intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//				Intent intent = new Intent(getContext(), MonitorActivity.class);		//SDk  卡顿
+//				getContext().startActivity(intent);
+				
+//				Intent intent = new Intent(getContext(), VideoMonitorActivity.class);		//RTSP
+//				getContext().startActivity(intent);
+				
+//				Intent intent = new Intent(getContext(), VideoMonitorActivity2.class);		 //  RTSP error
+//				getContext().startActivity(intent);
+				
+				Intent intent = new Intent(getContext(), VideoMonitor3.class);		//流畅  SDK
 				getContext().startActivity(intent);
+
 
 			} else if (m_strClickEvent.equals("重启")) {
 

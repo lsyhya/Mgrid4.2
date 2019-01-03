@@ -89,6 +89,7 @@ public class BuildHtml {
 					"			type : \"POST\",	//请求类型  post|get\r\n" + 
 					"            data : \"titleName="+dataName+"\",	//后台用 request.getParameter(\"key\");\r\n" + 
 					"			dataType : \"json\",  //返回数据的 类型 text|json|html--\r\n" + 
+				
 					"			success : function(users){	//回调函数 和 后台返回的 数据\r\n" + 
 					"\r\n" + 
 					"                if(users!='fail')\r\n" + 

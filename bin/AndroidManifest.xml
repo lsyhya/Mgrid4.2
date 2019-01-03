@@ -3,7 +3,7 @@
     package="com.mgrid.main"
     android:installLocation="preferExternal"
     android:versionCode="14"
-    android:versionName="5.284" >
+    android:versionName="5.29" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -20,6 +20,7 @@
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -95,6 +96,9 @@
         <service android:name="com.lsy.Service.TilmePlush.TimePlushService"></service>
         <activity android:name="FaceActivity"></activity>
         <receiver android:name=".broadcastreceiver.ScreenBroadcaseReceiver"></receiver>
+        <activity android:name="VideoMonitorActivity"></activity>
+         <activity android:name="VideoMonitorActivity2"></activity>
+           <activity android:name="VideoMonitor3"></activity>
    
       
        

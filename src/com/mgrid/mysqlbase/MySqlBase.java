@@ -14,10 +14,11 @@ public class MySqlBase extends SQLiteOpenHelper{
 	public static  final String doorTable="Door_T";
 	public static  final String doorEventTable="Event_T";
 	public static  final String doorXuNiEventTable="XuNiEvent_T";
-	private static final String  dbPath="SQL";
+	public static  final String EQUIP_SIGNAL_OID="EQUIP_SIGNAL_OID";
+	private static final String dbPath="SQL";
 	private static final String DB_PATH=Environment.getExternalStorageDirectory() + File.separator + dbPath + File.separator;
 
-	private static  final int    dbVersion=2;
+	private static  final int  dbVersion=3;
 	
 
 	public MySqlBase(Context context) {
@@ -50,9 +51,12 @@ public class MySqlBase extends SQLiteOpenHelper{
 		String doorManagerTable="create table if not exists "+doorTable+" (UserName text ,CardId text primary key,UserId text,PassWord text,Time text) ";
 		String doorEvent="create table if not exists "+doorEventTable+" (id integer primary key autoincrement,CardId text,Time text,Event text,CheckData integer) ";
 		String doorXuNiEvent="create table if not exists "+doorXuNiEventTable+" (id integer primary key autoincrement,CardId text,Time text,Event text,EventResult text,CheckData integer) "; 
+		String equip_signal_oid="create table if not exists "+EQUIP_SIGNAL_OID+" (oid text primary key,Name text,Value text) ";
+		
 		db.execSQL(doorManagerTable);
 		db.execSQL(doorEvent);
 		db.execSQL(doorXuNiEvent);
+		db.execSQL(equip_signal_oid);
 	}
 
 	@Override
@@ -72,6 +76,16 @@ public class MySqlBase extends SQLiteOpenHelper{
         	db.execSQL(doorXuNiEvent);
 			
 			break;
+			
+        case 3:
+			
+        	String equip_signal_oid="create table if not exists "+EQUIP_SIGNAL_OID+" (oid text primary key,Name text,Value text) ";
+    		
+    		
+    		db.execSQL(equip_signal_oid);
+			
+			break;
+			
 			
 
 		default:
