@@ -533,7 +533,7 @@ public class MainWindow extends ViewGroup {
 	/* @throws FileNotFoundException */
 	public void loadPage(String xmlFile) throws FileNotFoundException {
 		m_strCurrentPage = xmlFile;
-		
+
 		parseXml(xmlFile);
 
 		m_oCaculateThread = new SgExpressionCacularThread();
@@ -551,8 +551,6 @@ public class MainWindow extends ViewGroup {
 		m_oCaculateThread.start();
 	}
 
-	
-	
 	protected void unloadPage() {
 		m_oCaculateThread.autoDestroy();
 		m_fOffsetX = 0.0f;
@@ -646,21 +644,20 @@ public class MainWindow extends ViewGroup {
 		// Log.e("XML", arrStr[0]);
 		MGridActivity.XmlFile = arrStr[0];
 
-		if (MGridActivity.OPENWEB&&MGridActivity.isBulitHtml) {
+		if (MGridActivity.OPENWEB) {
 
-			MGridActivity.xianChengChi.execute(new Runnable() {
+			if (MGridActivity.isBulitHtml) {
+				MGridActivity.xianChengChi.execute(new Runnable() {
 
-				@Override
-				public void run() {
+					@Override
+					public void run() {
 
-			
 						BuildHtml.buildHtml(Environment.getExternalStorageDirectory().getPath() + m_strRootFolder
-								+ MGridActivity.XmlFile + ".html", MGridActivity.XmlFile);						
-						
-					
+								+ MGridActivity.XmlFile + ".html", MGridActivity.XmlFile);
 
-				}
-			});
+					}
+				});
+			}
 
 			MGridActivity.ViewJosnObject.put(MGridActivity.XmlFile, viewList);
 			MGridActivity.ViewSetBackObject.put(MGridActivity.XmlFile, callBackList);
@@ -936,7 +933,7 @@ public class MainWindow extends ViewGroup {
 							SgAlarmAction SgAA = new SgAlarmAction(this.getContext());
 							m_mapUIs.put(strID, SgAA);
 							VariableConfig.isAlarmAction_inHisEvent = true;
-							HisEvent.isFirst=true;
+							HisEvent.isFirst = true;
 						} else if ("ChangExpression".equals(strType)) {
 							LsyChangExpression Lve = new LsyChangExpression(this.getContext());
 							m_mapUIs.put(strID, Lve);
@@ -1043,18 +1040,18 @@ public class MainWindow extends ViewGroup {
 							m_mapUIs.put(strID, DI);
 							VariableConfig.isXUNIDOOR_inHisEvent = true;
 							callBackList.put(strID, DI);
-							HisEvent.isFirst=true;
+							HisEvent.isFirst = true;
 						} else if ("ChangeUserInfo".equals(strType)) {
 							ChangeUserInfo CUI = new ChangeUserInfo(this.getContext());
 							m_mapUIs.put(strID, CUI);
 							UISManager.ChangeUserInfoList.add(CUI);
 							callBackList.put(strID, CUI);
-							HisEvent.isFirst=true;
+							HisEvent.isFirst = true;
 						} else if ("NBerDoorView".equals(strType)) {
 							NBerDoorView NBDV = new NBerDoorView(this.getContext());
 							m_mapUIs.put(strID, NBDV);
 							VariableConfig.isNIBERDOOR_inHisEvent = true;
-							
+
 						} else if ("StateButton".equals(strType)) {
 							StateButton SB = new StateButton(this.getContext());
 							m_mapUIs.put(strID, SB);
