@@ -57,6 +57,7 @@ import com.sg.uis.newView.SgSplineChart;
 import com.sg.uis.newView.SgVideoView;
 import com.sg.uis.oldView.SaveEquipt;
 import com.sg.uis.oldView.SgImage;
+import com.sg.web.HTML.BuildHtml;
 import com.sg.web.base.ViewObjectBase;
 import com.sg.web.base.ViewObjectSetCallBack;
 
@@ -134,7 +135,7 @@ public class MGridActivity extends Activity {
 		MainWindow.SCREEN_HEIGHT = 768;
 
 		setBroadcastReceiver(); // 注册广播
-		
+
 		if (parseMgridIni()) {
 			// setProgressDialog();
 			if (!SIP.equals("")) {
@@ -148,13 +149,13 @@ public class MGridActivity extends Activity {
 	}
 
 	/**
-	 * 广播注册  监听屏幕亮 熄
+	 * 广播注册 监听屏幕亮 熄
 	 */
 	private void setBroadcastReceiver() {
-		
-		sBroadcaseReceiver=new ScreenBroadcaseReceiver(MGridActivity.this);
+
+		sBroadcaseReceiver = new ScreenBroadcaseReceiver(MGridActivity.this);
 		sBroadcaseReceiver.startReceiver();
-		
+
 	}
 
 	private boolean parseMgridIni() {
@@ -184,8 +185,8 @@ public class MGridActivity extends Activity {
 		m_UserName = iniReader.getValue("SysConf", "UserName", "admin");
 		m_PassWord = iniReader.getValue("SysConf", "PassWord", "12348765");
 		alarmWay = iniReader.getValue("SysConf", "ControlAlarmWay");
-	    OPENWEB = Boolean.parseBoolean(iniReader.getValue("SysConf", "OpenWeb","true"));
-		
+		OPENWEB = Boolean.parseBoolean(iniReader.getValue("SysConf", "OpenWeb", "true"));
+
 		if (alarmWay != null && alarmWay.equals("wav")) {
 			xianChengChi.execute(new Runnable() {
 
@@ -456,11 +457,9 @@ public class MGridActivity extends Activity {
 
 	}
 
-	
-
-	
-
 	private void parseView() {
+
+		isBuiltHtml();
 
 		if (parsePageList()) {
 			loadOtherPage();
@@ -623,16 +622,7 @@ public class MGridActivity extends Activity {
 						pagename = m_oPageList.get(tmp_load_pageseek);
 					} else {
 
-						tmp_flag_loading = false;
-						DataGetter.bIsLoading = false;
-						isChangPage = true;
-
-						Toast.makeText(MGridActivity.this, Load, Toast.LENGTH_LONG).show();
-						isNOChangPage = true;
-						isLoading = false;
-
-						System.out.println("所用时间：" + (System.currentTimeMillis() - starttime));
-
+						initSuccese();
 						return;
 					}
 					handler.postDelayed(this, tmp_load_int_time);
@@ -670,14 +660,10 @@ public class MGridActivity extends Activity {
 						handler.postDelayed(this, tmp_load_int_time);
 
 					} else {
-						tmp_flag_loading = false;
-						DataGetter.bIsLoading = false;
-						isChangPage = true;
-						Toast.makeText(MGridActivity.this, Load, Toast.LENGTH_LONG).show();
-						isLoading = false;
-						isNOChangPage = true;
-
-						System.out.println("所用时间：" + (System.currentTimeMillis() - starttime));
+						
+						
+						initSuccese();
+						
 					}
 				}
 			} // end of run
@@ -690,7 +676,33 @@ public class MGridActivity extends Activity {
 		}
 
 	}
+	
+	
+	private void initSuccese()
+	{
+		tmp_flag_loading = false;
+		DataGetter.bIsLoading = false;
+		isChangPage = true;
 
+		Toast.makeText(MGridActivity.this, Load, Toast.LENGTH_LONG).show();
+		isNOChangPage = true;
+		isLoading = false;
+
+		if (isBulitHtml) {
+			String str = Environment.getExternalStorageDirectory().getPath()
+					+ "/vtu_pagelist/refresh.ini";
+			File file = new File(str);
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}
+		}
+
+		Log.d("Mgrid", "所用时间：" + (System.currentTimeMillis() - starttime));
+
+	}
 	
 
 	// 修改密码
@@ -889,9 +901,8 @@ public class MGridActivity extends Activity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		
-		if(sBroadcaseReceiver!=null)
-		{
+
+		if (sBroadcaseReceiver != null) {
 			sBroadcaseReceiver.stopReceiver();
 		}
 
@@ -1021,6 +1032,26 @@ public class MGridActivity extends Activity {
 		startActivity(intent);
 	}
 
+	/**
+	 * 是否重新生存网页
+	 */
+	private void isBuiltHtml() {
+
+		String str = Environment.getExternalStorageDirectory().getPath() + "/vtu_pagelist/refresh.ini";
+		File file = new File(str);
+
+		if (!file.exists()) {
+
+			Log.e("Main", "创建html");
+
+			isBulitHtml = true;
+
+		} else {
+			isBulitHtml = false;
+
+		}
+	}
+
 	public static Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 
@@ -1077,21 +1108,18 @@ public class MGridActivity extends Activity {
 		}
 	};
 
-	
 	private ScreenBroadcaseReceiver sBroadcaseReceiver;
-	
+
 	// 解析Mgrid.ini
 	public UtIniReader iniReader = null;
 
 	// 网页服务管理
 	public ServerManager mServerManager;
-	public static boolean OPENWEB  = true;
-	
-	
+	public static boolean OPENWEB = true;
+	public static boolean isBulitHtml = true;
+
 	// SNMP功能
-	public static boolean OPENSNMP = true;	
-	
-	
+	public static boolean OPENSNMP = true;
 
 	public static int sleepTime = 2 * 60 * 60;// 屏保视频休眠时间
 	private Intent m_oTaskIntent = null;

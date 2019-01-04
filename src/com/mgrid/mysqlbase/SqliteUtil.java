@@ -492,6 +492,9 @@ public class SqliteUtil {
 			sql.execSQL(exe);
 	}
 
+	
+	
+	
 	// ¸ù¾ÝOID ÐÞ¸Ävalue
 
 	public void setOIDValue(String oid, String value) {
@@ -511,6 +514,7 @@ public class SqliteUtil {
 		if (sql != null)
 
 			cursor = sql.query(MySqlBase.EQUIP_SIGNAL_OID, null, "oid=?", new String[] { oid }, null, null, null);
+
 		
 		while (cursor != null && cursor.moveToNext()) {
 

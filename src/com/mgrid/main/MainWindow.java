@@ -1,6 +1,7 @@
 package com.mgrid.main;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -532,6 +533,7 @@ public class MainWindow extends ViewGroup {
 	/* @throws FileNotFoundException */
 	public void loadPage(String xmlFile) throws FileNotFoundException {
 		m_strCurrentPage = xmlFile;
+		
 		parseXml(xmlFile);
 
 		m_oCaculateThread = new SgExpressionCacularThread();
@@ -549,6 +551,8 @@ public class MainWindow extends ViewGroup {
 		m_oCaculateThread.start();
 	}
 
+	
+	
 	protected void unloadPage() {
 		m_oCaculateThread.autoDestroy();
 		m_fOffsetX = 0.0f;
@@ -642,23 +646,18 @@ public class MainWindow extends ViewGroup {
 		// Log.e("XML", arrStr[0]);
 		MGridActivity.XmlFile = arrStr[0];
 
-		if (MGridActivity.OPENWEB) {
+		if (MGridActivity.OPENWEB&&MGridActivity.isBulitHtml) {
 
 			MGridActivity.xianChengChi.execute(new Runnable() {
 
 				@Override
 				public void run() {
 
-					// if (xmlFile.equals(m_oMgridActivity.m_sMainPage)) {
-					// BuildHtml.buildHtml(
-					// Environment.getExternalStorageDirectory().getPath() + m_strRootFolder +
-					// "index.html",
-					// MGridActivity.XmlFile);
-					//
-					// } else {
-					BuildHtml.buildHtml(Environment.getExternalStorageDirectory().getPath() + m_strRootFolder
-							+ MGridActivity.XmlFile + ".html", MGridActivity.XmlFile);
-					// }
+			
+						BuildHtml.buildHtml(Environment.getExternalStorageDirectory().getPath() + m_strRootFolder
+								+ MGridActivity.XmlFile + ".html", MGridActivity.XmlFile);						
+						
+					
 
 				}
 			});
