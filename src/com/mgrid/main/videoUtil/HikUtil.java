@@ -250,11 +250,18 @@ public class HikUtil {
                     Log.e(TAG, "璁剧疆娴佹挱鏀炬ā寮忓け璐ワ紒");
                     return;
                 }
+                
                 if (!Player.getInstance().openStream(m_iPort, pDataBuffer, iDataSize, 2 * 1024 * 1024)) //open stream
                 {
                     Log.e(TAG, "鎵撳紑娴佸け璐ワ紒");
                     return;
                 }
+                
+                if (!Player.getInstance().setDisplayBuf(m_iPort, 6)) {
+					Log.e(TAG, "setDisplayBuf failed");
+					return;
+				}
+                
                 if (!Player.getInstance().play(m_iPort, mSurfaceView.getHolder())) {
                     Log.e(TAG, "鎾斁澶辫触锛�");
                     return;

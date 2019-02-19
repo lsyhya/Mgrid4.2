@@ -70,7 +70,7 @@ public class AlarmShieldTime extends TextView implements IObject {
 			long nowTime = System.currentTimeMillis();
 			long oldTime = Long.parseLong(OldTime);
 			long latertime = Long.parseLong(LaterTime) * 1000;
-			System.out.println("Ê±¼ä£º£º£º£º" + (nowTime - oldTime));
+			
 			if (nowTime - oldTime >= latertime) {
 				
 				Timecancel(); 

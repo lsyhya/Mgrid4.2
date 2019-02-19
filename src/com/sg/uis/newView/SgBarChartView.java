@@ -27,6 +27,7 @@ import com.mgrid.util.TimeUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
+import com.sg.common.RemoveRunableCallBack;
 import com.sg.web.BarChartViewObject;
 import com.sg.web.base.ViewObjectBase;
 import com.sg.web.base.ViewObjectSetCallBack;
@@ -50,7 +51,7 @@ import android.widget.TextView;
 
 /** Öù×´Í¼ */
 @SuppressLint({ "ShowToast", "InflateParams", "RtlHardcoded", "ClickableViewAccessibility" })
-public class SgBarChartView extends TextView implements IObject, ViewObjectSetCallBack {
+public class SgBarChartView extends TextView implements IObject, ViewObjectSetCallBack ,RemoveRunableCallBack{
 
 	private BarChart Bchart = null;
 	private List<String> chartLabels = new LinkedList<String>();
@@ -860,6 +861,7 @@ public class SgBarChartView extends TextView implements IObject, ViewObjectSetCa
 		((BarChartViewObject)base).setFontColor(ViewObjectColorUtil.getColor(fontColor));
 		((BarChartViewObject)base).setScaleColor(ViewObjectColorUtil.getColor(scaleColor));
 		((BarChartViewObject)base).setColorList(colorList);
+		((BarChartViewObject)base).setDataLable(data_label);
 		
 		if(isNenghao)
 		{
@@ -895,6 +897,13 @@ public class SgBarChartView extends TextView implements IObject, ViewObjectSetCa
 	@Override
 	public void onControl(Object obj) {
 
+	}
+
+	@Override
+	public void removeAllRunable() {
+		
+		handler.removeMessages(0);
+		
 	}
 
 }

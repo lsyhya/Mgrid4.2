@@ -32,6 +32,7 @@ import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
 import com.sg.common.MyAdapter;
+import com.sg.common.RemoveRunableCallBack;
 import com.sg.common.SgRealTimeData;
 import com.sg.web.SplineChartObject;
 import com.sg.web.base.ViewObjectBase;
@@ -59,7 +60,7 @@ import android.widget.Toast;
 
 /** mPUE曲线图 */
 @SuppressLint({ "ShowToast", "InflateParams", "RtlHardcoded", "ClickableViewAccessibility" })
-public class SgSplineChart extends TextView implements IObject, ViewObjectSetCallBack {
+public class SgSplineChart extends TextView implements IObject, ViewObjectSetCallBack ,RemoveRunableCallBack{
 
 	private SplineChart Schart;// 关键view
 	private LinkedList<String> labels = new LinkedList<String>();// X轴标签对象
@@ -1204,7 +1205,10 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 		base.setType(m_strType);
 		
 		
-		base.setValue(h);
+		((SplineChartObject) base).setH(h);
+		((SplineChartObject) base).setD(d);
+		((SplineChartObject) base).setM(m);
+		((SplineChartObject) base).setY(y);
 
 		// ((SplineChartObject) base).setMapData(mapData);
 		((SplineChartObject) base).setLdata(linePointMapData);
@@ -1225,6 +1229,20 @@ public class SgSplineChart extends TextView implements IObject, ViewObjectSetCal
 	@Override
 	public void onControl(Object obj) {
 
+	}
+
+	@Override
+	public void removeAllRunable() {
+		
+		Log.e(getUniqueID(), "Remove");
+		handler.removeMessages(0);
+		handler2.removeMessages(0);
+//		handler.removeCallbacks(runnable);
+//		handler.removeCallbacks(runDay);
+//		handler.removeCallbacks(runMon);
+//		handler.removeCallbacks(runYear);
+//		handler2.removeCallbacks(runnable2);
+		
 	}
 
 }

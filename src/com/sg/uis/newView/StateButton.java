@@ -11,7 +11,6 @@ import com.mgrid.util.ExpressionUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.SgRealTimeData;
-import com.sg.web.DoorInventedObject;
 import com.sg.web.StateButtonObject;
 import com.sg.web.base.ViewObjectBase;
 import com.sg.web.base.ViewObjectSetCallBack;
@@ -330,6 +329,12 @@ public class StateButton extends Button implements IObject, OnClickListener ,OnT
 		if (oRealTimeData != null) {
 			String strValue = oRealTimeData.strData;
 
+			if(strValue.isEmpty())
+			{
+				return false;
+			}
+			
+			
 			try {
 
 				int value = (int) Float.parseFloat(strValue);

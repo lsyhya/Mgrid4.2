@@ -116,6 +116,7 @@ public class SgSignalList extends UtTable implements IObject,ViewObjectSetCallBa
 			//m_title[i].setBackgroundColor(Color.GRAY);
 			m_title[i].setGravity(Gravity.CENTER);
 			m_title[i].setText(lstTitles.get(i));
+			//m_title[i].setTextColor(m_cForeColor);
 			rWin.addView(m_title[i]);
 		}
 	

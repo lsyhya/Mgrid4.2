@@ -19,6 +19,7 @@ import com.mgrid.main.R;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
 import com.sg.common.MyAdapter;
+import com.sg.common.RemoveRunableCallBack;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtTable;
 import com.sg.web.RectangleObject;
@@ -52,7 +53,7 @@ import data_model.local_his_signal;
 // 信号历史数据 SaveEquipt
 // author :fjw0312
 // time:2015 11 02
-public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack {
+public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack ,RemoveRunableCallBack{
 
 	// 方便中英文切换
 	private String DeviceName = LanguageStr.DeviceName;
@@ -879,6 +880,14 @@ public class SaveEquipt extends UtTable implements IObject,ViewObjectSetCallBack
 		arg1.setStatusCode(200);
 		
 	    arg1.setEntity(stringEntity);
+		
+	}
+
+
+	@Override
+	public void removeAllRunable() {
+		
+		handler.removeMessages(0);
 		
 	}
 }

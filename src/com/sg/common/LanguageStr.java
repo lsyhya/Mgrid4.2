@@ -33,7 +33,7 @@ public class LanguageStr {
 	// CoolButton+SgButton
 	public static String Prompt = "提示";
 	public static String problem = "是否确定?";
-	public static String OK = "确认:";
+	public static String OK = "确认";
 	public static String ON = "取消";
 	public static String text = "删除成功,请自行重启机器";
 
@@ -66,7 +66,7 @@ public class LanguageStr {
 	public static String text3 = "密码输入不完整";
 	public static String confirm = "确    认:";
 	public static String text11 = "你的配置出现错误", text12 = "你根本没有权限页面", text13 = "两次密码输入不一样",
-			text14 = "孩子， 你组态配置的标签大于权限页面的个数", text15 = "密码修改成功", text16 = "旧密码输入错误，请重新输入", text17 = "密码输入不完整";
+			text14 = " 组态配置的标签大于权限页面的个数", text15 = "密码修改成功", text16 = "旧密码输入错误，请重新输入", text17 = "密码输入不完整";
 
 	// SgChangNamePhoneTypeState
 	public static String Name = "姓名";
@@ -86,7 +86,7 @@ public class LanguageStr {
 	// SgImage
 	public static String denglu = "用户权限登录";
 	public static String pwText = "密码";
-	public static String text18 = "请等待加载完成！！";
+	public static String text18 = "请稍后..";
 	public static String text19 = "用户名或密码错误";
 	public static String userName = "用户名：";
 	public static String PWD = "密    码：";
@@ -134,6 +134,7 @@ public class LanguageStr {
 	// 系统语言和配置语言 true为中文 false为英
 	public static boolean systemLanguage = true;
 	public static String iniLanguage = "";
+	public static String Language = "Chinese";
 
 	// 获取系统语言
 	public static void whatLanguageSystem(Context context) {
@@ -150,14 +151,17 @@ public class LanguageStr {
 		if (iniLanguage == null || iniLanguage.equals("")) {
 			if (systemLanguage == true) {
 
+				
+				
 			} else {
+				Language="English";
 				setEnglish();
 			}
 		} else {
 			if (iniLanguage.equals("Chinese")) {
 
 			} else if (iniLanguage.equals("English")) {
-
+				Language="English";
 				setEnglish();
 			}
 		}
@@ -261,7 +265,7 @@ public class LanguageStr {
 		// SgImage
 		denglu = "Login";
 		pwText = "PassWord";
-		text18 = "Please wait for loading to complete！！";
+		text18 = "Loading...";
 		text19 = "Password or user name error";
 		userName = "User  ID:";
 		PWD = "PassWord:";

@@ -102,6 +102,7 @@ public class ScreenBroadcaseReceiver extends BroadcastReceiver {
 	 * ×¢Ïú¹ã²¥
 	 */
 	public void stopReceiver() {
+		handler.removeCallbacks(runTime);
 		context.unregisterReceiver(this);
 		releaseWakeLock();
 	}

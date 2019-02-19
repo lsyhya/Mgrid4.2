@@ -18,7 +18,17 @@ public class BarChartViewObject extends ViewObjectBase{
 	List<Double> cList= new LinkedList<Double>();
 	List<String> strList= new LinkedList<String>();
 	List<String> colorList= new ArrayList<String>();
+	List<String> dataLable= new ArrayList<String>();
 	
+	
+	public List<String> getDataLable() {
+		return dataLable;
+	}
+
+	public void setDataLable(List<String> dataLable) {
+		this.dataLable = dataLable;
+	}
+
 	public List<String> getColorList() {
 		return colorList;
 	}

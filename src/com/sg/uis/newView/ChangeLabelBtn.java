@@ -475,6 +475,7 @@ public class ChangeLabelBtn extends TextView implements IObject,ViewObjectSetCal
 
 		base.setTypeId(m_strID);
 		base.setType(m_strType);
+		base.setValue(m_strContent);
 		
 	}
 

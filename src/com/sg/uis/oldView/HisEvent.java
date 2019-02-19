@@ -27,6 +27,7 @@ import com.mgrid.util.FileUtil;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
 import com.sg.common.MyAdapter;
+import com.sg.common.RemoveRunableCallBack;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.lsyBase.HisEventTable;
 import com.sg.common.lsyBase.MyDoorEvent;
@@ -65,7 +66,7 @@ import data_model.local_his_event;
 // 信号告警数据 HisEvent
 // author :fjw0312
 // time:2016 5 17
-public class HisEvent extends HisEventTable implements IObject, ViewObjectSetCallBack {
+public class HisEvent extends HisEventTable implements IObject, ViewObjectSetCallBack ,RemoveRunableCallBack{
 
 	// 方便中英文切换
 	private String DeviceName = LanguageStr.DeviceName;
@@ -1805,5 +1806,12 @@ public class HisEvent extends HisEventTable implements IObject, ViewObjectSetCal
 
 		response.setEntity(stringEntity);
 
+	}
+
+	@Override
+	public void removeAllRunable() {
+		
+		handler.removeMessages(0);
+		
 	}
 }

@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 
 public class TimePlushService extends Service
 {
@@ -38,9 +39,20 @@ public class TimePlushService extends Service
 			{
 				service.startCalibrateTime();
 			}
+			
 			myHandler.postDelayed(runnable, 60*60*1000);
 			
 		}
 	};
+	
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+				
+		Log.e("TimePlushService","onDestroy");
+		myHandler.removeCallbacks(runnable);
+
+	}
 }
  

@@ -44,19 +44,7 @@ public class MyAndSerVice extends Service{
 		if(file.exists())
 		{
 		
-//			mServer = AndServer.serverBuilder()
-//	                .inetAddress(NetUtils.getLocalIPAddress()) // Bind IP address.
-//	                .port(8080)
-//	                .timeout(15, TimeUnit.SECONDS)
-//	                .website(new StorageWebsite(file.getAbsolutePath()))
-//	                .registerHandler("/test", new IndexHandler())   
-//	                .registerHandler("/getdata", new SendDataHandler())
-//	                .registerHandler("/onClick", new OnClickHandler())
-//	                .registerHandler("/callback", new DataCallBackHandler())
-//	                .registerHandler("/login", new LoginHandler())
-//	                .filter(new HttpCacheFilter())
-//	                .listener(mListener)
-//	                .build();
+
 			
 			
 			buildServer(8080);
@@ -92,7 +80,7 @@ public class MyAndSerVice extends Service{
 	
 	
 	/**
-     * Server listener.
+     * Server listener.  
      */
     private Server.ServerListener mListener = new Server.ServerListener() {
         @Override

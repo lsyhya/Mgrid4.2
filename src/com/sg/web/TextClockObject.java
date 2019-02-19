@@ -6,6 +6,15 @@ public class TextClockObject extends ViewObjectBase{
 	
 	String textColor;
 	float textSize;
+	String language;
+	
+	
+	public String getLanguage() {
+		return language;
+	}
+	public void setLanguage(String language) {
+		this.language = language;
+	}
 	public String getTextColor() {
 		return textColor;
 	}

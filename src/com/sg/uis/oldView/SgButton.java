@@ -80,7 +80,6 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 
 		this.setClickable(true);
 		this.setGravity(Gravity.CENTER);
-
 		this.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View view, MotionEvent event) {
@@ -91,6 +90,7 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 
 					m_xscal = event.getX();
 					m_yscal = event.getY();
+					
 					break;
 
 				case MotionEvent.ACTION_UP:
@@ -104,6 +104,7 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 						isTouch = true;
 						onClicked();
 					}
+					
 					break;
 
 				default:
@@ -321,6 +322,7 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 									SQL.cleanEventTable();
 									SQL.cleanXuniEventTable();
 									handler.sendEmptyMessage(2);
+									
 								}
 							});
 						}
@@ -400,7 +402,10 @@ public class SgButton extends TextView implements IObject, ViewObjectSetCallBack
 //				Intent intent = new Intent(getContext(), VideoMonitorActivity2.class);		 //  RTSP error
 //				getContext().startActivity(intent);
 				
-				Intent intent = new Intent(getContext(), VideoMonitor3.class);		//流畅  SDK
+//				Intent intent = new Intent(getContext(), VideoMonitor3.class);		//海康流畅  SDK
+//				getContext().startActivity(intent);
+				
+				Intent intent = new Intent(getContext(), VideoMonitor3.class);		//大华  SDK
 				getContext().startActivity(intent);
 
 

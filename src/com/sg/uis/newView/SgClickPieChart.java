@@ -13,6 +13,7 @@ import com.mgrid.main.MainWindow;
 import com.mgrid.util.ExpressionUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.RemoveRunableCallBack;
 import com.sg.common.TotalVariable;
 import com.sg.web.ClickPieChartObject;
 import com.sg.web.base.ViewObjectBase;
@@ -38,7 +39,7 @@ import comm_service.local_file;
 /** ±ýÍ¼ */
 @SuppressLint({ "ShowToast", "InflateParams", "RtlHardcoded",
 		"ClickableViewAccessibility" })
-public class SgClickPieChart extends TextView implements IObject ,ViewObjectSetCallBack{
+public class SgClickPieChart extends TextView implements IObject ,ViewObjectSetCallBack,RemoveRunableCallBack{
 
 	private LinkedList<PieData> chartData = new LinkedList<PieData>();// Êý¾ÝÔ´
 	private PieChart Pchart;
@@ -501,6 +502,13 @@ public class SgClickPieChart extends TextView implements IObject ,ViewObjectSetC
 	@Override
 	public void onControl(Object obj) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeAllRunable() {
+		
+		handler.removeMessages(0);
 		
 	}
 

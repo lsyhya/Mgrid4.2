@@ -58,6 +58,7 @@ import com.mgrid.main.MainWindow;
 import com.mgrid.util.XmlUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.RemoveRunableCallBack;
 import com.sg.common.UtIniReader;
 import comm_service.service;
 
@@ -70,7 +71,7 @@ import data_model.ipc_control;
 @SuppressLint({ "ShowToast", "ClickableViewAccessibility", "HandlerLeak",
 		"SimpleDateFormat", "DrawAllocation" })
 @SuppressWarnings("unused")
-public class SgAlarmAction extends TextView implements IObject {
+public class SgAlarmAction extends TextView implements IObject ,RemoveRunableCallBack{
 
 	// …Ë÷√∏ÊæØ≈–∂œ÷µ
 	private TextView Et_inputValue = null;
@@ -2436,7 +2437,7 @@ public class SgAlarmAction extends TextView implements IObject {
 		if (lose.equals("0"))
 			return false;
 
-		System.out.println(S_value + ":::" + "::label" + label);
+//		System.out.println(S_value + ":::" + "::label" + label);
 		if (!S_value.equals(AlarmValue)) {
 			neepUpdateTime = true;
 
@@ -2681,5 +2682,12 @@ public class SgAlarmAction extends TextView implements IObject {
 	public void updateText() {
 
 		handler.sendEmptyMessage(8);
+	}
+
+	@Override
+	public void removeAllRunable() {
+		
+		handler.removeMessages(0);
+		
 	}
 }

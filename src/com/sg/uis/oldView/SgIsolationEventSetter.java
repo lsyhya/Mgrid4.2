@@ -39,6 +39,7 @@ import com.mgrid.util.XmlUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
+import com.sg.common.RemoveRunableCallBack;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.web.SgIsolationEventSetterObject;
 import com.sg.web.base.ViewObjectBase;
@@ -47,7 +48,7 @@ import com.sun.mail.dsn.message_deliverystatus;
 
 import data_model.ipc_cfg_trigger_value;
 
-public class SgIsolationEventSetter extends ToggleButton implements IObject ,ViewObjectSetCallBack{
+public class SgIsolationEventSetter extends ToggleButton implements IObject ,ViewObjectSetCallBack,RemoveRunableCallBack{
 
 	private stBindingExpression oBindingExpression;
     private SelfDialog dialog=null;
@@ -623,6 +624,14 @@ public class SgIsolationEventSetter extends ToggleButton implements IObject ,Vie
 		
 		
 		onClickEvent();
+		
+	}
+
+
+	@Override
+	public void removeAllRunable() {
+		
+		hand.removeMessages(0);
 		
 	}
 

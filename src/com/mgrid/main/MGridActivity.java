@@ -9,11 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -42,10 +38,12 @@ import com.mgrid.uncaughtexceptionhandler.MyApplication;
 import com.mgrid.util.FileUtil;
 import com.mgrid.util.ImageUtil;
 import com.mgrid.util.LoginUtil;
+import com.mgrid.util.MediaUtil;
 import com.mgrid.util.XmlUtils;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
 import com.sg.common.LanguageStr;
+import com.sg.common.RemoveRunableCallBack;
 import com.sg.common.UtExpressionParser.stBindingExpression;
 import com.sg.common.UtIniReader;
 import com.sg.uis.LsyNewView.AlarmAction.SgAlarmAction;
@@ -56,8 +54,6 @@ import com.sg.uis.newView.NBerDoorView;
 import com.sg.uis.newView.SgSplineChart;
 import com.sg.uis.newView.SgVideoView;
 import com.sg.uis.oldView.SaveEquipt;
-import com.sg.uis.oldView.SgImage;
-import com.sg.web.HTML.BuildHtml;
 import com.sg.web.base.ViewObjectBase;
 import com.sg.web.base.ViewObjectSetCallBack;
 
@@ -67,10 +63,8 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -79,8 +73,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.provider.MediaStore.Audio.Media;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,6 +103,13 @@ public class MGridActivity extends Activity {
 	private void startTimeFlush() {
 		Intent intent = new Intent(this, TimePlushService.class);
 		startService(intent);
+	}
+	
+	private void StopTimeFlush() {
+		
+		Intent intent = new Intent(this, TimePlushService.class);
+		stopService(intent);
+		
 	}
 
 	public void Mainfinish() {
@@ -157,6 +158,8 @@ public class MGridActivity extends Activity {
 		sBroadcaseReceiver.startReceiver();
 
 	}
+	
+	
 
 	private boolean parseMgridIni() {
 
@@ -627,7 +630,7 @@ public class MGridActivity extends Activity {
 					}
 					handler.postDelayed(this, tmp_load_int_time);
 				} else {
-					System.out.println(tmp_load_pageseek);
+					//System.out.println(tmp_load_pageseek);
 					MainWindow page = new MainWindow(MGridActivity.this);
 					page.m_strRootFolder = m_sRootFolder;
 					page.m_bHasRandomData = m_bHasRandomData;
@@ -909,6 +912,21 @@ public class MGridActivity extends Activity {
 		if (mServerManager != null) {
 			mServerManager.stopService();
 		}
+		
+		MediaUtil.getMediaUtil().stopService(this);
+		
+		if(!SIP.equals(""))
+		{
+			StopTimeFlush();
+		}
+		
+		for (RemoveRunableCallBack re : lstRemoveRunable) {
+			
+			re.removeAllRunable();
+			
+		}
+		
+		
 
 	}
 
@@ -920,6 +938,7 @@ public class MGridActivity extends Activity {
 		if (!isAppOnForeground() && !ISFACEACTIVITY) {
 
 			showTaskUI(true);
+			
 		}
 
 	}
@@ -1119,7 +1138,7 @@ public class MGridActivity extends Activity {
 	public static boolean isBulitHtml = true;
 
 	// SNMP功能
-	public static boolean OPENSNMP = true;
+	public static boolean OPENSNMP = false;
 
 	public static int sleepTime = 2 * 60 * 60;// 屏保视频休眠时间
 	private Intent m_oTaskIntent = null;
@@ -1224,6 +1243,7 @@ public class MGridActivity extends Activity {
 	public static String alarmWay = "";
 	public static List<ipc_control> lstCtrlDo1 = null;
 	public static List<ipc_control> lstCtrlDo2 = null;
+	public static List<RemoveRunableCallBack> lstRemoveRunable=new ArrayList<>();
 
 	public static String appid = "9RJnJmPrCEbK6ie6CC6CQnti1Hs2J5iBpe8vwVL9ESnf";
 	public static String ft_key = "9jsBZdSCqsEo21Uo7a9rvUHonVCB8Cz8yweMF1WNrAgK";

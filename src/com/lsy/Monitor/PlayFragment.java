@@ -193,7 +193,7 @@ public class PlayFragment extends Fragment implements OnClickListener, Callback 
 
 		NET_DVR_PREVIEWINFO previewInfo = new NET_DVR_PREVIEWINFO();
 		previewInfo.lChannel = m_iStartChan;
-		previewInfo.dwStreamType = 0; // substream
+		previewInfo.dwStreamType = 1; // substream
 		previewInfo.bBlocked = 1;
 		previewInfo.byPreviewMode = 0;
 		// NET_DVR_CLIENTINFO struClienInfo = new NET_DVR_CLIENTINFO();
@@ -238,13 +238,13 @@ public class PlayFragment extends Fragment implements OnClickListener, Callback 
 					return;
 				}
 				
-				if (!Player.getInstance().openStream(m_iPort, pDataBuffer, iDataSize, 250 * 1024)) // open stream
+				if (!Player.getInstance().openStream(m_iPort, pDataBuffer, iDataSize, 600 * 1024)) // open stream
 				{
 					Log.e(TAG, "openStream failed");
 					return;
 				}
 				
-				if (!Player.getInstance().setDisplayBuf(m_iPort, 1)) {
+				if (!Player.getInstance().setDisplayBuf(m_iPort, 6)) {
 					Log.e(TAG, "setDisplayBuf failed");
 					return;
 				}

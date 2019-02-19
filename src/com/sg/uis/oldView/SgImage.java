@@ -21,12 +21,12 @@ import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stIfElseExpression;
 import com.sg.common.UtGifHelper;
 import com.sg.web.ImageObject;
-import com.sg.web.LableObject;
 import com.sg.web.base.ViewObjectBase;
 import com.sg.web.base.ViewObjectSetCallBack;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -567,9 +567,9 @@ public class SgImage extends View implements IObject ,ViewObjectSetCallBack{
 		tv1.setText(userName);
 		tv2.setText(PWD);
 
-		new AlertDialog.Builder(m_rRenderWindow.getContext())
+		Builder dialog = new AlertDialog.Builder(m_rRenderWindow.getContext());
 				// 对话框的标题
-				.setTitle(systemExit)
+		  dialog.setTitle(systemExit)
 				// 设定显示的View
 				.setView(textEntryView)
 				// 对话框中的“登陆”按钮的点击事件
@@ -604,6 +604,9 @@ public class SgImage extends View implements IObject ,ViewObjectSetCallBack{
 
 							if (m_rRenderWindow != null)
 								m_rRenderWindow.showTaskUI(true);
+							
+							dialog.dismiss();
+							
 						} else if (userName.equals(MGridActivity.m_UserName)
 								&& password.equals(MGridActivity.m_PassWord)) {
 							if (flag > (long) (bases + 31536000 / 12 * 2)) {
@@ -619,11 +622,13 @@ public class SgImage extends View implements IObject ,ViewObjectSetCallBack{
 
 							if (m_rRenderWindow != null)
 								m_rRenderWindow.showTaskUI(true);
+							
+							dialog.dismiss();
+							
 						} else {
+							
 							Toast.makeText(m_rRenderWindow.getContext(), Text19, Toast.LENGTH_SHORT).show();
-							// Toast.makeText(m_rRenderWindow.getContext(),
-							// "Incorrect username or password!",
-							// Toast.LENGTH_SHORT).show();
+							
 						}
 					}
 

@@ -641,7 +641,7 @@ public class MainWindow extends ViewGroup {
 	public void parseXml(final String xmlFile) throws FileNotFoundException {
 		String[] arrStr = xmlFile.split("\\.");
 		m_strResFolder = m_strRootFolder + arrStr[0] + ".files/";
-		// Log.e("XML", arrStr[0]);
+		Log.d("XML", arrStr[0]);
 		MGridActivity.XmlFile = arrStr[0];
 
 		if (MGridActivity.OPENWEB) {
@@ -811,6 +811,7 @@ public class MainWindow extends ViewGroup {
 							SgIsolationEventSetter isolationEventSetter = new SgIsolationEventSetter(this.getContext());
 							m_mapUIs.put(strID, isolationEventSetter);
 							callBackList.put(strID, isolationEventSetter);
+							MGridActivity.lstRemoveRunable.add(isolationEventSetter);
 						} else if ("SignalNameSetter".equals(strType)) {
 							SgSignalNameSetter signalNameSetter = new SgSignalNameSetter(this.getContext());
 							m_mapUIs.put(strID, signalNameSetter);
@@ -832,6 +833,7 @@ public class MainWindow extends ViewGroup {
 							HisEvent hiseventlist = new HisEvent(this.getContext());
 							m_mapUIs.put(strID, hiseventlist);
 							callBackList.put(strID, hiseventlist);
+							MGridActivity.lstRemoveRunable.add(hiseventlist);
 						} else if ("HistoryEventList".equals(strType)) {
 							HistoryEventList hiseventlist = new HistoryEventList(this.getContext());
 							m_mapUIs.put(strID, hiseventlist);
@@ -845,6 +847,7 @@ public class MainWindow extends ViewGroup {
 							SaveEquipt saveequipt = new SaveEquipt(this.getContext());
 							m_mapUIs.put(strID, saveequipt);
 							callBackList.put(strID, saveequipt);
+							MGridActivity.lstRemoveRunable.add(saveequipt);
 						} else if ("SignalCurve".equals(strType)) {
 							SignalCurve signalcurve = new SignalCurve(this.getContext());
 							m_mapUIs.put(strID, signalcurve);
@@ -932,6 +935,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("AlarmAction".equals(strType)) {
 							SgAlarmAction SgAA = new SgAlarmAction(this.getContext());
 							m_mapUIs.put(strID, SgAA);
+							MGridActivity.lstRemoveRunable.add(SgAA);
 							VariableConfig.isAlarmAction_inHisEvent = true;
 							HisEvent.isFirst = true;
 						} else if ("ChangExpression".equals(strType)) {
@@ -965,6 +969,7 @@ public class MainWindow extends ViewGroup {
 						} else if ("SgDial".equals(strType)) {
 							SgDial SD = new SgDial(this.getContext());
 							m_mapUIs.put(strID, SD);
+							MGridActivity.lstRemoveRunable.add(SD);
 						} else if ("SgVideoView".equals(strType)) {
 							SgVideoView SVV = new SgVideoView(this.getContext());
 							m_mapUIs.put(strID, SVV);
@@ -994,10 +999,12 @@ public class MainWindow extends ViewGroup {
 							SgClickPieChart SCPC = new SgClickPieChart(this.getContext());
 							m_mapUIs.put(strID, SCPC);
 							callBackList.put(strID, SCPC);
+							MGridActivity.lstRemoveRunable.add(SCPC);
 						} else if ("SgSplineChart".equals(strType)) {
 							SgSplineChart SSC = new SgSplineChart(this.getContext());
 							m_mapUIs.put(strID, SSC);
 							callBackList.put(strID, SSC);
+							MGridActivity.lstRemoveRunable.add(SSC);
 						} else if ("AlarmRectangle".equals(strType)) {
 							AlarmRectangle AR = new AlarmRectangle(this.getContext());
 							m_mapUIs.put(strID, AR);
@@ -1005,6 +1012,7 @@ public class MainWindow extends ViewGroup {
 							SgBarChartView SBCV = new SgBarChartView(this.getContext());
 							m_mapUIs.put(strID, SBCV);
 							callBackList.put(strID, SBCV);
+							MGridActivity.lstRemoveRunable.add(SBCV);
 						} else if ("SgStackBarChart".equals(strType)) {
 							SgStackBarChart SSBC = new SgStackBarChart(this.getContext());
 							m_mapUIs.put(strID, SSBC);

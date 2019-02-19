@@ -24,10 +24,11 @@ import com.mgrid.main.MGridActivity;
 import com.mgrid.main.MainWindow;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.RemoveRunableCallBack;
 
 /** ºÚ°×ÒÇ±íÅÌ */
 
-public class SgDial extends TextView implements IObject {
+public class SgDial extends TextView implements IObject ,RemoveRunableCallBack{
 
 	@SuppressWarnings("unused")
 	private DialChart DCchart = null;// ¹Ø¼üview
@@ -358,5 +359,12 @@ public class SgDial extends TextView implements IObject {
 	private List<String> label_list = new ArrayList<String>();
 	private float F_dial = 0;
     private float max_data=30;
+
+	@Override
+	public void removeAllRunable() {
+		
+		handler.removeMessages(0);
+		
+	}
 
 }

@@ -11,6 +11,7 @@ import android.widget.TextClock;
 import com.mgrid.main.MainWindow;
 import com.sg.common.CFGTLS;
 import com.sg.common.IObject;
+import com.sg.common.LanguageStr;
 import com.sg.common.UtExpressionParser;
 import com.sg.common.UtExpressionParser.stIfElseExpression;
 import com.sg.web.TextClockObject;
@@ -272,6 +273,8 @@ public class SgTextClock extends TextClock implements IObject,ViewObjectSetCallB
 		base.setCmd(m_strExpression);
 		
 		
+		
+		((TextClockObject)base).setLanguage(LanguageStr.Language);
 		((TextClockObject)base).setTextColor(ViewObjectColorUtil.getColor(textColor));
 		((TextClockObject)base).setTextSize(m_fFontSize);
 	}
